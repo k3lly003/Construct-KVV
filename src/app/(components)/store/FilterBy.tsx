@@ -1,9 +1,9 @@
 import Image from "next/image";
 import { ChevronRight, ChevronLeft, Search } from "lucide-react";
 import { FaStar } from "react-icons/fa";
-import { DropdownMenuDemo } from "./shad/DropdownMenuDemo";
+import { DropdownMenuDemo } from "../shad/DropdownMenuDemo";
 
-// Sample product data (replace with your actual data)
+
 interface Product {
   name: string;
   imageSrc: string;
@@ -11,6 +11,23 @@ interface Product {
   rating: string;
   originalPrice: number;
   discountedPrice: number;
+}
+
+interface Product {
+  name: string;
+  imageSrc: string;
+  altText: string;
+  rating: string;
+  originalPrice: number;
+  discountedPrice: number;
+}
+
+interface Service{
+  name: string;
+  imageSrc: string;
+  altText: string;
+  rating: string;
+  price: number;
 }
 
 const productData: Product[] = [
@@ -160,17 +177,83 @@ const productData: Product[] = [
   },
 ];
 
-const Products: React.FC = () => {
+export const serviceData: Service[] = [
+  {
+    name: "Constructor gloves",
+    imageSrc:
+      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80",
+    altText: "Constructor Jacket",
+    rating: "4.5",
+    price: 56000,
+  },
+  {
+    name: "Constructor gloves",
+    imageSrc:
+      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80",
+    altText: "Constructor Jacket",
+    rating: "4.5",
+    price: 56000,
+  },
+  {
+    name: "Constructor gloves",
+    imageSrc:
+      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80",
+    altText: "Constructor Jacket",
+    rating: "4.5",
+    price: 56000,
+  },
+  {
+    name: "Constructor gloves",
+    imageSrc:
+      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80",
+    altText: "Constructor Jacket",
+    rating: "4.5",
+    price: 56000,
+  },
+  {
+    name: "Constructor gloves",
+    imageSrc:
+      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80",
+    altText: "Constructor Jacket",
+    rating: "4.5",
+    price: 56000,
+  },
+  {
+    name: "Constructor gloves",
+    imageSrc:
+      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80",
+    altText: "Constructor Jacket",
+    rating: "4.5",
+    price: 56000,
+  },
+  {
+    name: "Constructor gloves",
+    imageSrc:
+      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80",
+    altText: "Constructor Jacket",
+    rating: "4.5",
+    price: 56000,
+  },
+];
+
+export const FilterBy: React.FC = () => {
 
   return (
     <div className="bg-white py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-2xl font-medium text-gray-900 mb-6 flex justify-between">
           <DropdownMenuDemo Prod='product' Serv='service'/>
-          <div className="border-gray-400 border rounded-md flex">
+          <div className="border-gray-200 border rounded-md flex">
             <input type="text" className="hover:border-0" />
             <Search className="flex self-center" />
           </div>
+        </div>
+        <div className="flex gap-10 my-10">
+          <div className="bg-gray-200 text-white font-medium p-2 rounded-2xl">Plumbling</div>
+          <div className="bg-gray-200 text-white font-medium p-2 rounded-2xl">Electricity</div>
+          <div className="bg-gray-200 text-white font-medium p-2 rounded-2xl">Accessories</div>
+          <div className="bg-gray-200 text-white font-medium p-2 rounded-2xl">Clothes</div>
+          <div className="bg-gray-200 text-white font-medium p-2 rounded-2xl">Construction</div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {productData.map((product) => (
@@ -222,5 +305,3 @@ const Products: React.FC = () => {
     </div>
   );
 };
-
-export default Products;
