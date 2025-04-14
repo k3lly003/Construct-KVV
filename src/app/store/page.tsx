@@ -7,7 +7,7 @@ import DefaultPageBanner from '../(components)/DefaultPageBanner'
 const page = () => {
   return (
     <>
-      <DefaultPageBanner title="Product" backgroundImage={''} />
+      <DefaultPageBanner title="Products" backgroundImage={''} />
       <Product />
     </>
   )

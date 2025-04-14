@@ -124,3 +124,79 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+
+/* swipe */
+.swiper {
+  width: 100%;
+  height: 50%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  /* Center slide text vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 50%;
+  object-fit: cover;
+}
+
+.swiper {
+  /* Down */
+  width: 50%;
+  height: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.swiper-slide {
+  width: 100%;
+  background-size: fit;
+  background-position: center;
+}
+
+.mySwiper {
+  /* low division */
+  width: 100%;
+  height:100%;
+  box-sizing: border-box;
+}
+
+.mySwiper .swiper-slide {
+  /* low single img card */
+  width: 25%;
+  height: 50%;
+  opacity: 0.4;
+}
+.mySwiper2 {
+  /* high division */
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.mySwiper .swiper-slide-thumb-active {
+  opacity: 1;
+}
+.mySwiper4 .swiper-slide-thumb-active {
+  opacity: 1;
+}
+
+.mySwiper4 .swiper-slide-thumb-active {
+  opacity: 1;
+}
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
