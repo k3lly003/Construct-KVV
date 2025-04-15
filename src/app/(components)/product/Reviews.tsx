@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReviewType } from '@/app/utils/fakes/ProductFakes';
+import { ReviewType } from '../../utils/fakes/ProductFakes';
 import ReviewCard from './ReviewCard';
 import { DialogDemo } from '../shad/ShadDialog';
 

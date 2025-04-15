@@ -8,7 +8,7 @@ export const BrickLoader: React.FC = () => {
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
           {/* Top brick */}
           <div 
-            className="w-12 h-6 bg-red-500 rounded-sm animate-bounce mx-auto"
+            className="w-12 h-6 bg-yellow-400 rounded-sm animate-bounce mx-auto"
             style={{ 
               animationDuration: '1s',
               animationDelay: '0.3s',
@@ -19,7 +19,7 @@ export const BrickLoader: React.FC = () => {
           {/* Bottom bricks container */}
           <div className="flex space-x-1 mt-1">
             <div 
-              className="w-12 h-6 bg-red-600 rounded-sm animate-bounce"
+              className="w-12 h-6 bg-yellow-400 rounded-sm animate-bounce"
               style={{ 
                 animationDuration: '1s',
                 animationDelay: '0.1s',
@@ -27,7 +27,7 @@ export const BrickLoader: React.FC = () => {
               }}
             />
             <div 
-              className="w-12 h-6 bg-red-700 rounded-sm animate-bounce"
+              className="w-12 h-6 bg-yellow-400 rounded-sm animate-bounce"
               style={{ 
                 animationDuration: '1s',
                 animationDelay: '0.2s',
@@ -56,7 +56,7 @@ export const BrickLoader: React.FC = () => {
 
         {/* Loading text */}
         <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 text-white text-lg font-medium">
-          Building...
+          kvv ...
         </div>
       </div>
 

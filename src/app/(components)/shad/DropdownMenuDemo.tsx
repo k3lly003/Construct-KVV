@@ -1,12 +1,12 @@
 
-  import { Button } from "@/components/ui/button"
+  import { Button } from "../../../components/ui/button"
   import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuTrigger,
-  } from "@/components/ui/dropdown-menu"
+  } from "../../../components/ui/dropdown-menu"
   
 
   interface DropdownMenuProps{
