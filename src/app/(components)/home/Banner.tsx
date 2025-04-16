@@ -5,7 +5,6 @@ import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { HomeBannerSlides } from "../../utils/fakes/HomeFakes"
 import Image from 'next/image';
 
-
 export const Banner: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -38,12 +37,11 @@ export const Banner: React.FC = () => {
           <div className="absolute inset-0">
             <Image
               src={slide.image}
-              // width={1920}
-              // height={600}
               alt={slide.title}
               className="w-full h-full object-cover"
-              layout="fill"
-              objectFit="cover"
+              fill
+              priority={index === currentSlide}
+              sizes="100vw"
             />
             <div className="absolute inset-0 bg-black bg-opacity-50"></div>
           </div>

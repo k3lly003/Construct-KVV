@@ -10,7 +10,7 @@ import 'swiper/css/thumbs';
 import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
 import { MdOutlineShoppingCart } from 'react-icons/md';
 import Image from 'next/image';
-import { fakeProductCards } from '../../utils/fakes/ProductFakes';
+import { fakeProductCards } from '../../../utils/fakes/ProductFakes';
 import DefaultPageBanner from '@/app/(components)/DefaultPageBanner';
 import Reviews from '@/app/(components)/product/Reviews';
 import RelatedProducts from '@/app/(components)/product/RelatedProducts';

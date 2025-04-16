@@ -107,7 +107,7 @@ export const Navbar: React.FC = () => {
               <p>Help</p>
             </Link>
             <Link
-              href="#"
+              href="/cart"
               className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
             >
               <ShoppingCart />
