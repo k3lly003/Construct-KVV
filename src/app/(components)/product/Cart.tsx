@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { Trash2, Plus, Minus, Truck, ShieldCheck, PackageCheck } from 'lucide-react';
 import { initialCartItems } from '@/app/utils/fakes/CartFakes';
+import Image from 'next/image';
+
 
 export interface CartItem {
   id: string;
@@ -55,8 +57,10 @@ export const CartPage: React.FC = () => {
               {cartItems.map((item) => (
                 <div key={item.id} className="p-6 border-b border-gray-200 last:border-0">
                   <div className="flex items-center gap-6">
-                    <img
+                    <Image
                       src={item.image}
+                      width={100}
+                      height={100}
                       alt={item.name}
                       className="w-24 h-24 object-cover rounded-lg"
                     />

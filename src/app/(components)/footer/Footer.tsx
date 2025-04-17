@@ -1,5 +1,6 @@
 import React from 'react';
 import { Building2, Mail, Phone, MapPin } from 'lucide-react';
+import Image from 'next/image';
 
 const constructionImages = [
   "https://images.unsplash.com/photo-1590725140246-20acddc1fb82?auto=format&fit=crop&q=80&w=300",
@@ -94,8 +95,10 @@ export const Footer: React.FC = () => {
             <div className="grid grid-cols-2 gap-4">
               {constructionImages.map((image, index) => (
                 <div key={index} className="aspect-square overflow-hidden rounded-lg">
-                  <img
+                  <Image
                     src={image}
+                    width={100}
+                    height={100}
                     alt={`Construction project ${index + 1}`}
                     className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
                   />
