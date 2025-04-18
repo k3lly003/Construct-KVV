@@ -2,171 +2,15 @@ import Image from "next/image";
 import { ChevronRight, ChevronLeft, Search } from "lucide-react";
 import { FaStar } from "react-icons/fa";
 import { DropdownMenuDemo } from "./shad/DropdownMenuDemo";
-
-// Sample product data (replace with your actual data)
-interface Product {
-  name: string;
-  imageSrc: string;
-  altText: string;
-  rating: string;
-  originalPrice: number;
-  discountedPrice: number;
-}
-
-const productData: Product[] = [
-  {
-    name: "Constructor gloves",
-    imageSrc:
-      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80",
-    altText: "Constructor Jacket",
-    rating: "4.5",
-    originalPrice: 56000,
-    discountedPrice: 19000,
-  },
-  {
-    name: "Metal Cutter",
-    imageSrc:
-      "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80",
-    altText: "Black cable Restorer",
-    rating: "4.5",
-    originalPrice: 56000,
-    discountedPrice: 19000,
-  },
-  {
-    name: "Multitool Gerber",
-    imageSrc:
-      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80",
-    altText: "Black Die Grinder",
-    rating: "4.5",
-    originalPrice: 56000,
-    discountedPrice: 19000,
-  },
-  {
-    name: "Constructor Rain Jacket",
-    imageSrc:
-      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80",
-    altText: "Black Die Grinder Drill",
-    rating: "4.5",
-    originalPrice: 56000,
-    discountedPrice: 19000,
-  },
-  {
-    name: "National Nail Camo",
-    imageSrc:
-      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80",
-    altText: "Constructor Jacket",
-    rating: "4.5",
-    originalPrice: 56000,
-    discountedPrice: 19000,
-  },
-  {
-    name: "Yellow Hammer Drill",
-    imageSrc:
-      "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80",
-    altText: "Black cable Restorer",
-    rating: "4.5",
-    originalPrice: 56000,
-    discountedPrice: 19000,
-  },
-  {
-    name: "Kozo Constructor Jacket",
-    imageSrc:
-      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80",
-    altText: "Black Die Grinder",
-    rating: "4.5",
-    originalPrice: 56000,
-    discountedPrice: 19000,
-  },
-  {
-    name: "Smart  Jig Saw",
-    imageSrc:
-      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80",
-    altText: "Black Die Grinder Drill",
-    rating: "4.5",
-    originalPrice: 56000,
-    discountedPrice: 19000,
-  },
-  {
-    name: "Constructor Jacket",
-    imageSrc:
-      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80",
-    altText: "Constructor Jacket",
-    rating: "4.5",
-    originalPrice: 56000,
-    discountedPrice: 19000,
-  },
-  {
-    name: "Black cable Restorer",
-    imageSrc:
-      "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80",
-    altText: "Black cable Restorer",
-    rating: "4.5",
-    originalPrice: 56000,
-    discountedPrice: 19000,
-  },
-  {
-    name: "Black Die Grinder",
-    imageSrc:
-      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80",
-    altText: "Black Die Grinder",
-    rating: "4.5",
-    originalPrice: 56000,
-    discountedPrice: 19000,
-  },
-  {
-    name: "Large Jig Saw",
-    imageSrc:
-      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80",
-    altText: "Black Die Grinder Drill",
-    rating: "4.5",
-    originalPrice: 56000,
-    discountedPrice: 19000,
-  },
-  {
-    name: "Yellow Hammer",
-    imageSrc:
-      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80",
-    altText: "Constructor Jacket",
-    rating: "4.5",
-    originalPrice: 56000,
-    discountedPrice: 19000,
-  },
-  {
-    name: "Restorer",
-    imageSrc:
-      "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80",
-    altText: "Black cable Restorer",
-    rating: "4.5",
-    originalPrice: 56000,
-    discountedPrice: 19000,
-  },
-  {
-    name: "Black shirt",
-    imageSrc:
-      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80",
-    altText: "Black Die Grinder",
-    rating: "4.5",
-    originalPrice: 56000,
-    discountedPrice: 19000,
-  },
-  {
-    name: "Boots 012",
-    imageSrc:
-      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80",
-    altText: "Black Die Grinder Drill",
-    rating: "4.5",
-    originalPrice: 56000,
-    discountedPrice: 19000,
-  },
-];
+import Link from "next/link";
+import { productData } from "../utils/fakes/ProductFakes";
 
 const Products: React.FC = () => {
-
   return (
     <div className="bg-white py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-2xl font-medium text-gray-900 mb-6 flex justify-between">
-          <DropdownMenuDemo Prod='product' Serv='service'/>
+          <DropdownMenuDemo Prod="product" Serv="service" />
           <div className="border-gray-400 border rounded-md flex">
             <input type="text" className="hover:border-0" />
             <Search className="flex self-center" />
@@ -181,7 +25,7 @@ const Products: React.FC = () => {
               <div className="aspect-w-1 h-40 w-full overflow-hidden">
                 <Image
                   src={product.imageSrc}
-                  alt={product.altText}
+                  alt={product.altText? product.altText : ''}
                   layout="responsive"
                   width={300}
                   height={300}
@@ -201,7 +45,13 @@ const Products: React.FC = () => {
                 </div>
                 <div className="mt-2 flex items-baseline">
                   <p className="font-semibold text-gray-900">
-                    RwF {product.discountedPrice.toLocaleString()}
+                    {product.discountedPrice ? (
+                      <>RWF {product.discountedPrice.toLocaleString()}</>
+                    ) : (
+                      <>
+                        RWF {product.originalPrice.toLocaleString()}{" "}
+                      </>
+                    )}
                   </p>
                 </div>
               </div>
@@ -214,6 +64,12 @@ const Products: React.FC = () => {
           <button className="border border-amber-300 hover:bg-amber-500 hover:text-white text-amber-300 font-semibold py-2 px-2 rounded focus:outline-none focus:shadow-outline">
             <ChevronLeft className="h-5 w-5 text-amber-300" />
           </button>
+          <div className="flex justify-center items-center gap-3">
+            <Link href={""}>01</Link>
+            <Link href={""}>02</Link>
+            <Link href={""}>03</Link>
+            <Link href={""}>04</Link>
+          </div>
           <button className="border border-amber-300 hover:bg-amber-500 hover:text-white text-amber-300 font-semibold py-2 px-2 rounded focus:outline-none focus:shadow-outline">
             <ChevronRight className="h-5 w-5" />
           </button>
