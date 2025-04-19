@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { BrickLoader } from "../(components)/BrickLoader";
 import { Banner } from "../(components)/home/Banner";
-import ProductCarousel from "../(components)/home/bestDeals";
+import { ProductCarousel } from "../(components)/home/bestDeals";
 import { ProjectShowcase } from "../(components)/home/ProjectAShowcase";
 import TrustpilotSection from "../(components)/home/ReviewGroup";
 import Product from "../(components)/Product";

@@ -200,3 +200,10 @@ body {
   height: 100%;
   object-fit: cover;
 }
+
+.overflow {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}

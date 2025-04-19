@@ -1,9 +1,8 @@
 import Image from "next/image";
-import { ChevronRight, ChevronLeft, Search } from "lucide-react";
-import { FaStar } from "react-icons/fa";
+import { ChevronRight, ChevronLeft, Search, Heart } from "lucide-react";
 import { DropdownMenuDemo } from "./shad/DropdownMenuDemo";
 import Link from "next/link";
-import { productData } from "../utils/fakes/ProductFakes";
+import { featuredProductData } from "../utils/fakes/ProductFakes";
 
 const Products: React.FC = () => {
   return (
@@ -17,45 +16,70 @@ const Products: React.FC = () => {
           </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {productData.map((product) => (
+          {featuredProductData.map((product) => (
             <div
-              key={product.name}
-              className="relative hover:shadow-md transition-shadow duration-200 space-y-3 mb-5"
-            >
-              <div className="aspect-w-1 h-40 w-full overflow-hidden">
+            key={product.id}
+            className="bg-white overflow-hidden w-64 m-4 hover:shadow-lg hover:rounded-xl transition-shadow"
+        >
+            <div className="relative">
                 <Image
-                  src={product.imageSrc}
-                  alt={product.altText? product.altText : ''}
-                  layout="responsive"
-                  width={300}
-                  height={300}
-                  className="object-cover"
+                    src={product.imageSrc}
+                    alt={product.name}
+                    width={100}
+                    height={100}
+                    className="w-full h-56 object-cover rounded-xl"
                 />
-              </div>
-              <div className="p-4 h-30 flex flex-col gap-3">
-                <h3 className="text-sm font-medium text-gray-900">
-                  <a href="#">
-                    <span aria-hidden="true" className="absolute inset-0" />
-                    {product.name}
-                  </a>
-                </h3>
-                <div className="mt-1 flex items-center">
-                  <FaStar className="h-4 w-4 text-yellow-500 flex-shrink-0" />
-                  <p className="ml-1 text-sm text-gray-500">{product.rating}</p>
+                {/* Assuming Heart is a component */}
+                <div className="absolute top-2 right-2 border rounded-full p-3 flex items-center justify-center cursor-pointer shadow-sm hover:bg-yellow-400 hover:border-yellow-400 transition-colors">
+                    <Heart className="text-gray-100" />
                 </div>
-                <div className="mt-2 flex items-baseline">
-                  <p className="font-semibold text-gray-900">
-                    {product.discountedPrice ? (
-                      <>RWF {product.discountedPrice.toLocaleString()}</>
-                    ) : (
-                      <>
-                        RWF {product.originalPrice.toLocaleString()}{" "}
-                      </>
-                    )}
-                  </p>
-                </div>
-              </div>
             </div>
+            <div className="p-4">
+                <div className="flex justify-between">
+                    <h3 className="text-md font-semibold text-gray-900 w-[60%] mb-1">
+                        {product.name}
+                    </h3>
+                    <p className="font-semibold text-sm text-yellow-400">
+                        {product.discountedPrice ? (
+                            <>RWF {product.discountedPrice.toLocaleString()}</>
+                        ) : (
+                            <>RWF {product.originalPrice.toLocaleString()}</>
+                        )}
+                    </p>
+                </div>
+                <p className="text-sm text-gray-500 mb-2">
+                    {"Description might not be directly available"}
+                </p>
+                <div className="flex items-center justify-between mb-3">
+                    <div className="text-green-500 text-sm">
+                        {/* Assuming Star is a component */}
+                        {/* <Star className="h-4 w-4 text-yellow-400 fill-current inline-block mr-1" /> */}
+                        ⭐ {product.rating}
+                    </div>
+                </div>
+                {/* Assuming Button is a custom component */}
+                {/* <Button
+                    text={"Add to cart"}
+                    texSize={"text-sm"}
+                    hoverBg={"hover:bg-yellow-400"}
+                    borderCol={"border-yellow-300"}
+                    bgCol={"white"}
+                    textCol={"text-gray-800"}
+                    border={"border-1"}
+                    handleButton={() =>
+                        alert(`Add to Cart clicked for ${product.name}`)
+                    }
+                    padding={"p-3"}
+                    round={"rounded-full"}
+                /> */}
+                <button
+                    className="text-sm bg-white text-gray-800 border border-yellow-300 hover:bg-yellow-400 rounded-full p-3 w-full transition-colors"
+                    onClick={() => alert(`Add to Cart clicked for ${product.name}`)}
+                >
+                    Add to cart
+                </button>
+            </div>
+        </div>
           ))}
         </div>
 

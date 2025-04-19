@@ -1,18 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Search,
-  Star,
-  ChevronLeft,
-  ChevronRight,
-  Heart,
-} from "lucide-react";
+import { Search, Star, ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Button from "../Button";
 import { initialProducts } from "../../utils/fakes/ProductFakes";
-
 
 export const ShopProducts: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -99,20 +92,19 @@ export const ShopProducts: React.FC = () => {
                     <h3 className="text-md font-semibold text-gray-900 w-[60%] mb-1">
                       {product.name}
                     </h3>
-                    <p className="font-semibold text-md text-yellow-400">
-                      {product.originalPrice}
-                      <span className="text-sm text-yellow-400"> Rwf</span>
-                    </p>
-                  </div>
-                  <p className="text-sm text-gray-500 mb-2">
-                    {/* {product.description} */}{"Description might not be directly available"}
-                    {/* Description might not be directly available */}
-                  </p>
-                  <div className="flex items-center justify-between mb-3">
                     <div className="text-green-500 text-sm">
                       <Star className="h-4 w-4 text-yellow-400 fill-current inline-block mr-1" />
                       {product.rating}
                     </div>
+                  </div>
+                  <p className="text-sm text-gray-500 mb-2 overflow">
+                    {product.description}
+                  </p>
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="font-semibold text-md text-yellow-400">
+                      {product.originalPrice}
+                      <span className="text-sm text-yellow-400"> Rwf</span>
+                    </p>
                   </div>
                   <Button
                     text={"Add to cart"}
