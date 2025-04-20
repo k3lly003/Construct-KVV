@@ -1,28 +1,13 @@
 "use client";
 
-import React, { useState } from 'react';
-import Image from 'next/image';
-import { Package, Clock, BadgeCheck } from 'lucide-react';
-import ReactPaginate from 'react-paginate';
-// import type { DealProduct } from '../types/deals'; // Assuming this type exists
+import React, { useState } from "react";
+import Image from "next/image";
+import { Package, Clock, BadgeCheck } from "lucide-react";
+import ReactPaginate from "react-paginate";
+import Button from "../Button";
+import type { DealProduct } from "../../utils/fakes/ProductFakes";
 
-
-export interface DealProduct {
-    id: string;
-    name: string;
-    category: string;
-    basePrice: number;
-    minOrder: number;
-    unit: string;
-    image: string;
-    marketPrice: number;
-    availability: 'In Stock' | 'Made to Order' | 'Limited Stock';
-    leadTime: string;
-    features: string[];
-    certifications: string[];
-}
-
-interface PaginatedProductGridProps {
+export interface PaginatedProductGridProps {
   products: DealProduct[];
   itemsPerPage: number;
   onQuoteRequest: (product: DealProduct) => void;
@@ -47,38 +32,52 @@ const PaginatedProductGrid: React.FC<PaginatedProductGridProps> = ({
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
         {currentProducts.map((product) => (
-          <div key={product.id} className="bg-white rounded-xl shadow-sm overflow-hidden">
-            <div className="relative h-48">
-              <Image
-                src={product.image}
-                alt={product.name}
-                width={100}
-                height={100}
-                className="w-full h-full object-cover"
-              />
+          <div
+            key={product.id}
+            className="bg-white overflow-hidden m-4 rounded-xl shadow-md"
+          >
+            <div className="relative">
+              <div className="w-full h-56 bg-gray-100 flex items-center justify-center">
+                <Image
+                  src={product.image}
+                  alt="Waterproof Laminate Flooring"
+                  width={100}
+                  height={100}
+                  className="w-full h-56 object-cover rounded-xl"
+                />
+              </div>
               <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-sm font-medium text-gray-700 shadow">
                 {product.availability}
               </div>
             </div>
-            <div className="p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">{product.name}</h3>
-              <div className="flex items-center mb-4">
-                <span className="text-sm text-gray-500">Market Price:</span>
-                <span className="ml-2 text-lg font-semibold text-gray-900">${product.marketPrice}/{product.unit}</span>
-                <span className="ml-4 text-sm text-gray-500">Base Price:</span>
-                <span className="ml-2 text-lg font-semibold text-green-600">${product.basePrice}/{product.unit}</span>
+            <div className="p-3 flex flex-col gap-2">
+              <div className="flex justify-between">
+                <h3 className="text-lg w-[60%] font-semibold text-gray-800 mb-1">
+                  {product.name}
+                </h3>
+                <div className="flex flex-col">
+                  <p className="font-semibold text-lg text-yellow-400">
+                    {product.basePrice}
+                    <span className="text-sm text-yellow-400"> Rwf</span>
+                  </p>
+                </div>
               </div>
-              <div className="space-y-2 mb-4">
+              <p className="text-sm text-gray-500 mb-2 overflow">
+                {product.description}
+              </p>
+              <div className="mb-3 space-y-1">
                 <div className="flex items-center text-sm text-gray-600">
                   <Package className="h-4 w-4 mr-2" />
-                  <span>Min. Order: {product.minOrder} {product.unit}</span>
+                  <span>
+                    Min. Order: {product.minOrder} {product.unit}
+                  </span>
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <Clock className="h-4 w-4 mr-2" />
                   <span>Lead Time: {product.leadTime}</span>
                 </div>
               </div>
-              <div className="flex flex-wrap gap-2 mb-4">
+              <div className="flex flex-wrap gap-2 mb-2">
                 {product.features.map((feature, index) => (
                   <span
                     key={index}
@@ -99,12 +98,32 @@ const PaginatedProductGrid: React.FC<PaginatedProductGridProps> = ({
                   </div>
                 ))}
               </div>
-              <button
-                onClick={() => onQuoteRequest(product)}
-                className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-              >
-                Request Quote
-              </button>
+              <div className="flex justify-between">
+                <Button
+                  text={"Request quote"}
+                  texSize={"text-sm"}
+                  hoverBg={"bg-yellow-500"}
+                  borderCol={"border-0"}
+                  bgCol={"bg-amber-400"}
+                  textCol={"text-white"}
+                  border={"border-1"}
+                  handleButton={() => onQuoteRequest(product)}
+                  padding={"p-7"}
+                  round={"rounded-md"}
+                />
+                <Button
+                  text={"View details"}
+                  texSize={"text-sm"}
+                  hoverBg={""}
+                  borderCol={"border-yellow-400"}
+                  bgCol={"bg-white"}
+                  textCol={"text-yellow-400"}
+                  border={"border-1"}
+                  handleButton={() => onQuoteRequest(product)}
+                  padding={"p-7"}
+                  round={"rounded-md"}
+                />
+              </div>
             </div>
           </div>
         ))}
@@ -112,9 +131,9 @@ const PaginatedProductGrid: React.FC<PaginatedProductGridProps> = ({
 
       {pageCount > 1 && (
         <ReactPaginate
-          previousLabel={'Previous'}
-          nextLabel={'Next'}
-          breakLabel={'...'}
+          previousLabel={"Previous"}
+          nextLabel={"Next"}
+          breakLabel={"..."}
           pageCount={pageCount}
           marginPagesDisplayed={2}
           pageRangeDisplayed={5}

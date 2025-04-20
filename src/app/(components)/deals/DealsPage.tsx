@@ -6,41 +6,18 @@ import QuoteFormModal from "./QuotaModal";
 import PaginatedProductGrid from "./ProductSection";
 import SearchFilter from "../sections/Seach_Filter";
 import HeaderSection from "./HeaderSection";
-
-export interface DealProduct {
-  id: string;
-  name: string;
-  category: string;
-  basePrice: number;
-  minOrder: number;
-  unit: string;
-  image: string;
-  marketPrice: number;
-  availability: "In Stock" | "Made to Order" | "Limited Stock";
-  leadTime: string;
-  features: string[];
-  certifications: string[];
-}
-
-export interface FormData {
-  company: string;
-  contact: string;
-  email: string;
-  phone: string;
-  requirements: string;
-  deliveryLocation: string;
-  preferredDeliveryDate: string;
-}
+import { DealProductDto, FormDataDto } from "@/app/utils/dtos/deals.dtos";
 
 const ITEMS_PER_PAGE = 3;
 
 const Page: React.FC = () => {
-  const [selectedProduct, setSelectedProduct] = useState<DealProduct | null>(
+  const [quantity, setQuantity] = useState<number>(0);
+  //********************************************************************************
+  const [selectedProduct, setSelectedProduct] = useState<DealProductDto | null>(
     null
   );
-  const [quantity, setQuantity] = useState<number>(0);
   const [showQuoteForm, setShowQuoteForm] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<FormDataDto>({
     company: "",
     contact: "",
     email: "",
@@ -49,7 +26,8 @@ const Page: React.FC = () => {
     deliveryLocation: "",
     preferredDeliveryDate: "",
   });
-
+  //********************************************************************************
+  // -------------------------------------------------------------------------------
   // SEARCH-FILTER STATES
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Products");
@@ -60,7 +38,7 @@ const Page: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [currentPage, setCurrentPage] = useState(0);
 
-  // FILTER-SORT LOGIC FOR PRODUCTS
+  // FILTER-SORT LOGIC FOR PRODUCTS ----------------------------------------------
   const filteredProducts = sampleProducts
     .filter((product) => {
       const matchesSearch = product.name
@@ -75,11 +53,12 @@ const Page: React.FC = () => {
       if (sortBy === "name") return a.name.localeCompare(b.name);
       return a[sortBy] - b[sortBy];
     });
+  // -----------------------------------------------------------------------------
 
   useEffect(() => {
     setCurrentPage(0);
   }, [searchTerm, selectedCategory, sortBy]);
-
+  //*********************************************************************************
   const handleQuantityChange = (value: number) => {
     setQuantity(Math.max(0, value));
   };
@@ -119,6 +98,14 @@ const Page: React.FC = () => {
     });
   };
 
+  // PRODUCT GRID
+  const handleQuoteRequest = (product: DealProductDto) => {
+    setSelectedProduct(product);
+    setQuantity(product.minOrder);
+    setShowQuoteForm(true);
+  };
+  //*********************************************************************************
+  //------------------------------------------------------------------------------------
   // FILTER & SEARCH
 
   const handleSearch = (term: string) => {
@@ -128,13 +115,7 @@ const Page: React.FC = () => {
   const handleFilter = (category: string) => {
     setSelectedCategory(category);
   };
-
-  // PRODUCT GRID
-  const handleQuoteRequest = (product: DealProduct) => {
-    setSelectedProduct(product);
-    setQuantity(product.minOrder);
-    setShowQuoteForm(true);
-  };
+  //----------------------------------------------------------------------------------
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -144,10 +125,8 @@ const Page: React.FC = () => {
           header="Bulk Deals & Custom Quotes"
           description="Get competitive prices on bulk orders and custom requirements. Compare market rates and negotiate deals directly."
         />
-
         {/* SEARCH & FILTER */}
         <SearchFilter onSearch={handleSearch} onFilter={handleFilter} />
-
         {/* PRODUCT GRID PAGINATION */}
         <PaginatedProductGrid
           products={filteredProducts}

@@ -133,7 +133,9 @@ function ProductPage({ params }: { params: { id: string } }) {
                 </span>
               </div>
               <div>
-                <Button text='Buy'/>
+                <Button text='Buy' texSize={''} hoverBg={''} borderCol={''} bgCol={''} textCol={''} border={''} padding={''} round={''} handleButton={function (): void {
+                  throw new Error('Function not implemented.');
+                } }/>
               </div>
             </div>
           </div>

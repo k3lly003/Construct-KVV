@@ -8,53 +8,16 @@ import {
     DialogDescription,
     DialogHeader,
     DialogTitle,
-    // DialogTrigger,
     DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ShadQuotaPropsDto } from '@/app/utils/dtos/deals.dtos';
 
-// Define your types here (or import them if they are in a separate file)
-export interface DealProduct {
-    id: string;
-    name: string;
-    category: string;
-    basePrice: number;
-    minOrder: number;
-    unit: string;
-    image: string;
-    marketPrice: number;
-    availability: 'In Stock' | 'Made to Order' | 'Limited Stock';
-    leadTime: string;
-    features: string[];
-    certifications: string[];
-}
 
-export interface FormData {
-    company: string;
-    contact: string;
-    email: string;
-    phone: string;
-    requirements: string;
-    deliveryLocation: string;
-    preferredDeliveryDate: string;
-}
-
-interface ShadQuotaProps {
-    isOpen: boolean;
-    onClose: () => void;
-    product: DealProduct | null;
-    initialQuantity: number;
-    formData: FormData;
-    onFormDataChange: (data: FormData) => void;
-    onSubmitQuote: (event: React.FormEvent) => void;
-    onQuantityChange: (quantity: number) => void;
-    calculateTotal: () => number;
-}
-
-const ShadQuota: React.FC<ShadQuotaProps> = ({
+const ShadQuota: React.FC<ShadQuotaPropsDto> = ({
     isOpen,
     onClose,
     product,
