@@ -2,33 +2,34 @@
 
 import React, { useState } from "react";
 import { ArrowRight } from "lucide-react";
+import storeImg from "../../../../public/store-img.jpg";
+import customerImg from "../../../../public/customer.jpg";
+import architectImg from "../../../../public/architect.jpg";
+import { StaticImageData } from 'next/image';
 
 interface ProjectItem {
-  image: string;
+  image: string | StaticImageData;
   name: string;
   description: string;
 }
 
 const projectItems: ProjectItem[] = [
   {
-    image:
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80",
-    name: "Seller",
+    image: storeImg,
+    name: "Seller / Shop",
     description:
       "If you have a store looking forward to sell your products navigate here.",
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80",
+    image: architectImg,
     name: "Architecture / Designer",
     description:
       "Are you an architurecture or an interior designer click here.",
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80",
-    name: "Ohter services",
-    description: "If you're not in any of the previous categories click here.",
+    image: customerImg,
+    name: "Customer",
+    description: "Looking for a construction product or services ?",
   },
 ];
 
@@ -42,7 +43,7 @@ export const ProjectShowcase: React.FC = () => {
           What type of pro are you?
         </h2>
         <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
-          Choose wha user you are so that we can help you.
+          Choose what client you are, so that we can help you.
         </p>
 
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-10">
@@ -58,7 +59,7 @@ export const ProjectShowcase: React.FC = () => {
                 className="absolute inset-0 transition-transform duration-700 ease-out transform 
                   group-hover:scale-110"
                 style={{
-                  backgroundImage: `url(${item.image})`,
+                  backgroundImage: `url(${typeof item.image === 'string' ? item.image : item.image.src})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}

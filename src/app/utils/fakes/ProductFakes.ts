@@ -279,7 +279,6 @@ export const categories = [
   'Safety Gear',
   'Electrical',
   'Plumbing',
-  'HVAC',
   'Finishing Materials'
 ];
 

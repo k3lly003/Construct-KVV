@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { Search, Star, ChevronLeft, ChevronRight, Heart } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Button from "../Button";
 import { initialProducts } from "../../utils/fakes/ProductFakes";
+import { ProductFilters } from "../product/ProductFilters";
 
 export const ShopProducts: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -41,39 +42,22 @@ export const ShopProducts: React.FC = () => {
         {/* Products Grid */}
         <div className="lg:col-span-3">
           {/* Filters */}
-          <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="relative flex-1">
-                <Search className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                />
-              </div>
-              <div className="flex items-center space-x-4">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                >
-                  <option value="featured">Featured</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="rating">Highest Rated</option>
-                </select>
-              </div>
-            </div>
-          </div>
+          <ProductFilters
+            // initialProducts={initialProducts}
+            searchTerm={searchTerm}
+            onSearchTermChange={setSearchTerm}
+            selectedCategory={selectedCategory}
+            onSelectedCategoryChange={setSelectedCategory}
+            sortBy={sortBy}
+            onSortByChange={setSortBy} initialProducts={[]} availableCategories={[]}
+          />
 
           {/* Products */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
+          <div className="flex flex-wrap gap-5 justify-center lg:flex lg:justify-start">
             {filteredProducts.map((product) => (
               <div
                 key={product.id}
-                className="bg-white overflow-hidden w-64 m-4 hover:shadow-lg hover:rounded-xl transition-shadow"
+                className="bg-white overflow-hidden w-64 m-2 hover:shadow-lg hover:rounded-xl transition-shadow"
               >
                 <div className="relative">
                   <Image

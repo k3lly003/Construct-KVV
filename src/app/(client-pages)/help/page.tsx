@@ -8,6 +8,8 @@ import GuidesSection from '../../(components)/help/GuideSection';
 import SearchBar from '../../(components)/help/Search';
 import { NextPage } from 'next';
 import DefaultPageBanner from '../../(components)/DefaultPageBanner';
+import { HelpData } from '../../utils/fakes/HelpFakes';
+
 
 const HelpPageContainer = styled.div`
   /* Base styles for the entire page */
@@ -18,12 +20,13 @@ const HelpPageContainer = styled.div`
 `;
 
 const page: NextPage = () => {
+  const {title, backgroundImage} = HelpData;
   return (
     <>
-      <DefaultPageBanner title="Help Center" backgroundImage={''} />
+      <DefaultPageBanner title={title} backgroundImage={backgroundImage} />
       <HelpPageContainer>
         <SearchBar />
-        <GuidesSection />
+        <GuidesSection backgroundImage={HelpData.backgroundImage} title={HelpData.title} guideData={[]} />
         <FaqSection />
         <ContactSection />
         {/* POTTENTIALLY ADD A "A QUICK LINK TO VISUAL GUIDE" */}

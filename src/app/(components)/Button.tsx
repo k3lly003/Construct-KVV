@@ -11,9 +11,9 @@ interface ButtonProp{
     border: string;
     padding: string;
     round: string;
-    handleButton: () => void;
+    handleButton: () => void | Promise<boolean>;
 }
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 const Button = ({text, texSize, hoverBg, borderCol, bgCol, textCol, border,padding, round, handleButton}: ButtonProp) => {
   return (
     <div>

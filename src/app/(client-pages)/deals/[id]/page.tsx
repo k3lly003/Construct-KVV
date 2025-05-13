@@ -40,8 +40,8 @@ const DealViewPage: React.FC<PaginatedProductGridProps> = ({}) => {
     <>
       <div className="container max-w-6xl mx-auto py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="rounded-xl overflow-hidden shadow-md">
-            <div className="flex justify-center py-2">
+          <div className="rounded-xl overflow-hidden border-2 shadow-md">
+            <div className="flex justify-center border">
               <Swiper
                 spaceBetween={10}
                 navigation={true}
@@ -59,7 +59,7 @@ const DealViewPage: React.FC<PaginatedProductGridProps> = ({}) => {
                         src={image}
                         alt={product.altText}
                         fill
-                        className="object-contain"
+                        className="object-cover"
                         onError={(e) => {
                           (e.currentTarget as HTMLImageElement).src =
                             "/product.png";

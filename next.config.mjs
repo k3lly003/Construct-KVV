@@ -17,7 +17,17 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com',
         port: ''
-      }
+      },
+      {
+        protocol: 'https',
+        hostname: 'https://unsplash.com',
+        port: ''
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.google.com',
+        port: ''
+      },
     ],
   }
 };

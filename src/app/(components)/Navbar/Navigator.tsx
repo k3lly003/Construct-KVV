@@ -44,7 +44,7 @@ export const Navbar: React.FC = () => {
               {navItems.map((item) => (
                 <div key={item.label} className="relative nav-menu">
                   <button
-                    className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
+                    className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900  border-transparent hover:border-gray-300"
                     onClick={(e) => handleMenuClick(item.label, e)}
                   >
                     {item.label}
@@ -57,11 +57,11 @@ export const Navbar: React.FC = () => {
 
                   {/* Dropdown menu */}
                   {activeMenu === item.label && item.items && (
-                    <div className="absolute left-0 z-10 mt-2 w-screen max-w-[1000px] bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+                    <div className="absolute left-0 z-10 mt-2 w-screen max-w-[780px] bg-white shadow-2xl">
                       <div className="grid grid-cols-4 gap-8 p-8">
                         {item.items.map((section) => (
                           <div key={section.title}>
-                            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
+                            <h3 className="text-sm font-semibold text-gray-900 w-full">
                               {section.title}
                             </h3>
                             <ul className="mt-4 space-y-4">
@@ -88,6 +88,12 @@ export const Navbar: React.FC = () => {
                   )}
                 </div>
               ))}
+              <Link
+                href="/deals"
+                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
+              >
+                Build your house
+              </Link>
               <Link
                 href="/deals"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"

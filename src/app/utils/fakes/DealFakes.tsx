@@ -3,12 +3,15 @@ import { ShieldCheck, TrendingUp, Truck } from "lucide-react";
 import { ReactNode } from 'react';
 
 interface Benefit {
+  backgroundImage: string;
   icon: ReactNode;
   title: string;
   description: string;
 }
 
 export const dealsHeaderData = {
+  backgroundImage: "./customer.jpg",
+  title:"Deals & Bids",
   header: "Bulk Deals & Custom Quotes",
   description: "Get competitive prices on bulk orders and custom requirements. Compare market rates and negotiate deals directly.",
   benefits: [

@@ -3,10 +3,10 @@ import { Building2, Mail, Phone, MapPin } from 'lucide-react';
 import Image from 'next/image';
 
 const constructionImages = [
-  "https://images.unsplash.com/photo-1590725140246-20acddc1fb82?auto=format&fit=crop&q=80&w=300",
+  "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=300",
   "https://images.unsplash.com/photo-1565008447742-97f6f38c985c?auto=format&fit=crop&q=80&w=300",
   "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=300",
-  "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=300"
+  "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=300",
 ];
 
 export const Footer: React.FC = () => {

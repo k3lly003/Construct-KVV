@@ -117,7 +117,7 @@ const TrustpilotSection: React.FC = () => {
 
   return (
     <ReviewsSection>
-      <Title>Why Buy From BuildDirect</Title>
+      <Title>Why Buy From Kvv Ltd</Title>
       <ReviewsContainer>
         <div>
             <h1>Great</h1>

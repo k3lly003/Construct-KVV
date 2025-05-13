@@ -6,13 +6,13 @@ import { Banner } from "../(components)/home/Banner";
 import { ProductCarousel } from "../(components)/home/bestDeals";
 import { ProjectShowcase } from "../(components)/home/ProjectAShowcase";
 import TrustpilotSection from "../(components)/home/ReviewGroup";
-import Product from "../(components)/Product";
+import {Products} from "../(components)/Product";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(false); // Start with false to match SSR
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    setIsLoading(true); // Now trigger loading on client side
+    setIsLoading(true);
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 2000);
@@ -21,13 +21,13 @@ export default function Home() {
   }, []);
 
   return (
-    <div>
+    <>
       {isLoading && <BrickLoader />}
       <Banner />
       <ProjectShowcase />
       <TrustpilotSection />
       <ProductCarousel />
-      <Product />
-    </div>
+      <Products/>
+    </>
   );
 }

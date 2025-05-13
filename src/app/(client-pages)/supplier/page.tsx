@@ -12,11 +12,11 @@ const page = () => {
   return (
     <>
       <ShopBanner/>
-      <div className='flex max-w-7xl mx-auto px-4 sm:px-6 lg:px-5 py-12'>
+      <div className='flex max-w-7xl mx-auto px-4 sm:px-6 lg:px-2 py-12'>
        <ContactInfo/>
        <div className='flex flex-col'>
        <ShopProducts/>
-        <Reviews reviews={[]}  />
+       <Reviews reviews={[]}  />
       </div>
       </div>
     </>

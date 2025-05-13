@@ -1,4 +1,6 @@
 import { CartItem } from "@/app/(components)/product/Cart";
+import { EmptyCartProps } from "../dtos/cart.dtos";
+import emptycart from '../../../../public/empty-cart.png' 
 
 export const initialCartItems: CartItem[] = [
   {
@@ -87,3 +89,10 @@ export const initialCartItems: CartItem[] = [
     weight: 2.3
   },
 ];
+
+export const emptyCart:EmptyCartProps ={
+  title: 'Cart',
+  subTitle: 'Your Shopping Cart is Empty!',
+  picture: emptycart,
+  btnText: 'Back to Store',
+}

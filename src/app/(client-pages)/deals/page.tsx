@@ -1,12 +1,13 @@
 import DealsPage from '../../(components)/deals/DealsPage'
 import DefaultPageBanner from '../../(components)/DefaultPageBanner'
-import React from 'react'
+import { dealsHeaderData } from "../../utils/fakes/DealFakes"
 
 const page = () => {
+  const { backgroundImage, title} = dealsHeaderData;
   return (
     <>
-     <DefaultPageBanner title="Deals & Bids" backgroundImage={''} />
-     <DealsPage/>
+     <DefaultPageBanner title={title} backgroundImage={backgroundImage} />
+     <DealsPage />
     </>
   )
 }

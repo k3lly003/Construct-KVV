@@ -1,15 +1,16 @@
 "use client"
 
 import React from 'react'
-// import Product from '../../(components)/Product'
+import { StoreData } from '../../utils/fakes/StoreFakes'
 import DefaultPageBanner from '../../(components)/DefaultPageBanner'
-import { ShopProducts } from '@/app/(components)/supplier/ShopProducts'
+import { Products } from '@/app/(components)/Product'
 
 const page = () => {
+  const { backgroundImage, title} = StoreData;
   return (
     <>
-      <DefaultPageBanner title="Products" backgroundImage={''} />
-      <ShopProducts/>
+      <DefaultPageBanner title={title} backgroundImage={backgroundImage} />
+      <Products/>
     </>
   )
 }
