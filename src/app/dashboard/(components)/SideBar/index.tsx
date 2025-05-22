@@ -7,10 +7,9 @@ import {
   Menu,
   LayoutDashboard,
   LogOut,
-  Package,
   CircleHelp,
   Settings,
-  Users,
+  Store,
   Tag,
   Layers,
   Bell,
@@ -19,6 +18,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 import CustomSheet from "../shad_/CustomSheet";
+import Image from "next/image";
+
 
 interface SidebarLinkProps {
   href: string;
@@ -37,7 +38,7 @@ const SidebarLink = ({
 SidebarLinkProps) => {
   const pathname = usePathname(); //This help use to know / determine which path / page or url we're on
   const isActive =
-    pathname === href || (pathname === "/" && href === "/myfiles");
+    pathname === href || (pathname === "/" && href === "/dashboard");
   return (
     <Link href={href}>
       <div
@@ -45,7 +46,7 @@ SidebarLinkProps) => {
           isCollapsed ? "justify-center py-4" : "justify-start px-8 py-4"
         }
        hover:text-white hover:bg-yellow-200 dark:hover:bg-yellow-500 gap-5 transition-colors ${
-         isActive ? "bg-green-200 text-red" : ""
+         isActive ? "bg-amber-200 text-black" : ""
        } hover:text-white`}
       >
         {/* I've put '!' to make it over ride any other css style */}
@@ -91,15 +92,21 @@ const SideBar = () => {
           isSidebarCollapsed ? "px-5" : "px-8"
         }`}
       >
-        <div>
-          <Package color="#6bc6ff" />
-        </div>
+          <Image
+            src="/favicon.ico"
+            alt="Logo"
+            width={40}
+            height={40}
+            className={`${
+              isSidebarCollapsed ? "hidden" : "block"
+            }`}
+          />
         <h1
           className={`${
             isSidebarCollapsed ? "hidden" : "block"
           } font-extrabold text-2xl`}
         >
-          Kvv Inventory
+          KMS
         </h1>
         <button
           className="md:hidden p-3 rounded-full hover:bg-blue-300 dark:hover:bg-blue-600"
@@ -113,35 +120,35 @@ const SideBar = () => {
         {/* DASHBOARD LINK */}
         <div className="mt-10">
           <SidebarLink
-            href="/"
+            href="/dashboard"
             icon={LayoutDashboard}
             label="Overview"
             isCollapsed={isSidebarCollapsed}
           />
 
           <SidebarLink
-            href="/products"
+            href="/dashboard/products"
             icon={Layers}
             label="Products"
             isCollapsed={isSidebarCollapsed}
           />
 
           <SidebarLink
-            href="/categories"
+            href="/dashboard/categories"
             icon={Tag}
             label="Categories"
             isCollapsed={isSidebarCollapsed}
           />
 
           <SidebarLink
-            href="/customers"
-            icon={Users}
-            label="Customers"
+            href="/dashboard/shops"
+            icon={Store}
+            label="Shops"
             isCollapsed={isSidebarCollapsed}
           />
 
           <SidebarLink
-            href="/notifications"
+            href="/dashboard/notifications"
             icon={Bell}
             label="Notifications"
             isCollapsed={isSidebarCollapsed}
@@ -150,13 +157,13 @@ const SideBar = () => {
         <hr className="border border-solid border-gray-300 my-10 w-[80%] flex self-center" />
         <div className="h-[70%]">
           <SidebarLink
-            href="/help"
+            href="/dashboard/guide"
             icon={CircleHelp}
-            label="Help"
+            label="Guide"
             isCollapsed={isSidebarCollapsed}
           />
           <SidebarLink
-            href="/settings"
+            href="/dashboard/settings"
             icon={Settings}
             label="Settings"
             isCollapsed={isSidebarCollapsed}
@@ -174,7 +181,7 @@ const SideBar = () => {
           className="md:hidden flex gap-3 cursor-pointer"
           onClick={handleOpenSheet}
         >
-          <div className="w-9 h-9 ml-7 p-5 bg-blue-100 rounded-full"></div>
+          <div className="w-9 h-9 ml-7 p-5 border rounded-full"></div>
           {isSheetOpen && (
             <CustomSheet
               open={<span className="font-semibold">Brice Ntiru</span>}

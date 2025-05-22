@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Building2, Save, Image, Plus, X } from 'lucide-react';
+import { Building2, Save, Images, Plus, X } from 'lucide-react';
 
 interface ShopFormData {
   name: string;
@@ -278,7 +278,7 @@ export const ShopProfileAdmin: React.FC = () => {
               
               <div className="flex items-center justify-center w-full">
                 <label className="w-64 flex flex-col items-center px-4 py-6 bg-white rounded-lg shadow-lg tracking-wide uppercase border border-blue-600 cursor-pointer hover:bg-blue-50 transition-colors">
-                  <Image className="w-8 h-8 text-blue-600" />
+                  <Images className="w-8 h-8 text-blue-600" />
                   <span className="mt-2 text-base leading-normal text-blue-600">Select a file</span>
                   <input type='file' className="hidden" accept="image/*" />
                 </label>

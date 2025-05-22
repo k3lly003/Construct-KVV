@@ -2,10 +2,14 @@
 import Image, { StaticImageData } from 'next/image';
 import React from 'react';
 import { FaStar } from 'react-icons/fa';
-import { ProductCardType, getAverageRating } from '../utils/fakes/ProductFakes';
+import { getAverageRating, ReviewType } from '../utils/fakes/ProductFakes';
 
-interface ProductCardProps extends ProductCardType {
- src: string | StaticImageData,
+interface ProductCardProps  {
+  productThumbnail: string | StaticImageData,
+  altText: string,
+  productName: string,
+  reviews: ReviewType[],
+  discountedPrice: number
 }
 
 const ProductCard = ({

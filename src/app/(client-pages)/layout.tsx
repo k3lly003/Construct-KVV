@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import "../globals.css";
 import { Navbar } from "../(components)/Navbar/Navigator";
 import { Footer } from "../(components)/footer/Footer";
+import ProgressBarProvider from "../progresiveBarProvider";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -16,7 +18,7 @@ import { Footer } from "../(components)/footer/Footer";
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | kvv shop',
+    template: 'kvv shop',
     default: 'kvv shop',
   },
   description: 'Welcome to the best construction e-commerce in Rwanda.',
@@ -37,9 +39,12 @@ export default function RootLayout({
       <meta property="og:image" content="/F9.jpeg" />
     </head>
     <body className="flex flex-col justify-start">
+      <ProgressBarProvider>
         <Navbar />
         {children}
         <Footer />
+      </ProgressBarProvider>
+      <SpeedInsights />
     </body>
   </html>
   );

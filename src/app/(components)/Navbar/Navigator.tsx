@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Building2, ChevronDown, ChevronUp, ShoppingCart } from "lucide-react";
 import { navItems } from "../../utils/fakes/NavFakes";
 import Link from "next/link";
+import FlagToggle from "./ToggleFlag";
 
 export const Navbar: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -89,7 +90,7 @@ export const Navbar: React.FC = () => {
                 </div>
               ))}
               <Link
-                href="/deals"
+                href="/build-house"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
               >
                 Build your house
@@ -129,6 +130,7 @@ export const Navbar: React.FC = () => {
                 Sign In
               </p>
             </Link>
+            <FlagToggle/>
           </div>
         </div>
       </div>

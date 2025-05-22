@@ -1,111 +1,37 @@
 // app/deals/[id]/page.tsx
 "use client";
 
-import React, { useState } from "react";
-import Image from "next/image";
+import React from "react";
+// import Image, { StaticImageData } from "next/image";
 import {
-  DealProduct,
+  // DealProduct,
   singleDealProduct,
   SingleDealProduct,
 } from "../../../utils/fakes/ProductFakes";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/free-mode";
-import "swiper/css/navigation";
-import "swiper/css/thumbs";
-import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import Specifications from "@/app/(components)/deals/Specifications";
 import Share from "@/app/(components)/deals/single-view/ShareBid";
 import DetailedSection from "@/app/(components)/deals/single-view/DetailedSection";
-import { DealProductDto } from "@/app/utils/dtos/deals.dtos";
+import ProductGallery from "@/app/(components)/product/ProductGallery";
+import DefaultPageBanner from "@/app/(components)/DefaultPageBanner";
+// import { DealProductDto } from "@/app/utils/dtos/deals.dtos";
 // import { PaginatedProductGridProps } from "@/app/(components)/deals/ProductSection";
 
-export interface PaginatedProductGridProps {
-  products: DealProduct[];
-  itemsPerPage: number;
-  onQuoteRequest: (product: DealProductDto) => void;
-}
-
-const DealViewPage: React.FC<PaginatedProductGridProps> = ({}) => {
-  const product: SingleDealProduct = singleDealProduct;
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
-  const allImages = [product.productThumbnail, ...product.imageSrc];
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleSwiper = (swiper: any) => {
-    setThumbsSwiper(swiper);
+export interface PageProps {
+   params: Promise<{id:string}>;
   };
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const DealViewPage: React.FC<PageProps> = ({params}) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const resolvedParams = React.use(params);
+  const product: SingleDealProduct = singleDealProduct;
 
   return (
     <>
+      <DefaultPageBanner backgroundImage="/architect.jpg" title={"Deals"}/>
       <div className="container max-w-6xl mx-auto py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="rounded-xl overflow-hidden border-2 shadow-md">
-            <div className="flex justify-center border">
-              <Swiper
-                spaceBetween={10}
-                navigation={true}
-                thumbs={{ swiper: thumbsSwiper }}
-                modules={[FreeMode, Navigation, Thumbs]}
-                className="rounded-lg min-w-[100%] box-border"
-              >
-                {allImages.map((image, index) => (
-                  <SwiperSlide
-                    key={index}
-                    className="w-[100%] rounded-lg shadow-lg"
-                  >
-                    <div className="relative w-full h-96">
-                      <Image
-                        src={image}
-                        alt={product.altText}
-                        fill
-                        className="object-cover"
-                        onError={(e) => {
-                          (e.currentTarget as HTMLImageElement).src =
-                            "/product.png";
-                        }}
-                      />
-                    </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </div>
-            <div className="w-full flex space-x-2 justify-start mt-3">
-              <div className="w-[100%] h-[5em] flex">
-                <Swiper
-                  onSwiper={handleSwiper}
-                  spaceBetween={10}
-                  slidesPerView={Math.min(allImages.length, 4)} // Display up to 4 thumbnails
-                  freeMode={true}
-                  watchSlidesProgress={true}
-                  modules={[FreeMode, Navigation, Thumbs]}
-                  className="min-w-[100%] max-h-[100px] mySwiper4"
-                >
-                  {allImages.map((image, index) => (
-                    <SwiperSlide
-                      key={index}
-                      className="opacity-[0.6] hover:opacity-100 transition-opacity cursor-pointer"
-                    >
-                      <div className="relative w-full h-full">
-                        <Image
-                          src={image}
-                          alt={`${product.altText} thumbnail ${index}`}
-                          fill
-                          className="object-cover rounded-md"
-                          onError={(e) => {
-                            (e.currentTarget as HTMLImageElement).src =
-                              "/product.png";
-                          }}
-                        />
-                      </div>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              </div>
-            </div>
-          </div>
-
-          {/* Details Section */}
+          <ProductGallery/>
           <DetailedSection />
         </div>
         <div className="my-5">
@@ -114,7 +40,7 @@ const DealViewPage: React.FC<PaginatedProductGridProps> = ({}) => {
         <hr className="my-10 border-1" />
         <div className="mt-10">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            Product Features
+            Additonal Features
           </h2>
           <ul className="list-disc list-inside text-gray-600">
             {product.features.map((feature) => (

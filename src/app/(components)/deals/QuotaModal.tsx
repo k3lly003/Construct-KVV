@@ -45,7 +45,7 @@ const ShadQuota: React.FC<ShadQuotaPropsDto> = ({
                     <div className="bg-gray-50 rounded-lg p-4 mb-6">
                         <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center">
-                                <Calculator className="h-5 w-5 text-blue-500 mr-2" />
+                                <Calculator className="h-5 w-5 text-amber-500 mr-2" />
                                 <span className="font-medium">Price Calculator</span>
                             </div>
                             <div className="text-sm text-gray-500">
@@ -70,8 +70,8 @@ const ShadQuota: React.FC<ShadQuotaPropsDto> = ({
                                 <div className="block text-sm font-medium text-gray-700 mb-1">
                                     Total Estimate
                                 </div>
-                                <div className="text-2xl font-bold text-blue-600">
-                                    ${calculateTotal().toLocaleString()}
+                                <div className="text-2xl font-bold text-amber-500">
+                                    {calculateTotal().toLocaleString()} Rfw
                                 </div>
                             </div>
                         </div>
@@ -169,7 +169,7 @@ const ShadQuota: React.FC<ShadQuotaPropsDto> = ({
                         <Button type="button" variant="outline" onClick={onClose}>
                             Cancel
                         </Button>
-                        <Button type="submit" disabled={initialQuantity < product.minOrder}>
+                        <Button type="submit" disabled={initialQuantity < product.minOrder} className='border-1 border-amber-500 hover:bg-amber-500 hover:text-white text-amber-500 bg-white'>
                             <Send className="h-4 w-4 mr-2" />
                             Submit Quote Request
                         </Button>

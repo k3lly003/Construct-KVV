@@ -28,6 +28,16 @@ const nextConfig = {
         hostname: 'www.google.com',
         port: ''
       },
+      {
+        protocol: 'https',
+        hostname: 'images.pexels.com',
+        port: ''
+      },
+      {
+        protocol: 'https',
+        hostname: 'source.unsplash.com',
+        pathname: '/random/**'
+      },
     ],
   }
 };

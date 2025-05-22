@@ -5,12 +5,12 @@ import Image from "next/image";
 import { Package, Clock, BadgeCheck } from "lucide-react";
 import ReactPaginate from "react-paginate";
 import Button from "../Button";
-import type { DealProduct } from "../../utils/fakes/ProductFakes";
+import type { DealProductDto } from "../../utils/dtos/deals.dtos";
 
 export interface PaginatedProductGridProps {
-  products: DealProduct[];
+  products: DealProductDto[];
   itemsPerPage: number;
-  onQuoteRequest: (product: DealProduct) => void;
+  onQuoteRequest: (product: DealProductDto) => void;
 }
 
 const PaginatedProductGrid: React.FC<PaginatedProductGridProps> = ({
@@ -39,7 +39,7 @@ const PaginatedProductGrid: React.FC<PaginatedProductGridProps> = ({
             <div className="relative">
               <div className="w-full h-56 bg-gray-100 flex items-center justify-center">
                 <Image
-                  src={product.image}
+                  src={product.productThumbnail || 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80'}
                   alt="Waterproof Laminate Flooring"
                   width={100}
                   height={100}
@@ -57,7 +57,7 @@ const PaginatedProductGrid: React.FC<PaginatedProductGridProps> = ({
                 </h3>
                 <div className="flex flex-col">
                   <p className="font-semibold text-lg text-yellow-400">
-                    {product.basePrice}
+                    {product.price}
                     <span className="text-sm text-yellow-400"> Rwf</span>
                   </p>
                 </div>

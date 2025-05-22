@@ -8,6 +8,7 @@ import user2 from "../../../../public/user2.jpeg"
 import user3 from "../../../../public/user3.jpeg"
 import user4 from "../../../../public/user4.jpeg"
 import { StaticImageData } from 'next/image';
+import { DealProductDto } from "../dtos/deals.dtos"
 
 // utils/fakes/fakeProductData.ts
 export interface ReviewType {
@@ -138,7 +139,7 @@ export interface DealProduct {
   minOrder: number;
   description?: string;
   unit: string;
-  image: string;
+  image: string | StaticImageData;
   marketPrice: number;
   availability: "In Stock" | "Made to Order" | "Limited Stock";
   leadTime: string;
@@ -146,13 +147,14 @@ export interface DealProduct {
   certifications: string[];
 }
 
-export const singleDealProduct = {
+export const singleDealProduct : DealProductDto = {
   id: "single-product-1",
   name: "Victoria Waterproof Laminate Flooring",
+  category: "Flooring",
   productThumbnail: jacket01,
   imageSrc: [jacket02, jacket03, jacket04],
   availability: "In Stock",
-  basePrice: 2000,
+  price: 3000,
   unit: "sq ft",
   description:
     "Experience the beauty and durability of Victoria Waterproof Laminate Flooring. Perfect for any room in your home, this Sea Salt style offers a light and airy feel while providing superior water resistance. Easy to install and maintain, it's a smart choice for busy households.",
@@ -173,18 +175,17 @@ export const singleDealProduct = {
 
 export type SingleDealProduct = typeof singleDealProduct;
 
-export const sampleProducts: DealProduct[] = [
+export const sampleProducts: DealProductDto[] = [
   {
     id: '1',
     name: 'Premium Structural Steel Beams',
     category: 'Building Materials',
-    basePrice: 7500,
+    price: 7500,
     minOrder: 50,
     description:
       'Our Premium Structural Steel Beams are engineered for robust and lasting construction. Manufactured to Grade A36/SS400 standards, these hot-rolled H-beams are available in lengths from 6 to 12 meters, providing versatile solutions for various structural applications. Certified with ISO 9001:2015, CE, and ASTM compliance, they ensure reliability and adherence to international quality benchmarks.',
     unit: 'tons',
-    image: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80',
-    marketPrice: 920,
+    productThumbnail: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&q=80',
     availability: 'Made to Order',
     leadTime: '15-20 days',
     features: ['Grade: A36/SS400', 'Length: 6-12m', 'Surface: Hot Rolled', 'Type: H-Beam'],
@@ -194,13 +195,12 @@ export const sampleProducts: DealProduct[] = [
     id: '2',
     name: 'Bulk Construction Cement',
     category: 'Building Materials',
-    basePrice: 5000,
+    price: 5000,
     minOrder: 100,
     description:
       'This Bulk Construction Cement is a Portland Type, Grade 43 cement ideal for a wide range of building projects. It features a standard setting time and is supplied in durable 50kg packaging. Holding BIS certification and compliant with EN 197-1 standards, this cement guarantees quality and performance for your construction needs.',
     unit: 'bags',
-    image: 'https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?auto=format&fit=crop&q=80',
-    marketPrice: 145,
+    productThumbnail: 'https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?auto=format&fit=crop&q=80',
     availability: 'In Stock',
     leadTime: '2-5 days',
     features: ['Type: Portland', 'Grade: 43', 'Setting Time: Standard', 'Packaging: 50kg'],
@@ -210,13 +210,12 @@ export const sampleProducts: DealProduct[] = [
     id: '3',
     name: 'Industrial Concrete Mixer',
     category: 'Equipment',
-    basePrice: 3200,
+    price: 3200,
     minOrder: 1,
     description:
       'The Industrial Concrete Mixer is a robust and mobile unit designed for efficient concrete preparation on construction sites. With a 350L capacity and powered by a 2.2kW motor, it operates at a drum speed of 22rpm. This mixer is CE certified and manufactured under ISO 9001:2015 quality management, ensuring durability and reliable performance.',
     unit: 'units',
-    image: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&q=80',
-    marketPrice: 3500,
+    productThumbnail: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&q=80',
     availability: 'Limited Stock',
     leadTime: '7-10 days',
     features: ['Capacity: 350L', 'Power: 2.2kW', 'Drum Speed: 22rpm', 'Mobile Type'],
@@ -226,13 +225,12 @@ export const sampleProducts: DealProduct[] = [
     id: '4',
     name: 'Heavy-Duty Scaffolding System',
     category: 'Equipment',
-    basePrice: 10000,
+    price: 10000,
     minOrder: 20,
     description:
       'Our Heavy-Duty Scaffolding System provides a safe and sturdy platform for construction work. Each set reaches a height of 2 meters and can support loads up to 450kg. Constructed from galvanized steel for enhanced durability and corrosion resistance, the system is designed for easy assembly. It complies with EN 12810-1 standards and is manufactured under ISO 9001:2015 certification.',
     unit: 'sets',
-    image: 'https://images.unsplash.com/photo-1590644178374-fb40b06b2481?auto=format&fit=crop&q=80',
-    marketPrice: 520,
+    productThumbnail: 'https://images.unsplash.com/photo-1590644178374-fb40b06b2481?auto=format&fit=crop&q=80',
     availability: 'In Stock',
     leadTime: '3-5 days',
     features: ['Height: 2m', 'Load Capacity: 450kg', 'Material: Galvanized Steel', 'Easy Assembly'],
@@ -242,13 +240,12 @@ export const sampleProducts: DealProduct[] = [
     id: '5',
     name: 'Reinforcement Steel Bars',
     category: 'Building Materials',
-    basePrice: 6800,
+    price: 6800,
     minOrder: 30,
     description:
       'These Reinforcement Steel Bars (Rebar) are crucial for strengthening concrete structures. Manufactured to Grade Fe500, they come in diameters ranging from 8 to 32mm and a standard length of 12 meters. The ribbed surface ensures excellent bonding with concrete. These steel bars are certified according to IS 1786:2008 and ISO 9001:2015 standards, guaranteeing high tensile strength and quality.',
     unit: 'tons',
-    image: 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&q=80',
-    marketPrice: 750,
+    productThumbnail: 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?auto=format&fit=crop&q=80',
     availability: 'In Stock',
     leadTime: '5-7 days',
     features: ['Grade: Fe500', 'Diameter: 8-32mm', 'Length: 12m', 'Ribbed Surface'],
@@ -258,13 +255,12 @@ export const sampleProducts: DealProduct[] = [
     id: '6',
     name: 'Industrial Generator Set',
     category: 'Equipment',
-    basePrice: 8500,
+    price: 8500,
     minOrder: 1,
     description:
       'The Industrial Generator Set is a reliable power solution for various industrial and commercial applications. With a power output of 100kVA and operating at 415V and 50Hz, this diesel-powered generator ensures a stable power supply. It is manufactured in compliance with ISO 8528 and CE certifications, assuring performance and safety.',
     unit: 'units',
-    image: 'https://images.unsplash.com/photo-1513828583688-c52646db42da?auto=format&fit=crop&q=80',
-    marketPrice: 9200,
+    productThumbnail: 'https://images.unsplash.com/photo-1513828583688-c52646db42da?auto=format&fit=crop&q=80',
     availability: 'Made to Order',
     leadTime: '20-25 days',
     features: ['Power: 100kVA', 'Voltage: 415V', 'Frequency: 50Hz', 'Diesel Powered'],
@@ -290,8 +286,8 @@ export const initialProducts: Product[] = [
     category: "Building Materials",
     originalPrice: 13500,
     stock: 500,
-    imageSrc:
-      "https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?auto=format&fit=crop&q=80",
+    imageSrc:"https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?auto=format&fit=crop&q=80",
+    altText: "Cement",
     rating: "4.7",
     reviews: 128,
     description:
@@ -304,8 +300,8 @@ export const initialProducts: Product[] = [
     category: "Tools & Equipment",
     originalPrice: 19000,
     stock: 50,
-    imageSrc:
-      "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?auto=format&fit=crop&q=80",
+    imageSrc:"https://images.unsplash.com/photo-1572981779307-38b8cabb2407?auto=format&fit=crop&q=80",
+    altText: "Drill",
     rating: "4.9",
     reviews: 89,
     description:
@@ -320,7 +316,8 @@ export const initialProducts: Product[] = [
     stock: 200,
     imageSrc:
       "https://images.unsplash.com/photo-1578874691223-64558a3ca096?auto=format&fit=crop&q=80",
-    rating: "4.8",
+    altText: "Gear",
+      rating: "4.8",
     reviews: 156,
     description:
       "Type 1 hard hat with 4-point suspension and comfortable padding.",
@@ -339,7 +336,8 @@ export const initialProducts: Product[] = [
     stock: 75,
     imageSrc:
       "https://images.unsplash.com/photo-1556132208-beefd277390a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=MwMjA3fDB8MHxzZWFyY2h8Mnx8SW5kdXN0cmlhbCUyMExFRHxlbnwwfHwwfHx8MA%3D%3D",
-    rating: "4.6",
+    altText: "LED",
+      rating: "4.6",
     reviews: 42,
     description:
       "High-output LED floodlight perfect for construction sites and outdoor areas.",
@@ -358,6 +356,7 @@ export const initialProducts: Product[] = [
     stock: 1000,
     imageSrc:
       "https://images.unsplash.com/photo-1616621859311-19dff47afafc?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=MwMjA3fDB8MHxzZWFyY2h8Mnx8UmVpbmZvcmNlZCUyMENvbmNyZXRlJTIwUmViYXJ8ZW58MHx8MHx8fDA%3D",
+    altText: "Rebar",
     rating: "4.5",
     reviews: 67,
     description:
@@ -377,6 +376,7 @@ export const initialProducts: Product[] = [
     stock: 35,
     imageSrc:
       "https://images.unsplash.com/photo-1657095544219-6328434702a8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=MwMjA3fDB8MHxzZWFyY2h8OHx8Q29yZGxlc3MlMjBDaXJjdWxhciUyMFNhd3xlbnwwfHwwfHx8MA%3D%3D",
+    altText: "Saw",
     rating: "4.7",
     reviews: 51,
     description:
@@ -396,6 +396,7 @@ export const initialProducts: Product[] = [
     stock: 300,
     imageSrc:
       "https://images.unsplash.com/photo-1644308411047-bd8947ec39e2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=MwMjA3fDB8MHxzZWFyY2h8MTV8fHdvcmtlciUyMGdsb3Zlc3xlbnwwfHwwfHx8MA%3D%3D",
+    altText: "Gloves",
     rating: "4.6",
     reviews: 92,
     description:
@@ -415,6 +416,7 @@ export const initialProducts: Product[] = [
     stock: 60,
     imageSrc:
       "https://images.unsplash.com/photo-1597766380552-36f5c673637a?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=MwMjA3fDB8MHxzZWFyY2h8OHx8RWxlY3RyaWNhbCUyMFdpcmluZyUyMEtpdHxlbnwwfHwwfHx8MA%3D%3D",
+    altText: "Wiring",
     rating: "4.4",
     reviews: 38,
     description:
@@ -434,6 +436,7 @@ export const initialProducts: Product[] = [
     stock: 150,
     imageSrc:
       "https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?auto=format&fit=crop&q=80",
+    altText: "Roll",
     rating: "4.7",
     reviews: 78,
     description:

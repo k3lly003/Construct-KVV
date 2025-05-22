@@ -7,7 +7,7 @@ import React from "react";
 const page = () => {
   return (
     <>
-      <DefaultPageBanner title="Cart" backgroundImage={"https://unsplash.com/photos/man-in-yellow-shirt-and-blue-denim-jeans-jumping-on-brown-wooden-railings-under-blue-and-X1P1_EDNnok" }/>
+      <DefaultPageBanner title="Cart" backgroundImage={"./support.webp"}/>
       <main className="container mx-auto py-8">
         <div className="mx-auto">
           <CartPage />

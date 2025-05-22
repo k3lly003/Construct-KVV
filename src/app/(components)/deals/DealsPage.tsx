@@ -48,10 +48,6 @@ const Page: React.FC = () => {
         selectedCategory === "All Products" ||
         product.category === selectedCategory;
       return matchesSearch && matchesCategory;
-    })
-    .sort((a, b) => {
-      if (sortBy === "name") return a.name.localeCompare(b.name);
-      return a[sortBy] - b[sortBy];
     });
   // -----------------------------------------------------------------------------
 
@@ -65,7 +61,7 @@ const Page: React.FC = () => {
 
   const calculateTotal = () => {
     if (!selectedProduct || quantity < selectedProduct.minOrder) return 0;
-    let price = selectedProduct.basePrice;
+    let price = selectedProduct.price ?? 0;
 
     // Volume discount tiers
     if (quantity >= selectedProduct.minOrder * 5) {

@@ -37,14 +37,14 @@ const Navbar = () => {
     <div className='flex justify-between items-center w-full mb-7'>
         {/* LEFT SIDE */}
         <div className='flex justify-between items-center gap-5'>
-            <button className='px-3 py-3 bg-gray-200 rounded-full hover:bg-blue-100' onClick={toogleSidebar}>
+            <button className='px-3 py-3 rounded-full text-muted-foreground border hover:cursor-pointer' onClick={toogleSidebar}>
                 <Menu className='w-4 h-4'/>
             </button>
         </div>
-        <div className='hidden md:flex w-50 md:w-80 border-2 border-gray-300 bg-white rounded-lg focus:outline-none focus:border-blue-500'>
-            <input type="search" placeholder='type to search ...' className='px-4 w-full py-2 dark:bg-gray-300' />
-            <div className='relative insert-y-0 left-0 px-3 flex items-center pointer-events-non w-12 dark:bg-gray-300'>
-              <Search className='text-gray-500 dark:bg-gray-300' size={20} />
+        <div className='hidden md:flex w-50 md:w-80 border-2 e rounded-lg focus:outline-none focus:border-blue-500'>
+            <input type="search" placeholder='type to search ...' className='px-4 w-full py-2 text-muted-foreground' />
+            <div className='relative insert-y-0 left-0 px-3 flex items-center pointer-events-non w-12'>
+              <Search className='text-muted-foreground' size={20} />
             </div>
         </div>
         {/* RIGHT SIDE */}

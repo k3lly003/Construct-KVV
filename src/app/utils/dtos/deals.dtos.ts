@@ -1,3 +1,5 @@
+import { StaticImageData } from "next/image";
+
 export interface SpecificationItem {
     label: string;
     value: string | number | boolean;
@@ -28,16 +30,26 @@ export interface SpecificationsProps {
 export interface DealProductDto {
   id: string;
   name: string;
-  category: string;
-  basePrice: number;
+  category?: string;
+  price?: number;
   minOrder: number;
   unit: string;
-  image: string;
-  marketPrice: number;
+  imageSrc?: string[] | StaticImageData[];
   availability: "In Stock" | "Made to Order" | "Limited Stock";
   leadTime: string;
   features: string[];
   certifications: string[];
+  description?: string; // Optional, likely only on the single view
+  saleInfo?: { // Optional, for products on sale
+    onSale: boolean;
+    originalPrice?: number;
+    discountPercentage?: number;
+    offerEnds?: string;
+  };
+  selectedStyle?: string;
+  availableStyles?: string[];
+  altText?: string;
+  productThumbnail?: string | StaticImageData; // Optional, might be the same as 'image' for listings
 }
 
 export interface FormDataDto {

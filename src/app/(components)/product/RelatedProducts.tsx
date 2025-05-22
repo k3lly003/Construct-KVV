@@ -10,7 +10,7 @@ const RelatedProducts = () => {
         {fakeProductCards.length > 0 ? (
           fakeProductCards.map((product) => (
             <div key={product.id} className="min-w-[250px] flex-shrink-0">
-              <ProductCard src={''} {...product} />
+              <ProductCard {...product} />
             </div>
           ))
         ) : (

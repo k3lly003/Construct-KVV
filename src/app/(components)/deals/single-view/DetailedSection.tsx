@@ -1,19 +1,14 @@
-"use client"
+"use client";
 
 import { BadgeCheck, Clock, FolderOpen, Package } from "lucide-react";
 import React, { useState } from "react";
 import Button from "../../Button";
-// import { PaginatedProductGridProps } from "@/app/(client-pages)/deals/[id]/page";
-import {
-  // DealProduct,
-  SingleDealProduct,
-  singleDealProduct,
-} from "@/app/utils/fakes/ProductFakes";
+import { singleDealProduct } from "@/app/utils/fakes/ProductFakes";
 import QuoteFormModal from "../../../(components)/deals/QuotaModal";
 import { DealProductDto, FormDataDto } from "@/app/utils/dtos/deals.dtos";
 
 const DetailedSection: React.FC = () => {
-  const product: SingleDealProduct = singleDealProduct;
+  const product: DealProductDto = singleDealProduct;
 
   const [quantity, setQuantity] = useState<number>(0);
   const [selectedProduct, setSelectedProduct] = useState<DealProductDto | null>(
@@ -36,7 +31,7 @@ const DetailedSection: React.FC = () => {
 
   const calculateTotal = () => {
     if (!selectedProduct || quantity < selectedProduct.minOrder) return 0;
-    let price = selectedProduct.basePrice;
+    let price = selectedProduct.price ?? 0;
 
     // Volume discount tiers
     if (quantity >= selectedProduct.minOrder * 5) {
@@ -77,15 +72,15 @@ const DetailedSection: React.FC = () => {
   };
   return (
     <>
-      <div className="flex flex-col justify-between">
+      <div className="flex flex-col gap-5 py-5">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-800 mb-2">
+          <h1 className="text-3xl font-semibold text-gray-800 mb-2">
             {product.name}
           </h1>
           <div className="flex items-center mb-2">
             <FolderOpen className="h-5 w-5 text-yellow-400 mr-1" />
             <p className="text-md text-gray-500 ml-2">
-              <span className="text-green-400">15 </span>Placed Bids
+              <span className="text-green-400">15</span> Placed Bids
             </p>
           </div>
           {/* ... rest of the details section ... */}
@@ -93,7 +88,7 @@ const DetailedSection: React.FC = () => {
             {product.saleInfo?.onSale ? (
               <>
                 <p className="font-semibold text-xl text-green-500 mr-2">
-                  {product.basePrice.toFixed(0)}Rwf
+                  {product.price?.toFixed(0)}Rwf
                 </p>
                 <p className="text-red-500 line-through mr-2">
                   Was {product.saleInfo.originalPrice?.toFixed(0)}Rwf
@@ -111,7 +106,7 @@ const DetailedSection: React.FC = () => {
               </>
             ) : (
               <p className="font-semibold text-xl text-yellow-400">
-                ${product.basePrice.toFixed(2)} / {product.unit}
+                ${product.price?.toFixed(2)} / {product.unit}
               </p>
             )}
           </div>
@@ -119,7 +114,7 @@ const DetailedSection: React.FC = () => {
           <div className="mb-4">
             <h3 className="text-lg font-semibold text-gray-700 mb-1">Style:</h3>
             <div className="flex items-center gap-2">
-              {product.availableStyles.map((style) => (
+              {product.availableStyles?.map((style) => (
                 <button
                   key={style}
                   className={`px-3 py-1 rounded-md text-sm border ${
@@ -155,18 +150,18 @@ const DetailedSection: React.FC = () => {
         </div>
 
         {/* Action Buttons */}
-          <Button
-            text={"Request Quote"}
-            texSize={"text-sm"}
-            hoverBg={"bg-amber-500"}
-            borderCol={"border-0"}
-            bgCol={"bg-amber-400"}
-            textCol={"text-white"}
-            border={"border-1"}
-            handleButton={() => (handleQuoteRequest)}
-            padding={"p-3"}
-            round={"rounded-md"}
-          />
+        <Button
+          text={"Request Quote"}
+          texSize={"text-sm"}
+          hoverBg={"bg-amber-500"}
+          borderCol={"border-0"}
+          bgCol={"bg-amber-400"}
+          textCol={"text-white"}
+          border={"border-1"}
+          handleButton={() => handleQuoteRequest(product)} // Call handleQuoteRequest with the current product
+          padding={"p-3"}
+          round={"rounded-md"}
+        />
         {/* QUOTE MODEL */}
         <QuoteFormModal
           isOpen={showQuoteForm}
