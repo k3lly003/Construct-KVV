@@ -2,14 +2,160 @@
 
 import React, { useState } from "react";
 import { Building2, ChevronDown, ChevronUp, ShoppingCart } from "lucide-react";
-import { navItems } from "../../utils/fakes/NavFakes";
+import { navItems, NavItem } from "../../utils/fakes/NavFakes";
 import Link from "next/link";
-import FlagToggle from "./ToggleFlag";
+import FlagToggle from "../../(components)/Navbar/ToggleFlag";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronRight } from 'lucide-react';
 
-export const Navbar: React.FC = () => {
+interface ThirdLevelItemProps {
+  item: { name: string; href?: string };
+}
+
+const ThirdLevelItem: React.FC<ThirdLevelItemProps> = ({ item }) => (
+  <li key={item.name}>
+    {item.href ? (
+      <Link
+        href={item.href}
+        className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-100"
+      >
+        {item.name}
+      </Link>
+    ) : (
+      <span className="block px-4 py-2 text-sm text-gray-600">{item.name}</span>
+    )}
+  </li>
+);
+
+interface SecondLevelItemProps {
+  item: {
+    name: string;
+    href?: string;
+    subItems?: { name: string; href?: string }[];
+  };
+}
+
+const SecondLevelItem: React.FC<SecondLevelItemProps> = ({ item }) => {
+  const [showSubMenu, setShowSubMenu] = useState(false);
+
+  return (
+    <li
+      key={item.name}
+      className="relative group"
+      onMouseEnter={() => setShowSubMenu(true)}
+      onMouseLeave={() => setShowSubMenu(false)}
+    >
+      {item.href ? (
+        <Link
+          href={item.href}
+          className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 group-hover:text-gray-900 flex justify-between items-center"
+        >
+          {item.name}
+          {item.subItems && item.subItems.length > 0 && (
+            <ChevronRight className="ml-2 h-4 w-4 text-gray-400 group-hover:text-gray-600" />
+          )}
+        </Link>
+      ) : (
+        <div className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 group-hover:text-gray-900 flex justify-between items-center">
+          {item.name}
+          {item.subItems && item.subItems.length > 0 && (
+            <ChevronRight className="ml-2 h-4 w-4 text-gray-400 group-hover:text-gray-600" />
+          )}
+        </div>
+      )}
+      <AnimatePresence>
+        {showSubMenu && item.subItems && item.subItems.length > 0 && (
+          <motion.ul
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.15, ease: "easeInOut" }}
+            className="absolute left-full top-0 z-20 bg-white shadow-md rounded-md w-48"
+          >
+            {item.subItems.map((subItem) => (
+              <ThirdLevelItem key={subItem.name} item={subItem} />
+            ))}
+          </motion.ul>
+        )}
+      </AnimatePresence>
+    </li>
+  );
+};
+
+interface FirstLevelSectionProps {
+  section: {
+    title: string;
+    items: {
+      name: string;
+      href?: string;
+      subItems?: { name: string; href?: string }[];
+    }[];
+  };
+}
+
+const FirstLevelSection: React.FC<FirstLevelSectionProps> = ({ section }) => (
+  <div key={section.title}>
+    <h3 className="text-sm font-semibold text-gray-900 w-full py-2">
+      {section.title}
+    </h3>
+    <ul className="mt-2 space-y-1">
+      {section.items.map((secondLevelItem) => (
+        <SecondLevelItem key={secondLevelItem.name} item={secondLevelItem} />
+      ))}
+    </ul>
+  </div>
+);
+
+interface MenuItemProps {
+  item: NavItem;
+  activeMenu: string | null;
+  handleMenuClick: (label: string, event: React.MouseEvent) => void;
+}
+
+const MenuItem: React.FC<MenuItemProps> = ({
+  item,
+  activeMenu,
+  handleMenuClick,
+}) => {
+  return (
+    <div key={item.label} className="relative nav-menu">
+      <button
+        className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
+        onClick={(e) => handleMenuClick(item.label, e)}
+      >
+        {item.label}
+        {activeMenu === item.label ? (
+          <ChevronUp className="ml-1 h-4 w-4 transition-transform duration-200" />
+        ) : (
+          <ChevronDown className="ml-1 h-4 w-4 transition-transform duration-200" />
+        )}
+      </button>
+
+      {/* First level dropdown menu */}
+      <AnimatePresence>
+        {activeMenu === item.label && item.items && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="absolute left-0 z-10 mt-2 w-screen max-w-[780px] bg-white shadow-2xl"
+          >
+            <div className="grid grid-cols-3 gap-8 p-8">
+              {item.items.map((firstLevelSection) => (
+                <FirstLevelSection key={firstLevelSection.title} section={firstLevelSection} />
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+const Navbar: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
-  // Close menus when clicking outside
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
@@ -43,51 +189,12 @@ export const Navbar: React.FC = () => {
             {/* Main navigation */}
             <div className="hidden md:ml-6 md:flex md:space-x-8">
               {navItems.map((item) => (
-                <div key={item.label} className="relative nav-menu">
-                  <button
-                    className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900  border-transparent hover:border-gray-300"
-                    onClick={(e) => handleMenuClick(item.label, e)}
-                  >
-                    {item.label}
-                    {activeMenu === item.label ? (
-                      <ChevronUp className="ml-1 h-4 w-4 transition-transform duration-200" />
-                    ) : (
-                      <ChevronDown className="ml-1 h-4 w-4 transition-transform duration-200" />
-                    )}
-                  </button>
-
-                  {/* Dropdown menu */}
-                  {activeMenu === item.label && item.items && (
-                    <div className="absolute left-0 z-10 mt-2 w-screen max-w-[780px] bg-white shadow-2xl">
-                      <div className="grid grid-cols-4 gap-8 p-8">
-                        {item.items.map((section) => (
-                          <div key={section.title}>
-                            <h3 className="text-sm font-semibold text-gray-900 w-full">
-                              {section.title}
-                            </h3>
-                            <ul className="mt-4 space-y-4">
-                              {section.items.map((subItem) => (
-                                <li key={subItem.name} className="relative">
-                                  <a
-                                    href="#"
-                                    className="group flex items-center text-sm text-gray-600 hover:text-gray-900"
-                                  >
-                                    {subItem.name}
-                                    {subItem.isPopular && (
-                                      <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
-                                        Popular
-                                      </span>
-                                    )}
-                                  </a>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
+                <MenuItem
+                  key={item.label}
+                  item={item}
+                  activeMenu={activeMenu}
+                  handleMenuClick={handleMenuClick}
+                />
               ))}
               <Link
                 href="/build-house"
@@ -95,18 +202,19 @@ export const Navbar: React.FC = () => {
               >
                 Build your house
               </Link>
-              <Link
-                href="/deals"
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
-              >
-                Deals
-              </Link>
 
               <Link
                 href="/store"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
               >
                 Store
+              </Link>
+
+              <Link
+                href="/shops"
+                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
+              >
+                Shops
               </Link>
             </div>
           </div>
@@ -130,10 +238,12 @@ export const Navbar: React.FC = () => {
                 Sign In
               </p>
             </Link>
-            <FlagToggle/>
+            <FlagToggle />
           </div>
         </div>
       </div>
     </nav>
   );
 };
+
+export default Navbar;
