@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const GoogleCallback = () => {
+const GoogleCallbackClient = () => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -47,5 +47,11 @@ const GoogleCallback = () => {
     </div>
   );
 };
+
+import dynamic from 'next/dynamic';
+
+const GoogleCallback = dynamic(() => Promise.resolve(GoogleCallbackClient), {
+  ssr: false,
+});
 
 export default GoogleCallback;
