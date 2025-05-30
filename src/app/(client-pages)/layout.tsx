@@ -1,15 +1,12 @@
+
+
 import type { Metadata } from "next";
-// import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import Navbar from "../(components)/Navbar/Navigator";
 import { Footer } from "../(components)/footer/Footer";
 import ProgressBarProvider from "../progresiveBarProvider";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
+import { UserStoreInitializer } from '../../store/userStore';
 
 // const geistMono = Geist_Mono({
 //   variable: "--font-geist-mono",
@@ -23,6 +20,7 @@ export const metadata: Metadata = {
   },
   description: 'Welcome to the best construction e-commerce in Rwanda.',
 };
+
 
 export default function RootLayout({
   children,
@@ -39,6 +37,7 @@ export default function RootLayout({
       <meta property="og:image" content="/F9.jpeg" />
     </head>
     <body className="flex flex-col justify-start">
+      <UserStoreInitializer />
       <ProgressBarProvider>
         <Navbar />
         {children}

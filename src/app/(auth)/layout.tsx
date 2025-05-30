@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 // import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
-import Navbar from "../(components)/Navbar/Navigator";
 
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | kvv shop',
+    template: '%s | kvv shop signup',
     default: 'kvv shop',
   },
   description: 'Welcome to the best construction e-commerce in Rwanda.',
@@ -27,7 +26,6 @@ export default function RootLayout({
       <meta property="og:image" content="/F9.jpeg" />
     </head>
     <body className="flex flex-col justify-start">
-        <Navbar />
         {children}
     </body>
   </html>

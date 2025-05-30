@@ -6,7 +6,10 @@ import { navItems, NavItem } from "../../utils/fakes/NavFakes";
 import Link from "next/link";
 import FlagToggle from "../../(components)/Navbar/ToggleFlag";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight } from "lucide-react";
+import Profile from "./Profile";
+import { useUserStore } from "../../../store/userStore";
+import CustomerProfile from "./CustomerProfile";
 
 interface ThirdLevelItemProps {
   item: { name: string; href?: string };
@@ -48,7 +51,7 @@ const SecondLevelItem: React.FC<SecondLevelItemProps> = ({ item }) => {
       {item.href ? (
         <Link
           href={item.href}
-          className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 group-hover:text-gray-900 flex justify-between items-center"
+          className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 group-hover:text-gray-900 flex justify-between items-center"
         >
           {item.name}
           {item.subItems && item.subItems.length > 0 && (
@@ -56,7 +59,7 @@ const SecondLevelItem: React.FC<SecondLevelItemProps> = ({ item }) => {
           )}
         </Link>
       ) : (
-        <div className="block px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 group-hover:text-gray-900 flex justify-between items-center">
+        <div className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 group-hover:text-gray-900 flex justify-between items-center">
           {item.name}
           {item.subItems && item.subItems.length > 0 && (
             <ChevronRight className="ml-2 h-4 w-4 text-gray-400 group-hover:text-gray-600" />
@@ -143,7 +146,10 @@ const MenuItem: React.FC<MenuItemProps> = ({
           >
             <div className="grid grid-cols-3 gap-8 p-8">
               {item.items.map((firstLevelSection) => (
-                <FirstLevelSection key={firstLevelSection.title} section={firstLevelSection} />
+                <FirstLevelSection
+                  key={firstLevelSection.title}
+                  section={firstLevelSection}
+                />
               ))}
             </div>
           </motion.div>
@@ -155,6 +161,9 @@ const MenuItem: React.FC<MenuItemProps> = ({
 
 const Navbar: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
+
+  // Get user data from Zustand store
+  const { role: userRole, name: userName, email: userEmail } = useUserStore();
 
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -238,6 +247,15 @@ const Navbar: React.FC = () => {
                 Sign In
               </p>
             </Link>
+            {userRole === "ADMIN" || userRole === "SELLER" ? (
+              <Profile
+                NK={""}
+                userName={userName || ""}
+                userEmail={userEmail || ""}
+              />
+            ) : (
+              <CustomerProfile NK={""} userName={userName || ""} userEmail={userEmail || ""} />
+            )}
             <FlagToggle />
           </div>
         </div>

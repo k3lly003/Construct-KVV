@@ -6,9 +6,8 @@ import { Banner } from "../(components)/home/Banner";
 import { ProductCarousel } from "../(components)/home/bestDeals";
 import { ProjectShowcase } from "../(components)/home/ProjectAShowcase";
 import { Products } from "../(components)/Product";
-import { reviewsData } from "../utils/fakes/HomeFakes";
-import ReviewCarousel from "../(components)/home/ReviewCarousel";
-// import TestimonialCarousel from "../(components)/home/TestimonialCarousel";
+// import { reviewsData } from "../utils/fakes/HomeFakes";
+// import ReviewCarousel from "../(components)/home/ReviewCarousel";
 
 export default function Home() {
   // const [isLoading, setIsLoading] = useState(false);
@@ -27,12 +26,8 @@ export default function Home() {
       {/* {isLoading && <BrickLoader />} */}
       <Banner />
       <ProjectShowcase />
-      {/* <TrustpilotSection /> */}
-      {/* <div className="flex flex-col items-center justify-center min-h-screen py-2">
-        <h1 className="text-3xl font-bold mb-8">What Our Clients Say</h1>
-        <TestimonialCarousel />
-      </div> */}
-      <ReviewCarousel reviews={reviewsData} />
+      {/* UN-COMMENT THIS REVIEW ONCE THE TOOL HAVE GOME MANY REVIEW */}
+      {/* <ReviewCarousel reviews={reviewsData} /> */}
       <ProductCarousel />
       <Products />
     </>
