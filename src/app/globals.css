@@ -126,79 +126,23 @@ body {
 }
 
 
-/* swipe */
-.swiper {
-  width: 100%;
-  height: 50%;
+/* In globals.css or a dedicated CSS file */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
 }
 
-.swiper-slide {
-  text-align: center;
-  font-size: 18px;
-  background: #fff;
-
-  /* Center slide text vertically */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
 }
 
-.swiper-slide img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
 }
 
-.swiper {
-  /* Down */
-  width: 50%;
-  height: 300px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.swiper-slide {
-  width: 100%;
-  background-size: fit;
-  background-position: center;
-}
-
-.mySwiper {
-  /* low division */
-  width: 100%;
-  height:100%;
-  box-sizing: border-box;
-}
-
-.mySwiper .swiper-slide {
-  /* low single img card */
-  width: 25%;
-  height: 50%;
-  opacity: 0.4;
-}
-.mySwiper2 {
-  /* high division */
-  width: 100%;
-  display: block;
-  object-fit: cover;
-}
-
-.mySwiper .swiper-slide-thumb-active {
-  opacity: 1;
-}
-.mySwiper4 .swiper-slide-thumb-active {
-  opacity: 1;
-}
-
-.mySwiper4 .swiper-slide-thumb-active {
-  opacity: 1;
-}
-.swiper-slide img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 .overflow {

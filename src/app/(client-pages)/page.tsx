@@ -1,5 +1,6 @@
 "use client";
 
+import ChatWidget from "../(components)/chat/ChatWidget";
 // import { useSuseEffect } from "react";
 // import { BrickLoader } from "../(components)/BrickLoader";
 import { Banner } from "../(components)/home/Banner";
@@ -28,6 +29,7 @@ export default function Home() {
       <ProjectShowcase />
       {/* UN-COMMENT THIS REVIEW ONCE THE TOOL HAVE GOME MANY REVIEW */}
       {/* <ReviewCarousel reviews={reviewsData} /> */}
+      <ChatWidget/>
       <ProductCarousel />
       <Products />
     </>
