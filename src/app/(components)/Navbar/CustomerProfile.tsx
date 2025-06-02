@@ -1,3 +1,4 @@
+"use client"
 
 import {
   DropdownMenu,
@@ -13,13 +14,19 @@ import { LayoutDashboard, LogOut } from "lucide-react";
 import Link from "next/link";
 
 
+
 interface profileProps{
   NK: string;
   userName: string;
   userEmail: string;
 }
 const CustomerProfile = ({NK, userEmail, userName}:profileProps) => {
-  
+    const logOutHandle = () => {
+    localStorage.clear();
+    window.location.href = '/signin'; 
+    
+    console.log("Local storage cleared. User logged out.");
+  };
 
   return (
     <>
@@ -48,7 +55,7 @@ const CustomerProfile = ({NK, userEmail, userName}:profileProps) => {
             </DropdownMenuItem>
           </Link>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="hover:text-red-600">
+          <DropdownMenuItem onClick ={logOutHandle} className="hover:text-red-600">
             <LogOut className="hover:text-red-600" />
             Log out
           </DropdownMenuItem>

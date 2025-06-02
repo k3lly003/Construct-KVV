@@ -1,7 +1,6 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { BackgroundBeams } from "../../../components/ui/background-beams";
-import { useState } from "react";
 import { Mail, Eye, EyeOff, ArrowLeft, UserRound } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { IoLogoFacebook } from "react-icons/io5";
@@ -9,82 +8,114 @@ import Image from "next/image";
 import Link from "next/link";
 import ContactAddress from "../../(components)/sections/ContactAddress";
 import { useRouter } from "next/navigation";
+import { Toaster, toast } from "sonner";
+import { z } from "zod";
+import axios from "axios";
+
+// Zod validation for signup
+const signupSchema = z.object({
+  first_name: z.string().min(2, "First name is required"),
+  second_name: z.string().min(2, "Second name is required"),
+  email: z.string().email("Please enter a valid email"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+});
 
 const Page = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [first_name, setFirst_name] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [second_name, setSecond_name] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [error, setError] = useState<string | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState<boolean>(false);
+  const [errors, setErrors] = useState<{
+    first_name?: string;
+    second_name?: string;
+    email?: string;
+    password?: string;
+  }>({});
 
   const router = useRouter();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleSignUp = async (e: React.FormEvent) => {
-    setError(null); // Clear any previous errors
-    setLoading(true); // Indicate loading state
-
-    try {
-      const response = await fetch("/api/login", {
-        // Replace with your actual login API endpoint
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+    e.preventDefault();
+    setErrors({});
+    // Validate with zod
+    const result = signupSchema.safeParse({
+      first_name,
+      second_name,
+      email,
+      password,
+    });
+    if (!result.success) {
+      const fieldErrors: {
+        first_name?: string;
+        second_name?: string;
+        email?: string;
+        password?: string;
+      } = {};
+      result.error.errors.forEach((err) => {
+        if (err.path[0] === "first_name") fieldErrors.first_name = err.message;
+        if (err.path[0] === "second_name") fieldErrors.second_name = err.message;
+        if (err.path[0] === "email") fieldErrors.email = err.message;
+        if (err.path[0] === "password") fieldErrors.password = err.message;
       });
+      setErrors(fieldErrors);
+      toast.error("Please fix the requirements and try again.");
+      return;
+    }
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Login failed");
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        "https://construct-kvv-bn-fork.onrender.com/api/v1/user/register",
+        {
+          firstName: first_name,
+          lastName: second_name,
+          email: email,
+          password: password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = response.data;
+      // Store the authentication token if present
+      if (data.data?.token) {
+        localStorage.setItem("authToken", data.data.token);
       }
-
-      const data = await response.json();
-      // Assuming your backend returns a token or user data upon successful login
-      console.log("Login successful:", data);
-
-      // --- Add your post-login logic here ---
-      // 1. Store the authentication token (e.g., in localStorage or a secure cookie)
-      localStorage.setItem("authToken", data.token);
-
-      // 2. Redirect the user to a dashboard or home page
-
-      router.push("/dashboard");
-
-      // 3. Update global application state (e.g., user context)
-      //    If you have a user context, you would update it here
-      // setUser(data.user);
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if (data.data?.user) {
+        localStorage.setItem("user", JSON.stringify(data.data.user));
+      }
+      toast.success("Signup successful!");
+      router.push("/signin");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.error("Login error:", err);
-      setError(err.message || "An unexpected error occurred during login.");
+      if (axios.isAxiosError(err)) {
+        toast.error(
+          err.response?.data?.message ||
+            "An unexpected error occurred during signup."
+        );
+      } else {
+        toast.error("An unexpected error occurred during signup.");
+      }
     } finally {
-      setLoading(false); // End loading state
+      setLoading(false);
     }
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  const togglePasswordVisibility = () => setShowPassword((v) => !v);
 
-  // *********************************************************************************
-
-  // LOGIN WITH SOCIAL MEDIA LOGICS
   const handleGoogleLogin = () => {
-    // Redirect the user to the backend Google OAuth flow
     window.location.href =
       "https://construct-kvv-bn-fork.onrender.com/api/v1/auth/google";
   };
 
   return (
     <>
+      <Toaster richColors />
       <div className="min-h-screen bg-black flex justify-center items-center">
         <div className="z-20 bg-black shadow-2xl rounded-sx overflow-hidden flex w-full max-w-5xl">
           {/* Left Side: Sign Up Form */}
@@ -97,7 +128,7 @@ const Page = () => {
             </div>
             <div className="mb-6">
               <h2 className="text-lg font-semibold text-gray-800 my-2">
-                Sign-In
+                Sign-Up
               </h2>
               <p className="text-gray-600">
                 Create your account to get started.
@@ -107,47 +138,57 @@ const Page = () => {
               <div className="flex gap-2">
                 <div className="mb-4 w-[50%]">
                   <label
-                    htmlFor="name"
+                    htmlFor="first_name"
                     className="block text-gray-700 text-sm font-bold mb-2"
                   >
                     First Name
                   </label>
                   <div className="relative">
                     <input
-                      type="first_name"
+                      type="text"
                       id="first_name"
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                        errors.first_name ? "border-red-500" : ""
+                      }`}
                       placeholder="your first name"
                       value={first_name}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => setFirst_name(e.target.value)}
                     />
                     <UserRound
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                       size={16}
                     />
                   </div>
+                  {errors.first_name && (
+                    <p className="text-red-500 text-xs mt-1">{errors.first_name}</p>
+                  )}
                 </div>
                 <div className="mb-4 w-[50%]">
                   <label
-                    htmlFor="name"
+                    htmlFor="second_name"
                     className="block text-gray-700 text-sm font-bold mb-2"
                   >
                     Second Name
                   </label>
                   <div className="relative">
                     <input
-                      type="second_name"
+                      type="text"
                       id="second_name"
-                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                        errors.second_name ? "border-red-500" : ""
+                      }`}
                       placeholder="your second name"
                       value={second_name}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => setSecond_name(e.target.value)}
                     />
                     <UserRound
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                       size={16}
                     />
                   </div>
+                  {errors.second_name && (
+                    <p className="text-red-500 text-xs mt-1">{errors.second_name}</p>
+                  )}
                 </div>
               </div>
               <div className="mb-4">
@@ -161,7 +202,9 @@ const Page = () => {
                   <input
                     type="email"
                     id="email"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                      errors.email ? "border-red-500" : ""
+                    }`}
                     placeholder="you@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -171,6 +214,9 @@ const Page = () => {
                     size={16}
                   />
                 </div>
+                {errors.email && (
+                  <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                )}
               </div>
               <div className="mb-6">
                 <label
@@ -183,7 +229,9 @@ const Page = () => {
                   <input
                     type={showPassword ? "text" : "password"}
                     id="password"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline ${
+                      errors.password ? "border-red-500" : ""
+                    }`}
                     placeholder="********"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -198,6 +246,9 @@ const Page = () => {
                 <p className="text-gray-600 text-xs italic">
                   Minimum 8 characters
                 </p>
+                {errors.password && (
+                  <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                )}
               </div>
               <div className="flex items-center justify-between mb-4">
                 <label className="flex items-center text-gray-700 text-sm">
@@ -217,8 +268,9 @@ const Page = () => {
               <button
                 className="bg-amber-500 hover:bg-amber-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
                 type="submit"
+                disabled={loading}
               >
-                Sign Up
+                {loading ? "Signing Up..." : "Sign Up"}
               </button>
             </form>
             <div className="mt-6 border-t pt-6">

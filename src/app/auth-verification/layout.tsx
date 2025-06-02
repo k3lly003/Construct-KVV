@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "../globals.css";
 import ProgressBarProvider from "../progresiveBarProvider";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Suspense } from "react";
 
 
 export const metadata: Metadata = {
@@ -27,9 +28,11 @@ export default function RootLayout({
       <meta property="og:image" content="/F9.jpeg" />
     </head>
     <body className="flex flex-col justify-start">
+      <Suspense fallback={<div>Loading...</div>}>
       <ProgressBarProvider>
         {children}
       </ProgressBarProvider>
+      </Suspense>
       <SpeedInsights />
     </body>
   </html>

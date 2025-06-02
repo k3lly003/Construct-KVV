@@ -13,12 +13,16 @@ import {
   Tag,
   Layers,
   Bell,
+  User, // New icon for Profile
+  DollarSign, // New icon for Sales Report
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomSheet from "../shad_/CustomSheet";
 import Image from "next/image";
+import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
+import { useRouter } from 'next/navigation';
 
 
 interface SidebarLinkProps {
@@ -45,9 +49,9 @@ SidebarLinkProps) => {
         className={`cursor-pointer flex items-center ${
           isCollapsed ? "justify-center py-4" : "justify-start px-8 py-4"
         }
-       hover:text-white hover:bg-yellow-200 dark:hover:bg-yellow-500 gap-5 transition-colors ${
-         isActive ? "bg-amber-200 text-black" : ""
-       } hover:text-white`}
+        hover:text-white hover:bg-yellow-200 dark:hover:bg-yellow-500 gap-5 transition-colors ${
+          isActive ? "bg-amber-200 text-black" : ""
+        } hover:text-white`}
       >
         {/* I've put '!' to make it over ride any other css style */}
         <Icon className="w-6 h-6 !text-gray-700 dark:!text-gray-500" />
@@ -65,10 +69,15 @@ SidebarLinkProps) => {
 
 const SideBar = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const isSidebarCollapsed = useAppSelector(
     (state) => state.global.isSidebarCollapsed
   );
+
+  const USER = getUserDataFromLocalStorage();
+  const userRole = USER ? USER.role : null;
+  const isLoggedIn = !!USER;
 
   const toogleSidebar = () => {
     dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
@@ -84,23 +93,32 @@ const SideBar = () => {
     isSidebarCollapsed ? "w-0 md:w-16" : "w-72 md:w-64"
   }transition-all duration-500 overflow-hidden h-full shadow-md dark:shadow-2xl`;
 
+  // If the user is not logged in, you might want to render nothing or a very basic sidebar.
+  // For a dashboard sidebar, typically it's hidden if not logged in.
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push('/signin');
+    }
+  }, [isLoggedIn, router]);
+
   return (
     <div className={sidebarClassName}>
       {/* TOP LOGO */}
-      <div
+      <Link href="/">
+        <div
         className={`flex gap-3 justify-between md:justify-normal items-center pt-8 ${
           isSidebarCollapsed ? "px-5" : "px-8"
         }`}
       >
-          <Image
-            src="/favicon.ico"
-            alt="Logo"
-            width={40}
-            height={40}
-            className={`${
-              isSidebarCollapsed ? "hidden" : "block"
-            }`}
-          />
+        <Image
+          src="/favicon.ico"
+          alt="Logo"
+          width={40}
+          height={40}
+          className={`${
+            isSidebarCollapsed ? "hidden" : "block"
+          }`}
+        />
         <h1
           className={`${
             isSidebarCollapsed ? "hidden" : "block"
@@ -114,10 +132,11 @@ const SideBar = () => {
         >
           <Menu className="w-4 h-4" size={24} />
         </button>
-      </div>
+        </div>
+      </Link>
       {/* LINKS */}
       <div className="flex-grow mt-8 flex flex-col">
-        {/* DASHBOARD LINK */}
+        {/* DASHBOARD LINK (Common) */}
         <div className="mt-10">
           <SidebarLink
             href="/dashboard"
@@ -133,19 +152,40 @@ const SideBar = () => {
             isCollapsed={isSidebarCollapsed}
           />
 
-          <SidebarLink
-            href="/dashboard/categories"
-            icon={Tag}
-            label="Categories"
-            isCollapsed={isSidebarCollapsed}
-          />
+          {/* Role-specific links */}
+          {userRole === "ADMIN" && (
+            <>
+              <SidebarLink
+                href="/dashboard/shops"
+                icon={Store}
+                label="Shops"
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/categories"
+                icon={Tag}
+                label="Categories"
+                isCollapsed={isSidebarCollapsed}
+              />
+            </>
+          )}
 
-          <SidebarLink
-            href="/dashboard/shops"
-            icon={Store}
-            label="Shops"
-            isCollapsed={isSidebarCollapsed}
-          />
+          {userRole === "SELLER" && (
+            <>
+              <SidebarLink
+                href="/dashboard/profile" // Assuming profile path for sellers
+                icon={User}
+                label="Profile"
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/sales-report" // Assuming sales report path for sellers
+                icon={DollarSign}
+                label="Sales Report"
+                isCollapsed={isSidebarCollapsed}
+              />
+            </>
+          )}
 
           <SidebarLink
             href="/dashboard/notifications"
@@ -156,12 +196,24 @@ const SideBar = () => {
         </div>
         <hr className="border border-solid border-gray-300 my-10 w-[80%] flex self-center" />
         <div className="h-[70%]">
-          <SidebarLink
-            href="/dashboard/guide"
-            icon={CircleHelp}
-            label="Guide"
-            isCollapsed={isSidebarCollapsed}
-          />
+          {/* Role-specific Guide/Support link */}
+          {userRole === "ADMIN" && (
+            <SidebarLink
+              href="/dashboard/guide"
+              icon={CircleHelp}
+              label="Guide"
+              isCollapsed={isSidebarCollapsed}
+            />
+          )}
+          {userRole === "SELLER" && (
+            <SidebarLink
+              href="/dashboard/support" // Assuming a support page for sellers
+              icon={CircleHelp} // Using CircleHelp for support
+              label="Support"
+              isCollapsed={isSidebarCollapsed}
+            />
+          )}
+
           <SidebarLink
             href="/dashboard/settings"
             icon={Settings}

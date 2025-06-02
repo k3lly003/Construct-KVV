@@ -1,95 +1,103 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { BackgroundBeams } from "../../../components/ui/background-beams";
-import { useState } from "react";
 import { Mail, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { IoLogoFacebook } from "react-icons/io5";
 import Image from "next/image";
 import Link from "next/link";
 import ContactAddress from "../../(components)/sections/ContactAddress";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
+import { Toaster, toast } from "sonner";
+import { z } from "zod";
+
+// Zod validation
+const loginSchema = z.object({
+  email: z.string().email("Please enter a valid email"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+});
 
 const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [error, setError] = useState<string | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState<boolean>(false);
-
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {}
+  );
   const router = useRouter();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleSignIn = async (e: React.FormEvent) => {
-    setError(null); // Clear any previous errors
-    setLoading(true); // Indicate loading state
+  e.preventDefault();
+  setErrors({});
+  // Validate with zod
+  const result = loginSchema.safeParse({ email, password });
+  if (!result.success) {
+    const fieldErrors: { email?: string; password?: string } = {};
+    result.error.errors.forEach((err) => {
+      if (err.path[0] === "email") fieldErrors.email = err.message;
+      if (err.path[0] === "password") fieldErrors.password = err.message;
+    });
+    setErrors(fieldErrors);
+    toast.error("Please fix the requirements and try again.");
+    return;
+  }
 
-    try {
-      const response = await fetch('/api/login', { // Replace with your actual login API endpoint
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+  setLoading(true);
+  try {
+    const response = await fetch(
+      "https://construct-kvv-bn-fork.onrender.com/api/v1/user/login",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Login failed');
       }
+    );
 
-      const data = await response.json();
-      // Assuming your backend returns a token or user data upon successful login
-      console.log('Login successful:', data);
+    const responseData = await response.json();
 
-      // --- Add your post-login logic here ---
-      // 1. Store the authentication token (e.g., in localStorage or a secure cookie)
-      localStorage.setItem('authToken', data.token);
-
-      // 2. Redirect the user to a dashboard or home page
-      
-      router.push('/dashboard');
-
-      // 3. Update global application state (e.g., user context)
-      //    If you have a user context, you would update it here
-      // setUser(data.user);
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      console.error('Login error:', err);
-      setError(err.message || 'An unexpected error occurred during login.');
-    } finally {
-      setLoading(false); // End loading state
+    if (!response.ok) {
+      throw new Error(responseData.message || "Login failed");
     }
-  };
+    const { token, user } = responseData.data; 
+    // Store token and user data in localStorage
+    if (token) {
+      localStorage.setItem("authToken", token);
+    }
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    }
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-  
-  // *********************************************************************************
+    toast.success("Login successful!");
+    // Comment out navigation for debugging
+    router.push("/");
 
-  // LOGIN WITH SOCIAL MEDIA LOGICS 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    toast.error(err.message || "An unexpected error occurred during login.");
+    console.error("Login error:", err);
+  } finally {
+    setLoading(false);
+  }
+};
+
+  const togglePasswordVisibility = () => setShowPassword((v) => !v);
+
   const handleGoogleLogin = () => {
-    // Redirect the user to the backend Google OAuth flow
     window.location.href =
       "https://construct-kvv-bn-fork.onrender.com/api/v1/auth/google";
   };
 
   return (
     <>
+      <Toaster richColors />
       <div className="min-h-screen bg-black flex justify-center items-center">
         <div className="z-20 bg-black shadow-2xl rounded-sx overflow-hidden flex w-full max-w-5xl">
           {/* Left Side: Sign Up Form */}
           <div className="p-8 w-1/2">
             <div className="text-amber-800 flex gap-5 items-center mb-8">
               <ArrowLeft />
-              <Link
-                href="/"
-                className="text-2xl font-semibold"
-              >
+              <Link href="/" className="text-2xl font-semibold">
                 Construction Kvv
               </Link>
             </div>
@@ -113,7 +121,9 @@ const Page = () => {
                   <input
                     type="email"
                     id="email"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                      errors.email ? "border-red-500" : ""
+                    }`}
                     placeholder="you@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -123,6 +133,9 @@ const Page = () => {
                     size={16}
                   />
                 </div>
+                {errors.email && (
+                  <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                )}
               </div>
               <div className="mb-6">
                 <label
@@ -135,7 +148,9 @@ const Page = () => {
                   <input
                     type={showPassword ? "text" : "password"}
                     id="password"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline ${
+                      errors.password ? "border-red-500" : ""
+                    }`}
                     placeholder="********"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -150,6 +165,9 @@ const Page = () => {
                 <p className="text-gray-600 text-xs italic">
                   Minimum 8 characters
                 </p>
+                {errors.password && (
+                  <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                )}
               </div>
               <div className="flex items-center justify-between mb-4">
                 <label className="flex items-center text-gray-700 text-sm">
@@ -169,8 +187,9 @@ const Page = () => {
               <button
                 className="bg-amber-500 hover:bg-amber-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
                 type="submit"
+                disabled={loading}
               >
-                Sign In
+                {loading ? "Signing In..." : "Sign In"}
               </button>
             </form>
             <div className="mt-6 border-t pt-6">
@@ -178,7 +197,10 @@ const Page = () => {
                 Or sign in with
               </p>
               <div className="flex justify-center space-x-4">
-                <button onClick={handleGoogleLogin} className="bg-white border text-gray-700 font-semibold py-2 px-4 rounded hover:bg-amber-400 hover:border-amber-400 hover:text-white flex items-center cursor-pointer">
+                <button
+                  onClick={handleGoogleLogin}
+                  className="bg-white border text-gray-700 font-semibold py-2 px-4 rounded hover:bg-amber-400 hover:border-amber-400 hover:text-white flex items-center cursor-pointer"
+                >
                   <FcGoogle className="mr-2" />
                   Google
                 </button>

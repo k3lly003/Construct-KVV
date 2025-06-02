@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // Import useEffect
 import { Building2, ChevronDown, ChevronUp, ShoppingCart } from "lucide-react";
 import { navItems, NavItem } from "../../utils/fakes/NavFakes";
 import Link from "next/link";
@@ -10,6 +10,9 @@ import { ChevronRight } from "lucide-react";
 import Profile from "./Profile";
 import { useUserStore } from "../../../store/userStore";
 import CustomerProfile from "./CustomerProfile";
+import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
+
+// REMOVE this line: const USER = getUserDataFromLocalStorage();
 
 interface ThirdLevelItemProps {
   item: { name: string; href?: string };
@@ -161,11 +164,18 @@ const MenuItem: React.FC<MenuItemProps> = ({
 
 const Navbar: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false); // New state to track if on client
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [localUserData, setLocalUserData] = useState<any>(null); // New state for local user data
 
   // Get user data from Zustand store
   const { role: userRole, name: userName, email: userEmail } = useUserStore();
 
-  React.useEffect(() => {
+  useEffect(() => {
+    // This code only runs on the client after hydration
+    setIsClient(true);
+    setLocalUserData(getUserDataFromLocalStorage());
+
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (!target.closest(".nav-menu")) {
@@ -242,19 +252,29 @@ const Navbar: React.FC = () => {
             >
               <ShoppingCart />
             </Link>
-            <Link href="/signin" className="border-l-1">
-              <p className="pl-5 px-4 py-2 hover:text-yellow-400 font-medium">
-                Sign In
-              </p>
-            </Link>
-            {userRole === "ADMIN" || userRole === "SELLER" ? (
-              <Profile
-                NK={""}
-                userName={userName || ""}
-                userEmail={userEmail || ""}
-              />
-            ) : (
-              <CustomerProfile NK={""} userName={userName || ""} userEmail={userEmail || ""} />
+            {/* Conditionally render based on isClient and localUserData */}
+            {isClient && (
+              localUserData ? (
+                userRole === "ADMIN" || userRole === "SELLER" ? (
+                  <Profile
+                    NK={""}
+                    userName={userName || ""}
+                    userEmail={userEmail || ""}
+                  />
+                ) : (
+                  <CustomerProfile
+                    NK={""}
+                    userName={userName || ""}
+                    userEmail={userEmail || ""}
+                  />
+                )
+              ) : (
+                <Link href="/signin" className="border-l-1">
+                  <p className="pl-5 px-4 py-2 hover:text-yellow-400 font-medium">
+                    Sign In
+                  </p>
+                </Link>
+              )
             )}
             <FlagToggle />
           </div>

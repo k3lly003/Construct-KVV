@@ -1,15 +1,15 @@
-import DealsPage from '../../(components)/deals/DealsPage'
-import DefaultPageBanner from '../../(components)/DefaultPageBanner'
-import { dealsHeaderData } from "../../utils/fakes/DealFakes"
+import DealsPage from "../../(components)/deals/DealsPage";
+import DefaultPageBanner from "../../(components)/DefaultPageBanner";
+import { dealsHeaderData } from "../../utils/fakes/DealFakes";
 
 const page = () => {
-  const { backgroundImage, title} = dealsHeaderData;
+  const { backgroundImage, title } = dealsHeaderData;
   return (
     <>
-     <DefaultPageBanner title={title} backgroundImage={backgroundImage} />
-     <DealsPage />
+        <DefaultPageBanner title={title} backgroundImage={backgroundImage} />
+        <DealsPage />
     </>
-  )
-}
+  );
+};
 
-export default page
+export default page;

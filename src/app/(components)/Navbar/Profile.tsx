@@ -1,3 +1,4 @@
+"use client"
 
 import {
   DropdownMenu,
@@ -20,6 +21,15 @@ interface profileProps{
 }
 const Profile = ({NK, userEmail, userName}:profileProps) => {
   
+  const logOutHandle = () => {
+  localStorage.clear();
+  // Optional: Redirect the user to the login page or home page after logging out
+  window.location.href = '/signin'; 
+  // or 
+  // window.location.reload(); // Reloads the page to clear any in-memory state
+  
+  console.log("Local storage cleared. User logged out.");
+};
 
   return (
     <>
@@ -48,7 +58,7 @@ const Profile = ({NK, userEmail, userName}:profileProps) => {
             </DropdownMenuItem>
           </Link>
           <DropdownMenuSeparator />
-          <DropdownMenuItem className="hover:text-red-600">
+          <DropdownMenuItem onClick ={logOutHandle} className="hover:text-red-600">
             <LogOut className="hover:text-red-600" />
             Log out
           </DropdownMenuItem>
