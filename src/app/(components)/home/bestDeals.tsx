@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { ChevronRight, ChevronLeft, Heart, Star } from "lucide-react";
-import Button from "../Button";
+import { Button } from "../Button";
 import { featuredProductData } from "@/app/utils/fakes/ProductFakes";
 
 export const ProductCarousel: React.FC = () => {

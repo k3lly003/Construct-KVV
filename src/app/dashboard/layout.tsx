@@ -3,7 +3,8 @@ import { Inter } from "next/font/google";
 import "../globals.css";
 import DashboardWrapper from "./dashboardWrapper";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { UserStoreInitializer } from '../../store/userStore';
+import { UserStoreInitializer } from "../../store/userStore";
+import { QueryProviders } from "../provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,10 +21,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-         <UserStoreInitializer />
-       <DashboardWrapper>{children}</DashboardWrapper> 
-       <SpeedInsights /> 
-      </body> 
+        <QueryProviders>
+          <UserStoreInitializer />
+          <DashboardWrapper>{children}</DashboardWrapper>
+          <SpeedInsights />
+        </QueryProviders>
+      </body>
     </html>
   );
 }

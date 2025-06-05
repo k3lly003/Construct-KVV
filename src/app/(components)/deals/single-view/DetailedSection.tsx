@@ -2,7 +2,7 @@
 
 import { BadgeCheck, Clock, FolderOpen, Package } from "lucide-react";
 import React, { useState } from "react";
-import Button from "../../Button";
+import { Button } from "../../Button";
 import { singleDealProduct } from "@/app/utils/fakes/ProductFakes";
 import QuoteFormModal from "../../../(components)/deals/QuotaModal";
 import { DealProductDto, FormDataDto } from "@/app/utils/dtos/deals.dtos";

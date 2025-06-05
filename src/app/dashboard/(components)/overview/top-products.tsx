@@ -12,7 +12,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { GenericButton } from "@/components/ui/generic-button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   DropdownMenu,
@@ -191,14 +191,14 @@ export const TopProducts = () => {
           <h1 className="text-2xl font-semibold">Orders Management</h1>
         </div>
         <div className="space-x-2">
-          <Button variant="outline">
+          <GenericButton variant="outline">
             <Upload className="h-4 w-4 mr-2" />
             Export
-          </Button>
-          <Button>
+          </GenericButton>
+          <GenericButton>
             <Plus className="h-4 w-4" />
             Add new product
-          </Button>
+          </GenericButton>
         </div>
       </div>
 
@@ -214,10 +214,10 @@ export const TopProducts = () => {
         <div className="flex items-center space-x-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
+              <GenericButton variant="outline" size="sm">
                 <Funnel className="h-4 w-4 mr-2" />
                 Filter <ChevronDown className="h-4 w-4 ml-2" />
-              </Button>
+              </GenericButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[200px]">
               <DropdownMenuItem>Filter by Name</DropdownMenuItem>
@@ -303,3 +303,4 @@ export const TopProducts = () => {
     </div>
   );
 };
+

@@ -9,7 +9,7 @@ import {
   TableHead,
   TableCell,
 } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
+import { GenericButton } from "@/components/ui/generic-button";
 import { Input } from '@/components/ui/input';
 import {
   DropdownMenu,
@@ -202,10 +202,10 @@ const CategoriesTablePage = () => {
         <h1 className="text-2xl font-semibold">Product Categories</h1>
         <Dialog open={openAddDialog} onOpenChange={setOpenAddDialog}>
           <DialogTrigger asChild>
-            <Button>
+            <GenericButton>
               <Plus className="h-4 w-4 mr-2" />
               Add Category
-            </Button>
+            </GenericButton>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
@@ -234,24 +234,24 @@ const CategoriesTablePage = () => {
                       onChange={(e) => handleSubCategoryInputChange(index, e.target.value)}
                     />
                     {newSubCategories.length > 1 || index > 0 ? (
-                      <Button type="button" variant="destructive" size="sm" onClick={() => handleRemoveSubCategoryInput(index)}>
+                      <GenericButton type="button" variant="destructive" size="sm" onClick={() => handleRemoveSubCategoryInput(index)}>
                         <Trash2 className="h-4 w-4" />
-                      </Button>
+                      </GenericButton>
                     ) : null}
                   </div>
                 ))}
-                <Button type="button" variant="secondary" size="sm" className="mt-2" onClick={handleAddSubCategoryInput}>
+                <GenericButton type="button" variant="secondary" size="sm" className="mt-2" onClick={handleAddSubCategoryInput}>
                   Add Sub-category
-                </Button>
+                </GenericButton>
               </div>
             </div>
             <div className="flex justify-end">
-              <Button variant="secondary" onClick={() => setOpenAddDialog(false)}>
+              <GenericButton variant="secondary" onClick={() => setOpenAddDialog(false)}>
                 Cancel
-              </Button>
-              <Button className="ml-2" onClick={handleAddCategory}>
+              </GenericButton>
+              <GenericButton className="ml-2" onClick={handleAddCategory}>
                 Add Category
-              </Button>
+              </GenericButton>
             </div>
           </DialogContent>
         </Dialog>
@@ -272,11 +272,11 @@ const CategoriesTablePage = () => {
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline">
+            <GenericButton variant="outline">
               <Funnel className="h-4 w-4 mr-2 md:mr-0" />
               <span className='hidden md:inline'>Filter Category</span>
               <ChevronDown className="h-4 w-4 ml-2 md:mr-0" />
-            </Button>
+            </GenericButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
             <DropdownMenuItem onClick={() => handleCategoryFilter(null)}>All Categories</DropdownMenuItem>
@@ -308,10 +308,10 @@ const CategoriesTablePage = () => {
                     <>
                       <Dialog>
                         <DialogTrigger asChild>
-                          <Button variant="link" size="sm" className="p-0">
+                          <GenericButton variant="link" size="sm" className="p-0">
                             {category.items[0].name}
                             {category.items.length > 1 && <span className="text-muted-foreground ml-1">+{category.items.length - 1}</span>}
-                          </Button>
+                          </GenericButton>
                         </DialogTrigger>
                         <DialogContent>
                           <DialogHeader>
@@ -331,12 +331,12 @@ const CategoriesTablePage = () => {
                 </TableCell>
                 <TableCell className='py-4'>{category.dateCreated}</TableCell>
                 <TableCell className='py-4 text-right'>
-                  <Button size="sm" variant="ghost" className="mr-2">
+                  <GenericButton size="sm" variant="ghost" className="mr-2">
                     <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button size="sm" variant="destructive" onClick={() => handleDeleteCategory(category.id)}>
+                  </GenericButton>
+                  <GenericButton size="sm" variant="destructive" onClick={() => handleDeleteCategory(category.id)}>
                     <Trash2 className="h-4 w-4" />
-                  </Button>
+                  </GenericButton>
                 </TableCell>
               </TableRow>
             ))}

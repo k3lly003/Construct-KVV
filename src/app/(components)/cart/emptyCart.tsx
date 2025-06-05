@@ -3,7 +3,7 @@
 import Image from "next/image";
 import React from "react";
 import { EmptyCartProps } from "../../utils/dtos/cart.dtos";
-import Button from "../Button";
+import { Button } from "../Button";
 import { useRouter } from "next/navigation";
 
 const EmptyCart: React.FC<EmptyCartProps> = ({

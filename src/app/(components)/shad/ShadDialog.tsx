@@ -1,4 +1,4 @@
-import { Button } from "../../../components/ui/button";
+import { GenericButton } from "@/components/ui/generic-button";
 import {
   Dialog,
   DialogContent,
@@ -16,7 +16,7 @@ export function DialogDemo() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Add review</Button>
+        <GenericButton variant="outline">Add review</GenericButton>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -44,9 +44,10 @@ export function DialogDemo() {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit">Send</Button>
+          <GenericButton type="submit">Send</GenericButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
+

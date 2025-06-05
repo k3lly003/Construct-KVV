@@ -20,9 +20,7 @@ export interface PageProps {
    params: Promise<{id:string}>;
   };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const DealViewPage: React.FC<PageProps> = ({params}) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const resolvedParams = React.use(params);
   const product: SingleDealProduct = singleDealProduct;
 

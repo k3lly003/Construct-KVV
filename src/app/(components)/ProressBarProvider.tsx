@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback, Suspense } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import PageLoader from '../(components)/Navbar/PageLoader';
 
@@ -48,12 +48,12 @@ export const ProgressBarProvider: React.FC<ProgressBarProviderProps> = ({ childr
   }, [pathname, searchParams, startLoading, stopLoading]); // Re-run effect when pathname or searchParams change
 
   return (
-     <Suspense fallback={<div>Loading...</div>}>
+    //  <Suspense fallback={<div>Loading...</div>}>
     <ProgressBarContext.Provider value={{ isLoading, startLoading, stopLoading }}>
       <PageLoader isLoading={isLoading} /> {/* Render the visual loader */}
       {children}
     </ProgressBarContext.Provider>
-    </Suspense>
+    // </Suspense>
   );
 };
 

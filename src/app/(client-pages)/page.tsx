@@ -1,7 +1,5 @@
 "use client";
 
-import ChatWidget from "../(components)/chat/ChatWidget";
-// import { useSuseEffect } from "react";
 // import { BrickLoader } from "../(components)/BrickLoader";
 import { Banner } from "../(components)/home/Banner";
 import { ProductCarousel } from "../(components)/home/bestDeals";
@@ -13,23 +11,12 @@ import { Products } from "../(components)/Product";
 export default function Home() {
   // const [isLoading, setIsLoading] = useState(false);
 
-  // useEffect(() => {
-  //   setIsLoading(true);
-  //   const timer = setTimeout(() => {
-  //     setIsLoading(false);
-  //   }, 2000);
-
-  //   return () => clearTimeout(timer);
-  // }, []);
-
   return (
     <>
-      {/* {isLoading && <BrickLoader />} */}
       <Banner />
       <ProjectShowcase />
       {/* UN-COMMENT THIS REVIEW ONCE THE TOOL HAVE GOME MANY REVIEW */}
       {/* <ReviewCarousel reviews={reviewsData} /> */}
-      <ChatWidget/>
       <ProductCarousel />
       <Products />
     </>

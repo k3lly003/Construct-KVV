@@ -115,7 +115,7 @@ const Page = () => {
 
   return (
     <>
-      <Toaster richColors />
+      <Toaster richColors position="top-right"/>
       <div className="min-h-screen bg-black flex justify-center items-center">
         <div className="z-20 bg-black shadow-2xl rounded-sx overflow-hidden flex w-full max-w-5xl">
           {/* Left Side: Sign Up Form */}

@@ -12,7 +12,7 @@ import {
   TableCell,
 } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { GenericButton } from "@/components/ui/generic-button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import {
   DropdownMenu,
@@ -39,29 +39,29 @@ const Pagination = ({ total, current, onPageChange }: PaginationProps) => {
   if (total <= 1) return null;
   return (
     <div className="flex space-x-1">
-      <button
+      <GenericButton
         className="px-2 py-1 border rounded disabled:opacity-50"
         onClick={() => onPageChange(current - 1)}
         disabled={current === 1}
       >
         Prev
-      </button>
+      </GenericButton>
       {Array.from({ length: total }, (_, i) => (
-        <button
+        <GenericButton
           key={i + 1}
           className={`px-2 py-1 border rounded ${current === i + 1 ? 'bg-primary text-white' : ''}`}
           onClick={() => onPageChange(i + 1)}
         >
           {i + 1}
-        </button>
+        </GenericButton>
       ))}
-      <button
+      <GenericButton
         className="px-2 py-1 border rounded disabled:opacity-50"
         onClick={() => onPageChange(current + 1)}
         disabled={current === total}
       >
         Next
-      </button>
+      </GenericButton>
     </div>
   );
 };
@@ -150,14 +150,14 @@ const Page = () => {
           </p>
         </div>
         <div className="space-x-2">
-          <Button variant="outline">
+          <GenericButton variant="outline">
             <Upload className="h-4 w-4 mr-2" />
             Export
-          </Button>
-          <Button>
+          </GenericButton>
+          <GenericButton>
             <Plus className="h-4 w-4" />
             Add new Shop
-          </Button>
+          </GenericButton>
         </div>
       </div>
 
@@ -173,10 +173,10 @@ const Page = () => {
         <div className="flex items-center space-x-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
+              <GenericButton variant="outline" size="sm">
                 <Funnel className="h-4 w-4 mr-2" />
                 Filter <ChevronDown className="h-4 w-4 ml-2" />
-              </Button>
+              </GenericButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[200px]">
               <DropdownMenuItem>Filter by Name</DropdownMenuItem>

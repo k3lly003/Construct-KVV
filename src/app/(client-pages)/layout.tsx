@@ -1,47 +1,34 @@
-// src/app/(client-pages)/layout.tsx (or wherever your RootLayout is located)
+"use client"
 
-import type { Metadata } from "next";
-import "../globals.css";
-import Navbar from "../(components)/Navbar/Navigator";
-import { Footer } from "../(components)/footer/Footer";
-import ProgressBarProvider from "../(components)/ProressBarProvider";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import { UserStoreInitializer } from '../../store/userStore';
-import { Suspense } from "react";
+import { Suspense } from "react"
+import ProgressBarProvider from "@/app/(components)/ProressBarProvider"
+import { UserStoreInitializer } from "@/store/userStore"
+import Navbar from "@/app/(components)/Navbar/Navigator"
+import { Footer } from "@/app/(components)/footer/Footer"
+import ChatWidget from "@/app/(components)/chat/ChatWidget"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
-export const metadata: Metadata = {
-  title: {
-    template: 'kvv shop',
-    default: 'kvv shop',
-  },
-  description: 'Welcome to the best construction e-commerce in Rwanda.',
-};
-
-export default function RootLayout({
+export default function ClientLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="icon" href="/logo/logo1.png" type="image/png" />
-        <meta name="keywords" content="construction kvv, construction kvv shop, construction kvv, kvv, e-commerce, construction, real estate in Rwanda, kvv Rwanda, Rwanda, construction e-commerce" />
-        <meta property="og:title" content="construction kvv shop" />
-        <meta property="og:description" content="Welcome to the best online construction shop in Rwanda." />
-        <meta property="og:image" content="/F9.jpeg" />
-      </head>
-      <body className="flex flex-col justify-start">
-        <UserStoreInitializer />
-        <Suspense fallback={<div>Loading...</div>}>
+    <>
+      <UserStoreInitializer />
+      <Suspense fallback={<div>Loading...</div>}>
         <ProgressBarProvider>
-          <Navbar />
-          {children}
-          <Footer />
+          <div className="flex flex-col min-h-screen">
+            <Navbar />
+            <main className="flex-grow">
+              {children}
+            </main>
+            <Footer />
+            <ChatWidget />
+          </div>
         </ProgressBarProvider>
-        </Suspense>
-        <SpeedInsights />
-      </body>
-    </html>
-  );
+      </Suspense>
+      <SpeedInsights />
+    </>
+  )
 }

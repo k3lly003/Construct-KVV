@@ -1,5 +1,5 @@
 
-  import { Button } from "../../../components/ui/button"
+  import { GenericButton } from "@/components/ui/generic-button"
   import {
     DropdownMenu,
     DropdownMenuContent,
@@ -17,7 +17,7 @@
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline">Filter by ...</Button>
+          <GenericButton variant="outline">Filter by ...</GenericButton>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuGroup>

@@ -14,15 +14,13 @@ interface ButtonProp{
     handleButton: () => void | Promise<boolean>;
 }
 
-const Button = ({text, texSize, hoverBg, borderCol, bgCol, textCol, border,padding, round, handleButton}: ButtonProp) => {
+export const Button = ({text, texSize, hoverBg, borderCol, bgCol, textCol, border,padding, round, handleButton}: ButtonProp) => {
   return (
     <div>
       <button 
         onClick={handleButton} 
-        className={`${border} ${padding} ${bgCol} ${textCol} cursor-pointer mt-3 w-full ${borderCol} ${round} py-2 text-sm font-semibold ${hoverBg} transition-colors ${texSize}`}
-      >{text}</button>
+        className={`${border} ${padding} ${bgCol} ${textCol} cursor-pointer mt-3 w-full ${borderCol} ${round} py-2 text-sm font-semibold ${hoverBg} transition-colors ${texSize}`}>{text}
+      </button>
     </div>
   )
 }
-
-export default Button

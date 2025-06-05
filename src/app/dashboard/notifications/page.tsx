@@ -4,7 +4,7 @@
 
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { GenericButton } from "@/components/ui/generic-button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
@@ -123,10 +123,10 @@ const page = () => {
             value={searchTerm}
             onChange={handleSearchChange}
           />
-          <Button variant="outline" size="sm">
+          <GenericButton variant="outline" size="sm">
             <SlidersHorizontal className="h-4 w-4 mr-2" />
             Filter
-          </Button>
+          </GenericButton>
         </div>
       </div>
 

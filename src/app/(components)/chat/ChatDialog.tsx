@@ -2,7 +2,6 @@
 
 import React, { useEffect } from 'react';
 import { X, MessageCircle, Send, Construction, Drill, Pickaxe, BrickWall } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChatDialogProps } from '../../utils/dtos/chat.dtos';
@@ -82,14 +81,12 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
               </div>
               <h3 className="font-semibold text-md">Kvv Construction Assistant</h3>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
+            <button
               onClick={onClose}
-              className="text-white hover:bg-amber-600 h-8 w-8 p-0"
+              className="text-white hover:bg-amber-600 h-8 w-8 p-3 border"
             >
               <X className="w-4 h-4" />
-            </Button>
+            </button>
           </div>
 
           {/* MESSAGES */}
@@ -125,14 +122,14 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
                 <p className="text-sm text-gray-600 font-medium">What would you like to do?</p>
                 <div className="space-y-2">
                   {quickActions.map((action, index) => (
-                    <Button
+                    <button
                       key={index}
-                      variant="outline"
+                      // variant="outline"
                       className="w-full justify-start text-amber-600 border-amber-200 hover:bg-emerald-50 hover:border-amber-300 transition-colors"
                       onClick={() => handleQuickAction(action)}
                     >
                       {action}
-                    </Button>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -148,13 +145,12 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
                 className="flex-1"
                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()} // Call the returned handleSendMessage
               />
-              <Button
+              <button
                 onClick={handleSendMessage} // Call the returned handleSendMessage
-                size="sm"
-                className="bg-amber-500 hover:bg-amber-600 text-white px-3"
+                className="h-24 bg-amber-500 hover:bg-amber-600 text-white"
               >
                 <Send className="w-4 h-4" />
-              </Button>
+              </button>
             </div>
           </div>
         </motion.div>

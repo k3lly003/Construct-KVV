@@ -4,13 +4,12 @@ import React, { useState } from "react";
 import { Star, ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import Button from "../Button";
+import { Button } from "../Button";
 import { initialProducts } from "../../utils/fakes/ProductFakes";
 import { ProductFilters } from "../product/ProductFilters";
 
 export const ShopProducts: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedCategory, setSelectedCategory] = useState("All Products");
   const [sortBy, setSortBy] = useState("featured");
 
