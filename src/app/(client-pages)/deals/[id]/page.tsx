@@ -1,4 +1,3 @@
-// app/deals/[id]/page.tsx
 "use client";
 
 import React from "react";
@@ -13,15 +12,8 @@ import Share from "@/app/(components)/deals/single-view/ShareBid";
 import DetailedSection from "@/app/(components)/deals/single-view/DetailedSection";
 import ProductGallery from "@/app/(components)/product/ProductGallery";
 import DefaultPageBanner from "@/app/(components)/DefaultPageBanner";
-// import { DealProductDto } from "@/app/utils/dtos/deals.dtos";
-// import { PaginatedProductGridProps } from "@/app/(components)/deals/ProductSection";
 
-export interface PageProps {
-   params: Promise<{id:string}>;
-  };
-
-const DealViewPage: React.FC<PageProps> = ({params}) => {
-  const resolvedParams = React.use(params);
+const DealViewPage: React.FC = () => {
   const product: SingleDealProduct = singleDealProduct;
 
   return (
