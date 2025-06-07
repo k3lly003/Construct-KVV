@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useFormContext } from "../../../../state/form-context";
+import { useFormContext } from "@/state/form-context";
 import { GenericButton } from "@/components/ui/generic-button";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";

@@ -13,7 +13,7 @@ import {
   houseStyleOptions, 
   roofStyleOptions, 
   exteriorMaterialOptions 
-} from "../../../utils/fakes/formData";
+} from "@/app/utils/fakes/formData";
 
 export function StepTwoExterior() {
   const { formData, updateFormData, nextStep, prevStep } = useFormContext();

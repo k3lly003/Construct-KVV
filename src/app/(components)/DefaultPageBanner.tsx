@@ -1,5 +1,3 @@
-// "use client"
-
 interface DefaultPageBannerProps{
     backgroundImage: string,
     title: string,

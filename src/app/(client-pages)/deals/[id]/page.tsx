@@ -6,7 +6,7 @@ import {
   // DealProduct,
   singleDealProduct,
   SingleDealProduct,
-} from "../../../utils/fakes/ProductFakes";
+} from "@/app/utils/fakes/ProductFakes";
 import Specifications from "@/app/(components)/deals/Specifications";
 import Share from "@/app/(components)/deals/single-view/ShareBid";
 import DetailedSection from "@/app/(components)/deals/single-view/DetailedSection";

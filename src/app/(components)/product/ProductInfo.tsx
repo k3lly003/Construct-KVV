@@ -110,7 +110,7 @@ export default function ProductInfo({
         
         <GenericButton
           variant="outline"
-          size="icon"
+          size="sm"
           className="h-10 w-10"
           onClick={toggleWishlist}
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
@@ -123,7 +123,7 @@ export default function ProductInfo({
         
         <GenericButton
           variant="outline"
-          size="icon"
+          size="sm"
           className="h-10 w-10"
           onClick={shareProduct}
           aria-label="Share product"

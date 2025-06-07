@@ -1,4 +1,3 @@
-// components/CategoryServicesFilter.tsx
 import React, { useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import Slider from 'rc-slider';

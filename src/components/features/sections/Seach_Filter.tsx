@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Search, SlidersHorizontal } from 'lucide-react';
-import { categories } from '../../utils/fakes/ProductFakes';
+import { categories } from '@/app/utils/fakes/ProductFakes';
 
 interface SearchFilterProps {
   onSearch: (term: string) => void;

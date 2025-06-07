@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Package, Clock, BadgeCheck } from "lucide-react";
 import ReactPaginate from "react-paginate";
-import Button from "../Button";
-import type { DealProductDto } from "../../utils/dtos/deals.dtos";
+import { Button } from "@/app/(components)/Button";
+import type { DealProductDto } from "@/app/utils/dtos/deals.dtos";
 
 export interface PaginatedProductGridProps {
   products: DealProductDto[];

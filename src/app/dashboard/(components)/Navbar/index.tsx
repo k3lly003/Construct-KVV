@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { Menu, Bell, Search } from 'lucide-react';
-// import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '../../../redux';
 import { setIsSidebarCollapsed } from '../../../../state';
 import CustomSheet from '../shad_/CustomSheet';

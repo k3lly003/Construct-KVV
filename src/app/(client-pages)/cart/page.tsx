@@ -1,5 +1,5 @@
 import DefaultPageBanner from "@/app/(components)/DefaultPageBanner";
-import { CartPage } from "../../(components)/product/Cart";
+import { CartPage } from "@/app/(components)/product/Cart";
 import React from "react";
 // import EmptyCart from "../../(components)/cart/emptyCart";
 // import { emptyCart } from "../../utils/fakes/CartFakes";

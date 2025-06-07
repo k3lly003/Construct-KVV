@@ -21,7 +21,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogOut, User, Mail, Phone, MapPin } from "lucide-react";
 import { GenericButton } from "@/components/ui/generic-button";
-import EditProfileDialog from "./EditProfileDialog";
+import EditProfileDialog from "@/app/(components)/Navbar/EditProfileDialog";
 import { useUserProfile } from "@/app/hooks/useUserProfile";
 import { getInitials } from "@/lib/utils";
 import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";

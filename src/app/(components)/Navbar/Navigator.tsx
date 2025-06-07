@@ -1,18 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from "react"; // Import useEffect
+import React, { useState, useEffect } from "react";
 import { Building2, ChevronDown, ChevronUp, ShoppingCart } from "lucide-react";
-import { navItems, NavItem } from "../../utils/fakes/NavFakes";
+import { navItems, NavItem } from "@/app/utils/fakes/NavFakes";
 import Link from "next/link";
-import FlagToggle from "../../(components)/Navbar/ToggleFlag";
+import FlagToggle from "@/app/(components)/Navbar/ToggleFlag";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight } from "lucide-react";
-import Profile from "./Profile";
-import { useUserStore } from "../../../store/userStore";
-import CustomerProfile from "./CustomerProfile";
+import Profile from "@/app/(components)/Navbar/Profile";
+import { useUserStore } from "@/store/userStore";
+import CustomerProfile from "@/app/(components)/Navbar/CustomerProfile";
 import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
-
-// REMOVE this line: const USER = getUserDataFromLocalStorage();
 
 interface ThirdLevelItemProps {
   item: { name: string; href?: string };

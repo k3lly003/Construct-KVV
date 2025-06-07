@@ -1,7 +1,7 @@
 import { ChevronDown, ChevronUp, Heart } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-import Button from "../Button";
+import  {Button } from "@/app/(components)/Button";
 
 function SerComp() {
   const [showDetails, setShowDetails] = useState(false);

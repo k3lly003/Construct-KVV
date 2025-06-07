@@ -1,5 +1,5 @@
 import { CartItem } from "@/app/(components)/product/Cart";
-import { EmptyCartProps } from "../dtos/cart.dtos";
+import { EmptyCartProps } from "@/app/utils/dtos/cart.dtos";
 import emptycart from '../../../../public/empty-cart.png' 
 
 export const initialCartItems: CartItem[] = [

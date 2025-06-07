@@ -8,7 +8,7 @@ import { ImageSelector } from "@/components/ui/image-selector";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
-import { landscapeStyleOptions } from "../../../utils/fakes/formData";
+import { landscapeStyleOptions } from "@/app/utils/fakes/formData";
 
 export function StepFourOutdoor() {
   const { formData, updateFormData, nextStep, prevStep } = useFormContext();

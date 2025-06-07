@@ -8,10 +8,9 @@ import { featuredProductData } from "@/app/utils/fakes/ProductFakes";
 
 export const ProductCarousel: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const productsPerPage = 4; // Adjust based on your responsive design
+  const productsPerPage = 4; 
 
   const totalProducts = featuredProductData.length;
-  // const totalPages = Math.ceil(totalProducts / productsPerPage);
 
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => {

@@ -2,9 +2,8 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
-import PageLoader from '../(components)/Navbar/PageLoader';
+import PageLoader from '@/app/(components)/Navbar/PageLoader';
 
-// Define the context type
 interface ProgressBarContextType {
   startLoading: () => void;
   stopLoading: () => void;

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { reviewsData } from '../../utils/fakes/HomeFakes'; // Adjust the path to your fakes file
+import { reviewsData } from '@/app/utils/fakes/HomeFakes';
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ChevronLeft, ChevronRight } from "lucide-react";

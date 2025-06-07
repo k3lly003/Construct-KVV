@@ -1,4 +1,3 @@
-// (components)/auth/LoginAuth.tsx
 import React, { useState, FormEventHandler } from 'react';
 
 interface LoginCardProps {

@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { GenericButton } from "@/components/ui/generic-button";
-import { Input } from "../../../components/ui/input";
-import { Checkbox } from "../../../components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 
 interface LoginCardProps {

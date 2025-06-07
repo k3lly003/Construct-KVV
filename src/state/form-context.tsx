@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useState, useContext, useCallback } from "react";
-import { FormData, initialFormData } from "../app/utils/fakes/formData";
+import { FormData, initialFormData } from "@/app/utils/fakes/formData";
 
 type FormContextType = {
   formData: FormData;

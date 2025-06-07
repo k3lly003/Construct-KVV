@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormContext } from "../../../../state/form-context";
+import { useFormContext } from "@/state/form-context";
 import { GenericButton } from "@/components/ui/generic-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

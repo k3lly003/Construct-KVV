@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import React from "react";
-import { EmptyCartProps } from "../../utils/dtos/cart.dtos";
-import Button from "../Button";
+import { EmptyCartProps } from "@/app/utils/dtos/cart.dtos";
+import { Button } from "@/app/(components)/Button";
 import { useRouter } from "next/navigation";
 
 const EmptyCart: React.FC<EmptyCartProps> = ({

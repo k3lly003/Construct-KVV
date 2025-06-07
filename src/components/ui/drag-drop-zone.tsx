@@ -127,7 +127,6 @@ export function DragDropZone({ onImagesChange, maxFiles = 10, images }: DragDrop
                   )}
                   <GenericButton
                     size="sm"
-                    variant="destructive"
                     onClick={() => removeImage(index)}
                   >
                     <X className="h-3 w-3" />

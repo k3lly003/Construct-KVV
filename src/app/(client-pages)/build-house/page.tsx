@@ -1,7 +1,7 @@
-import DefaultPageBanner from '../../(components)/DefaultPageBanner'
-import { FormContainer } from '../../(components)/build-house/form-container'
+import DefaultPageBanner from '@/app/(components)/DefaultPageBanner'
+import { FormContainer } from '@/app/(components)/build-house/form-container'
 // import { PageHeader } from '../../(components)/build-house/page-header'
-import { FormProvider } from '../../../state/form-context'
+import { FormProvider } from '@/state/form-context'
 
 const page = () => {
   return (

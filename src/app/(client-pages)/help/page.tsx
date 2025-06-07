@@ -2,13 +2,13 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import FaqSection from '../../(components)/help/FaqSection';
-import ContactSection from '../../(components)/help/ContactSection';
-import GuidesSection from '../../(components)/help/GuideSection';
-import SearchBar from '../../(components)/help/Search';
+import FaqSection from '@/app/(components)/help/FaqSection';
+import ContactSection from '@/app/(components)/help/ContactSection';
+import GuidesSection from '@/app/(components)/help/GuideSection';
+import SearchBar from '@/app/(components)/help/Search';
 import { NextPage } from 'next';
-import DefaultPageBanner from '../../(components)/DefaultPageBanner';
-import { HelpData } from '../../utils/fakes/HelpFakes';
+import DefaultPageBanner from '@/app/(components)/DefaultPageBanner';
+import { HelpData } from '@/app/utils/fakes/HelpFakes';
 
 
 const HelpPageContainer = styled.div`

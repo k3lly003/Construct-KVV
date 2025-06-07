@@ -1,6 +1,5 @@
-// components/deals/HeaderSection.tsx
 import React from 'react';
-import { dealsHeaderData } from '../../utils/fakes/DealFakes'; // Adjust the import path
+import { dealsHeaderData } from '@/app/utils/fakes/DealFakes';
 
 interface DealsHeaderProps {
   header: string;

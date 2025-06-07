@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { sampleProducts } from "../../utils/fakes/ProductFakes";
-import QuoteFormModal from "./QuotaModal";
-import PaginatedProductGrid from "./ProductSection";
-import SearchFilter from "../sections/Seach_Filter";
-import HeaderSection from "./HeaderSection";
+import { sampleProducts } from "@/app/utils/fakes/ProductFakes";
+import QuoteFormModal from "@/app/(components)/deals/QuotaModal";
+import PaginatedProductGrid from "@/app/(components)/deals/ProductSection";
+import SearchFilter from "@/app/(components)/sections/Seach_Filter";
+import HeaderSection from "@/app/(components)/deals/HeaderSection";
 import { DealProductDto, FormDataDto } from "@/app/utils/dtos/deals.dtos";
 
 const ITEMS_PER_PAGE = 3;

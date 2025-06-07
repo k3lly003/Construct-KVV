@@ -1,8 +1,7 @@
-// utils/middlewares/handleMessages.ts
 import { useState } from "react";
-import { Message } from "../dtos/chat.dtos"; // Make sure this path is correct
+import { Message } from "@/app/utils/dtos/chat.dtos";
 
-export function useHandleSendMessages() { // Renamed to follow hook convention: use*
+export function useHandleSendMessages() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',

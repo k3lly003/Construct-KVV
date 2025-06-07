@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { SpecificationsProps } from "../../utils/dtos/deals.dtos";
+import { SpecificationsProps } from "@/app/utils/dtos/deals.dtos";
 
 
 

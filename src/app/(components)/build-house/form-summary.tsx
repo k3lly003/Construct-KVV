@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { useFormContext } from "../../../state/form-context";
+import { useFormContext } from "@/state/form-context";
 import { GenericButton } from "@/components/ui/generic-button";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";

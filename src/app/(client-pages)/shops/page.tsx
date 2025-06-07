@@ -1,9 +1,9 @@
 "use client"
 
 import type { NextPage } from 'next';
-import ProfileCard from '../../(components)/supplier/SupplierCard';
+import ProfileCard from '@/app/(components)/supplier/SupplierCard';
 import { useState } from 'react';
-import CategoryServicesFilter from '../../(components)/sections/CategoriesServicesFilter';
+import CategoryServicesFilter from '@/app/(components)/sections/CategoriesServicesFilter';
 import { profilesFakes, Profile } from '@/app/utils/fakes/shopsFakes';
 import DefaultPageBanner from '@/app/(components)/DefaultPageBanner';
 

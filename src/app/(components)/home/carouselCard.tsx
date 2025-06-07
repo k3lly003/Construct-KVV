@@ -1,4 +1,3 @@
-// Conceptual CarouselCard.tsx
 import { Review } from "@/app/utils/fakes/HomeFakes";
 import { CardContent } from "@/components/ui/card";
 import Image from 'next/image';

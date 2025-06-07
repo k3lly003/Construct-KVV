@@ -4,9 +4,9 @@ import React, { useEffect } from 'react';
 import { X, MessageCircle, Send, Construction, Drill, Pickaxe, BrickWall } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChatDialogProps } from '../../utils/dtos/chat.dtos';
-import { quickActions } from '../../utils/fakes/ChatFakes';
-import { useHandleSendMessages } from '../../utils/middlewares/handleMessages';
+import { ChatDialogProps } from '@/app/utils/dtos/chat.dtos';
+import { quickActions } from '@/app/utils/fakes/ChatFakes';
+import { useHandleSendMessages } from '@/app/utils/middlewares/handleMessages';
 
 const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

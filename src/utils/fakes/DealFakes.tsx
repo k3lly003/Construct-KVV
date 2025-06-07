@@ -1,4 +1,3 @@
-// utils/fakes/dealsFakes.ts
 import { ShieldCheck, TrendingUp, Truck } from "lucide-react";
 import { ReactNode } from 'react';
 

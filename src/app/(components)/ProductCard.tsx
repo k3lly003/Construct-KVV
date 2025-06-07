@@ -2,7 +2,7 @@
 import Image, { StaticImageData } from 'next/image';
 import React from 'react';
 import { FaStar } from 'react-icons/fa';
-import { getAverageRating, ReviewType } from '../utils/fakes/ProductFakes';
+import { getAverageRating, ReviewType } from '@/app/utils/fakes/ProductFakes';
 
 interface ProductCardProps  {
   productThumbnail: string | StaticImageData,

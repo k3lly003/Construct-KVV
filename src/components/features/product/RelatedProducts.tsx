@@ -1,6 +1,6 @@
 import React from 'react';
-import ProductCard from '../ProductCard';
-import { fakeProductCards } from '../../utils/fakes/ProductFakes';
+import ProductCard from '@/components/ui/ProductCard';
+import { fakeProductCards } from '@/app/utils/fakes/ProductFakes';
 
 const RelatedProducts = () => {
   return (

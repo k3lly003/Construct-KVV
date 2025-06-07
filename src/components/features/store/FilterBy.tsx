@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { ChevronRight, ChevronLeft, Search } from "lucide-react";
 import { FaStar } from "react-icons/fa";
-import { DropdownMenuDemo } from "../shad/DropdownMenuDemo";
+import { DropdownMenuDemo } from "@/app/(components)/shad/DropdownMenuDemo";
 
 
 interface Product {

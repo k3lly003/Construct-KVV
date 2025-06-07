@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
-import { HomeBannerSlides } from "../../utils/fakes/HomeFakes";
+import { HomeBannerSlides } from "@/app/utils/fakes/HomeFakes";
 import Image from "next/image";
 
 export const Banner: React.FC = () => {

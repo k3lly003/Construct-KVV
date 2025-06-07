@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { MessageCircle, X } from 'lucide-react';
-import ChatDialog from './ChatDialog';
+import ChatDialog from '@/app/(components)/chat/ChatDialog';
 
 const ChatWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);

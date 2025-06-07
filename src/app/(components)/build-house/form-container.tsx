@@ -1,15 +1,15 @@
 "use client";
 
 import React from 'react';
-import { useFormContext } from '../../../state/form-context';
-import { StepOneBasics } from './form-steps/step-1-basics';
-import { StepTwoExterior } from './form-steps/step-2-exterior';
-import { StepThreeInterior } from './form-steps/step-3-interior';
-import { StepFourOutdoor } from './form-steps/step-4-outdoor';
-import { StepFivePreferences } from './form-steps/step-5-preferences';
-import { StepSixContact } from './form-steps/step-6-contact';
-import { FormSummary } from './form-summary';
-import { StepIndicator } from '../../../components/ui/step-indicator';
+import { useFormContext } from '@/state/form-context';
+import { StepOneBasics } from '@/app/(components)/build-house/form-steps/step-1-basics';
+import { StepTwoExterior } from '@/app/(components)/build-house/form-steps/step-2-exterior';
+import { StepThreeInterior } from '@/app/(components)/build-house/form-steps/step-3-interior';
+import { StepFourOutdoor } from '@/app/(components)/build-house/form-steps/step-4-outdoor';
+import { StepFivePreferences } from '@/app/(components)/build-house/form-steps/step-5-preferences';
+import { StepSixContact } from '@/app/(components)/build-house/form-steps/step-6-contact';
+import { FormSummary } from '@/app/(components)/build-house/form-summary';
+import { StepIndicator } from '@/components/ui/step-indicator';
 import { AnimatePresence } from 'framer-motion';
 
 export function FormContainer() {

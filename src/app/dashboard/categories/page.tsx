@@ -234,7 +234,7 @@ const CategoriesTablePage = () => {
                       onChange={(e) => handleSubCategoryInputChange(index, e.target.value)}
                     />
                     {newSubCategories.length > 1 || index > 0 ? (
-                      <GenericButton type="button" variant="destructive" size="sm" onClick={() => handleRemoveSubCategoryInput(index)}>
+                      <GenericButton type="button" className='bg-red-500 hover:bg-red-600 text-white' size="sm" onClick={() => handleRemoveSubCategoryInput(index)}>
                         <Trash2 className="h-4 w-4" />
                       </GenericButton>
                     ) : null}
@@ -334,7 +334,7 @@ const CategoriesTablePage = () => {
                   <GenericButton size="sm" variant="ghost" className="mr-2">
                     <Pencil className="h-4 w-4" />
                   </GenericButton>
-                  <GenericButton size="sm" variant="destructive" onClick={() => handleDeleteCategory(category.id)}>
+                  <GenericButton size="sm" className='bg-red-500 hover:bg-red-600 text-white' onClick={() => handleDeleteCategory(category.id)}>
                     <Trash2 className="h-4 w-4" />
                   </GenericButton>
                 </TableCell>

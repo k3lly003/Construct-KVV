@@ -1,12 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import { BackgroundBeams } from "../../../components/ui/background-beams";
+import { BackgroundBeams } from "@/components/ui/background-beams";
 import { Mail, Eye, EyeOff, ArrowLeft, UserRound } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { IoLogoFacebook } from "react-icons/io5";
 import Image from "next/image";
 import Link from "next/link";
-import ContactAddress from "../../(components)/sections/ContactAddress";
+import ContactAddress from "@/app/(components)/sections/ContactAddress";
 import { useRouter } from "next/navigation";
 import { Toaster, toast } from "sonner";
 import { z } from "zod";

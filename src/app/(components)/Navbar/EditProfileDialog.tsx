@@ -58,7 +58,12 @@ const EditProfileDialog = ({ isOpen, onClose, userData }: EditProfileDialogProps
       data.append("profilePicture", profilePicture);
     }
 
-    updateProfile(data, {
+    updateProfile({
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      location: formData.location,
+    }, {
       onSuccess: () => {
         toast.success("Profile updated successfully");
         onClose();

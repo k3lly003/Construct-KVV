@@ -8,9 +8,8 @@ import user2 from "../../../../public/user2.jpeg"
 import user3 from "../../../../public/user3.jpeg"
 import user4 from "../../../../public/user4.jpeg"
 import { StaticImageData } from 'next/image';
-import { DealProductDto } from "../dtos/deals.dtos"
+import { DealProductDto } from "@/app/utils/dtos/deals.dtos"
 
-// utils/fakes/fakeProductData.ts
 export interface ReviewType {
   id?: string;
   image: StaticImageData;

@@ -1,4 +1,3 @@
-// import Reviews from '@/app/(components)/product/Reviews'
 import Reviews from '@/app/(components)/product/Reviews'
 import { ContactInfo } from '@/app/(components)/supplier/ContactInfo'
 import { ShopBanner } from '@/app/(components)/supplier/ShopBanner'

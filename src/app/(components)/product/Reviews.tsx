@@ -1,7 +1,7 @@
 import React from 'react';
-import { ReviewType } from '../../utils/fakes/ProductFakes';
-import ReviewCard from './ReviewCard';
-import { DialogDemo } from '../shad/ShadDialog';
+import { ReviewType } from '@/app/utils/fakes/ProductFakes';
+import ReviewCard from '@/app/(components)/product/ReviewCard';
+import { DialogDemo } from '@/app/(components)/shad/ShadDialog';
 
 interface ReviewsProps {
   reviews: ReviewType[];

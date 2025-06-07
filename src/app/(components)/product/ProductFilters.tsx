@@ -1,5 +1,5 @@
 import React from "react";
-import { Search } from "lucide-react"; // Assuming you are using lucide-react for the Search icon
+import { Search } from "lucide-react";
 import { categories } from "@/app/utils/fakes/ProductFakes";
 
 interface Product {
@@ -7,7 +7,6 @@ interface Product {
   name: string;
   category: string;
   originalPrice: number;
-  // Add other product properties as needed
 }
 
 interface FilteredProductsProps {

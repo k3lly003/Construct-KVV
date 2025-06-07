@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import ProductGallery from "./ProductGallery";
-import ProductInfo from "./ProductInfo";
+import ProductGallery from "@/app/(components)/product/ProductGallery";
+import ProductInfo from "@/app/(components)/product/ProductInfo";
 
 export default function ProductView() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

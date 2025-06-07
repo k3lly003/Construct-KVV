@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 // import Link from 'next/link';
-import { HelpData, HelpProps } from '../../utils/fakes/HelpFakes'; // Assuming HelpData is in a file named HelpData.ts or .js
-import { GuidesWrapper } from '../../../../public/styled-components/help';
+import { HelpData, HelpProps } from '@/app/utils/fakes/HelpFakes';
+import { GuidesWrapper } from '../../../styles/help';
 
 const GuidesSection: React.FC<HelpProps> = () => {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);

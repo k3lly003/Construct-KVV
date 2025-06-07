@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { CreateProductInput } from '../app/utils/middlewares/Validation';
+import { CreateProductInput } from '@/app/utils/middlewares/Validation';
 
 export function useCreateProduct() {
   return useMutation({

@@ -4,9 +4,9 @@ import React, { useState } from "react";
 import { Star, ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "../(components)/Button";
-import { initialProducts } from "../utils/fakes/ProductFakes";
-import { ProductFilters } from "./product/ProductFilters";
+import { Button } from "@/app/(components)/Button";
+import { initialProducts } from "@/app/utils/fakes/ProductFakes";
+import { ProductFilters } from "@/app/(components)/product/ProductFilters";
 
 export const Products: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");

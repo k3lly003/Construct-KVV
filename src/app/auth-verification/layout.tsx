@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "../globals.css";
-import ProgressBarProvider from "../progresiveBarProvider";
+import ProgressBarProvider from "@/app/progresiveBarProvider";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Suspense } from "react";
 
