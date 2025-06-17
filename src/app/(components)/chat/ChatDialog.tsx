@@ -122,6 +122,15 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
                     </div>
                   )}
                   <p className="text-sm leading-relaxed">{message.content}</p>
+                  {/* Add support button for assistant messages */}
+                  {!message.isUser && (
+                    <button
+                      className="mt-2 text-xs text-amber-700 underline hover:text-amber-900 transition-colors"
+                      onClick={() => (window.location.href = "/help")}
+                    >
+                      Not satisfied? Contact our support team to help you.
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
