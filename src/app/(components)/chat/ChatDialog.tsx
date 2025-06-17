@@ -1,36 +1,45 @@
 "use client";
-
-import React, { useEffect } from 'react';
-import { X, MessageCircle, Send, Construction, Drill, Pickaxe, BrickWall } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChatDialogProps } from '@/app/utils/dtos/chat.dtos';
-import { quickActions } from '@/app/utils/fakes/ChatFakes';
-import { useHandleSendMessages } from '@/app/utils/middlewares/handleMessages';
-
+import React, { useEffect } from "react";
+import {
+  X,
+  MessageCircle,
+  Send,
+  Construction,
+  Drill,
+  Pickaxe,
+  BrickWall,
+} from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChatDialogProps } from "@/app/utils/dtos/chat.dtos";
+import { quickActions } from "@/app/utils/fakes/ChatFakes";
+import { useHandleSendMessages } from "@/app/utils/middlewares/handleMessages";
 const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { messages, setMessages, inputValue, setInputValue, handleQuickAction, handleSendMessage } = useHandleSendMessages();
-
+  const {
+    messages,
+    setMessages,
+    inputValue,
+    setInputValue,
+    handleQuickAction,
+    handleSendMessage,
+  } = useHandleSendMessages();
   // Dialog-specific useEffect for Escape key
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         onClose();
       }
     };
-
     if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
+      document.addEventListener("keydown", handleEscape);
     } else {
-      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener("keydown", handleEscape);
     }
-
     return () => {
-      document.removeEventListener('keydown', handleEscape);
+      document.removeEventListener("keydown", handleEscape);
     };
-  }, [isOpen, onClose])
-
+  }, [isOpen, onClose]);
   const dialogVariants = {
     hidden: {
       opacity: 0,
@@ -59,7 +68,6 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
       },
     },
   };
-
   return (
     <AnimatePresence>
       {isOpen && (
@@ -75,32 +83,35 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-white rounded-full grid grid-cols-2 grid-rows-2 place-items-center gap-1 p-1">
                 <Pickaxe className="w-3 h-3 text-amber-500" />
-                <Construction className='w-3 h-3 text-amber-500'/>
-                <BrickWall className='w-3 h-3 text-amber-500'/>
-                <Drill className='w-3 h-3 text-amber-500'/>
+                <Construction className="w-3 h-3 text-amber-500" />
+                <BrickWall className="w-3 h-3 text-amber-500" />
+                <Drill className="w-3 h-3 text-amber-500" />
               </div>
-              <h3 className="font-semibold text-md">Kvv Construction Assistant</h3>
+              <h3 className="font-semibold text-md">
+                Kvv Construction Assistant
+              </h3>
             </div>
             <button
               onClick={onClose}
-              className="text-white hover:bg-amber-600 h-8 w-8 p-3 border"
+              className="text-white flex justify-center items-center hover:bg-amber-600 h-8 w-8 border rounded-full"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
-
           {/* MESSAGES */}
           <div className="flex-1 p-4 space-y-4 overflow-y-auto bg-gray-50">
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
+                className={`flex ${
+                  message.isUser ? "justify-end" : "justify-start"
+                }`}
               >
                 <div
                   className={`max-w-[80%] p-3 rounded-lg ${
                     message.isUser
-                      ? 'bg-amber-500 text-white'
-                      : 'bg-white text-gray-800 shadow-sm border'
+                      ? "bg-amber-500 text-white"
+                      : "bg-white text-gray-800 shadow-sm border"
                   }`}
                 >
                   {!message.isUser && (
@@ -114,18 +125,19 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
             ))}
-
             {/* Quick Actions */}
             {/* Display quick actions only if there's only the initial message */}
             {messages.length === 1 && (
               <div className="space-y-3 mt-4">
-                <p className="text-sm text-gray-600 font-medium">What would you like to do?</p>
+                <p className="text-sm text-gray-600 font-medium">
+                  What would you like to do?
+                </p>
                 <div className="space-y-2">
                   {quickActions.map((action, index) => (
                     <button
                       key={index}
                       // variant="outline"
-                      className="w-full justify-start text-amber-600 border-amber-200 hover:bg-emerald-50 hover:border-amber-300 transition-colors"
+                      className="w-full justify-start text-amber-600 border-2 border-amber-200 hover:bg-emerald-50 hover:border-amber-300 transition-colors"
                       onClick={() => handleQuickAction(action)}
                     >
                       {action}
@@ -143,11 +155,11 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Choose an option or type your message..."
                 className="flex-1"
-                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()} // Call the returned handleSendMessage
+                onKeyPress={(e) => e.key === "Enter" && handleSendMessage()} // Call the returned handleSendMessage
               />
               <button
                 onClick={handleSendMessage} // Call the returned handleSendMessage
-                className="h-24 bg-amber-500 hover:bg-amber-600 text-white"
+                className="w-10 flex justify-center items-center bg-amber-500 hover:bg-amber-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send className="w-4 h-4" />
               </button>
@@ -158,5 +170,4 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
     </AnimatePresence>
   );
 };
-
 export default ChatDialog;
