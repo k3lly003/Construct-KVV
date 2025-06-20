@@ -1,12 +1,19 @@
 "use client";
-
-import React, { useState } from 'react';
-import { MessageCircle, X } from 'lucide-react';
-import ChatDialog from '@/app/(components)/chat/ChatDialog';
-
+import React, { useState, useEffect } from "react";
+import { MessageCircle, X } from "lucide-react";
+import dynamic from "next/dynamic";
+const ChatDialog = dynamic(() => import("@/app/(components)/chat/ChatDialog"), {
+  ssr: false,
+});
 const ChatWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  if (!isMounted) {
+    return null;
+  }
   return (
     <>
       {/* Floating Chat Button */}
@@ -29,11 +36,9 @@ const ChatWidget: React.FC = () => {
           </button>
         )}
       </div>
-
       {/* Chat Dialog */}
       <ChatDialog isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>
   );
 };
-
 export default ChatWidget;
