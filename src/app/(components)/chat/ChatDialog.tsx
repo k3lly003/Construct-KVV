@@ -15,7 +15,7 @@ import { ChatDialogProps } from "@/app/utils/dtos/chat.dtos";
 import { quickActions } from "@/app/utils/fakes/ChatFakes";
 import { useHandleSendMessages } from "@/app/utils/middlewares/handleMessages";
 const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  
   const {
     messages,
     inputValue,

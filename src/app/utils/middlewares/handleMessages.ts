@@ -69,7 +69,7 @@ export function useHandleSendMessages() {
       };
       setMessages((prev) => [...prev, response]);
       // Optionally, handle data.relevantFAQs here
-    } catch (error) {
+    } catch {
       const errorMsg: Message = {
         id: (Date.now() + 2).toString(),
         content:
