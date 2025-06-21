@@ -7,6 +7,7 @@ type FormContextType = {
   formData: FormData;
   currentStep: number;
   updateFormData: (data: Partial<FormData>) => void;
+  setApiResponse: (response: any) => void;
   nextStep: () => void;
   prevStep: () => void;
   goToStep: (step: number) => void;
@@ -22,7 +23,9 @@ const FormContext = createContext<FormContextType | undefined>(undefined);
 
 export const TOTAL_STEPS = 6;
 
-export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const FormProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [currentStep, setCurrentStep] = useState(1);
   const [isFormCompleted, setIsFormCompleted] = useState(false);
@@ -32,16 +35,20 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setFormData((prev: any) => ({ ...prev, ...data }));
   }, []);
 
+  const setApiResponse = useCallback((response: any) => {
+    setFormData((prev) => ({ ...prev, apiResponse: response }));
+  }, []);
+
   const nextStep = useCallback(() => {
     if (currentStep < TOTAL_STEPS) {
-      setCurrentStep(prev => prev + 1);
+      setCurrentStep((prev) => prev + 1);
       window.scrollTo(0, 0);
     }
   }, [currentStep]);
 
   const prevStep = useCallback(() => {
     if (currentStep > 1) {
-      setCurrentStep(prev => prev - 1);
+      setCurrentStep((prev) => prev - 1);
       window.scrollTo(0, 0);
     }
   }, [currentStep]);
@@ -69,6 +76,7 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
     formData,
     currentStep,
     updateFormData,
+    setApiResponse,
     nextStep,
     prevStep,
     goToStep,
@@ -77,7 +85,7 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
     totalSteps: TOTAL_STEPS,
     resetForm,
     completeForm,
-    isFormCompleted
+    isFormCompleted,
   };
 
   return <FormContext.Provider value={value}>{children}</FormContext.Provider>;

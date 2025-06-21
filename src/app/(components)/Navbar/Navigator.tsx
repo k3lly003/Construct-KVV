@@ -221,10 +221,10 @@ const Navbar: React.FC = () => {
               </Link>
 
               <Link
-                href="/store"
+                href="/projects"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
               >
-                Store
+                Projects
               </Link>
 
               <Link
@@ -251,8 +251,8 @@ const Navbar: React.FC = () => {
               <ShoppingCart />
             </Link>
             {/* Conditionally render based on isClient and localUserData */}
-            {isClient && (
-              localUserData ? (
+            {isClient &&
+              (localUserData ? (
                 userRole === "ADMIN" || userRole === "SELLER" ? (
                   <Profile
                     NK={""}
@@ -272,8 +272,7 @@ const Navbar: React.FC = () => {
                     Sign In
                   </p>
                 </Link>
-              )
-            )}
+              ))}
             <FlagToggle />
           </div>
         </div>
