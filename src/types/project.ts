@@ -40,9 +40,12 @@ export interface Bid {
   createdAt?: string;
 }
 
+// Define the project status types
+export type ProjectStatus = "DRAFT" | "OPEN" | "CLOSED" | "COMPLETED";
+
 export interface Project {
   id: string;
-  status: string;
+  status: ProjectStatus;
   ownerId: string;
   choosenEstimationId: string;
   createdAt: string;

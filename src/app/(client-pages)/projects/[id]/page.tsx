@@ -9,6 +9,14 @@ import { GenericButton } from "@/components/ui/generic-button";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import Link from "next/link";
+import { projectService, ProjectStatus } from "@/app/services/projectServices";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface ProjectPageProps {
   params: Promise<{ id: string }>;
@@ -16,7 +24,8 @@ interface ProjectPageProps {
 
 function ProjectPage({ params }: ProjectPageProps) {
   const resolvedParams = React.use(params);
-  const { project, isLoading, error } = useProject(resolvedParams.id);
+  const { project, isLoading, error, refetch } = useProject(resolvedParams.id);
+  const [isUpdatingStatus, setIsUpdatingStatus] = React.useState(false);
 
   console.log("🏠 Project Page Rendered for ID:", resolvedParams.id);
   console.log("📊 Project Data:", project);
@@ -40,6 +49,63 @@ function ProjectPage({ params }: ProjectPageProps) {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount);
+  };
+
+  const handleStatusUpdate = async (newStatus: ProjectStatus) => {
+    if (!project) return;
+
+    setIsUpdatingStatus(true);
+    try {
+      console.log(
+        "🔄 Updating project status from",
+        project.status,
+        "to",
+        newStatus
+      );
+
+      await projectService.updateProjectStatus(project.id, newStatus);
+
+      // Refetch the project data to get the updated status
+      await refetch();
+
+      console.log("✅ Project status updated successfully");
+      toast.success(`Project status updated to ${newStatus} successfully! 🎉`);
+    } catch (error) {
+      console.error("❌ Error updating project status:", error);
+      toast.error("Failed to update project status. Please try again.");
+    } finally {
+      setIsUpdatingStatus(false);
+    }
+  };
+
+  const getStatusColor = (status: ProjectStatus) => {
+    switch (status) {
+      case "DRAFT":
+        return "bg-amber-100 text-amber-800 border-amber-300";
+      case "OPEN":
+        return "bg-green-100 text-green-800 border-green-300";
+      case "CLOSED":
+        return "bg-red-100 text-red-800 border-red-300";
+      case "COMPLETED":
+        return "bg-blue-100 text-blue-800 border-blue-300";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-300";
+    }
+  };
+
+  const getStatusIcon = (status: ProjectStatus) => {
+    switch (status) {
+      case "DRAFT":
+        return "📝";
+      case "OPEN":
+        return "🔓";
+      case "CLOSED":
+        return "🔒";
+      case "COMPLETED":
+        return "✅";
+      default:
+        return "📋";
+    }
   };
 
   if (isLoading) {
@@ -119,18 +185,14 @@ function ProjectPage({ params }: ProjectPageProps) {
                   <h1 className="text-2xl font-bold text-amber-900 mb-2">
                     House Project
                   </h1>
-                  <Badge
-                    variant={
-                      project.status === "DRAFT" ? "secondary" : "default"
-                    }
-                    className={`text-sm ${
-                      project.status === "DRAFT"
-                        ? "bg-amber-100 text-amber-800 border-amber-300"
-                        : "bg-amber-500 text-white border-amber-500"
-                    }`}
-                  >
-                    {project.status}
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <Badge
+                      variant="outline"
+                      className={`text-sm ${getStatusColor(project.status)}`}
+                    >
+                      {getStatusIcon(project.status)} {project.status}
+                    </Badge>
+                  </div>
                 </div>
                 <div className="text-right">
                   <p className="text-sm text-amber-700">Project ID</p>
@@ -325,6 +387,53 @@ function ProjectPage({ params }: ProjectPageProps) {
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* Status Update Section */}
+            <Card className="p-6 border-amber-200 bg-white shadow-lg">
+              <h3 className="text-lg font-semibold text-amber-900 mb-4">
+                Project Status
+              </h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-amber-800">Current Status:</span>
+                  <Badge
+                    variant="outline"
+                    className={`text-sm ${getStatusColor(project.status)}`}
+                  >
+                    {getStatusIcon(project.status)} {project.status}
+                  </Badge>
+                </div>
+
+                <div className="pt-3 border-t border-amber-200">
+                  <p className="text-sm text-amber-700 mb-3">Update Status:</p>
+                  <Select
+                    value={project.status}
+                    onValueChange={(value: ProjectStatus) =>
+                      handleStatusUpdate(value)
+                    }
+                    disabled={isUpdatingStatus}
+                  >
+                    <SelectTrigger className="w-full border-amber-300">
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="DRAFT">📝 Draft</SelectItem>
+                      <SelectItem value="OPEN">🔓 Open for Bidding</SelectItem>
+                      <SelectItem value="CLOSED">🔒 Closed</SelectItem>
+                      <SelectItem value="COMPLETED">✅ Completed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {isUpdatingStatus && (
+                    <div className="flex items-center justify-center mt-2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-amber-500"></div>
+                      <span className="text-sm text-amber-600 ml-2">
+                        Updating...
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </Card>
+
             {/* Cost Information */}
             <Card className="p-6 border-amber-200 bg-white shadow-lg">
               <h3 className="text-lg font-semibold text-amber-900 mb-4">
@@ -336,21 +445,6 @@ function ProjectPage({ params }: ProjectPageProps) {
                   <span className="font-semibold text-amber-600 text-lg">
                     {formatCurrency(project.choosenEstimation.estimatedCost)}
                   </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-amber-800">Project Status:</span>
-                  <Badge
-                    variant={
-                      project.status === "DRAFT" ? "secondary" : "default"
-                    }
-                    className={`${
-                      project.status === "DRAFT"
-                        ? "bg-amber-100 text-amber-800 border-amber-300"
-                        : "bg-amber-500 text-white border-amber-500"
-                    }`}
-                  >
-                    {project.status}
-                  </Badge>
                 </div>
               </div>
             </Card>

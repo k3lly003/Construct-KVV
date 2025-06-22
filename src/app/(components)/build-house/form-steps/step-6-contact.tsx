@@ -8,8 +8,18 @@ import { Card } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 import axios from "axios";
+import { projectService, ProjectStatus } from "@/app/services/projectServices";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 
 export function StepSixContact() {
   const {
@@ -23,6 +33,11 @@ export function StepSixContact() {
   } = useFormContext();
   const [selectedBudget, setSelectedBudget] = useState(formData.budget || "");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+  const [currentStatus, setCurrentStatus] = useState<ProjectStatus>("DRAFT");
+
+  // Get API response from form data
+  const apiResponse = formData.apiResponse;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -185,17 +200,8 @@ export function StepSixContact() {
           descriptionResponse.data
         );
 
-        if (
-          descriptionResponse.data &&
-          (descriptionResponse.data as any).description
-        ) {
-          descriptionFromAPI = (descriptionResponse.data as any).description;
-          console.log("📝 Retrieved description from API:", descriptionFromAPI);
-        } else {
-          console.log(
-            "⚠️ No description found in API response, using stored summary"
-          );
-        }
+        descriptionFromAPI = (descriptionResponse.data as any).description;
+        console.log("📝 Description from API:", descriptionFromAPI);
       } catch (descriptionError: any) {
         console.error("❌ Description API Error:", descriptionError);
         console.error(
@@ -206,44 +212,26 @@ export function StepSixContact() {
           "❌ Description API Error Data:",
           descriptionError.response?.data
         );
-        console.log("⚠️ Using stored house summary as fallback");
-      }
 
-      // Use the API description if available, otherwise use the stored house summary
-      let finalDescription = "";
-      if (descriptionFromAPI) {
-        finalDescription = descriptionFromAPI;
-        console.log("📝 Using API description for final request");
-      } else if (
-        formData.houseSummary &&
-        formData.houseSummary.fullDescription
-      ) {
-        finalDescription = formData.houseSummary.fullDescription;
-        console.log("📝 Using stored house summary for final request");
-        console.log("📝 Stored summary:", formData.houseSummary);
-      } else {
-        // Fallback to a basic description
-        finalDescription =
+        // Continue with the process even if description update fails
+        descriptionFromAPI =
+          formData.houseSummary?.fullDescription ||
           "House construction project with selected specifications.";
-        console.log("📝 Using fallback description");
+        console.log("⚠️ Using fallback description:", descriptionFromAPI);
       }
 
-      console.log("📝 Final description to be sent:", finalDescription);
-
-      // Prepare the request body with description
-      const requestBody = {
+      // Create the final project request body
+      const projectRequestBody = {
         choosenEstimationId: choosenEstimationId,
+        description: descriptionFromAPI,
       };
 
-      console.log("🚀 Final request body:", requestBody);
-      console.log(
-        "🚀 API endpoint: http://localhost:3000/api/v1/final-project"
-      );
+      console.log("📤 Final Project Request Body:", projectRequestBody);
 
-      // Make the API call
-      const response = await axios.post(
+      // Make the final API call to create the project
+      const projectResponse = await axios.post(
         "http://localhost:3000/api/v1/final-project",
-        requestBody,
+        projectRequestBody,
         {
           headers: {
             "Content-Type": "application/json",
@@ -252,116 +240,99 @@ export function StepSixContact() {
         }
       );
 
-      console.log("✅ API Response Status:", response.status);
-      console.log("✅ API Response Data:", response.data);
+      console.log(
+        "✅ Project Creation API Response Status:",
+        projectResponse.status
+      );
+      console.log(
+        "✅ Project Creation API Response Data:",
+        projectResponse.data
+      );
 
-      // Show success toast
-      toast.success("🎉 Your project has been initialized successfully!", {
-        description:
-          "We've forwarded it to make all bids on it. You'll be notified of updates.",
-        duration: 5000,
-      });
+      // Show success message
+      toast.success("Project created successfully! 🎉");
+      console.log("🎉 Project creation completed successfully!");
 
-      // Reset form and go to first step
+      // Complete the form
+      completeForm();
+
+      // Navigate to projects page after a short delay
       setTimeout(() => {
-        console.log("🔄 Resetting form and going to step 1...");
-        resetForm();
-        goToStep(1);
+        window.location.href = "/projects";
       }, 2000);
     } catch (error: any) {
       console.error("❌ Project creation error:", error);
       console.error("❌ Error response:", error.response?.data);
       console.error("❌ Error status:", error.response?.status);
 
-      const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        "Failed to create project";
-      toast.error("❌ Project creation failed", {
-        description: errorMessage,
-        duration: 5000,
-      });
+      if (error.response?.status === 401) {
+        toast.error("Authentication failed. Please login again.");
+      } else if (error.response?.status === 400) {
+        toast.error("Invalid project data. Please check your inputs.");
+      } else {
+        toast.error("Failed to create project. Please try again.");
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Generate cost options from API response
   const generateCostOptions = () => {
     const options = [];
 
-    // Add the main estimated cost from API response
+    // Add main estimate from API response if available
     if (formData.apiResponse && formData.apiResponse.estimatedCost) {
       options.push({
-        value: `main-${formData.apiResponse.estimatedCost}`,
-        label: `${formData.apiResponse.estimatedCost.toLocaleString()} Rfw`,
+        value: "main-estimate",
+        label: `Main Estimate: $${formData.apiResponse.estimatedCost.toLocaleString()}`,
         description: "Recommended based on your specifications",
-        isRecommended: true,
         cost: formData.apiResponse.estimatedCost,
       });
     }
 
-    // Add suggestions from API response
+    // Add suggestions from API response if available
     if (formData.apiResponse && formData.apiResponse.suggestions) {
       formData.apiResponse.suggestions.forEach(
         (suggestion: any, index: number) => {
-          if (suggestion && suggestion.estimatedCost) {
-            options.push({
-              value: `suggestion-${index}-${suggestion.estimatedCost}`,
-              label: `${suggestion.estimatedCost.toLocaleString()} Rfw`,
-              description: suggestion.description || "Alternative option",
-              isRecommended: false,
-              cost: suggestion.estimatedCost,
-            });
-          }
+          options.push({
+            value: `suggestion-${index}`,
+            label: `Option ${
+              index + 1
+            }: $${suggestion.estimatedCost.toLocaleString()}`,
+            description:
+              suggestion.description || `Alternative option ${index + 1}`,
+            cost: suggestion.estimatedCost,
+          });
         }
       );
     }
 
-    // If no API data, provide default options
-    if (options.length === 0) {
+    // Add default options if no API response
+    if (!formData.apiResponse) {
       options.push(
         {
-          value: "Above_100m Rfw",
-          label: "Above 100m Rfw",
-          description: "Premium luxury options",
-          isRecommended: true,
-          cost: 100000000,
+          value: "budget-friendly",
+          label: "Budget Friendly: $150,000 - $250,000",
+          description: "Cost-effective construction with quality materials",
+          cost: 200000,
         },
         {
-          value: "under_100m Rfw",
-          label: "Under 100m Rfw",
-          description: "High-end options",
-          isRecommended: false,
-          cost: 90000000,
+          value: "standard",
+          label: "Standard: $250,000 - $400,000",
+          description: "Balanced quality and cost",
+          cost: 325000,
         },
         {
-          value: "50m Rfw - 90m Rfw",
-          label: "50m Rfw - 90m Rfw",
-          description: "Mid-range options",
-          isRecommended: false,
-          cost: 70000000,
+          value: "premium",
+          label: "Premium: $400,000 - $600,000",
+          description: "High-end materials and finishes",
+          cost: 500000,
         },
         {
-          value: "10m Rfw - 25m Rfw",
-          label: "10m Rfw - 25m Rfw",
-          description: "Standard options",
-          isRecommended: false,
-          cost: 17500000,
-        },
-        {
-          value: "5m Rfw - 9.5m Rfw",
-          label: "5m Rfw - 9.5m Rfw",
-          description: "Budget-friendly options",
-          isRecommended: false,
-          cost: 7250000,
-        },
-        {
-          value: "above_1m Rfw",
-          label: "Above 1m Rfw",
-          description: "Basic options",
-          isRecommended: false,
-          cost: 1500000,
+          value: "luxury",
+          label: "Luxury: $600,000+",
+          description: "Custom luxury home with premium features",
+          cost: 750000,
         }
       );
     }
@@ -371,9 +342,66 @@ export function StepSixContact() {
 
   const costOptions = generateCostOptions();
 
+  const handleStatusUpdate = async (newStatus: ProjectStatus) => {
+    if (!apiResponse?.id) {
+      toast.error("No project ID available for status update");
+      return;
+    }
+
+    setIsUpdatingStatus(true);
+    try {
+      console.log(
+        "🔄 Updating project status from",
+        currentStatus,
+        "to",
+        newStatus
+      );
+
+      await projectService.updateProjectStatus(apiResponse.id, newStatus);
+
+      setCurrentStatus(newStatus);
+      console.log("✅ Project status updated successfully");
+      toast.success(`Project status updated to ${newStatus} successfully! 🎉`);
+    } catch (error) {
+      console.error("❌ Error updating project status:", error);
+      toast.error("Failed to update project status. Please try again.");
+    } finally {
+      setIsUpdatingStatus(false);
+    }
+  };
+
+  const getStatusColor = (status: ProjectStatus) => {
+    switch (status) {
+      case "DRAFT":
+        return "bg-amber-100 text-amber-800 border-amber-300";
+      case "OPEN":
+        return "bg-green-100 text-green-800 border-green-300";
+      case "CLOSED":
+        return "bg-red-100 text-red-800 border-red-300";
+      case "COMPLETED":
+        return "bg-blue-100 text-blue-800 border-blue-300";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-300";
+    }
+  };
+
+  const getStatusIcon = (status: ProjectStatus) => {
+    switch (status) {
+      case "DRAFT":
+        return "📝";
+      case "OPEN":
+        return "🔓";
+      case "CLOSED":
+        return "🔒";
+      case "COMPLETED":
+        return "✅";
+      default:
+        return "📋";
+    }
+  };
+
   return (
     <>
-      <Toaster richColors position="top-right" />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -382,195 +410,272 @@ export function StepSixContact() {
       >
         <div className="mb-6">
           <h2 className="text-3xl font-bold tracking-tight">
-            Cost & Budget Selection
+            Project Status & Contact
           </h2>
           <p className="text-muted-foreground mt-2">
-            Review the estimated costs and select your preferred budget range.
+            Review your project details and update the status. Your project is
+            ready to be published for bidding!
           </p>
         </div>
 
-        {/* Cost Comparison Section */}
-        {formData.apiResponse && (
-          <Card className="p-6 mb-6 bg-green-50 border-green-200">
-            <div className="space-y-4">
-              <h3 className="text-xl font-semibold text-green-800 mb-4">
-                💰 Cost Analysis & Recommendations
+        <div className="space-y-8">
+          {/* Project Status Update Section */}
+          {apiResponse?.id && (
+            <Card className="p-6 border-amber-200 bg-white shadow-lg">
+              <h3 className="text-lg font-semibold text-amber-900 mb-4">
+                🚀 Project Status Management
               </h3>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-3">
-                  <h4 className="font-medium text-green-700">
-                    Primary Estimate
-                  </h4>
-                  <div className="p-4 bg-green-100 rounded-lg border border-green-300">
-                    <div className="text-2xl font-bold text-green-800">
-                      {formData.apiResponse.estimatedCost?.toLocaleString()} Rfw
-                    </div>
-                    <p className="text-green-700 text-sm mt-1">
-                      Based on your specifications
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <h4 className="font-medium text-green-700">
-                    Project Confidence
-                  </h4>
-                  <div className="p-4 bg-green-100 rounded-lg border border-green-300">
-                    <div className="text-lg font-semibold text-green-800 capitalize">
-                      {formData.apiResponse.confidence || "High"}
-                    </div>
-                    <p className="text-green-700 text-sm mt-1">
-                      Feasibility assessment
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {formData.apiResponse.description && (
-                <div className="mt-4 p-4 bg-green-100 rounded-lg">
-                  <h4 className="font-medium text-green-700 mb-2">
-                    Project Description
-                  </h4>
-                  <p className="text-green-700 text-sm">
-                    {formData.apiResponse.description}
-                  </p>
-                </div>
-              )}
-            </div>
-          </Card>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Cost Options Selection */}
-          <Card className="p-6">
-            <div className="space-y-6">
-              <div className="text-center mb-6">
-                <h3 className="text-2xl font-semibold text-primary mb-2">
-                  💡 Select Your Budget Range
-                </h3>
-                <p className="text-muted-foreground">
-                  Choose the budget range that best fits your project
-                  requirements
-                </p>
-              </div>
-
-              <RadioGroup
-                value={selectedBudget}
-                onValueChange={setSelectedBudget}
-                className="space-y-4"
-              >
-                {costOptions.map((option) => (
-                  <Label
-                    key={option.value}
-                    htmlFor={`budget-${option.value}`}
-                    className={`
-                      flex items-start space-x-4 p-4 border-2 rounded-lg cursor-pointer
-                      hover:bg-accent/50 transition-all duration-200
-                      ${
-                        selectedBudget === option.value
-                          ? "border-primary bg-primary/5"
-                          : "border-gray-200"
-                      }
-                      ${
-                        option.isRecommended
-                          ? "ring-2 ring-green-200 bg-green-50/50"
-                          : ""
-                      }
-                    `}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-amber-800 font-medium">
+                    Current Status:
+                  </span>
+                  <Badge
+                    variant="outline"
+                    className={`text-sm ${getStatusColor(currentStatus)}`}
                   >
-                    <div className="flex items-center space-x-3 flex-1">
-                      <RadioGroupItem
-                        value={option.value}
-                        id={`budget-${option.value}`}
-                        className="mt-1"
-                      />
+                    {getStatusIcon(currentStatus)} {currentStatus}
+                  </Badge>
+                </div>
 
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2">
-                          <span className="text-lg font-semibold text-gray-800">
-                            {option.label}
-                          </span>
-                          {option.isRecommended && (
-                            <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
-                              Recommended
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-sm text-gray-600 mt-1">
-                          {option.description}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Cost comparison indicator */}
-                    {option.isRecommended && (
-                      <div className="flex-shrink-0">
-                        <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                <div className="pt-3 border-t border-amber-200">
+                  <p className="text-sm text-amber-700 mb-3">
+                    Update Project Status:
+                  </p>
+                  <div className="flex items-center space-x-3">
+                    <Select
+                      value={currentStatus}
+                      onValueChange={(value: ProjectStatus) =>
+                        handleStatusUpdate(value)
+                      }
+                      disabled={isUpdatingStatus}
+                    >
+                      <SelectTrigger className="w-48 border-amber-300">
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="DRAFT">
+                          📝 Draft - Project is being prepared
+                        </SelectItem>
+                        <SelectItem value="OPEN">
+                          🔓 Open for Bidding - Accepting professional bids
+                        </SelectItem>
+                        <SelectItem value="CLOSED">
+                          🔒 Closed - No more bids accepted
+                        </SelectItem>
+                        <SelectItem value="COMPLETED">
+                          ✅ Completed - Project finished
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {isUpdatingStatus && (
+                      <div className="flex items-center">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-amber-500"></div>
+                        <span className="text-sm text-amber-600 ml-2">
+                          Updating...
+                        </span>
                       </div>
                     )}
-                  </Label>
-                ))}
-              </RadioGroup>
-
-              {/* Budget Selection Summary */}
-              {selectedBudget && (
-                <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <h4 className="font-medium text-blue-800 mb-2">
-                    Selected Budget Range
-                  </h4>
-                  <p className="text-blue-700">
-                    {costOptions.find((opt) => opt.value === selectedBudget)
-                      ?.label || selectedBudget}
-                  </p>
-                  <p className="text-sm text-blue-600 mt-1">
-                    {
-                      costOptions.find((opt) => opt.value === selectedBudget)
-                        ?.description
-                    }
+                  </div>
+                  <p className="text-xs text-amber-600 mt-2">
+                    💡 <strong>DRAFT:</strong> Keep private while planning •{" "}
+                    <strong>OPEN:</strong> Publish for bidding •{" "}
+                    <strong>CLOSED:</strong> Stop accepting bids •{" "}
+                    <strong>COMPLETED:</strong> Mark as finished
                   </p>
                 </div>
-              )}
-            </div>
-          </Card>
+              </div>
+            </Card>
+          )}
 
-          {/* Final Summary */}
-          <Card className="p-6 bg-gray-50">
-            <div className="text-center space-y-4">
-              <h3 className="text-xl font-semibold text-gray-800">
-                🎉 Ready to Proceed!
-              </h3>
-              <p className="text-gray-600">
-                Your house design is complete. We'll use your selected budget
-                range to create the perfect design for your dream home.
-              </p>
-              <div className="flex items-center justify-center space-x-2 text-sm text-gray-500">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M9 12l2 2 4-4" />
-                  <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
-                </svg>
-                <span>All specifications have been reviewed and confirmed</span>
+          {/* Project Summary */}
+          <Card className="p-6 border-amber-200 bg-white shadow-lg">
+            <h3 className="text-lg font-semibold text-amber-900 mb-4">
+              📋 Project Summary
+            </h3>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm text-amber-700">Project Type</p>
+                  <p className="font-medium text-amber-900 capitalize">
+                    {formData.projectType || "Not specified"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-amber-700">Square Footage</p>
+                  <p className="font-medium text-amber-900">
+                    {formData.squareFootage?.toLocaleString() ||
+                      "Not specified"}{" "}
+                    sq ft
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-amber-700">Bedrooms</p>
+                  <p className="font-medium text-amber-900">
+                    {formData.bedrooms || 0}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-amber-700">Bathrooms</p>
+                  <p className="font-medium text-amber-900">
+                    {formData.bathrooms || 0}
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <p className="text-sm text-amber-700">Description</p>
+                <p className="font-medium text-amber-900">
+                  {apiResponse?.description ||
+                    "Project description will be generated"}
+                </p>
               </div>
             </div>
           </Card>
 
-          <div className="flex justify-between">
+          {/* Cost Comparison */}
+          {apiResponse && (
+            <Card className="p-6 border-amber-200 bg-white shadow-lg">
+              <h3 className="text-lg font-semibold text-amber-900 mb-4">
+                💰 Cost Analysis & Comparison
+              </h3>
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="text-center p-4 bg-amber-50 rounded-lg border border-amber-200">
+                    <div className="text-2xl mb-2">📊</div>
+                    <div className="text-sm font-medium text-amber-900">
+                      Your Estimate
+                    </div>
+                    <div className="text-lg font-bold text-amber-600">
+                      $
+                      {formData.squareFootage
+                        ? (formData.squareFootage * 150).toLocaleString()
+                        : "N/A"}
+                    </div>
+                  </div>
+                  <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
+                    <div className="text-2xl mb-2">🎯</div>
+                    <div className="text-sm font-medium text-green-900">
+                      Optimized Cost
+                    </div>
+                    <div className="text-lg font-bold text-green-600">
+                      ${apiResponse.estimatedCost?.toLocaleString() || "N/A"}
+                    </div>
+                  </div>
+                  <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <div className="text-2xl mb-2">💡</div>
+                    <div className="text-sm font-medium text-blue-900">
+                      Potential Savings
+                    </div>
+                    <div className="text-lg font-bold text-blue-600">
+                      $
+                      {(
+                        (formData.squareFootage
+                          ? formData.squareFootage * 150
+                          : 0) - (apiResponse.estimatedCost || 0)
+                      ).toLocaleString()}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
+                  <h4 className="font-semibold text-amber-900 mb-2">
+                    🎯 Cost Optimization Recommendations
+                  </h4>
+                  <ul className="text-sm text-amber-800 space-y-1">
+                    <li>• Material selection optimization</li>
+                    <li>• Labor cost efficiency</li>
+                    <li>• Timeline optimization</li>
+                    <li>• Resource allocation improvements</li>
+                  </ul>
+                </div>
+              </div>
+            </Card>
+          )}
+
+          {/* Contact Information */}
+          <Card className="p-6 border-amber-200 bg-white shadow-lg">
+            <h3 className="text-lg font-semibold text-amber-900 mb-4">
+              📞 Contact Information
+            </h3>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="name" className="text-base">
+                    Full Name
+                  </Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="Enter your full name"
+                    className="h-12 border-amber-300 focus:border-amber-500"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="email" className="text-base">
+                    Email Address
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    className="h-12 border-amber-300 focus:border-amber-500"
+                  />
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="phone" className="text-base">
+                  Phone Number
+                </Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="Enter your phone number"
+                  className="h-12 border-amber-300 focus:border-amber-500"
+                />
+              </div>
+              <div>
+                <Label htmlFor="message" className="text-base">
+                  Additional Notes
+                </Label>
+                <textarea
+                  id="message"
+                  placeholder="Any additional requirements or notes..."
+                  className="w-full h-24 p-3 border border-amber-300 rounded-md focus:border-amber-500 focus:outline-none resize-none"
+                />
+              </div>
+            </div>
+          </Card>
+
+          {/* Agreement */}
+          <Card className="p-6 border-amber-200 bg-white shadow-lg">
+            <div className="flex items-start space-x-3">
+              <input
+                type="checkbox"
+                id="agreement"
+                className="mt-1 w-4 h-4 text-amber-600 border-amber-300 rounded focus:ring-amber-500"
+              />
+              <div>
+                <Label htmlFor="agreement" className="text-base cursor-pointer">
+                  I agree to the terms and conditions
+                </Label>
+                <p className="text-sm text-amber-700 mt-1">
+                  By checking this box, you agree to our terms of service and
+                  acknowledge that your project will be published for
+                  professional bidding once submitted.
+                </p>
+              </div>
+            </div>
+          </Card>
+
+          {/* Navigation */}
+          <div className="flex justify-between space-x-4">
             <GenericButton
               type="button"
-              onClick={prevStep}
               variant="outline"
               size="lg"
-              disabled={isSubmitting}
+              onClick={prevStep}
+              className="border-amber-500 text-amber-700 hover:bg-amber-50 bg-white"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -584,68 +689,35 @@ export function StepSixContact() {
                 strokeLinejoin="round"
                 className="mr-2 h-4 w-4"
               >
-                <line x1="19" y1="12" x2="5" y2="12" />
-                <polyline points="12 19 5 12 12 5" />
+                <polyline points="15 18 9 12 15 6" />
               </svg>
-              Back
+              Previous
             </GenericButton>
             <GenericButton
               type="submit"
               size="lg"
-              disabled={!selectedBudget || isSubmitting}
-              className={
-                !selectedBudget || isSubmitting
-                  ? "opacity-50 cursor-not-allowed"
-                  : ""
-              }
+              disabled={isSubmitting}
+              className="bg-amber-500 hover:bg-amber-600 text-white shadow-md"
             >
-              {isSubmitting ? (
-                <>
-                  <svg
-                    className="animate-spin -ml-1 mr-3 h-4 w-4 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Creating Project...
-                </>
-              ) : (
-                <>
-                  Complete Project
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="ml-2 h-4 w-4"
-                  >
-                    <path d="M9 12l2 2 4-4" />
-                    <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
-                  </svg>
-                </>
-              )}
+              {isSubmitting ? "Submitting..." : "Submit Project"}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="ml-2 h-4 w-4"
+              >
+                <path d="M22 2L11 13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
             </GenericButton>
           </div>
-        </form>
+        </div>
       </motion.div>
     </>
   );

@@ -9,9 +9,20 @@ import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import Link from "next/link";
+import { projectService, ProjectStatus } from "@/app/services/projectServices";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const ProjectsPage = () => {
   const { projects, isLoading, error, deleteProject } = useProjects();
+  const [updatingStatuses, setUpdatingStatuses] = React.useState<
+    Record<string, boolean>
+  >({});
 
   console.log("🏠 Projects Page Rendered");
   console.log("📊 Projects:", projects);
@@ -25,6 +36,60 @@ const ProjectsPage = () => {
     } catch (error) {
       console.error("❌ Error deleting project:", error);
       toast.error("Failed to delete project");
+    }
+  };
+
+  const handleStatusUpdate = async (
+    projectId: string,
+    newStatus: ProjectStatus
+  ) => {
+    setUpdatingStatuses((prev) => ({ ...prev, [projectId]: true }));
+
+    try {
+      console.log("🔄 Updating project status:", projectId, "to:", newStatus);
+
+      await projectService.updateProjectStatus(projectId, newStatus);
+
+      // Refresh the projects list
+      window.location.reload();
+
+      console.log("✅ Project status updated successfully");
+      toast.success(`Project status updated to ${newStatus} successfully! 🎉`);
+    } catch (error) {
+      console.error("❌ Error updating project status:", error);
+      toast.error("Failed to update project status. Please try again.");
+    } finally {
+      setUpdatingStatuses((prev) => ({ ...prev, [projectId]: false }));
+    }
+  };
+
+  const getStatusColor = (status: ProjectStatus) => {
+    switch (status) {
+      case "DRAFT":
+        return "bg-amber-100 text-amber-800 border-amber-300";
+      case "OPEN":
+        return "bg-green-100 text-green-800 border-green-300";
+      case "CLOSED":
+        return "bg-red-100 text-red-800 border-red-300";
+      case "COMPLETED":
+        return "bg-blue-100 text-blue-800 border-blue-300";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-300";
+    }
+  };
+
+  const getStatusIcon = (status: ProjectStatus) => {
+    switch (status) {
+      case "DRAFT":
+        return "📝";
+      case "OPEN":
+        return "🔓";
+      case "CLOSED":
+        return "🔒";
+      case "COMPLETED":
+        return "✅";
+      default:
+        return "📋";
     }
   };
 
@@ -223,16 +288,10 @@ const ProjectsPage = () => {
                         ...
                       </h3>
                       <Badge
-                        variant={
-                          project.status === "DRAFT" ? "secondary" : "default"
-                        }
-                        className={`text-xs ${
-                          project.status === "DRAFT"
-                            ? "bg-amber-100 text-amber-800 border-amber-300"
-                            : "bg-amber-500 text-white border-amber-500"
-                        }`}
+                        variant="outline"
+                        className={`text-xs ${getStatusColor(project.status)}`}
                       >
-                        {project.status}
+                        {getStatusIcon(project.status)} {project.status}
                       </Badge>
                     </div>
                   </div>
@@ -321,6 +380,30 @@ const ProjectsPage = () => {
                         👁️ View Details & Bid
                       </GenericButton>
                     </Link>
+                    <div className="flex flex-col space-y-1">
+                      <Select
+                        value={project.status}
+                        onValueChange={(value: ProjectStatus) =>
+                          handleStatusUpdate(project.id, value)
+                        }
+                        disabled={updatingStatuses[project.id]}
+                      >
+                        <SelectTrigger className="w-24 h-8 text-xs border-amber-300">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="DRAFT">📝 Draft</SelectItem>
+                          <SelectItem value="OPEN">🔓 Open</SelectItem>
+                          <SelectItem value="CLOSED">🔒 Closed</SelectItem>
+                          <SelectItem value="COMPLETED">✅ Done</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {updatingStatuses[project.id] && (
+                        <div className="flex justify-center">
+                          <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-amber-500"></div>
+                        </div>
+                      )}
+                    </div>
                     <GenericButton
                       variant="outline"
                       size="sm"

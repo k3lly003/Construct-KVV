@@ -60,6 +60,7 @@ export const useProject = (id: string) => {
     data: project,
     isLoading,
     error,
+    refetch,
   } = useQuery({
     queryKey: ["project", id],
     queryFn: () => projectService.getProjectById(id),
@@ -76,5 +77,6 @@ export const useProject = (id: string) => {
     project,
     isLoading,
     error,
+    refetch,
   };
 };
