@@ -508,6 +508,26 @@ export function StepFourOutdoor() {
             </p>
           </div>
 
+          {/* 
+            API Response Display Section - Cost Optimization
+            =================================================
+            
+            This section displays the API response data specifically for cost optimization purposes.
+            It shows the user the current estimation details and provides cost optimization options
+            extracted from the API response. The section includes:
+            
+            - Current project description from previous steps
+            - Estimated cost to establish baseline for optimization
+            - Confidence level of the estimation (if available)
+            - Feasibility analysis results (if available)
+            - Live preview of updated description with current step selections
+            
+            The display uses an orange color scheme to indicate cost optimization focus
+            and provides visual feedback for the optimization process.
+            
+            This section is active and visible to users to help them understand
+            their current estimation and available cost-saving options.
+          */}
           {/* API Response Display */}
           {formData.apiResponse && (
             <Card className="p-6 mb-6 bg-orange-50 border-orange-200">

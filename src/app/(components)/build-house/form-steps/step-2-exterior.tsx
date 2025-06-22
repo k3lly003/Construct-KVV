@@ -56,15 +56,14 @@ export function StepTwoExterior() {
 
   const updateDescriptionWithStep2Selections = () => {
     console.log("📝 Step 2 - Updating Description with Exterior Selections");
-
+    
     if (!formData.apiResponse) {
-      console.log(
-        "⚠️ Step 2 - No API response available for description update"
-      );
+      console.log("⚠ep 2 - No API response available for description update");
       return;
     }
 
-    const baseDescription = formData.apiResponse.description || "";
+    const baseDescription = formData
+      .apiResponse.description || "";
     console.log("📝 Step 2 - Base Description:", baseDescription);
 
     // Build step 2 additions
@@ -161,6 +160,25 @@ export function StepTwoExterior() {
         </p>
       </div>
 
+      {/* 
+        API Response Display Section
+        ============================
+        
+        This section displays the comprehensive API response data received from the estimator endpoint.
+        It shows the user the results of their house estimation including:
+        
+        - Original project description from step 1
+        - Estimated cost breakdown
+        - Room and bathroom counts
+        - Live preview of updated description with current step selections
+        - Raw API response data for debugging purposes
+        
+        The display uses a green color scheme to indicate successful API response
+        and provides visual feedback that the estimation process is working correctly.
+        
+        Note: This section is currently commented out but can be uncommented
+        for debugging or to show users their estimation progress.
+      */}
       {/* API Response Display */}
       {formData.apiResponse && (
         <Card className="p-6 mb-6 bg-green-50 border-green-200">
