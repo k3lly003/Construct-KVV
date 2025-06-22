@@ -2,7 +2,7 @@
 
 import React from "react";
 import DefaultPageBanner from "@/app/(components)/DefaultPageBanner";
-import { useProjects } from "@/app/hooks/useProjects";
+import { useProjects, useSafeFormContext } from "@/app/hooks/useProjects";
 import { Card } from "@/components/ui/card";
 import { GenericButton } from "@/components/ui/generic-button";
 import { Badge } from "@/components/ui/badge";
@@ -20,9 +20,10 @@ import {
 
 const ProjectsPage = () => {
   const { projects, isLoading, error, deleteProject } = useProjects();
-  const [updatingStatuses, setUpdatingStatuses] = React.useState<
-    Record<string, boolean>
-  >({});
+  const { formData } = useSafeFormContext();
+  const [updatingStatuses, setUpdatingStatuses] = React.useState<{
+    [key: string]: boolean;
+  }>({});
 
   console.log("🏠 Projects Page Rendered");
   console.log("📊 Projects:", projects);
@@ -37,6 +38,13 @@ const ProjectsPage = () => {
       console.error("❌ Error deleting project:", error);
       toast.error("Failed to delete project");
     }
+  };
+
+  const handleUpdateProject = async (projectId: string) => {
+    console.log("🔄 Navigating to project detail page for update:", projectId);
+
+    // Navigate to the project detail page where users can update with proper form fields
+    window.location.href = `/projects/${projectId}`;
   };
 
   const handleStatusUpdate = async (
@@ -404,19 +412,33 @@ const ProjectsPage = () => {
                         </div>
                       )}
                     </div>
-                    <GenericButton
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        handleDeleteProject(
-                          project.id,
-                          project.choosenEstimation.description.substring(0, 30)
-                        )
-                      }
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-300 bg-white"
-                    >
-                      🗑️
-                    </GenericButton>
+                    <div className="flex flex-col space-y-1">
+                      <GenericButton
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleUpdateProject(project.id)}
+                        className="text-amber-600 hover:text-amber-700 hover:bg-amber-50 border-amber-300 bg-white"
+                        title="Edit Project"
+                      >
+                        ✏️
+                      </GenericButton>
+                      <GenericButton
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          handleDeleteProject(
+                            project.id,
+                            project.choosenEstimation.description.substring(
+                              0,
+                              30
+                            )
+                          )
+                        }
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-300 bg-white"
+                      >
+                        🗑️
+                      </GenericButton>
+                    </div>
                   </div>
                 </Card>
               </motion.div>

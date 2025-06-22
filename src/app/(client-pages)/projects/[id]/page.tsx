@@ -2,14 +2,22 @@
 
 import React from "react";
 import DefaultPageBanner from "@/app/(components)/DefaultPageBanner";
-import { useProject } from "@/app/hooks/useProjects";
+import { useProject, useSafeFormContext } from "@/app/hooks/useProjects";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { GenericButton } from "@/components/ui/generic-button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import Link from "next/link";
-import { projectService, ProjectStatus } from "@/app/services/projectServices";
+import {
+  projectService,
+  ProjectStatus,
+  convertFormDataToProjectUpdate,
+  ProjectUpdateData,
+} from "@/app/services/projectServices";
 import {
   Select,
   SelectContent,
@@ -26,11 +34,45 @@ function ProjectPage({ params }: ProjectPageProps) {
   const resolvedParams = React.use(params);
   const { project, isLoading, error, refetch } = useProject(resolvedParams.id);
   const [isUpdatingStatus, setIsUpdatingStatus] = React.useState(false);
+  const [isUpdatingProject, setIsUpdatingProject] = React.useState(false);
+
+  // Use safe form context
+  const { formData } = useSafeFormContext();
+
+  // State for update form
+  const [updateFormData, setUpdateFormData] = React.useState<ProjectUpdateData>(
+    {
+      roomsCount: 0,
+      bathroomsCount: 0,
+      kitchensCount: 1,
+      conversationRoomsCount: 0,
+      extras: [],
+      description: "",
+      estimatedCost: 0,
+    }
+  );
+
+  // Initialize form data when project loads
+  React.useEffect(() => {
+    if (project) {
+      setUpdateFormData({
+        roomsCount: project.choosenEstimation.roomsCount,
+        bathroomsCount: project.choosenEstimation.bathroomsCount,
+        kitchensCount: project.choosenEstimation.kitchensCount,
+        conversationRoomsCount:
+          project.choosenEstimation.conversationRoomsCount,
+        extras: project.choosenEstimation.extras,
+        description: project.choosenEstimation.description,
+        estimatedCost: project.choosenEstimation.estimatedCost,
+      });
+    }
+  }, [project]);
 
   console.log("🏠 Project Page Rendered for ID:", resolvedParams.id);
   console.log("📊 Project Data:", project);
   console.log("🔄 Loading:", isLoading);
   console.log("❌ Error:", error);
+  console.log("📝 Update Form Data:", updateFormData);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -75,6 +117,84 @@ function ProjectPage({ params }: ProjectPageProps) {
       toast.error("Failed to update project status. Please try again.");
     } finally {
       setIsUpdatingStatus(false);
+    }
+  };
+
+  const handleUpdateProject = async () => {
+    console.log("🔘 STEP 1: Update button clicked");
+
+    if (!project) {
+      console.log("❌ STEP 1 FAILED: No project data available");
+      return;
+    }
+    console.log("✅ STEP 1 PASSED: Project data available");
+
+    console.log("🔘 STEP 2: Setting loading state");
+    setIsUpdatingProject(true);
+    console.log("✅ STEP 2 PASSED: Loading state set to true");
+
+    try {
+      console.log("🔘 STEP 3: Starting project update process");
+      console.log("🆔 Project ID being sent:", project.id);
+      console.log("🆔 Project ID type:", typeof project.id);
+      console.log("🆔 Project ID length:", project.id.length);
+      console.log("🆔 Full project object:", project);
+      console.log("📝 Form data being used:", updateFormData);
+      console.log("✅ STEP 3 PASSED: Logged all project and form data");
+
+      console.log("🔘 STEP 4: Using update form data directly");
+      // Use update form data directly since it's already in the correct format
+      const projectUpdateData = updateFormData;
+      console.log("✅ STEP 4 PASSED: Update form data ready");
+      console.log("📝 Project update data:", projectUpdateData);
+
+      console.log("🔘 STEP 5: Calling projectService.updateProject");
+      console.log("🆔 Project ID for API call:", project.id);
+
+      // Update the project
+      await projectService.updateProject(project.id, projectUpdateData);
+      console.log(
+        "✅ STEP 5 PASSED: projectService.updateProject completed successfully"
+      );
+
+      console.log("🔘 STEP 6: Refetching project data");
+      // Refetch the project data to get the updated information
+      await refetch();
+      console.log("✅ STEP 6 PASSED: Project data refetched successfully");
+
+      console.log("🔘 STEP 7: Showing success message");
+      console.log("✅ Project updated successfully");
+      toast.success("Project updated successfully! 🎉", {
+        style: {
+          background: "white",
+          color: "#92400e",
+          border: "1px solid #f59e0b",
+        },
+      });
+      console.log("✅ STEP 7 PASSED: Success message shown");
+    } catch (error: any) {
+      console.log("❌ ERROR CAUGHT: Update process failed");
+      console.error("❌ Error updating project:", error);
+      console.error("❌ Error details:", {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+        config: error.config,
+      });
+      console.error("❌ Project ID that failed:", project.id);
+      console.log("🔘 STEP ERROR: Showing error toast");
+      toast.error("Failed to update project. Please try again.", {
+        style: {
+          background: "white",
+          color: "#dc2626",
+          border: "1px solid #ef4444",
+        },
+      });
+      console.log("✅ STEP ERROR PASSED: Error toast shown");
+    } finally {
+      console.log("🔘 STEP 8: Cleaning up loading state");
+      setIsUpdatingProject(false);
+      console.log("✅ STEP 8 PASSED: Loading state set to false");
     }
   };
 
@@ -431,6 +551,215 @@ function ProjectPage({ params }: ProjectPageProps) {
                     </div>
                   )}
                 </div>
+              </div>
+            </Card>
+
+            {/* Update Project Section */}
+            <Card className="p-6 border-amber-200 bg-white shadow-lg">
+              <h3 className="text-lg font-semibold text-amber-900 mb-4">
+                Update Project
+              </h3>
+              <div className="space-y-4">
+                <p className="text-sm text-amber-700 mb-3">
+                  Update project details with new values
+                </p>
+
+                {/* Project Details Form */}
+                <div className="space-y-4">
+                  {/* Description */}
+                  <div>
+                    <Label
+                      htmlFor="description"
+                      className="text-sm font-medium text-amber-900"
+                    >
+                      Project Description
+                    </Label>
+                    <Textarea
+                      id="description"
+                      value={updateFormData.description}
+                      onChange={(e) =>
+                        setUpdateFormData((prev) => ({
+                          ...prev,
+                          description: e.target.value,
+                        }))
+                      }
+                      className="mt-1 border-amber-300 focus:border-amber-500"
+                      rows={3}
+                      placeholder="Enter project description..."
+                    />
+                  </div>
+
+                  {/* Room Counts */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label
+                        htmlFor="roomsCount"
+                        className="text-sm font-medium text-amber-900"
+                      >
+                        Bedrooms
+                      </Label>
+                      <Input
+                        id="roomsCount"
+                        type="number"
+                        min="0"
+                        max="20"
+                        value={updateFormData.roomsCount}
+                        onChange={(e) =>
+                          setUpdateFormData((prev) => ({
+                            ...prev,
+                            roomsCount: parseInt(e.target.value) || 0,
+                          }))
+                        }
+                        className="mt-1 border-amber-300 focus:border-amber-500"
+                      />
+                    </div>
+                    <div>
+                      <Label
+                        htmlFor="bathroomsCount"
+                        className="text-sm font-medium text-amber-900"
+                      >
+                        Bathrooms
+                      </Label>
+                      <Input
+                        id="bathroomsCount"
+                        type="number"
+                        min="0"
+                        max="20"
+                        step="0.5"
+                        value={updateFormData.bathroomsCount}
+                        onChange={(e) =>
+                          setUpdateFormData((prev) => ({
+                            ...prev,
+                            bathroomsCount: parseFloat(e.target.value) || 0,
+                          }))
+                        }
+                        className="mt-1 border-amber-300 focus:border-amber-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label
+                        htmlFor="kitchensCount"
+                        className="text-sm font-medium text-amber-900"
+                      >
+                        Kitchens
+                      </Label>
+                      <Input
+                        id="kitchensCount"
+                        type="number"
+                        min="1"
+                        max="10"
+                        value={updateFormData.kitchensCount}
+                        onChange={(e) =>
+                          setUpdateFormData((prev) => ({
+                            ...prev,
+                            kitchensCount: parseInt(e.target.value) || 1,
+                          }))
+                        }
+                        className="mt-1 border-amber-300 focus:border-amber-500"
+                      />
+                    </div>
+                    <div>
+                      <Label
+                        htmlFor="conversationRoomsCount"
+                        className="text-sm font-medium text-amber-900"
+                      >
+                        Living Rooms
+                      </Label>
+                      <Input
+                        id="conversationRoomsCount"
+                        type="number"
+                        min="0"
+                        max="10"
+                        value={updateFormData.conversationRoomsCount}
+                        onChange={(e) =>
+                          setUpdateFormData((prev) => ({
+                            ...prev,
+                            conversationRoomsCount:
+                              parseInt(e.target.value) || 0,
+                          }))
+                        }
+                        className="mt-1 border-amber-300 focus:border-amber-500"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Estimated Cost */}
+                  <div>
+                    <Label
+                      htmlFor="estimatedCost"
+                      className="text-sm font-medium text-amber-900"
+                    >
+                      Estimated Cost (USD)
+                    </Label>
+                    <Input
+                      id="estimatedCost"
+                      type="number"
+                      min="0"
+                      step="1000"
+                      value={updateFormData.estimatedCost}
+                      onChange={(e) =>
+                        setUpdateFormData((prev) => ({
+                          ...prev,
+                          estimatedCost: parseInt(e.target.value) || 0,
+                        }))
+                      }
+                      className="mt-1 border-amber-300 focus:border-amber-500"
+                      placeholder="Enter estimated cost..."
+                    />
+                  </div>
+
+                  {/* Extras Display (Read-only for now) */}
+                  {updateFormData.extras.length > 0 && (
+                    <div>
+                      <Label className="text-sm font-medium text-amber-900">
+                        Additional Features (Current)
+                      </Label>
+                      <div className="mt-1 flex flex-wrap gap-2">
+                        {updateFormData.extras.map((extra, index) => (
+                          <Badge
+                            key={index}
+                            variant="outline"
+                            className="text-xs border-amber-500 text-amber-700 bg-white"
+                          >
+                            {extra.name.replace(/_/g, " ")} (
+                            {extra.detail.count})
+                          </Badge>
+                        ))}
+                      </div>
+                      <p className="text-xs text-amber-600 mt-1">
+                        Features can be updated through the build house form
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Update Button */}
+                <GenericButton
+                  onClick={handleUpdateProject}
+                  disabled={isUpdatingProject}
+                  fullWidth
+                  className="bg-amber-600 hover:bg-amber-700 text-white border-amber-600 mt-4"
+                >
+                  {isUpdatingProject ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Updating Project...
+                    </>
+                  ) : (
+                    <>🔄 Update Project</>
+                  )}
+                </GenericButton>
+                {isUpdatingProject && (
+                  <div className="flex items-center justify-center mt-2">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-amber-500"></div>
+                    <span className="text-sm text-amber-600 ml-2">
+                      Updating project data...
+                    </span>
+                  </div>
+                )}
               </div>
             </Card>
 

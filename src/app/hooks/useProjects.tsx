@@ -1,8 +1,42 @@
 import { useCallback } from "react";
 import { Project } from "@/types/project";
-import { projectService } from "@/app/services/projectServices";
+import {
+  projectService,
+  ProjectUpdateData,
+} from "@/app/services/projectServices";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+
+// Safe form context hook that doesn't throw if context is not available
+export const useSafeFormContext = () => {
+  try {
+    const { useFormContext } = require("@/state/form-context");
+    return useFormContext();
+  } catch (error) {
+    console.log("📝 Form context not available, using default data");
+    return {
+      formData: {
+        bedrooms: 3,
+        bathrooms: 2,
+        projectType: "residential",
+        apiResponse: {
+          description: "Default project description",
+          estimatedCost: 25000000,
+          features: [
+            {
+              name: "garage",
+              count: 1,
+            },
+            {
+              name: "garden",
+              count: 1,
+            },
+          ],
+        },
+      },
+    };
+  }
+};
 
 export const useProjects = () => {
   const queryClient = useQueryClient();
@@ -34,11 +68,37 @@ export const useProjects = () => {
     },
   });
 
+  const updateProjectMutation = useMutation({
+    mutationFn: async ({
+      id,
+      projectData,
+    }: {
+      id: string;
+      projectData: ProjectUpdateData;
+    }) => {
+      return projectService.updateProject(id, projectData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      queryClient.invalidateQueries({ queryKey: ["project"] });
+    },
+    onError: (error: any) => {
+      console.error("❌ Update project mutation error:", error);
+    },
+  });
+
   const deleteProject = useCallback(
     async (id: string) => {
       return deleteProjectMutation.mutateAsync(id);
     },
     [deleteProjectMutation]
+  );
+
+  const updateProject = useCallback(
+    async (id: string, projectData: ProjectUpdateData) => {
+      return updateProjectMutation.mutateAsync({ id, projectData });
+    },
+    [updateProjectMutation]
   );
 
   console.log("📊 Projects data:", projects);
@@ -47,9 +107,13 @@ export const useProjects = () => {
 
   return {
     projects,
-    isLoading: isLoading || deleteProjectMutation.isPending,
-    error: error || deleteProjectMutation.error,
+    isLoading:
+      isLoading ||
+      deleteProjectMutation.isPending ||
+      updateProjectMutation.isPending,
+    error: error || deleteProjectMutation.error || updateProjectMutation.error,
     deleteProject,
+    updateProject,
   };
 };
 
