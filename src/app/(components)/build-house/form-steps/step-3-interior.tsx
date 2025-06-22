@@ -179,38 +179,7 @@ export function StepThreeInterior() {
         </p>
       </div>
 
-      {/* Example of using API response in step 3 */}
-      {apiResponse && (
-        <Card className="p-4 mb-6 bg-orange-50 border-orange-200">
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-medium text-orange-800">
-                  💡 Using API Response in Step 3
-                </h3>
-                <p className="text-sm text-orange-600 mt-1">
-                  Estimated cost: ${estimatedCost?.toLocaleString() || "N/A"}
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="text-xs text-orange-600">
-                  Description: {description?.substring(0, 50)}...
-                </p>
-              </div>
-            </div>
-
-            {/* Live Preview of Updated Description */}
-            <div className="mt-3 p-3 bg-orange-100 rounded-lg">
-              <h4 className="font-medium text-orange-800 mb-2">
-                📝 Live Preview - Updated Description:
-              </h4>
-              <p className="text-orange-700 text-sm">
-                {generateLiveDescription()}
-              </p>
-            </div>
-          </div>
-        </Card>
-      )}
+     
 
       <form onSubmit={handleSubmit} className="space-y-8">
         <Card className="p-6">

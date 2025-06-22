@@ -56,14 +56,13 @@ export function StepTwoExterior() {
 
   const updateDescriptionWithStep2Selections = () => {
     console.log("📝 Step 2 - Updating Description with Exterior Selections");
-    
+
     if (!formData.apiResponse) {
       console.log("⚠ep 2 - No API response available for description update");
       return;
     }
 
-    const baseDescription = formData
-      .apiResponse.description || "";
+    const baseDescription = formData.apiResponse.description || "";
     console.log("📝 Step 2 - Base Description:", baseDescription);
 
     // Build step 2 additions
@@ -160,90 +159,7 @@ export function StepTwoExterior() {
         </p>
       </div>
 
-      {/* 
-        API Response Display Section
-        ============================
-        
-        This section displays the comprehensive API response data received from the estimator endpoint.
-        It shows the user the results of their house estimation including:
-        
-        - Original project description from step 1
-        - Estimated cost breakdown
-        - Room and bathroom counts
-        - Live preview of updated description with current step selections
-        - Raw API response data for debugging purposes
-        
-        The display uses a green color scheme to indicate successful API response
-        and provides visual feedback that the estimation process is working correctly.
-        
-        Note: This section is currently commented out but can be uncommented
-        for debugging or to show users their estimation progress.
-      */}
-      {/* API Response Display */}
-      {formData.apiResponse && (
-        <Card className="p-6 mb-6 bg-green-50 border-green-200">
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-green-800">
-              🎉 Estimate Generated Successfully!
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="font-medium text-green-700">
-                  Original Description:
-                </span>
-                <p className="text-green-600 mt-1">
-                  {formData.apiResponse.description || "N/A"}
-                </p>
-              </div>
-              <div>
-                <span className="font-medium text-green-700">
-                  Estimated Cost:
-                </span>
-                <p className="text-green-600 mt-1">
-                  $
-                  {formData.apiResponse.estimatedCost?.toLocaleString() ||
-                    "N/A"}
-                </p>
-              </div>
-              {formData.apiResponse.roomsCount && (
-                <div>
-                  <span className="font-medium text-green-700">Rooms:</span>
-                  <p className="text-green-600 mt-1">
-                    {formData.apiResponse.roomsCount} bedrooms
-                  </p>
-                </div>
-              )}
-              {formData.apiResponse.bathroomsCount && (
-                <div>
-                  <span className="font-medium text-green-700">Bathrooms:</span>
-                  <p className="text-green-600 mt-1">
-                    {formData.apiResponse.bathroomsCount} bathrooms
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {/* Live Preview of Updated Description */}
-            <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h4 className="font-medium text-blue-800 mb-2">
-                📝 Live Preview - Updated Description:
-              </h4>
-              <p className="text-blue-700 text-sm">
-                {generateLiveDescription()}
-              </p>
-            </div>
-
-            <div className="mt-3 p-3 bg-green-100 rounded-lg">
-              <span className="font-medium text-green-700">
-                API Response Data:
-              </span>
-              <pre className="text-xs text-green-600 mt-2 overflow-auto">
-                {JSON.stringify(formData.apiResponse, null, 2)}
-              </pre>
-            </div>
-          </div>
-        </Card>
-      )}
+     
 
       <form onSubmit={handleSubmit} className="space-y-8">
         <Card className="p-6">
