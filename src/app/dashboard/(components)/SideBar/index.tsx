@@ -173,13 +173,19 @@ const SideBar = () => {
           {userRole === "SELLER" && (
             <>
               <SidebarLink
-                href="/dashboard/profile" // Assuming profile path for sellers
+                href="/dashboard/bids"
+                icon={DollarSign}
+                label="My Bids"
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/profile"
                 icon={User}
                 label="Profile"
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
-                href="/dashboard/sales-report" // Assuming sales report path for sellers
+                href="/dashboard/sales-report"
                 icon={DollarSign}
                 label="Sales Report"
                 isCollapsed={isSidebarCollapsed}
@@ -207,8 +213,8 @@ const SideBar = () => {
           )}
           {userRole === "SELLER" && (
             <SidebarLink
-              href="/dashboard/support" // Assuming a support page for sellers
-              icon={CircleHelp} // Using CircleHelp for support
+              href="/dashboard/support"
+              icon={CircleHelp}
               label="Support"
               isCollapsed={isSidebarCollapsed}
             />

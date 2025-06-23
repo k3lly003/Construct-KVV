@@ -11,6 +11,7 @@ import Profile from "@/app/(components)/Navbar/Profile";
 import { useUserStore } from "@/store/userStore";
 import CustomerProfile from "@/app/(components)/Navbar/CustomerProfile";
 import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
+import { NotificationsBell } from "./NotificationsBell";
 
 interface ThirdLevelItemProps {
   item: { name: string; href?: string };
@@ -228,10 +229,10 @@ const Navbar: React.FC = () => {
               </Link>
 
               <Link
-                href="/shops"
+                href="/my-projects"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
               >
-                Shops
+                Projects
               </Link>
             </div>
           </div>
@@ -250,6 +251,7 @@ const Navbar: React.FC = () => {
             >
               <ShoppingCart />
             </Link>
+            <NotificationsBell />
             {/* Conditionally render based on isClient and localUserData */}
             {isClient && (
               localUserData ? (

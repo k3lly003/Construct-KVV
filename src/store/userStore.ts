@@ -3,10 +3,11 @@
 import { create } from 'zustand';
 
 // Define the shape of your user state
-interface UserState {
-  role: 'ADMIN' | 'SELLER' | null;
+export interface UserState {
+  role: 'ADMIN' | 'SELLER' | 'USER' | null;
   firstName: string | null;
   lastName: string | null;
+  profilePic: string | null;
   name: string | null;
   email: string | null;
   isHydrated: boolean; // Flag to indicate if client-side data has been loaded
@@ -23,6 +24,7 @@ export const useUserStore = create<UserState>((set) => ({
   role: null,
   firstName: null,
   lastName: null,
+  profilePic: null,
   name: null,
   email: null,
   isHydrated: false,
@@ -33,9 +35,10 @@ export const useUserStore = create<UserState>((set) => ({
       const user = getUserDataFromLocalStorage();
       if (user) {
         set({
-          role: user.role as 'ADMIN' | 'SELLER', // Cast to ensure type safety
+          role: user.role as 'ADMIN' | 'SELLER' | 'USER', // Cast to ensure type safety
           firstName: user.firstName,
           lastName: user.lastName,
+          profilePic: user.profilePic,
           name: `${user.firstName} ${user.lastName}`,
           email: `${user.email}`,
           isHydrated: true, // Mark as hydrated once data is loaded

@@ -6,6 +6,8 @@ import DefaultPageBanner from '@/app/(components)/DefaultPageBanner';
 import Reviews from '@/app/(components)/product/Reviews';
 import RelatedProducts from '@/app/(components)/product/RelatedProducts';
 import ProductView from '@/app/(components)/product/ProductView';
+import { PlaceBidForm } from '@/app/(client-pages)/Bids/PlaceBidForm';
+import { ProjectBidsList } from '@/app/(client-pages)/Bids/ProjectBidsList';
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -22,6 +24,12 @@ function ProductPage({ params }: ProductPageProps) {
       <DefaultPageBanner title="Product View" backgroundImage='/building.jpg' />
       <div className="max-w-7xl flex flex-col gap-[30px] p-3 sm:w-[60%] m-auto my-10">
         <ProductView/>
+        <div className="mt-8">
+          <PlaceBidForm projectId={resolvedParams.id} />
+        </div>
+        <div className="mt-8">
+          <ProjectBidsList projectId={resolvedParams.id} />
+        </div>
         <RelatedProducts />
         {reviews && <Reviews reviews={reviews} />}
       </div>
