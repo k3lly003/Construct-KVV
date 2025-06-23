@@ -4,7 +4,8 @@ import { create } from 'zustand';
 
 // Define the shape of your user state
 export interface UserState {
-  role: 'ADMIN' | 'SELLER' | 'USER' | null;
+  id: string | null;
+  role: 'ADMIN' | 'SELLER' | 'CUSTOMER' | null;
   firstName: string | null;
   lastName: string | null;
   profilePic: string | null;
@@ -21,6 +22,7 @@ export interface UserState {
 import { getUserDataFromLocalStorage } from '@/app/utils/middlewares/UserCredentions';
 
 export const useUserStore = create<UserState>((set) => ({
+  id: null,
   role: null,
   firstName: null,
   lastName: null,
@@ -35,7 +37,8 @@ export const useUserStore = create<UserState>((set) => ({
       const user = getUserDataFromLocalStorage();
       if (user) {
         set({
-          role: user.role as 'ADMIN' | 'SELLER' | 'USER', // Cast to ensure type safety
+          id: user.id || null,
+          role: user.role as 'ADMIN' | 'SELLER' | 'CUSTOMER', // Cast to ensure type safety
           firstName: user.firstName,
           lastName: user.lastName,
           profilePic: user.profilePic,

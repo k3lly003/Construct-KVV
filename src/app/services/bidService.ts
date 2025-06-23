@@ -29,7 +29,7 @@ export const bidService = {
         Authorization: `Bearer ${authToken}`,
       },
     });
-    return response.data;
+    return response.data.data;
   },
 
   // TODO: Implement getSellerBids
