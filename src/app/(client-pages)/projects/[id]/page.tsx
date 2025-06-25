@@ -98,22 +98,29 @@ function ProjectPage({ params }: ProjectPageProps) {
 
     setIsUpdatingStatus(true);
     try {
-      console.log(
-        "🔄 Updating project status from",
-        project.status,
-        "to",
-        newStatus
+      // Use the direct PATCH endpoint as requested
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        toast.error("No authentication token found. Please login first.");
+        setIsUpdatingStatus(false);
+        return;
+      }
+      await fetch(
+        `http://localhost:3000/api/v1/final-project/${project.id}/status`,
+        {
+          method: "PATCH",
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+        }
       );
-
-      await projectService.updateProjectStatus(project.id, newStatus);
-
       // Refetch the project data to get the updated status
       await refetch();
-
-      console.log("✅ Project status updated successfully");
       toast.success(`Project status updated to ${newStatus} successfully! 🎉`);
     } catch (error) {
-      console.error("❌ Error updating project status:", error);
       toast.error("Failed to update project status. Please try again.");
     } finally {
       setIsUpdatingStatus(false);

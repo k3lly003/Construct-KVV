@@ -50,6 +50,8 @@ export type FormData = {
   stories: number;
   bedrooms: number;
   bathrooms: number;
+  recommendations: string[];
+  confidences: string;
 
   // API Response from step 1
   apiResponse?: any;

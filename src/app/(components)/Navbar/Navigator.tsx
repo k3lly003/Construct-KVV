@@ -11,6 +11,9 @@ import Profile from "@/app/(components)/Navbar/Profile";
 import { useUserStore } from "@/store/userStore";
 import CustomerProfile from "@/app/(components)/Navbar/CustomerProfile";
 import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
+import { NotificationIcon } from "@/components/ui/notification-icon";
+import { NotificationModal } from "@/components/ui/notification-modal";
+import { useNotificationStore } from "@/store/notificationStore";
 
 interface ThirdLevelItemProps {
   item: { name: string; href?: string };
@@ -162,32 +165,66 @@ const MenuItem: React.FC<MenuItemProps> = ({
 
 const Navbar: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
-  const [isClient, setIsClient] = useState(false); // New state to track if on client
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [localUserData, setLocalUserData] = useState<any>(null); // New state for local user data
+  const [isClient, setIsClient] = useState(false);
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
+  const [localUserData, setLocalUserData] = useState<any>(null);
 
   // Get user data from Zustand store
   const { role: userRole, name: userName, email: userEmail } = useUserStore();
 
+  // Get notification data from store
+  const {
+    notifications,
+    markAsRead,
+    markAllAsRead,
+    getUnreadCount,
+    fetchNotifications,
+    isLoading: notificationsLoading,
+    error: notificationsError,
+  } = useNotificationStore();
+
+  // Track client and local storage user data
   useEffect(() => {
-    // This code only runs on the client after hydration
     setIsClient(true);
     setLocalUserData(getUserDataFromLocalStorage());
-
+    // Only add "click outside" listener after mount
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (!target.closest(".nav-menu")) {
-        setActiveMenu(null);
-      }
+      if (!target.closest(".nav-menu")) setActiveMenu(null);
     };
-
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
+  // Fetch notifications only when client and user data are set
+  useEffect(() => {
+    if (isClient && localUserData) {
+      fetchNotifications();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isClient, localUserData]);
+
   const handleMenuClick = (label: string, event: React.MouseEvent) => {
     event.stopPropagation();
     setActiveMenu(activeMenu === label ? null : label);
+  };
+
+  const handleNotificationClick = async () => {
+    // Refresh notifications when opening the modal
+    await fetchNotifications();
+    setIsNotificationModalOpen(true);
+  };
+
+  const handleNotificationClose = () => {
+    setIsNotificationModalOpen(false);
+  };
+
+  const handleMarkAsRead = (id: string) => {
+    markAsRead(id);
+  };
+
+  const handleMarkAllAsRead = () => {
+    markAllAsRead();
   };
 
   return (
@@ -244,6 +281,16 @@ const Navbar: React.FC = () => {
             >
               <p>Help</p>
             </Link>
+
+            {/* Notification Icon (client only) */}
+            {isClient && (
+              <NotificationIcon
+                count={getUnreadCount()}
+                onClick={handleNotificationClick}
+                className="text-amber-600 hover:text-amber-700"
+              />
+            )}
+
             <Link
               href="/cart"
               className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
@@ -277,6 +324,19 @@ const Navbar: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Notification Modal (client only) */}
+      {isClient && (
+        <NotificationModal
+          isOpen={isNotificationModalOpen}
+          onClose={handleNotificationClose}
+          notifications={notifications}
+          onMarkAsRead={handleMarkAsRead}
+          onMarkAllAsRead={handleMarkAllAsRead}
+          isLoading={notificationsLoading}
+          error={notificationsError}
+        />
+      )}
     </nav>
   );
 };

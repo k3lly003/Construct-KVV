@@ -11,7 +11,9 @@ import Profile from "@/app/(components)/Navbar/Profile";
 import { useUserStore } from "@/store/userStore";
 import CustomerProfile from "@/app/(components)/Navbar/CustomerProfile";
 import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
-
+import { NotificationIcon } from "@/components/ui/notification-icon";
+import { NotificationModal } from "@/components/ui/notification-modal";
+import { useNotificationStore } from "@/store/notificationStore";
 
 interface ThirdLevelItemProps {
   item: { name: string; href?: string };
@@ -164,11 +166,16 @@ const MenuItem: React.FC<MenuItemProps> = ({
 const Navbar: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false); // New state to track if on client
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [localUserData, setLocalUserData] = useState<any>(null); // New state for local user data
 
   // Get user data from Zustand store
   const { role: userRole, name: userName, email: userEmail } = useUserStore();
+
+  // Get notification data from store
+  const { notifications, markAsRead, markAllAsRead, getUnreadCount } =
+    useNotificationStore();
 
   useEffect(() => {
     // This code only runs on the client after hydration
@@ -189,6 +196,22 @@ const Navbar: React.FC = () => {
   const handleMenuClick = (label: string, event: React.MouseEvent) => {
     event.stopPropagation();
     setActiveMenu(activeMenu === label ? null : label);
+  };
+
+  const handleNotificationClick = () => {
+    setIsNotificationModalOpen(true);
+  };
+
+  const handleNotificationClose = () => {
+    setIsNotificationModalOpen(false);
+  };
+
+  const handleMarkAsRead = (id: string) => {
+    markAsRead(id);
+  };
+
+  const handleMarkAllAsRead = () => {
+    markAllAsRead();
   };
 
   return (
@@ -245,6 +268,14 @@ const Navbar: React.FC = () => {
             >
               <p>Help</p>
             </Link>
+
+            {/* Notification Icon */}
+            <NotificationIcon
+              count={getUnreadCount()}
+              onClick={handleNotificationClick}
+              className="text-amber-600 hover:text-amber-700"
+            />
+
             <Link
               href="/cart"
               className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
@@ -252,8 +283,8 @@ const Navbar: React.FC = () => {
               <ShoppingCart />
             </Link>
             {/* Conditionally render based on isClient and localUserData */}
-            {isClient && (
-              localUserData ? (
+            {isClient &&
+              (localUserData ? (
                 userRole === "ADMIN" || userRole === "SELLER" ? (
                   <Profile
                     NK={""}
@@ -273,12 +304,20 @@ const Navbar: React.FC = () => {
                     Sign In
                   </p>
                 </Link>
-              )
-            )}
+              ))}
             <FlagToggle />
           </div>
         </div>
       </div>
+
+      {/* Notification Modal */}
+      <NotificationModal
+        isOpen={isNotificationModalOpen}
+        onClose={handleNotificationClose}
+        notifications={notifications}
+        onMarkAsRead={handleMarkAsRead}
+        onMarkAllAsRead={handleMarkAllAsRead}
+      />
     </nav>
   );
 };
