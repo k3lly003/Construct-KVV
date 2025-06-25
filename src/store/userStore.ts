@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { create } from 'zustand';
+import { create } from "zustand";
 
 // Define the shape of your user state
 interface UserState {
-  role: 'ADMIN' | 'SELLER' | null;
+  role: "ADMIN" | "SELLER" | "CUSTOMER" | null;
   firstName: string | null;
   lastName: string | null;
   name: string | null;
@@ -17,7 +17,7 @@ interface UserState {
 
 // Helper function to get user data from localStorage (same as before)
 // Ensure this path is correct relative to your store file
-import { getUserDataFromLocalStorage } from '@/app/utils/middlewares/UserCredentions';
+import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
 
 export const useUserStore = create<UserState>((set) => ({
   role: null,
@@ -29,11 +29,11 @@ export const useUserStore = create<UserState>((set) => ({
 
   loadUserData: () => {
     // This function will only run on the client-side
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const user = getUserDataFromLocalStorage();
       if (user) {
         set({
-          role: user.role as 'ADMIN' | 'SELLER', // Cast to ensure type safety
+          role: user.role as "ADMIN" | "SELLER" | "CUSTOMER", // Now supports CUSTOMER
           firstName: user.firstName,
           lastName: user.lastName,
           name: `${user.firstName} ${user.lastName}`,
@@ -51,7 +51,7 @@ export const useUserStore = create<UserState>((set) => ({
 // Optional: A component to hydrate the store on the client.
 // This is a common pattern with Zustand in Next.js to ensure
 // `loadUserData` is called once after the client mounts.
-import React from 'react';
+import React from "react";
 
 export function UserStoreInitializer() {
   const loadUserData = useUserStore((state) => state.loadUserData);

@@ -25,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { NegotiationChat } from "@/app/dashboard/(components)/negotiation/NegotiationChat";
 
 interface ProjectPageProps {
   params: Promise<{ id: string }>;
@@ -466,7 +467,7 @@ function ProjectPage({ params }: ProjectPageProps) {
                   {project.bids.map((bid, index) => (
                     <div
                       key={index}
-                      className="p-4 border border-amber-200 rounded-lg bg-amber-50"
+                      className="p-4 border border-amber-200 rounded-lg bg-amber-50 mb-6"
                     >
                       <div className="flex justify-between items-start">
                         <div>
@@ -485,6 +486,13 @@ function ProjectPage({ params }: ProjectPageProps) {
                             {formatDate(bid.createdAt || "")}
                           </p>
                         </div>
+                      </div>
+                      {/* Negotiation Chat for this bid */}
+                      <div className="mt-4">
+                        <NegotiationChat
+                          bidId={String(bid.id)}
+                          initialBidData={bid}
+                        />
                       </div>
                     </div>
                   ))}
