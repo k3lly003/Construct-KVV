@@ -26,9 +26,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { NegotiationChat } from "@/app/dashboard/(components)/negotiation/NegotiationChat";
+import { any } from "zod";
 
 interface ProjectPageProps {
   params: Promise<{ id: string }>;
+}
+
+// Add BidStatus enum
+export enum BidStatus {
+  PENDING = "PENDING",
+  ACCEPTED = "ACCEPTED",
+  REJECTED = "REJECTED",
+  WITHDRAWN = "WITHDRAWN",
+  COUNTERED = "COUNTERED",
 }
 
 function ProjectPage({ params }: ProjectPageProps) {
@@ -500,19 +510,13 @@ function ProjectPage({ params }: ProjectPageProps) {
                   {/* Call to Action even when bids exist */}
                   <div className="mt-4 p-4 bg-amber-500 rounded-lg border border-amber-600">
                     <h4 className="font-semibold text-white mb-2">
-                      Want to Submit Your Bid?
+                      Handle Your Project to Our Professionals?
                     </h4>
                     <p className="text-white/90 text-sm">
-                      Join the competition and submit your professional bid for
-                      this project.
+                      Accept or Reject the bids from our professionals.
                     </p>
                     <div className="mt-3">
-                      <GenericButton
-                        variant="outline"
-                        className="text-white border-white hover:bg-white hover:text-amber-600 bg-transparent"
-                      >
-                        💼 Submit Your Bid
-                      </GenericButton>
+                      <BidStatusDropdown bidId={project.bids[0]?.id} />
                     </div>
                   </div>
                 </div>
@@ -918,7 +922,7 @@ function ProjectPage({ params }: ProjectPageProps) {
                     fullWidth
                     className="text-amber-600 border-amber-500 hover:bg-amber-50 bg-white"
                   >
-                    💼 Submit Your Bid
+                    💼 Your Bids
                   </GenericButton>
                 </div>
               </div>
@@ -929,5 +933,98 @@ function ProjectPage({ params }: ProjectPageProps) {
     </>
   );
 }
+
+const BidStatusDropdown: React.FC<{ bidId: string }> = ({ bidId }) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [selectedStatus, setSelectedStatus] = React.useState<BidStatus | null>(
+    null
+  );
+
+  const handleStatusChange = async (status: BidStatus) => {
+    setIsLoading(true);
+    setSelectedStatus(status);
+    try {
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        toast.error("No authentication token found. Please login first.");
+        setIsLoading(false);
+        return;
+      }
+      const res = await fetch(
+        `http://localhost:3000/api/v1/bids/${bidId}/status`,
+        {
+          method: "PATCH",
+          headers: {
+            accept: "*/*",
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status }),
+        }
+      );
+      if (!res.ok) throw new Error("Failed to update bid status");
+      toast.success(`Bid status updated to ${status}!`);
+    } catch (e: any) {
+      toast.error(e.message || "Failed to update bid status");
+    } finally {
+      setIsLoading(false);
+      setIsOpen(false);
+    }
+  };
+
+  return (
+    <div className="relative inline-block text-left w-full">
+      <button
+        type="button"
+        className="inline-flex justify-center w-full rounded-md border border-white shadow-sm px-4 py-2 bg-white text-amber-600 font-semibold hover:bg-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
+        onClick={() => setIsOpen((v) => !v)}
+        disabled={isLoading}
+      >
+        {isLoading ? (
+          <span className="flex items-center justify-center">
+            <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-amber-500 mr-2"></span>
+            Processing...
+          </span>
+        ) : (
+          <>
+            💼{" "}
+            {selectedStatus
+              ? `Status: ${selectedStatus}`
+              : "Accept/Update Bid Status"}
+            <svg
+              className="ml-2 h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fillRule="evenodd"
+                d="M5.23 7.21a.75.75 0 011.06.02L10 10.584l3.71-3.354a.75.75 0 111.02 1.1l-4.25 3.846a.75.75 0 01-1.02 0l-4.25-3.846a.75.75 0 01.02-1.06z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </>
+        )}
+      </button>
+      {isOpen && !isLoading && (
+        <div className="origin-top-right absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
+          <div className="py-1">
+            {Object.values(BidStatus).map((status) => (
+              <button
+                key={status}
+                onClick={() => handleStatusChange(status)}
+                className="block w-full text-left px-4 py-2 text-sm text-amber-700 hover:bg-amber-100 hover:text-amber-900"
+              >
+                {status.charAt(0) + status.slice(1).toLowerCase()}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default ProjectPage;

@@ -258,6 +258,25 @@ const ErrorFallback = ({
   </div>
 );
 
+// Helper to get initials from businessName
+function getBusinessInitials(businessName: string) {
+  if (!businessName) return "";
+  const parts = businessName.split(" ").filter(Boolean);
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+// Helper to get user info from localStorage
+function getLocalUser() {
+  if (typeof window !== "undefined") {
+    try {
+      const userStr = localStorage.getItem("user");
+      if (userStr) return JSON.parse(userStr);
+    } catch {}
+  }
+  return null;
+}
+
 // Separate component for the actual chat content
 const ChatContent = ({
   bidId,
@@ -404,10 +423,35 @@ const ChatContent = ({
               const isOwnMessage = isSellerMsg
                 ? userRole === "SELLER"
                 : userRole !== "SELLER";
-              // Use profilePic and displayName if available (mock: use email as name)
-              const displayName = msg.senderId || "User";
-              // TODO: Replace with actual profilePic if available
-              const profilePic = undefined;
+              let displayName = "";
+              let profilePic = undefined;
+              if (isSellerMsg) {
+                // Seller info from msg.bid.seller
+                const seller = msg.bid?.seller;
+                if (seller) {
+                  displayName = seller.businessName || "";
+                  profilePic = seller.user?.profilePic || undefined;
+                }
+                if (!profilePic && displayName) {
+                  displayName = getBusinessInitials(displayName);
+                }
+              } else {
+                // User info from localStorage
+                const localUser = getLocalUser();
+                if (localUser) {
+                  displayName = `${localUser.firstName} ${localUser.lastName}`;
+                  profilePic = localUser.profilePic || undefined;
+                  if (
+                    !profilePic &&
+                    localUser.firstName &&
+                    localUser.lastName
+                  ) {
+                    displayName = getInitials(displayName);
+                  }
+                } else {
+                  displayName = "User";
+                }
+              }
               if ("isInitialBid" in msg && msg.isInitialBid) {
                 return (
                   <InitialBidMessage
