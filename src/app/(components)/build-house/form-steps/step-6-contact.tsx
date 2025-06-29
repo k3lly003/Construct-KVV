@@ -21,6 +21,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { convertFormDataToProjectUpdate } from "@/app/services/projectServices";
+import type { FormData as AppFormData } from "@/app/utils/fakes/formData";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // --- BudgetRadioSection Component ---
 function BudgetRadioSection({
@@ -29,38 +32,61 @@ function BudgetRadioSection({
   setSelectedId,
   disabled,
 }: {
-  apiResponse: any;
+  apiResponse: AppFormData["apiResponse"];
   selectedId: string;
   setSelectedId: (id: string) => void;
   disabled: boolean;
 }) {
-  // Extract options: main estimate and suggestions
-  const mainEstimate =
-    apiResponse && apiResponse.estimatedCost && apiResponse.id
+  const mainEstimate: Array<{
+    id: string;
+    label: string;
+    description: string;
+    cost: number;
+  }> =
+    apiResponse &&
+    typeof apiResponse === "object" &&
+    apiResponse.estimatedCost &&
+    apiResponse.id
       ? [
           {
             id: apiResponse.id,
-            label: `Main Estimate: Rwf ${apiResponse.estimatedCost.toLocaleString()}`,
+            label: `Main Estimate: Rwf ${apiResponse.estimatedCost?.toLocaleString()}`,
             description:
               apiResponse.description ||
               "Recommended based on your specifications",
-            cost: apiResponse.estimatedCost,
+            cost: apiResponse.estimatedCost!,
           },
         ]
       : [];
 
-  const suggestions = Array.isArray(apiResponse?.suggestions)
-    ? apiResponse.suggestions.map((sugg: any, idx: number) => ({
+  const suggestions: Array<{
+    id: string;
+    label: string;
+    description: string;
+    cost: number;
+  }> = Array.isArray(apiResponse?.suggestions)
+    ? (
+        apiResponse.suggestions as Array<{
+          id: string;
+          estimatedCost?: number;
+          description?: string;
+        }>
+      ).map((sugg, idx) => ({
         id: sugg.id,
         label: `Option ${idx + 1}: Rwf ${
           sugg.estimatedCost?.toLocaleString?.() ?? ""
         }`,
         description: sugg.description || `Alternative option ${idx + 1}`,
-        cost: sugg.estimatedCost,
+        cost: sugg.estimatedCost ?? 0,
       }))
     : [];
 
-  const options = [...mainEstimate, ...suggestions];
+  const options: Array<{
+    id: string;
+    label: string;
+    description: string;
+    cost: number;
+  }> = [...mainEstimate, ...suggestions];
 
   return (
     <RadioGroup
@@ -140,7 +166,7 @@ export function StepSixContact() {
         houseSummary?.fullDescription ||
         "Updated modern house description with luxury features";
       await axios.put(
-        `http://localhost:3000/api/v1/estimator/${selectedBudgetId}/description`,
+        `${API_URL}/api/v1/estimator/${selectedBudgetId}/description`,
         { description },
         {
           headers: {
@@ -152,7 +178,7 @@ export function StepSixContact() {
 
       // 2. Create final project with the chosen estimation ID
       await axios.post(
-        "http://localhost:3000/api/v1/final-project",
+        `${API_URL}/api/v1/final-project`,
         { choosenEstimationId: selectedBudgetId },
         {
           headers: {
@@ -167,11 +193,19 @@ export function StepSixContact() {
       setTimeout(() => {
         window.location.href = "/projects";
       }, 1500);
-    } catch (error: any) {
-      toast.error(
-        error?.response?.data?.message ||
-          "Failed to create project. Please try again."
-      );
+    } catch (error: unknown) {
+      let errorMessage = "Failed to create project. Please try again.";
+      if (
+        error &&
+        typeof error === "object" &&
+        "response" in error &&
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message
+      ) {
+        errorMessage = (error as { response?: { data?: { message?: string } } })
+          .response!.data!.message!;
+      }
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -244,11 +278,29 @@ export function StepSixContact() {
                   <span className="text-sm text-amber-700 mb-1">
                     💡 Recommendations
                   </span>
-                  {apiResponse?.feasibilityAnalysis?.recommendations &&
-                  apiResponse.feasibilityAnalysis.recommendations.length > 0 ? (
-                    <ul className="list-none pl-0 space-y-1 w-full">
-                      {apiResponse.feasibilityAnalysis.recommendations.map(
-                        (rec: string, idx: number) => (
+                  {(() => {
+                    let recommendations: unknown[] | undefined;
+                    if (
+                      apiResponse?.feasibilityAnalysis &&
+                      typeof apiResponse.feasibilityAnalysis === "object" &&
+                      "recommendations" in apiResponse.feasibilityAnalysis &&
+                      Array.isArray(
+                        (
+                          apiResponse.feasibilityAnalysis as {
+                            recommendations?: unknown[];
+                          }
+                        ).recommendations
+                      )
+                    ) {
+                      recommendations = (
+                        apiResponse.feasibilityAnalysis as {
+                          recommendations?: unknown[];
+                        }
+                      ).recommendations;
+                    }
+                    return recommendations && recommendations.length > 0 ? (
+                      <ul className="list-none pl-0 space-y-1 w-full">
+                        {recommendations.map((rec, idx) => (
                           <li
                             key={idx}
                             className="flex items-start space-x-2 text-amber-900"
@@ -261,17 +313,17 @@ export function StepSixContact() {
                                 : "🛠️"}
                             </span>
                             <span className="font-medium leading-snug">
-                              {rec}
+                              {rec as string}
                             </span>
                           </li>
-                        )
-                      )}
-                    </ul>
-                  ) : (
-                    <span className="font-bold text-amber-900">
-                      No recommendations available
-                    </span>
-                  )}
+                        ))}
+                      </ul>
+                    ) : (
+                      <span className="font-bold text-amber-900">
+                        No recommendations available
+                      </span>
+                    );
+                  })()}
                 </div>
               </div>
               <div>

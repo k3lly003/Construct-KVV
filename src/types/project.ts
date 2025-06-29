@@ -33,11 +33,13 @@ export interface Owner {
 }
 
 export interface Bid {
-  // Add bid structure when available
-  id?: string;
-  amount?: number;
+  id: string;
+  message: string;
+  amount: number;
+  createdAt: string;
+  sellerId?: string;
   description?: string;
-  createdAt?: string;
+  // Add any other fields as needed
 }
 
 // Define the project status types
@@ -69,4 +71,12 @@ export interface Projects {
   extras: string;
   description: string;
   estimatedCost: number;
+}
+
+export enum BidStatus {
+  PENDING = "PENDING",
+  ACCEPTED = "ACCEPTED",
+  REJECTED = "REJECTED",
+  WITHDRAWN = "WITHDRAWN",
+  COUNTERED = "COUNTERED",
 }

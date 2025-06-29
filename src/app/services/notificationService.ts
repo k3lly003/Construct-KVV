@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Notification } from "@/components/ui/notification-modal";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export interface NotificationResponse {
   success: boolean;
@@ -51,11 +51,12 @@ class NotificationService {
         }
       );
 
-      return response.data;
-    } catch (error: any) {
+      return response.data as NotificationResponse;
+    } catch (error) {
+      const err = error as { response?: { data?: { message?: string } } };
       console.error("Error fetching notifications:", error);
       throw new Error(
-        error.response?.data?.message || "Failed to fetch notifications"
+        err.response?.data?.message || "Failed to fetch notifications"
       );
     }
   }
@@ -79,11 +80,12 @@ class NotificationService {
         }
       );
 
-      return response.data;
-    } catch (error: any) {
+      return response.data as MarkAsReadResponse;
+    } catch (error) {
+      const err = error as { response?: { data?: { message?: string } } };
       console.error("Error marking notification as read:", error);
       throw new Error(
-        error.response?.data?.message || "Failed to mark notification as read"
+        err.response?.data?.message || "Failed to mark notification as read"
       );
     }
   }
@@ -107,11 +109,12 @@ class NotificationService {
         }
       );
 
-      return response.data;
-    } catch (error: any) {
+      return response.data as MarkAsReadResponse;
+    } catch (error) {
+      const err = error as { response?: { data?: { message?: string } } };
       console.error("Error marking all notifications as read:", error);
       throw new Error(
-        error.response?.data?.message ||
+        err.response?.data?.message ||
           "Failed to mark all notifications as read"
       );
     }

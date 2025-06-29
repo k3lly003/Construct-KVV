@@ -294,8 +294,8 @@ export function StepFivePreferences() {
                 🏡 Your Dream House Summary
               </h3>
               <p className="text-muted-foreground">
-                Here's a complete overview of your house design based on all
-                your selections
+                Here&apos;s a complete overview of your house design based on
+                all your selections
               </p>
             </div>
 

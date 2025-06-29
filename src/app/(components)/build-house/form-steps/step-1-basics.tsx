@@ -11,6 +11,8 @@ import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredent
 import { useState } from "react";
 import axios from "axios";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export function StepOneBasics() {
   const { formData, updateFormData, nextStep, setApiResponse } =
     useFormContext();
@@ -181,8 +183,8 @@ export function StepOneBasics() {
     };
 
     console.log("🚀authToken ", token);
-    console.log("🚀 Sending API Request:", {
-      url: "http://localhost:300/api/v1/estimator/comprehensive",
+    console.log("\uD83D\uDE80 Sending API Request:", {
+      url: `${API_URL}/api/v1/estimator/comprehensive`,
       method: "POST",
       headers: {
         accept: "application/json",
@@ -196,7 +198,7 @@ export function StepOneBasics() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/v1/estimator/comprehensive",
+        `${API_URL}/api/v1/estimator/comprehensive`,
         requestBody,
         {
           headers: {
@@ -210,17 +212,36 @@ export function StepOneBasics() {
       console.log("✅ API Response Status:", response.status);
       console.log("✅ API Response Headers:", response.headers);
       console.log("✅ API Response Data:", response.data);
-      setApiResponse(response.data);
-    } catch (error: any) {
-      console.error("❌ API Error Status:", error.response?.status);
-      console.error("❌ API Error Headers:", error.response?.headers);
-      console.error("❌ API Error Data:", error.response?.data);
-      console.error("❌ API Error Message:", error.message);
-      setError(
-        error.response?.data?.message ||
-          error.message ||
-          "Failed to get estimate"
+      setApiResponse(
+        response.data as import("@/app/utils/fakes/formData").FormData["apiResponse"]
       );
+    } catch (error: unknown) {
+      let errorMessage = "Failed to get estimate";
+      if (
+        error &&
+        typeof error === "object" &&
+        "message" in error &&
+        typeof (error as { message?: string }).message === "string"
+      ) {
+        errorMessage = (error as { message?: string }).message!;
+      }
+      if (error && typeof error === "object" && "response" in error) {
+        const response = (
+          error as { response?: { data?: { message?: string } } }
+        ).response;
+        if (
+          response &&
+          typeof response === "object" &&
+          "data" in response &&
+          response.data &&
+          typeof response.data === "object" &&
+          "message" in response.data
+        ) {
+          errorMessage = (response.data as { message?: string }).message!;
+        }
+      }
+      setError(errorMessage);
+      console.error("❌ API Error:", error);
     } finally {
       setIsLoading(false);
     }
@@ -250,8 +271,7 @@ export function StepOneBasics() {
               <RadioGroup
                 id="projectType"
                 value={formData.projectType}
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                onValueChange={(value: any) =>
+                onValueChange={(value: string) =>
                   updateFormData({ projectType: value })
                 }
                 className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2"

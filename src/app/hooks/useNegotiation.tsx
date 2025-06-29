@@ -1,9 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { negotiationService } from "@/app/services/negotiationService";
-import { CreateNegotiationMessageDTO } from "@/types/negotiation";
+import {
+  CreateNegotiationMessageDTO,
+  NegotiationMessage,
+} from "@/types/negotiation";
 import { useEffect, useState, useCallback } from "react";
 
-export const useNegotiation = (bidId: string, initialMessages?: any[]) => {
+export const useNegotiation = (
+  bidId: string,
+  initialMessages?: NegotiationMessage[]
+) => {
   const queryClient = useQueryClient();
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false);
@@ -20,43 +26,40 @@ export const useNegotiation = (bidId: string, initialMessages?: any[]) => {
   // Pre-populate cache with initial data if provided
   useEffect(() => {
     if (initialMessages && bidId && isClient) {
-      queryClient.setQueryData(["negotiationHistory", bidId], initialMessages);
+      queryClient.setQueryData(
+        ["negotiationHistory", bidId],
+        initialMessages as unknown[]
+      );
     }
   }, [initialMessages, bidId, isClient, queryClient]);
 
-  const useHistory = useCallback(() => {
-    return useQuery({
-      queryKey: ["negotiationHistory", bidId],
-      queryFn: async () => {
-        if (!authToken) throw new Error("Not authenticated");
-        if (!isClient) throw new Error("Not on client side");
-
-        // Wrap the service call to ensure it's properly handled
-        try {
-          const result = await negotiationService.getNegotiationHistory(
-            bidId,
-            authToken
-          );
-          return result;
-        } catch (error) {
-          console.error("Failed to fetch negotiation history:", error);
-          throw error;
-        }
-      },
-      enabled: !!bidId && !!authToken && isClient,
-      staleTime: 1000 * 30, // 30 seconds
-      refetchInterval: 10000, // Refetch every 10 seconds
-      retry: (failureCount, error) => {
-        if (error.message === "Not authenticated") return false;
-        if (error.message === "Not on client side") return false;
-        return failureCount < 2;
-      },
-      // Use initial data if available
-      initialData: initialMessages,
-      // Don't refetch if we have initial data and it's fresh
-      refetchOnMount: !initialMessages,
-    });
-  }, [bidId, authToken, isClient, initialMessages, queryClient]);
+  const historyQuery = useQuery({
+    queryKey: ["negotiationHistory", bidId],
+    queryFn: async () => {
+      if (!authToken) throw new Error("Not authenticated");
+      if (!isClient) throw new Error("Not on client side");
+      try {
+        const result = await negotiationService.getNegotiationHistory(
+          bidId,
+          authToken
+        );
+        return result;
+      } catch (error) {
+        console.error("Failed to fetch negotiation history:", error);
+        throw error;
+      }
+    },
+    enabled: !!bidId && !!authToken && isClient,
+    staleTime: 1000 * 30, // 30 seconds
+    refetchInterval: 10000, // Refetch every 10 seconds
+    retry: (failureCount, error: Error) => {
+      if (error.message === "Not authenticated") return false;
+      if (error.message === "Not on client side") return false;
+      return failureCount < 2;
+    },
+    initialData: initialMessages,
+    refetchOnMount: !initialMessages,
+  });
 
   const sendMessageMutation = useMutation({
     mutationFn: async (messageData: CreateNegotiationMessageDTO) => {
@@ -97,7 +100,7 @@ export const useNegotiation = (bidId: string, initialMessages?: any[]) => {
   );
 
   return {
-    useHistory,
+    historyQuery,
     sendMessage,
     isSending: sendMessageMutation.isPending,
     isClient,

@@ -17,12 +17,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { getInitials } from "@/lib/utils";
 
 const AMBER = "#FFC107";
 const WHITE = "#FFFFFF";
 
-const BidDetailsCard = ({ bid }: { bid: any }) => {
+const BidDetailsCard = ({
+  bid,
+}: {
+  bid: { amount: number; message?: string; createdAt: string } | null;
+}) => {
   if (!bid) return null;
 
   const formatAmount = (amount: number) => {
@@ -64,13 +67,13 @@ const MessageBubble = ({
   msg,
   isOwnMessage,
   profilePic,
-  displayName,
+  displayName = "",
   isSeller,
 }: {
   msg: NegotiationMessage;
   isOwnMessage: boolean;
   profilePic?: string;
-  displayName: string;
+  displayName?: string;
   isSeller: boolean;
 }) => {
   const [expanded, setExpanded] = useState(false);
@@ -89,12 +92,14 @@ const MessageBubble = ({
   const avatarOrder = isOwnMessage ? "order-2 ml-2" : "order-1 mr-2";
   const bubbleOrder = isOwnMessage ? "order-1" : "order-2";
 
+  const displayNameSafe = displayName || "";
+
   return (
     <div className={`flex ${align} w-full items-end`}>
       <div className={avatarOrder}>
         <Avatar className="size-10 shadow-md border-2 border-white">
           {profilePic ? (
-            <AvatarImage src={profilePic} alt={displayName} />
+            <AvatarImage src={profilePic} alt={displayNameSafe} />
           ) : (
             <AvatarFallback
               style={{
@@ -103,7 +108,7 @@ const MessageBubble = ({
                 border: isSeller ? "2px solid #FFC107" : "2px solid #eee",
               }}
             >
-              {getInitials(displayName)}
+              {displayNameSafe}
             </AvatarFallback>
           )}
         </Avatar>
@@ -145,14 +150,18 @@ const InitialBidMessage = ({
   bid,
   userId,
   profilePic,
-  displayName,
+  displayName = "",
 }: {
-  bid: any;
+  bid: {
+    message?: string;
+    amount: number;
+    sellerId?: string;
+    createdAt?: string;
+  };
   userId: string | null;
   profilePic?: string;
-  displayName: string;
+  displayName?: string;
 }) => {
-  if (!bid) return null;
   const [expanded, setExpanded] = useState(false);
   const maxPreviewLength = 200;
   const isLong = bid.message && bid.message.length > maxPreviewLength;
@@ -162,11 +171,6 @@ const InitialBidMessage = ({
       : bid.message?.slice(0, maxPreviewLength) + "...";
   // Assume initial bid is always from seller, so align right for seller
   const isOwnMessage = bid.sellerId === userId;
-  const isSeller = true;
-  const bubbleBg = `bg-[${AMBER}] text-black`;
-  const align = isOwnMessage ? "justify-end" : "justify-start";
-  const avatarOrder = isOwnMessage ? "order-2 ml-2" : "order-1 mr-2";
-  const bubbleOrder = isOwnMessage ? "order-1" : "order-2";
 
   const formatAmount = (amount: number) => {
     if (isNaN(amount) || amount == null) return "Amount not available";
@@ -184,12 +188,18 @@ const InitialBidMessage = ({
     return date.toLocaleTimeString();
   };
 
+  const displayNameSafe = displayName || "";
+
   return (
-    <div className={`flex ${align} mb-4 w-full items-end`}>
-      <div className={avatarOrder}>
+    <div
+      className={`flex ${
+        isOwnMessage ? "justify-end" : "justify-start"
+      } mb-4 w-full items-end`}
+    >
+      <div className={`${isOwnMessage ? "order-2 ml-2" : "order-1 mr-2"}`}>
         <Avatar className="size-10 shadow-md border-2 border-white">
           {profilePic ? (
-            <AvatarImage src={profilePic} alt={displayName} />
+            <AvatarImage src={profilePic} alt={displayNameSafe} />
           ) : (
             <AvatarFallback
               style={{
@@ -198,13 +208,15 @@ const InitialBidMessage = ({
                 border: "2px solid #FFC107",
               }}
             >
-              {getInitials(displayName)}
+              {displayNameSafe}
             </AvatarFallback>
           )}
         </Avatar>
       </div>
       <div
-        className={`${bubbleOrder} max-w-[70%] p-4 rounded-2xl shadow-md ${bubbleBg} transition-all`}
+        className={`${
+          isOwnMessage ? "order-1" : "order-2"
+        } max-w-[70%] p-4 rounded-2xl shadow-md bg-[${AMBER}] text-black transition-all`}
         style={{ wordBreak: "break-word" }}
       >
         <div className="mb-2">
@@ -221,7 +233,7 @@ const InitialBidMessage = ({
           </button>
         )}
         <p className="text-xs opacity-60 mt-2 text-right">
-          {formatTime(bid.createdAt)}
+          {formatTime(bid.createdAt || "")}
         </p>
       </div>
     </div>
@@ -277,18 +289,25 @@ function getLocalUser() {
   return null;
 }
 
-// Separate component for the actual chat content
+interface ChatContentProps {
+  bidId: string;
+  initialBidData?: {
+    id: string;
+    message: string;
+    amount: number;
+    createdAt: string;
+    sellerId?: string;
+  };
+  initialMessages?: NegotiationMessage[];
+}
+
 const ChatContent = ({
   bidId,
   initialBidData,
   initialMessages,
-}: {
-  bidId: string;
-  initialBidData?: any;
-  initialMessages?: any[];
-}) => {
+}: ChatContentProps) => {
   const {
-    useHistory,
+    historyQuery,
     sendMessage,
     isSending,
     isClient: isNegotiationClient,
@@ -297,7 +316,7 @@ const ChatContent = ({
     data: messages,
     isLoading: isLoadingMessages,
     error: messagesError,
-  } = useHistory();
+  } = historyQuery;
 
   const { role: userRole, email, isHydrated } = useUserStore();
 
@@ -310,12 +329,14 @@ const ChatContent = ({
     if (!initialBidData || !messages) return [];
     const initialBidMessage = {
       id: `initial-bid-${initialBidData.id}`,
-      message: initialBidData.message,
-      amount: initialBidData.amount,
-      createdAt: initialBidData.createdAt,
-      sellerId: initialBidData.sellerId,
+      bidId: initialBidData.id,
+      senderId: initialBidData.sellerId || "",
       senderType: "SELLER" as const,
+      message: initialBidData.message,
+      createdAt: initialBidData.createdAt,
       isInitialBid: true as const,
+      amount: initialBidData.amount,
+      sellerId: initialBidData.sellerId,
     };
     return [initialBidMessage, ...messages].sort(
       (a, b) =>
@@ -352,7 +373,7 @@ const ChatContent = ({
       });
       setNewMessage("");
       setFile(null);
-    } catch (e) {
+    } catch {
       toast.error("Failed to send message.");
     }
     console.log("handleSendMessage called", {
@@ -390,7 +411,6 @@ const ChatContent = ({
   return (
     <>
       <AcceptBidModal
-        bidId={bidId}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
@@ -415,7 +435,7 @@ const ChatContent = ({
           ref={scrollAreaRef}
           style={{ maxHeight: "calc(70vh - 64px)", minHeight: 0 }}
         >
-          <BidDetailsCard bid={initialBidData} />
+          <BidDetailsCard bid={initialBidData ?? null} />
           <div className="space-y-6">
             {allMessages?.map((msg) => {
               // Determine if this is a seller or user message
@@ -426,27 +446,46 @@ const ChatContent = ({
               let displayName = "";
               let profilePic = undefined;
               if (isSellerMsg) {
-                // Seller info from msg.bid.seller
-                const seller = msg.bid?.seller;
-                if (seller) {
+                // Seller info from msg.bid.seller if available
+                if (
+                  "bid" in msg &&
+                  typeof msg.bid === "object" &&
+                  msg.bid !== null &&
+                  "seller" in msg.bid &&
+                  typeof msg.bid.seller === "object" &&
+                  msg.bid.seller !== null
+                ) {
+                  const seller = msg.bid.seller as {
+                    businessName?: string;
+                    user?: { profilePic?: string };
+                  };
                   displayName = seller.businessName || "";
                   profilePic = seller.user?.profilePic || undefined;
-                }
-                if (!profilePic && displayName) {
-                  displayName = getBusinessInitials(displayName);
+                  let displayNameSafe = displayName || "";
+                  if (!profilePic && displayNameSafe) {
+                    displayNameSafe = getBusinessInitials(displayNameSafe);
+                  } else if (!profilePic) {
+                    displayNameSafe = "";
+                  }
+                } else {
+                  displayName = "Seller";
                 }
               } else {
                 // User info from localStorage
                 const localUser = getLocalUser();
                 if (localUser) {
-                  displayName = `${localUser.firstName} ${localUser.lastName}`;
-                  profilePic = localUser.profilePic || undefined;
-                  if (
-                    !profilePic &&
-                    localUser.firstName &&
-                    localUser.lastName
-                  ) {
-                    displayName = getInitials(displayName);
+                  // If user has profilePic, use full name. Otherwise, use initials (first letter of first and last name)
+                  if (localUser.profilePic) {
+                    displayName = `${localUser.firstName} ${localUser.lastName}`;
+                    profilePic = localUser.profilePic;
+                  } else {
+                    const initials = `${(
+                      localUser.firstName?.[0] || ""
+                    ).toUpperCase()}${(
+                      localUser.lastName?.[0] || ""
+                    ).toUpperCase()}`;
+                    displayName = initials;
+                    profilePic = undefined;
                   }
                 } else {
                   displayName = "User";
@@ -456,10 +495,10 @@ const ChatContent = ({
                 return (
                   <InitialBidMessage
                     key={msg.id}
-                    bid={msg}
-                    userId={email}
+                    bid={msg ?? { amount: 0, createdAt: "" }}
+                    userId={email || ""}
                     profilePic={profilePic}
-                    displayName={displayName}
+                    displayName={displayName || ""}
                   />
                 );
               } else {
@@ -525,16 +564,17 @@ const ChatContent = ({
   );
 };
 
-// Main component with error boundary and suspense
+interface NegotiationChatProps {
+  bidId: string;
+  initialBidData?: ChatContentProps["initialBidData"];
+  initialMessages?: ChatContentProps["initialMessages"];
+}
+
 export const NegotiationChat = ({
   bidId,
   initialBidData,
   initialMessages,
-}: {
-  bidId: string;
-  initialBidData?: any;
-  initialMessages?: any[];
-}) => {
+}: NegotiationChatProps) => {
   return (
     <>
       <Suspense fallback={<LoadingSpinner />}>

@@ -8,8 +8,7 @@ import { motion } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
 
 export function StepFourOutdoor() {
-  const { formData, updateFormData, nextStep, prevStep, setApiResponse } =
-    useFormContext();
+  const { formData, nextStep, prevStep, setApiResponse } = useFormContext();
   const [selectedCostOptimizations, setSelectedCostOptimizations] = useState<
     string[]
   >([]);
@@ -107,28 +106,6 @@ export function StepFourOutdoor() {
     setApiResponse(updatedApiResponse);
   };
 
-  const generateLiveDescription = () => {
-    if (!formData.apiResponse) return "No API response available";
-
-    const baseDescription = formData.apiResponse.description || "";
-
-    // Build step 4 additions - only cost optimizations
-    const step4Additions = [];
-
-    if (selectedCostOptimizations.length > 0) {
-      const optimizationsText = selectedCostOptimizations.join(", ");
-      step4Additions.push(`cost optimizations: ${optimizationsText}`);
-    }
-
-    // Create meaningful sentence
-    let step4Description = "";
-    if (step4Additions.length > 0) {
-      step4Description = ` with ${step4Additions.join(", ")}`;
-    }
-
-    return baseDescription + step4Description;
-  };
-
   const handleCostOptimizationChange = useCallback(
     (optimization: string, checked: boolean) => {
       console.log("🔄 handleCostOptimizationChange called:", {
@@ -184,7 +161,7 @@ export function StepFourOutdoor() {
         apiResponse.costOptimizations &&
         Array.isArray(apiResponse.costOptimizations)
       ) {
-        apiResponse.costOptimizations.forEach((opt: any) => {
+        apiResponse.costOptimizations.forEach((opt: unknown) => {
           if (typeof opt === "string") {
             const cleaned = cleanOptimizationText(opt);
             if (cleaned) optimizations.push(cleaned);
@@ -194,19 +171,19 @@ export function StepFourOutdoor() {
 
       // Check for suggestions (array of objects with description field)
       if (apiResponse.suggestions && Array.isArray(apiResponse.suggestions)) {
-        apiResponse.suggestions.forEach((suggestion: any) => {
-          if (suggestion && typeof suggestion === "object") {
-            // Extract description from suggestion object
-            if (
-              suggestion.description &&
-              typeof suggestion.description === "string"
-            ) {
-              const cleaned = cleanOptimizationText(suggestion.description);
+        apiResponse.suggestions.forEach((suggestion: unknown) => {
+          if (
+            suggestion &&
+            typeof suggestion === "object" &&
+            "description" in suggestion
+          ) {
+            const s = suggestion as { description?: string; extras?: string };
+            if (s.description && typeof s.description === "string") {
+              const cleaned = cleanOptimizationText(s.description);
               if (cleaned) optimizations.push(cleaned);
             }
-            // Extract other relevant fields if needed
-            if (suggestion.extras && typeof suggestion.extras === "string") {
-              const cleaned = cleanOptimizationText(suggestion.extras);
+            if (s.extras && typeof s.extras === "string") {
+              const cleaned = cleanOptimizationText(s.extras);
               if (cleaned) optimizations.push(cleaned);
             }
           }
@@ -216,33 +193,42 @@ export function StepFourOutdoor() {
       // Check for feasibilityAnalysis recommendations
       if (
         apiResponse.feasibilityAnalysis &&
-        apiResponse.feasibilityAnalysis.recommendations
+        typeof apiResponse.feasibilityAnalysis === "object" &&
+        "recommendations" in apiResponse.feasibilityAnalysis &&
+        Array.isArray(
+          (apiResponse.feasibilityAnalysis as { recommendations?: unknown[] })
+            .recommendations
+        )
       ) {
-        if (Array.isArray(apiResponse.feasibilityAnalysis.recommendations)) {
-          apiResponse.feasibilityAnalysis.recommendations.forEach(
-            (rec: any) => {
-              if (typeof rec === "string") {
-                const cleaned = cleanOptimizationText(rec);
-                if (cleaned) optimizations.push(cleaned);
-              }
-            }
-          );
-        }
+        (
+          (apiResponse.feasibilityAnalysis as { recommendations?: unknown[] })
+            .recommendations as unknown[]
+        ).forEach((rec: unknown) => {
+          if (typeof rec === "string") {
+            const cleaned = cleanOptimizationText(rec);
+            if (cleaned) optimizations.push(cleaned);
+          }
+        });
       }
 
       // Check for feasibilityAnalysis issues
       if (
         apiResponse.feasibilityAnalysis &&
-        apiResponse.feasibilityAnalysis.issues
+        typeof apiResponse.feasibilityAnalysis === "object" &&
+        "issues" in apiResponse.feasibilityAnalysis &&
+        Array.isArray(
+          (apiResponse.feasibilityAnalysis as { issues?: unknown[] }).issues
+        )
       ) {
-        if (Array.isArray(apiResponse.feasibilityAnalysis.issues)) {
-          apiResponse.feasibilityAnalysis.issues.forEach((issue: any) => {
-            if (typeof issue === "string") {
-              const cleaned = cleanOptimizationText(issue);
-              if (cleaned) optimizations.push(cleaned);
-            }
-          });
-        }
+        (
+          (apiResponse.feasibilityAnalysis as { issues?: unknown[] })
+            .issues as unknown[]
+        ).forEach((issue: unknown) => {
+          if (typeof issue === "string") {
+            const cleaned = cleanOptimizationText(issue);
+            if (cleaned) optimizations.push(cleaned);
+          }
+        });
       }
 
       // Check for aiGeneratedDescription
@@ -507,8 +493,6 @@ export function StepFourOutdoor() {
               Select cost optimization strategies to reduce your project cost.
             </p>
           </div>
-
-       
 
           <form onSubmit={handleSubmit} className="space-y-8">
             <Card className="p-6">

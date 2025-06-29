@@ -6,14 +6,6 @@ import { GenericButton } from "@/components/ui/generic-button";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { ImageSelector } from "@/components/ui/image-selector";
-import { Switch } from "@/components/ui/switch";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { motion } from "framer-motion";
 import {
   houseStyleOptions,
@@ -112,39 +104,6 @@ export function StepTwoExterior() {
     setApiResponse(updatedApiResponse);
   };
 
-  const generateLiveDescription = () => {
-    if (!formData.apiResponse) return "No API response available";
-
-    const baseDescription = formData.apiResponse.description || "";
-
-    // Build step 2 additions
-    const step2Additions = [];
-
-    if (formData.houseStyle) {
-      step2Additions.push(`${formData.houseStyle} style`);
-    }
-
-    if (formData.roofStyle) {
-      step2Additions.push(`${formData.roofStyle} roof`);
-    }
-
-    if (formData.exteriorMaterial) {
-      step2Additions.push(`${formData.exteriorMaterial} exterior`);
-    }
-
-    if (formData.colorPalette) {
-      step2Additions.push(`${formData.colorPalette} color palette`);
-    }
-
-    // Create meaningful sentence
-    let step2Description = "";
-    if (step2Additions.length > 0) {
-      step2Description = ` featuring ${step2Additions.join(", ")}`;
-    }
-
-    return baseDescription + step2Description;
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -158,8 +117,6 @@ export function StepTwoExterior() {
           Choose the exterior style and features that match your vision.
         </p>
       </div>
-
-     
 
       <form onSubmit={handleSubmit} className="space-y-8">
         <Card className="p-6">

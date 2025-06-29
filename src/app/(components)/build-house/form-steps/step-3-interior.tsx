@@ -108,51 +108,6 @@ export function StepThreeInterior() {
     setApiResponse(updatedApiResponse);
   };
 
-  const generateLiveDescription = () => {
-    if (!formData.apiResponse) return "No API response available";
-
-    const baseDescription = formData.apiResponse.description || "";
-
-    // Build step 3 additions
-    const step3Additions = [];
-
-    if (formData.openFloorPlan) {
-      step3Additions.push("open floor plan");
-    }
-
-    if (formData.kitchenStyle) {
-      step3Additions.push(`${formData.kitchenStyle} kitchen`);
-    }
-
-    if (formData.hasBasement) {
-      step3Additions.push("basement");
-    }
-
-    if (formData.hasHomeOffice) {
-      step3Additions.push("home office");
-    }
-
-    if (formData.specialRooms.length > 0) {
-      const specialRoomsText = formData.specialRooms
-        .map((room) => room.replace("_", " "))
-        .join(", ");
-      step3Additions.push(`${specialRoomsText}`);
-    }
-
-    // Create meaningful sentence
-    let step3Description = "";
-    if (step3Additions.length > 0) {
-      step3Description = ` with ${step3Additions.join(", ")}`;
-    }
-
-    return baseDescription + step3Description;
-  };
-
-  // Example of using API response data in step 3
-  const apiResponse = formData.apiResponse;
-  const estimatedCost = apiResponse?.estimatedCost;
-  const description = apiResponse?.description;
-
   const handleSpecialRoomChange = (room: string, checked: boolean) => {
     let newRooms = [...formData.specialRooms];
 
@@ -178,8 +133,6 @@ export function StepThreeInterior() {
           Customize the interior layout and features of your space.
         </p>
       </div>
-
-     
 
       <form onSubmit={handleSubmit} className="space-y-8">
         <Card className="p-6">

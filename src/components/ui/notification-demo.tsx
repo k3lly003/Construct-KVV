@@ -2,40 +2,57 @@
 
 import React from "react";
 import { GenericButton } from "@/components/ui/generic-button";
-import { useNotificationStore } from "@/store/notificationStore";
 
 export function NotificationDemo() {
-  const { notifications, addNotification } = useNotificationStore();
+  // Local addNotification for demo purposes
+  const addNotification = (notification: {
+    title: string;
+    description: string;
+    type: string;
+  }) => {
+    // This should be replaced with a real implementation if needed
+    alert(
+      `${notification.type.toUpperCase()}: ${notification.title} - ${
+        notification.description
+      }`
+    );
+  };
 
   const addTestNotification = (
     type: "info" | "success" | "warning" | "error"
   ) => {
-    const notifications = {
-      info: {
-        title: "Information Update",
-        description:
-          "This is an informational notification for testing purposes.",
-        type: "info" as const,
-      },
-      success: {
-        title: "Success!",
-        description: "Operation completed successfully. Great job!",
-        type: "success" as const,
-      },
-      warning: {
-        title: "Warning",
-        description: "Please review your project settings before proceeding.",
-        type: "warning" as const,
-      },
-      error: {
-        title: "Error Occurred",
-        description:
-          "Something went wrong. Please try again or contact support.",
-        type: "error" as const,
-      },
-    };
-
-    addNotification(notifications[type]);
+    switch (type) {
+      case "info":
+        addNotification({
+          title: "Information Update",
+          description:
+            "This is an informational notification for testing purposes.",
+          type: "info",
+        });
+        break;
+      case "success":
+        addNotification({
+          title: "Success!",
+          description: "Operation completed successfully. Great job!",
+          type: "success",
+        });
+        break;
+      case "warning":
+        addNotification({
+          title: "Warning",
+          description: "Please review your project settings before proceeding.",
+          type: "warning",
+        });
+        break;
+      case "error":
+        addNotification({
+          title: "Error Occurred",
+          description:
+            "Something went wrong. Please try again or contact support.",
+          type: "error",
+        });
+        break;
+    }
   };
 
   return (

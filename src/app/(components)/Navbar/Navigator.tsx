@@ -167,7 +167,8 @@ const Navbar: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false);
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
-  const [localUserData, setLocalUserData] = useState<any>(null);
+  type UserData = { role?: string; name?: string; email?: string };
+  const [localUserData, setLocalUserData] = useState<UserData | null>(null);
 
   // Get user data from Zustand store
   const { role: userRole, name: userName, email: userEmail } = useUserStore();

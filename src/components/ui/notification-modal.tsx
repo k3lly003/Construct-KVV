@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { GenericButton } from "@/components/ui/generic-button";
-import { Bell, X, Clock, MessageSquare } from "lucide-react";
+import { Bell, X, Clock } from "lucide-react";
 import { formatNotificationTime } from "@/utils/formatTime";
 
 export interface Notification {
@@ -21,7 +21,7 @@ export interface Notification {
   type: "INFO" | "SUCCESS" | "WARNING" | "ERROR";
   message: string;
   isRead: boolean;
-  metadata: any | null;
+  metadata: Record<string, unknown> | null;
   priority: string | null;
   createdAt: string;
   updatedAt: string;
@@ -118,7 +118,7 @@ export function NotificationModal({
               <Bell className="h-12 w-12 text-amber-300 mx-auto mb-4" />
               <p className="text-amber-700 font-medium">No notifications</p>
               <p className="text-amber-600 text-sm mt-1">
-                You're all caught up!
+                You&apos;re all caught up!
               </p>
             </div>
           ) : (

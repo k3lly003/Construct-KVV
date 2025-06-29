@@ -1,18 +1,18 @@
 import { useCallback } from "react";
-import { Project } from "@/types/project";
 import {
   projectService,
   ProjectUpdateData,
 } from "@/app/services/projectServices";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { Project } from "@/types/project";
 
 // Safe form context hook that doesn't throw if context is not available
 export const useSafeFormContext = () => {
   try {
-    const { useFormContext } = require("@/state/form-context");
-    return useFormContext();
-  } catch (error) {
+    return import("@/state/form-context").then((mod) => mod.useFormContext());
+  } catch {
+    // The error parameter is intentionally omitted to avoid ESLint unused variable error
     console.log("📝 Form context not available, using default data");
     return {
       formData: {
@@ -47,7 +47,7 @@ export const useProjects = () => {
     data: projects = [],
     isLoading,
     error,
-  } = useQuery({
+  } = useQuery<Project[]>({
     queryKey: ["projects"],
     queryFn: projectService.getAllProjects,
     retry: 2,
@@ -62,7 +62,7 @@ export const useProjects = () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       toast.success("Project deleted successfully");
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       console.error("❌ Delete project mutation error:", error);
       toast.error("Failed to delete project");
     },
@@ -82,7 +82,7 @@ export const useProjects = () => {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       queryClient.invalidateQueries({ queryKey: ["project"] });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       console.error("❌ Update project mutation error:", error);
     },
   });
@@ -103,7 +103,6 @@ export const useProjects = () => {
 
   console.log("📊 Projects data:", projects);
   console.log("🔄 Loading state:", isLoading);
-  console.log("❌ Error state:", error);
 
   return {
     projects,
@@ -111,7 +110,7 @@ export const useProjects = () => {
       isLoading ||
       deleteProjectMutation.isPending ||
       updateProjectMutation.isPending,
-    error: error || deleteProjectMutation.error || updateProjectMutation.error,
+    error,
     deleteProject,
     updateProject,
   };
@@ -123,7 +122,6 @@ export const useProject = (id: string) => {
   const {
     data: project,
     isLoading,
-    error,
     refetch,
   } = useQuery({
     queryKey: ["project", id],
@@ -135,12 +133,10 @@ export const useProject = (id: string) => {
 
   console.log("📊 Project data:", project);
   console.log("🔄 Loading state:", isLoading);
-  console.log("❌ Error state:", error);
 
   return {
     project,
     isLoading,
-    error,
     refetch,
   };
 };

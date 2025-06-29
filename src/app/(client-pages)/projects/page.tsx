@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import DefaultPageBanner from "@/app/(components)/DefaultPageBanner";
-import { useProjects, useSafeFormContext } from "@/app/hooks/useProjects";
+import DefaultPageBanner from "@/components/ui/DefaultPageBanner";
+import { useProjects } from "@/app/hooks/useProjects";
 import { Card } from "@/components/ui/card";
 import { GenericButton } from "@/components/ui/generic-button";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +20,6 @@ import {
 
 const ProjectsPage = () => {
   const { projects, isLoading, error, deleteProject } = useProjects();
-  const { formData } = useSafeFormContext();
   const [updatingStatuses, setUpdatingStatuses] = React.useState<{
     [key: string]: boolean;
   }>({});

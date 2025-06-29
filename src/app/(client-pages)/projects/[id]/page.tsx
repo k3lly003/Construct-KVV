@@ -2,20 +2,18 @@
 
 import React from "react";
 import DefaultPageBanner from "@/app/(components)/DefaultPageBanner";
-import { useProject, useSafeFormContext } from "@/app/hooks/useProjects";
+import { useProject } from "@/app/hooks/useProjects";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { GenericButton } from "@/components/ui/generic-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { motion } from "framer-motion";
 import { toast } from "sonner";
 import Link from "next/link";
 import {
   projectService,
   ProjectStatus,
-  convertFormDataToProjectUpdate,
   ProjectUpdateData,
 } from "@/app/services/projectServices";
 import {
@@ -26,29 +24,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { NegotiationChat } from "@/app/dashboard/(components)/negotiation/NegotiationChat";
-import { any } from "zod";
+import { BidStatus } from "@/types/project";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface ProjectPageProps {
   params: Promise<{ id: string }>;
 }
 
-// Add BidStatus enum
-export enum BidStatus {
-  PENDING = "PENDING",
-  ACCEPTED = "ACCEPTED",
-  REJECTED = "REJECTED",
-  WITHDRAWN = "WITHDRAWN",
-  COUNTERED = "COUNTERED",
-}
-
 function ProjectPage({ params }: ProjectPageProps) {
   const resolvedParams = React.use(params);
-  const { project, isLoading, error, refetch } = useProject(resolvedParams.id);
+  const { project, isLoading, refetch } = useProject(resolvedParams.id);
   const [isUpdatingStatus, setIsUpdatingStatus] = React.useState(false);
   const [isUpdatingProject, setIsUpdatingProject] = React.useState(false);
-
-  // Use safe form context
-  const { formData } = useSafeFormContext();
 
   // State for update form
   const [updateFormData, setUpdateFormData] = React.useState<ProjectUpdateData>(
@@ -82,8 +70,6 @@ function ProjectPage({ params }: ProjectPageProps) {
   console.log("🏠 Project Page Rendered for ID:", resolvedParams.id);
   console.log("📊 Project Data:", project);
   console.log("🔄 Loading:", isLoading);
-  console.log("❌ Error:", error);
-  console.log("📝 Update Form Data:", updateFormData);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -116,23 +102,24 @@ function ProjectPage({ params }: ProjectPageProps) {
         setIsUpdatingStatus(false);
         return;
       }
-      await fetch(
-        `http://localhost:3000/api/v1/final-project/${project.id}/status`,
-        {
-          method: "PATCH",
-          headers: {
-            accept: "application/json",
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ status: newStatus }),
-        }
-      );
+      await fetch(`${API_URL}/api/v1/final-project/${project.id}/status`, {
+        method: "PATCH",
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
       // Refetch the project data to get the updated status
       await refetch();
       toast.success(`Project status updated to ${newStatus} successfully! 🎉`);
-    } catch (error) {
-      toast.error("Failed to update project status. Please try again.");
+    } catch (error: unknown) {
+      let errorMessage = "Failed to update project status. Please try again.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      toast.error(errorMessage);
     } finally {
       setIsUpdatingStatus(false);
     }
@@ -190,18 +177,14 @@ function ProjectPage({ params }: ProjectPageProps) {
         },
       });
       console.log("✅ STEP 7 PASSED: Success message shown");
-    } catch (error: any) {
+    } catch (error: unknown) {
+      let errorMessage = "Failed to update project. Please try again.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
       console.log("❌ ERROR CAUGHT: Update process failed");
       console.error("❌ Error updating project:", error);
-      console.error("❌ Error details:", {
-        message: error.message,
-        status: error.response?.status,
-        data: error.response?.data,
-        config: error.config,
-      });
-      console.error("❌ Project ID that failed:", project.id);
-      console.log("🔘 STEP ERROR: Showing error toast");
-      toast.error("Failed to update project. Please try again.", {
+      toast.error(errorMessage, {
         style: {
           background: "white",
           color: "#dc2626",
@@ -265,7 +248,7 @@ function ProjectPage({ params }: ProjectPageProps) {
     );
   }
 
-  if (error || !project) {
+  if (!project) {
     return (
       <>
         <DefaultPageBanner
@@ -278,8 +261,8 @@ function ProjectPage({ params }: ProjectPageProps) {
               Project Not Found
             </h3>
             <p className="text-amber-800 mb-6">
-              The project you're looking for doesn't exist or you don't have
-              access to it.
+              The project you&apos;re looking for doesn&apos;t exist or you
+              don&apos;t have access to it.
             </p>
             <Link href="/projects">
               <GenericButton
@@ -515,9 +498,9 @@ function ProjectPage({ params }: ProjectPageProps) {
                     <p className="text-white/90 text-sm">
                       Accept or Reject the bids from our professionals.
                     </p>
-                    <div className="mt-3">
-                      <BidStatusDropdown bidId={project.bids[0]?.id} />
-                    </div>
+                    {project.bids[0]?.id && (
+                      <BidStatusDropdown bidId={project.bids[0].id} />
+                    )}
                   </div>
                 </div>
               )}
@@ -951,22 +934,23 @@ const BidStatusDropdown: React.FC<{ bidId: string }> = ({ bidId }) => {
         setIsLoading(false);
         return;
       }
-      const res = await fetch(
-        `http://localhost:3000/api/v1/bids/${bidId}/status`,
-        {
-          method: "PATCH",
-          headers: {
-            accept: "*/*",
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ status }),
-        }
-      );
+      const res = await fetch(`${API_URL}/api/v1/bids/${bidId}/status`, {
+        method: "PATCH",
+        headers: {
+          accept: "*/*",
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status }),
+      });
       if (!res.ok) throw new Error("Failed to update bid status");
       toast.success(`Bid status updated to ${status}!`);
-    } catch (e: any) {
-      toast.error(e.message || "Failed to update bid status");
+    } catch (e: unknown) {
+      let errorMessage = "Failed to update bid status";
+      if (e instanceof Error) {
+        errorMessage = e.message;
+      }
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
       setIsOpen(false);

@@ -7,7 +7,7 @@ type FormContextType = {
   formData: FormData;
   currentStep: number;
   updateFormData: (data: Partial<FormData>) => void;
-  setApiResponse: (response: any) => void;
+  setApiResponse: (response: FormData["apiResponse"]) => void;
   nextStep: () => void;
   prevStep: () => void;
   goToStep: (step: number) => void;
@@ -31,11 +31,10 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isFormCompleted, setIsFormCompleted] = useState(false);
 
   const updateFormData = useCallback((data: Partial<FormData>) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setFormData((prev: any) => ({ ...prev, ...data }));
+    setFormData((prev: FormData) => ({ ...prev, ...data }));
   }, []);
 
-  const setApiResponse = useCallback((response: any) => {
+  const setApiResponse = useCallback((response: FormData["apiResponse"]) => {
     setFormData((prev) => ({ ...prev, apiResponse: response }));
   }, []);
 

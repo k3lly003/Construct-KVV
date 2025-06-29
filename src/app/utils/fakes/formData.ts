@@ -54,7 +54,19 @@ export type FormData = {
   confidences: string;
 
   // API Response from step 1
-  apiResponse?: any;
+  apiResponse?: {
+    description?: string;
+    estimatedCost?: number;
+    features?: Array<{ name: string; count: number }>;
+    confidence?: string;
+    id?: string;
+    suggestions?: Array<{
+      id: string;
+      estimatedCost?: number;
+      description?: string;
+    }>;
+    [key: string]: unknown;
+  };
 
   // Step 2: Exterior
   houseStyle: HouseStyle;
@@ -102,6 +114,8 @@ export const initialFormData: FormData = {
   stories: 2,
   bedrooms: 3,
   bathrooms: 2,
+  recommendations: [],
+  confidences: "", 
 
   // Step 2: Exterior
   houseStyle: "modern",

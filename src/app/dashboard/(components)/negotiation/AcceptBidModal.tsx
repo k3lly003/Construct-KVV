@@ -24,16 +24,11 @@ const acceptBidSchema = z.object({
 type AcceptBidFormValues = z.infer<typeof acceptBidSchema>;
 
 interface AcceptBidModalProps {
-  bidId: string;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const AcceptBidModal = ({
-  bidId,
-  isOpen,
-  onClose,
-}: AcceptBidModalProps) => {
+export const AcceptBidModal = ({ isOpen, onClose }: AcceptBidModalProps) => {
   const {
     register,
     handleSubmit,
@@ -44,7 +39,7 @@ export const AcceptBidModal = ({
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit: SubmitHandler<AcceptBidFormValues> = async (data) => {
+  const onSubmit: SubmitHandler<AcceptBidFormValues> = async () => {
     setIsLoading(true);
     // Placeholder for acceptBid
     // Replace with actual implementation

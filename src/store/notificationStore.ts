@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { Notification } from "@/components/ui/notification-modal";
 import { notificationService } from "@/app/services/notificationService";
-import { formatNotificationTime } from "@/utils/formatTime";
 
 interface NotificationStore {
   notifications: Notification[];
@@ -38,9 +37,10 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
         notifications: formattedNotifications,
         isLoading: false,
       });
-    } catch (error: any) {
+    } catch (error) {
+      const err = error as { message?: string };
       set({
-        error: error.message || "Failed to fetch notifications",
+        error: err.message || "Failed to fetch notifications",
         isLoading: false,
       });
       console.error("Error fetching notifications:", error);
@@ -59,8 +59,9 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
             : notification
         ),
       }));
-    } catch (error: any) {
-      set({ error: error.message || "Failed to mark notification as read" });
+    } catch (error) {
+      const err = error as { message?: string };
+      set({ error: err.message || "Failed to mark notification as read" });
       console.error("Error marking notification as read:", error);
     }
   },
@@ -76,9 +77,10 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
           isRead: true,
         })),
       }));
-    } catch (error: any) {
+    } catch (error) {
+      const err = error as { message?: string };
       set({
-        error: error.message || "Failed to mark all notifications as read",
+        error: err.message || "Failed to mark all notifications as read",
       });
       console.error("Error marking all notifications as read:", error);
     }
