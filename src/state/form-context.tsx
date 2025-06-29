@@ -7,6 +7,7 @@ type FormContextType = {
   formData: FormData;
   currentStep: number;
   updateFormData: (data: Partial<FormData>) => void;
+  setApiResponse: (response: FormData["apiResponse"]) => void;
   nextStep: () => void;
   prevStep: () => void;
   goToStep: (step: number) => void;
@@ -22,26 +23,31 @@ const FormContext = createContext<FormContextType | undefined>(undefined);
 
 export const TOTAL_STEPS = 6;
 
-export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const FormProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [currentStep, setCurrentStep] = useState(1);
   const [isFormCompleted, setIsFormCompleted] = useState(false);
 
   const updateFormData = useCallback((data: Partial<FormData>) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    setFormData((prev: any) => ({ ...prev, ...data }));
+    setFormData((prev: FormData) => ({ ...prev, ...data }));
+  }, []);
+
+  const setApiResponse = useCallback((response: FormData["apiResponse"]) => {
+    setFormData((prev) => ({ ...prev, apiResponse: response }));
   }, []);
 
   const nextStep = useCallback(() => {
     if (currentStep < TOTAL_STEPS) {
-      setCurrentStep(prev => prev + 1);
+      setCurrentStep((prev) => prev + 1);
       window.scrollTo(0, 0);
     }
   }, [currentStep]);
 
   const prevStep = useCallback(() => {
     if (currentStep > 1) {
-      setCurrentStep(prev => prev - 1);
+      setCurrentStep((prev) => prev - 1);
       window.scrollTo(0, 0);
     }
   }, [currentStep]);
@@ -69,6 +75,7 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
     formData,
     currentStep,
     updateFormData,
+    setApiResponse,
     nextStep,
     prevStep,
     goToStep,
@@ -77,7 +84,7 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({ children
     totalSteps: TOTAL_STEPS,
     resetForm,
     completeForm,
-    isFormCompleted
+    isFormCompleted,
   };
 
   return <FormContext.Provider value={value}>{children}</FormContext.Provider>;

@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { Toaster, toast } from "sonner";
 import { z } from "zod";
 import axios from "axios";
+import { User } from "@/types/user";
 
 // Zod validation for signup
 const signupSchema = z.object({
@@ -19,6 +20,12 @@ const signupSchema = z.object({
   email: z.string().email("Please enter a valid email"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
+
+function isAxiosError(
+  error: unknown
+): error is { response?: { data?: { message?: string } } } {
+  return typeof error === "object" && error !== null && "isAxiosError" in error;
+}
 
 const Page = () => {
   const [first_name, setFirst_name] = useState("");
@@ -55,7 +62,8 @@ const Page = () => {
       } = {};
       result.error.errors.forEach((err) => {
         if (err.path[0] === "first_name") fieldErrors.first_name = err.message;
-        if (err.path[0] === "second_name") fieldErrors.second_name = err.message;
+        if (err.path[0] === "second_name")
+          fieldErrors.second_name = err.message;
         if (err.path[0] === "email") fieldErrors.email = err.message;
         if (err.path[0] === "password") fieldErrors.password = err.message;
       });
@@ -81,7 +89,7 @@ const Page = () => {
         }
       );
 
-      const data = response.data;
+      const data = response.data as { data?: { token?: string; user?: User } };
       // Store the authentication token if present
       if (data.data?.token) {
         localStorage.setItem("authToken", data.data.token);
@@ -91,9 +99,9 @@ const Page = () => {
       }
       toast.success("Signup successful!");
       router.push("/signin");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      if (axios.isAxiosError(err)) {
+      if (isAxiosError(err)) {
         toast.error(
           err.response?.data?.message ||
             "An unexpected error occurred during signup."
@@ -115,7 +123,7 @@ const Page = () => {
 
   return (
     <>
-      <Toaster richColors position="top-right"/>
+      <Toaster richColors position="top-right" />
       <div className="min-h-screen bg-black flex justify-center items-center">
         <div className="z-20 bg-black shadow-2xl rounded-sx overflow-hidden flex w-full max-w-5xl">
           {/* Left Side: Sign Up Form */}
@@ -160,7 +168,9 @@ const Page = () => {
                     />
                   </div>
                   {errors.first_name && (
-                    <p className="text-red-500 text-xs mt-1">{errors.first_name}</p>
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.first_name}
+                    </p>
                   )}
                 </div>
                 <div className="mb-4 w-[50%]">
@@ -187,7 +197,9 @@ const Page = () => {
                     />
                   </div>
                   {errors.second_name && (
-                    <p className="text-red-500 text-xs mt-1">{errors.second_name}</p>
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.second_name}
+                    </p>
                   )}
                 </div>
               </div>

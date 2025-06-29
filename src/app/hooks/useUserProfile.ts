@@ -12,18 +12,25 @@ interface UserProfile {
 export const useUserProfile = () => {
   const queryClient = useQueryClient();
 
-  const { data: userProfile, isLoading, error } = useQuery({
+  const {
+    data: userProfile,
+    isLoading,
+    error,
+  } = useQuery<UserProfile>({
     queryKey: ["userProfile"],
     queryFn: async () => {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("No token found");
-      
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return response.data;
+
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/user/me`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data as UserProfile;
     },
   });
 
@@ -49,7 +56,7 @@ export const useUserProfile = () => {
           },
         }
       );
-      return response.data;
+      return response.data as UserProfile;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["userProfile"] });
@@ -63,4 +70,4 @@ export const useUserProfile = () => {
     updateProfile: updateProfileMutation.mutate,
     isUpdating: updateProfileMutation.isPending,
   };
-}; 
+};
