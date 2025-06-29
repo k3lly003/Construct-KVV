@@ -7,22 +7,34 @@ const api = axios.create({
   },
 });
 
-// Add request interceptor for auth token if needed
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("auth_token");
-    // Ensure headers object exists
-    if (!config.headers) {
-      config.headers = {};
+    if (typeof window === "undefined") return config;
+
+    const token = localStorage.getItem("authToken");
+
+    if (token && config.headers) {
+      // AxiosHeaders has 'set' function. TypeScript-safe check
+      if (
+        typeof (config.headers as unknown) === "object" &&
+        "set" in config.headers &&
+        typeof (config.headers as { set?: unknown }).set === "function"
+      ) {
+        (config.headers as { set: (key: string, value: string) => void }).set(
+          "Authorization",
+          `Bearer ${token}`
+        );
+      } else {
+        // Plain object fallback
+        (config.headers as Record<string, string>)[
+          "Authorization"
+        ] = `Bearer ${token}`;
+      }
     }
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 export default api;
