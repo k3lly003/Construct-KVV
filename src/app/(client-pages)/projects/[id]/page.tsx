@@ -50,7 +50,7 @@ function ProjectPage({ params }: ProjectPageProps) {
       estimatedCost: 0,
     }
   );
- 
+
   // Initialize form data when project loads
   React.useEffect(() => {
     if (project) {
@@ -84,7 +84,7 @@ function ProjectPage({ params }: ProjectPageProps) {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "USD",
+      currency: "Rwf",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount);
@@ -694,7 +694,7 @@ function ProjectPage({ params }: ProjectPageProps) {
                       htmlFor="estimatedCost"
                       className="text-sm font-medium text-amber-900"
                     >
-                      Estimated Cost (USD)
+                      Estimated Cost (Rwf)
                     </Label>
                     <Input
                       id="estimatedCost"
