@@ -12,58 +12,47 @@ import { GenericButton } from "@/components/ui/generic-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { useUserProfile } from "@/app/hooks/useUserProfile";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useCustomerProfile } from "@/app/hooks/useCustomerProfile";
 import { Camera } from "lucide-react";
 import { getInitials } from "@/lib/utils";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface EditProfileDialogProps {
   isOpen: boolean;
   onClose: () => void;
   userData: {
-    name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     phone?: string;
-    location?: string;
-    profilePicture?: string;
+    profilePic?: string;
   };
 }
 
 const EditProfileDialog = ({ isOpen, onClose, userData }: EditProfileDialogProps) => {
   const [formData, setFormData] = useState({
-    name: userData.name,
+    firstName: userData.firstName,
+    lastName: userData.lastName,
     email: userData.email,
     phone: userData.phone || "",
-    location: userData.location || "",
   });
-  const [profilePicture, setProfilePicture] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>(userData.profilePicture || "");
+  const [profilePic, setProfilePic] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>(userData.profilePic || "");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { updateProfile, isUpdating } = useUserProfile();
+  const { updateProfile, isUpdating } = useCustomerProfile();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const data = new FormData();
-    
-    // Append all form fields
-    Object.entries(formData).forEach(([key, value]) => {
-      if (value) {
-        data.append(key, value);
-      }
-    });
-
-    // Append profile picture if selected
-    if (profilePicture) {
-      data.append("profilePicture", profilePicture);
+    data.append("firstName", formData.firstName);
+    data.append("lastName", formData.lastName);
+    data.append("email", formData.email);
+    data.append("phone", formData.phone);
+    if (profilePic) {
+      data.append("profilePic", profilePic);
     }
-
-    updateProfile({
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone,
-      location: formData.location,
-    }, {
+    updateProfile(data, {
       onSuccess: () => {
         toast.success("Profile updated successfully");
         onClose();
@@ -86,7 +75,7 @@ const EditProfileDialog = ({ isOpen, onClose, userData }: EditProfileDialogProps
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setProfilePicture(file);
+      setProfilePic(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewUrl(reader.result as string);
@@ -116,7 +105,7 @@ const EditProfileDialog = ({ isOpen, onClose, userData }: EditProfileDialogProps
                 {previewUrl ? (
                   <AvatarImage src={previewUrl} alt="Profile" />
                 ) : (
-                  <AvatarFallback>{getInitials(userData.name)}</AvatarFallback>
+                  <AvatarFallback>{getInitials(formData.firstName + ' ' + formData.lastName)}</AvatarFallback>
                 )}
               </Avatar>
               <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
@@ -134,13 +123,23 @@ const EditProfileDialog = ({ isOpen, onClose, userData }: EditProfileDialogProps
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="firstName">First Name</Label>
             <Input
-              id="name"
-              name="name"
-              value={formData.name}
+              id="firstName"
+              name="firstName"
+              value={formData.firstName}
               onChange={handleChange}
-              placeholder="Enter your name"
+              placeholder="Enter your first name"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="lastName">Last Name</Label>
+            <Input
+              id="lastName"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              placeholder="Enter your last name"
             />
           </div>
           <div className="space-y-2">
@@ -162,16 +161,6 @@ const EditProfileDialog = ({ isOpen, onClose, userData }: EditProfileDialogProps
               value={formData.phone}
               onChange={handleChange}
               placeholder="Enter your phone number"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="location">Location</Label>
-            <Input
-              id="location"
-              name="location"
-              value={formData.location}
-              onChange={handleChange}
-              placeholder="Enter your location"
             />
           </div>
           <div className="flex justify-end space-x-2 pt-4">

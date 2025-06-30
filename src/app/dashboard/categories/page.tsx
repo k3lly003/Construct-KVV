@@ -11,10 +11,10 @@ import {
 } from '@/components/ui/table';
 import { GenericButton } from "@/components/ui/generic-button";
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Pencil, Trash2, Plus, ChevronDown, Search, Funnel } from 'lucide-react';
@@ -26,136 +26,29 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { v4 as uuidv4 } from 'uuid';
-
-interface SubCategory {
-  id: string;
-  name: string;
-}
-
-interface Category {
-  id: string;
-  title: string;
-  items?: SubCategory[];
-  dateCreated?: string; // Expecting date as a string from the database
-}
-
-const initialCategories: Category[] = [
-  {
-    id: uuidv4(),
-    title: 'Building Materials',
-    items: [
-      { id: uuidv4(), name: 'Concrete & Cement' },
-      { id: uuidv4(), name: 'Bricks & Blocks' },
-      { id: uuidv4(), name: 'Lumber & Timber' },
-      { id: uuidv4(), name: 'Steel (structural, rebar)' },
-      { id: uuidv4(), name: 'Roofing Materials (tiles, metal sheets, etc.)' },
-      { id: uuidv4(), name: 'Insulation (thermal, acoustic)' },
-      { id: uuidv4(), name: 'Aggregates (sand, gravel, crushed stone)' },
-      { id: uuidv4(), name: 'Doors & Windows (frames, glass)' },
-      { id: uuidv4(), name: 'Adhesives & Sealants' },
-      { id: uuidv4(), name: 'Drywall & Plasterboard' },
-    ],
-    dateCreated: '2025-05-10',
-  },
-  {
-    id: uuidv4(),
-    title: 'Design',
-    items: [
-      { id: uuidv4(), name: 'Architectural Design' },
-      { id: uuidv4(), name: 'Structural Engineering' },
-      { id: uuidv4(), name: 'Interior Design' },
-      { id: uuidv4(), name: 'MEP Engineering (Mechanical, Electrical, Plumbing)' },
-      { id: uuidv4(), name: 'Landscape Design' },
-      { id: uuidv4(), name: '3D Modeling & Visualization' },
-      { id: uuidv4(), name: 'Permitting Services' },
-      { id: uuidv4(), name: 'Project Planning' },
-    ],
-    dateCreated: '2025-05-12',
-  },
-  {
-    id: uuidv4(),
-    title: "Safety Gear",
-    items: [
-      { id: uuidv4(), name: "Hard Hats" },
-      { id: uuidv4(), name: "Safety Glasses & Goggles" },
-      { id: uuidv4(), name: "Gloves (work, chemical, etc.)" },
-      { id: uuidv4(), name: "Safety Footwear" },
-      { id: uuidv4(), name: "High-Visibility Clothing" },
-      { id: uuidv4(), name: "Harnesses & Fall Protection" },
-      { id: uuidv4(), name: "Respirators & Masks" },
-      { id: uuidv4(), name: "Ear Protection" }
-    ],
-    dateCreated: '2025-05-12',
-  },
-  {
-    id: uuidv4(),
-    title: "Electrical",
-    items: [
-      { id: uuidv4(), name: "Wiring & Cables" },
-      { id: uuidv4(), name: "Lighting Fixtures" },
-      { id: uuidv4(), name: "Switches & Outlets" },
-      { id: uuidv4(), name: "Distribution Boards & Panels" },
-      { id: uuidv4(), name: "Conduit & Trunking" },
-      { id: uuidv4(), name: "Generators & UPS Systems" },
-      { id: uuidv4(), name: "Security Systems (alarms, CCTV)" },
-      { id: uuidv4(), name: "Smart Home Systems" }
-    ],
-    dateCreated: '2025-05-12',
-  },
-  {
-    id: uuidv4(),
-    title: "Plumbing",
-    items: [
-      { id: uuidv4(), name: "Pipes & Fittings (PVC, copper, etc.)" },
-      { id: uuidv4(), name: "Sanitaryware (toilets, sinks, showers)" },
-      { id: uuidv4(), name: "Water Heaters" },
-      { id: uuidv4(), name: "Pumps & Valves" },
-      { id: uuidv4(), name: "Drainage Systems" },
-      { id: uuidv4(), name: "Irrigation Systems" }
-    ],
-    dateCreated: '2025-05-12',
-  },
-  {
-    id: uuidv4(),
-    title: "Finishing Materials",
-    items: [
-      { id: uuidv4(), name: "Paints & Coatings" },
-      { id: uuidv4(), name: "Flooring (tiles, wood, carpet, laminate)" },
-      { id: uuidv4(), name: "Wallpapers & Wall Coverings" },
-      { id: uuidv4(), name: "Ceiling Finishes (gypsum boards, suspended ceilings)" },
-      { id: uuidv4(), name: "Countertops" },
-      { id: uuidv4(), name: "Cabinets & Joinery" },
-      { id: uuidv4(), name: "Fixtures & Fittings (door handles, etc.)" }
-    ],
-    dateCreated: '2025-05-12',
-  }
-];
+import { useCategories } from '@/app/hooks/useCategories';
+import { toast } from 'sonner';
 
 const CategoriesTablePage = () => {
-  const [categories, setCategories] = useState(initialCategories);
+  const { categories, createCategory, deleteCategory } = useCategories();
   const [searchQuery, setSearchQuery] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
   const [openAddDialog, setOpenAddDialog] = useState(false);
-  const [newCategoryTitle, setNewCategoryTitle] = useState('');
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [newCategoryDescription, setNewCategoryDescription] = useState('');
   const [newSubCategories, setNewSubCategories] = useState<string[]>(['']);
 
-  const filteredCategories = categories
-    .filter((category) =>
-      category.title.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    .filter((category) => !categoryFilter || category.title === categoryFilter);
-
+  // @typescript-eslint/no-unused-vars
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
-  const handleCategoryFilter = (categoryTitle: string | null) => {
-    setCategoryFilter(categoryTitle);
-  };
-
-  const handleDeleteCategory = (id: string) => {
-    setCategories(categories.filter(cat => cat.id !== id));
+  const handleDeleteCategory = async (id: string) => {
+    try {
+      await deleteCategory(id);
+      toast.success('Category deleted successfully');
+    } catch {
+      toast.error('Failed to delete category');
+    }
   };
 
   const handleAddSubCategoryInput = () => {
@@ -178,23 +71,33 @@ const CategoriesTablePage = () => {
     }
   };
 
-  const handleAddCategory = () => {
-    if (newCategoryTitle.trim()) {
-      const newCategory: Category = {
-        id: uuidv4(),
-        title: newCategoryTitle.trim(),
-        items: newSubCategories
-          .map(sub => sub.trim())
-          .filter(sub => sub !== '')
-          .map(name => ({ id: uuidv4(), name })),
-        dateCreated: new Date().toLocaleDateString(),
-      };
-      setCategories([...categories, newCategory]);
-      setOpenAddDialog(false);
-      setNewCategoryTitle('');
-      setNewSubCategories(['']);
+  const handleAddCategory = async () => {
+    if (newCategoryName.trim()) {
+      try {
+        await createCategory(
+          newCategoryName.trim(),
+          newCategoryDescription.trim(),
+          newSubCategories
+        );
+        setOpenAddDialog(false);
+        setNewCategoryName('');
+        setNewCategoryDescription('');
+        setNewSubCategories(['']);
+        toast.success('Category created successfully');
+      } catch {
+        toast.error('Failed to create category');
+      }
     }
   };
+
+  const parentCategories = categories.filter(cat => !cat.parentId);
+  const subCategoriesMap = categories
+    .filter(cat => typeof cat.parentId === "string" && cat.parentId)
+    .reduce((acc, sub) => {
+      if (!acc[sub.parentId!]) acc[sub.parentId!] = [];
+      acc[sub.parentId!].push(sub);
+      return acc;
+    }, {} as Record<string, typeof categories>);
 
   return (
     <div className="p-6">
@@ -213,14 +116,26 @@ const CategoriesTablePage = () => {
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="category-title" className="text-right">
-                  Category Title
+                <Label htmlFor="category-name" className="text-right">
+                  Category Name
                 </Label>
                 <Input
-                  id="category-title"
+                  id="category-name"
                   className="col-span-3"
-                  value={newCategoryTitle}
-                  onChange={(e) => setNewCategoryTitle(e.target.value)}
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="category-description" className="text-right">
+                  Description
+                </Label>
+                <Textarea
+                  id="category-description"
+                  className="col-span-3"
+                  value={newCategoryDescription}
+                  onChange={(e) => setNewCategoryDescription(e.target.value)}
+                  placeholder="Enter category description..."
                 />
               </div>
               <div>
@@ -279,12 +194,7 @@ const CategoriesTablePage = () => {
             </GenericButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56">
-            <DropdownMenuItem onClick={() => handleCategoryFilter(null)}>All Categories</DropdownMenuItem>
-            {initialCategories.map((cat) => (
-              <DropdownMenuItem key={cat.id} onClick={() => handleCategoryFilter(cat.title)}>
-                {cat.title}
-              </DropdownMenuItem>
-            ))}
+            {/* Category filter removed as categoryFilter is unused */}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -294,55 +204,61 @@ const CategoriesTablePage = () => {
           <TableHeader>
             <TableRow className='text-amber-300'>
               <TableHead className='text-amber-300'>Category Name</TableHead>
+              <TableHead className='text-amber-300'>Description</TableHead>
               <TableHead className='text-amber-300'>Sub-categories</TableHead>
               <TableHead className='text-amber-300'>Date Created</TableHead>
               <TableHead className='text-amber-300 text-right'>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredCategories.map((category) => (
-              <TableRow key={category.id}>
-                <TableCell className="font-medium py-4">{category.title}</TableCell>
+            {parentCategories.map((parent) => (
+              <TableRow key={parent.id}>
+                <TableCell className="font-medium py-4">{parent.name}</TableCell>
+                <TableCell className="py-4">{parent.description}</TableCell>
                 <TableCell className="py-4">
-                  {category.items && category.items.length > 0 ? (
-                    <>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <GenericButton variant="link" size="sm" className="p-0">
-                            {category.items[0].name}
-                            {category.items.length > 1 && <span className="text-muted-foreground ml-1">+{category.items.length - 1}</span>}
-                          </GenericButton>
-                        </DialogTrigger>
-                        <DialogContent>
-                          <DialogHeader>
-                            <DialogTitle className='text-amber-500'>Sub-categories for {category.title}</DialogTitle>
-                          </DialogHeader>
-                          <ul className="list-disc pl-5 py-2">
-                            {category.items.map((sub) => (
-                              <li className="py-2" key={sub.id}>{sub.name}</li>
-                            ))}
-                          </ul>
-                        </DialogContent>
-                      </Dialog>
-                    </>
+                  {subCategoriesMap[parent.id] && subCategoriesMap[parent.id].length > 0 ? (
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <GenericButton variant="link" size="sm" className="p-0">
+                          {subCategoriesMap[parent.id][0].name}
+                          {subCategoriesMap[parent.id].length > 1 && (
+                            <span className="text-muted-foreground ml-1">
+                              +{subCategoriesMap[parent.id].length - 1}
+                            </span>
+                          )}
+                        </GenericButton>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle className='text-amber-500'>
+                            Sub-categories for {parent.name}
+                          </DialogTitle>
+                        </DialogHeader>
+                        <ul className="list-disc pl-5 py-2">
+                          {subCategoriesMap[parent.id].map((sub) => (
+                            <li className="py-2" key={sub.id}>{sub.name}</li>
+                          ))}
+                        </ul>
+                      </DialogContent>
+                    </Dialog>
                   ) : (
                     <span className="text-muted-foreground italic">No sub-categories</span>
                   )}
                 </TableCell>
-                <TableCell className='py-4'>{category.dateCreated}</TableCell>
+                <TableCell className='py-4'>{parent.dateCreated}</TableCell>
                 <TableCell className='py-4 text-right'>
                   <GenericButton size="sm" variant="ghost" className="mr-2">
                     <Pencil className="h-4 w-4" />
                   </GenericButton>
-                  <GenericButton size="sm" className='bg-red-500 hover:bg-red-600 text-white' onClick={() => handleDeleteCategory(category.id)}>
+                  <GenericButton size="sm" className='bg-red-500 hover:bg-red-600 text-white' onClick={() => handleDeleteCategory(parent.id)}>
                     <Trash2 className="h-4 w-4" />
                   </GenericButton>
                 </TableCell>
               </TableRow>
             ))}
-            {filteredCategories.length === 0 && (
+            {parentCategories.length === 0 && (
               <TableRow>
-                <TableCell colSpan={4} className="text-center py-4">
+                <TableCell colSpan={5} className="text-center py-4">
                   No categories found.
                 </TableCell>
               </TableRow>

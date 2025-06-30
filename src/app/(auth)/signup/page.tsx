@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { BackgroundBeams } from "@/components/ui/background-beams";
 import { Mail, Eye, EyeOff, ArrowLeft, UserRound } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { IoLogoFacebook } from "react-icons/io5";
@@ -184,7 +183,7 @@ const Page = () => {
                     <input
                       type="text"
                       id="second_name"
-                      className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                      className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline  ${
                         errors.second_name ? "border-red-500" : ""
                       }`}
                       placeholder="your second name"
@@ -329,7 +328,6 @@ const Page = () => {
           </div>
         </div>
       </div>
-      <BackgroundBeams />
     </>
   );
 };

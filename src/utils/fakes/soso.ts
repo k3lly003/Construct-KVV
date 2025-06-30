@@ -1,0 +1,135 @@
+interface ServiceData {
+    id: string;
+    title: string;
+    category: string;
+    provider: {
+      name: string;
+      avatar: string;
+      rating: number;
+      reviews: number;
+      verified: boolean;
+      yearsExperience: number;
+    };
+    pricing: {
+      basePrice: number;
+      unit: string;
+      estimatedTotal: string;
+    };
+    location: {
+      city: string;
+      serviceRadius: string;
+    };
+    availability: string;
+    description: string;
+    features: string[];
+    specifications: {
+      [key: string]: string | number;
+    };
+    warranty: {
+      duration: string;
+      coverage: string[];
+    };
+    gallery: string[];
+    reviews: {
+      id: string;
+      author: string;
+      rating: number;
+      comment: string;
+      date: string;
+      verified: boolean;
+    }[];
+  }
+  
+  const serviceData: ServiceData = {
+    id: "1",
+    title: "Premium Laminate Flooring Installation",
+    category: "Flooring Services",
+    provider: {
+      name: "ProFloor Masters",
+      avatar: "https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&dpr=2",
+      rating: 4.9,
+      reviews: 247,
+      verified: true,
+      yearsExperience: 12
+    },
+    pricing: {
+      basePrice: 8.50,
+      unit: "per sq ft",
+      estimatedTotal: "$850 - $1,200"
+    },
+    location: {
+      city: "San Francisco, CA",
+      serviceRadius: "25 miles"
+    },
+    availability: "Available this week",
+    description: "Transform your space with our premium laminate flooring installation service. We specialize in high-quality AC4 rated laminate flooring that combines durability, style, and affordability. Our certified installers ensure perfect results with lifetime warranty coverage.",
+    features: [
+      "AC4 Durability Rating - Commercial Grade",
+      "Waterproof & Scratch Resistant",
+      "Unilin Click Lock System",
+      "10mm Total Thickness",
+      "Lifetime Residential Warranty",
+      "Professional Installation Included",
+      "Free Subfloor Preparation",
+      "Same-Day Furniture Moving"
+    ],
+    specifications: {
+      "Product Length": "47.8 in",
+      "Total Thickness": "10 mm",
+      "Underpad Thickness": "2 mm",
+      "Width": "7.67 in",
+      "AC Durability Rating": "AC4",
+      "Click Lock Type": "Unilin Click Lock",
+      "Color": "Beige",
+      "Edge Type": "Micro Bevel",
+      "Gloss Level": "Matte",
+      "Grade": "Above/On/Below Grade",
+      "Installation": "Floating",
+      "Surface Finish": "Embossed in Register (EIR)",
+      "Waterproof Rating": "100% Waterproof"
+    },
+    warranty: {
+      duration: "Lifetime Residential",
+      coverage: [
+        "Manufacturing defects",
+        "Wear and tear protection",
+        "Water damage coverage",
+        "Installation workmanship",
+        "Subfloor preparation"
+      ]
+    },
+    gallery: [
+      "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2",
+      "https://images.pexels.com/photos/1571453/pexels-photo-1571453.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2",
+      "https://images.pexels.com/photos/1571468/pexels-photo-1571468.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2",
+      "https://images.pexels.com/photos/1571463/pexels-photo-1571463.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2"
+    ],
+    reviews: [
+      {
+        id: "1",
+        author: "Sarah Johnson",
+        rating: 5,
+        comment: "Exceptional work! The team was professional, punctual, and the flooring looks absolutely stunning. Highly recommend!",
+        date: "2 weeks ago",
+        verified: true
+      },
+      {
+        id: "2",
+        author: "Mike Chen",
+        rating: 5,
+        comment: "Great value for money. The installation was completed in one day and the quality is outstanding.",
+        date: "1 month ago",
+        verified: true
+      },
+      {
+        id: "3",
+        author: "Emily Rodriguez",
+        rating: 4,
+        comment: "Very satisfied with the service. Minor delay in scheduling but the end result was worth it.",
+        date: "2 months ago",
+        verified: true
+      }
+    ]
+  };
+
+  export default serviceData;

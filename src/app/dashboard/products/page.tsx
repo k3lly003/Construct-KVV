@@ -19,6 +19,15 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Funnel, Plus, Upload } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { dummyOrders } from "../../utils/fakes/ProductFakes"
+import Link from "next/link";
 // import { Pagination } from '@/components/ui/pagination'; // Assuming you'll create this
 
 // Temporary Pagination component implementation
@@ -60,15 +69,6 @@ const Pagination = ({ total, current, onPageChange }: PaginationProps) => {
     </div>
   );
 };
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { dummyOrders } from "../../utils/fakes/ProductFakes"
-import { CreateProductDialog } from "../(components)/products/create-product-dialog";
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState("all");
@@ -79,9 +79,9 @@ const Page = () => {
   // Filter orders based on the active tab
   const filteredOrders = dummyOrders.filter((order) => {
     if (activeTab === "all") return true;
-    if (activeTab === "completed") return order.status === "Completed";
-    if (activeTab === "inProgress") return order.status === "In Progress";
-    if (activeTab === "canceled") return order.status === "Canceled";
+    if (activeTab === "pending") return order.status === "pending";
+    if (activeTab === "approved") return order.status === "Approved";
+    if (activeTab === "sold") return order.status === "sold";
     return true;
   });
 
@@ -117,6 +117,13 @@ const Page = () => {
     setCurrentPage(page);
   };
 
+
+
+
+  //        INTERACTION LOGIC GOES BELOW        //                INTEGRATION LOGIC GOES BELOW        //                                INTEGRATION LOGIC GOES BELOW        //
+
+
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
@@ -133,12 +140,18 @@ const Page = () => {
             <Upload className="h-4 w-4 mr-2" />
             Export
           </GenericButton>
-          <CreateProductDialog>
+          <Link href="/dashboard/create-service">
+            <GenericButton className="gap-2">
+              <Plus className="h-4 w-4" />
+              Add Service
+            </GenericButton>
+          </Link>
+          <Link href="/dashboard/products/create">
             <GenericButton className="gap-2">
               <Plus className="h-4 w-4" />
               Add Product
             </GenericButton>
-          </CreateProductDialog>
+          </Link>
         </div>
       </div>
 
@@ -146,9 +159,9 @@ const Page = () => {
         <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsList>
             <TabsTrigger value="all">All Orders</TabsTrigger>
-            <TabsTrigger value="completed">Completed</TabsTrigger>
-            <TabsTrigger value="inProgress">In Progress</TabsTrigger>
-            <TabsTrigger value="canceled">Canceled</TabsTrigger>
+            <TabsTrigger value="pending">pending</TabsTrigger>
+            <TabsTrigger value="approved">Approved</TabsTrigger>
+            <TabsTrigger value="sold">sold</TabsTrigger>
           </TabsList>
         </Tabs>
         <div className="flex items-center space-x-2">
@@ -180,13 +193,13 @@ const Page = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-amber-300">ID</TableHead>
-              <TableHead className="text-amber-300">Name</TableHead>
-              <TableHead className="text-amber-300">Product(s)</TableHead>
+              <TableHead className="text-amber-300">Photo</TableHead>
+              <TableHead className="text-amber-300">Product-name</TableHead>
+              <TableHead className="text-amber-300">Description</TableHead>
               <TableHead className="text-amber-300">Date & Time</TableHead>
               <TableHead className="text-amber-300">Status</TableHead>
-              <TableHead className="text-amber-300">Total Paid</TableHead>
-              <TableHead className="text-amber-300">Payment Method</TableHead>
+              <TableHead className="text-amber-300">Cost per unit(Rfw)</TableHead>
+              <TableHead className="text-amber-300">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -201,11 +214,11 @@ const Page = () => {
                 <TableCell className="py-4">
                   <div
                     className={`inline-flex items-center rounded-full px-5 py-1 text-xs font-semibold ${
-                      order.status === "Completed"
+                      order.status === "pending"
                         ? "bg-green-100 text-green-800"
-                        : order.status === "In Progress"
-                        ? "bg-blue-100 text-blue-800"
-                        : order.status === "Canceled"
+                        : order.status === "Approved"
+                        ? "bg-amber-500 text-white"
+                        : order.status === "sold"
                         ? "bg-red-100 text-red-800"
                         : "bg-gray-100 text-gray-800"
                     }`}

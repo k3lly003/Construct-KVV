@@ -517,7 +517,7 @@ export interface Order {
   name: string;
   product: string;
   dateTime: string;
-  status: "Completed" | "In Progress" | "Canceled";
+  status: "pending" | "Approved" | "sold";
   totalPaid: number;
   paymentMethod: "Paypal" | "Credit Card" | "Wallet";
 }
@@ -529,7 +529,7 @@ export const dummyOrders: Order[] = [
     name: "Nick Patterson",
     product: "Pull & Bear Shirt",
     dateTime: "Mar 18, 2022 (08:19)",
-    status: "Completed",
+    status: "pending",
     totalPaid: 428.67,
     paymentMethod: "Paypal",
   },
@@ -538,7 +538,7 @@ export const dummyOrders: Order[] = [
     name: "Ayda Zyne",
     product: "Kotton Corduroy Pants",
     dateTime: "Mar 18, 2022 (08:02)",
-    status: "Completed",
+    status: "pending",
     totalPaid: 89.0,
     paymentMethod: "Credit Card",
   },
@@ -547,7 +547,7 @@ export const dummyOrders: Order[] = [
     name: "Islam Abroni...",
     product: "Apple Airpods Pro, Desk Shelf, Sta...",
     dateTime: "Mar 18, 2022 (07:34)",
-    status: "In Progress",
+    status: "Approved",
     totalPaid: 1259.0,
     paymentMethod: "Wallet",
   },
@@ -556,7 +556,7 @@ export const dummyOrders: Order[] = [
     name: "Ahmed Gül",
     product: "Tom Ford Black Orchid, Cactus So...",
     dateTime: "Mar 18, 2022 (07:20)",
-    status: "Completed",
+    status: "pending",
     totalPaid: 4099.0,
     paymentMethod: "Wallet",
   },
@@ -565,7 +565,7 @@ export const dummyOrders: Order[] = [
     name: "James Jones",
     product: "Redmi Power Bank - 20000mAh",
     dateTime: "Mar 18, 2022 (06:52)",
-    status: "In Progress",
+    status: "Approved",
     totalPaid: 36.0,
     paymentMethod: "Wallet",
   },
@@ -574,7 +574,7 @@ export const dummyOrders: Order[] = [
     name: "Ario Chilver",
     product: "Faber-Castell Polychromos 120",
     dateTime: "Mar 18, 2022 (03:35)",
-    status: "Completed",
+    status: "pending",
     totalPaid: 249.45,
     paymentMethod: "Paypal",
   },
@@ -583,7 +583,7 @@ export const dummyOrders: Order[] = [
     name: "Fred Wade Jr.",
     product: "H&M Hat, Nike Air Zoom",
     dateTime: "Mar 18, 2022 (00:49)",
-    status: "Completed",
+    status: "pending",
     totalPaid: 1600.0,
     paymentMethod: "Paypal",
   },
@@ -592,7 +592,7 @@ export const dummyOrders: Order[] = [
     name: "Hille Johnson",
     product: "New Balance Suit",
     dateTime: "Mar 17, 2022 (23:36)",
-    status: "Canceled",
+    status: "sold",
     totalPaid: 899.0,
     paymentMethod: "Credit Card",
   },
@@ -601,7 +601,7 @@ export const dummyOrders: Order[] = [
     name: "Matheus Brown",
     product: "Apple Watch Series 7",
     dateTime: "Mar 17, 2022 (23:32)",
-    status: "In Progress",
+    status: "Approved",
     totalPaid: 740.0,
     paymentMethod: "Paypal",
   },
@@ -610,7 +610,7 @@ export const dummyOrders: Order[] = [
     name: "Udein Battier",
     product: "Michelin Pilot Sport 4",
     dateTime: "Mar 17, 2022 (21:05)",
-    status: "Completed",
+    status: "pending",
     totalPaid: 430.0,
     paymentMethod: "Credit Card",
   },

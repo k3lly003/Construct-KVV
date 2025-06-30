@@ -1,231 +1,69 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Building2, ChevronDown, ChevronUp, ShoppingCart } from "lucide-react";
-import { navItems, NavItem } from "@/app/utils/fakes/NavFakes";
+import { ChevronDown, ChevronUp, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import FlagToggle from "@/app/(components)/Navbar/ToggleFlag";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight } from "lucide-react";
+import Image from "next/image";
 import Profile from "@/app/(components)/Navbar/Profile";
 import { useUserStore } from "@/store/userStore";
 import CustomerProfile from "@/app/(components)/Navbar/CustomerProfile";
 import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
-import { NotificationIcon } from "@/components/ui/notification-icon";
-import { NotificationModal } from "@/components/ui/notification-modal";
-import { useNotificationStore } from "@/store/notificationStore";
-
-interface ThirdLevelItemProps {
-  item: { name: string; href?: string };
-}
-
-const ThirdLevelItem: React.FC<ThirdLevelItemProps> = ({ item }) => (
-  <li key={item.name}>
-    {item.href ? (
-      <Link
-        href={item.href}
-        className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-100"
-      >
-        {item.name}
-      </Link>
-    ) : (
-      <span className="block px-4 py-2 text-sm text-gray-600">{item.name}</span>
-    )}
-  </li>
-);
-
-interface SecondLevelItemProps {
-  item: {
-    name: string;
-    href?: string;
-    subItems?: { name: string; href?: string }[];
-  };
-}
-
-const SecondLevelItem: React.FC<SecondLevelItemProps> = ({ item }) => {
-  const [showSubMenu, setShowSubMenu] = useState(false);
-
-  return (
-    <li
-      key={item.name}
-      className="relative group"
-      onMouseEnter={() => setShowSubMenu(true)}
-      onMouseLeave={() => setShowSubMenu(false)}
-    >
-      {item.href ? (
-        <Link
-          href={item.href}
-          className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 group-hover:text-gray-900 flex justify-between items-center"
-        >
-          {item.name}
-          {item.subItems && item.subItems.length > 0 && (
-            <ChevronRight className="ml-2 h-4 w-4 text-gray-400 group-hover:text-gray-600" />
-          )}
-        </Link>
-      ) : (
-        <div className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 group-hover:text-gray-900 flex justify-between items-center">
-          {item.name}
-          {item.subItems && item.subItems.length > 0 && (
-            <ChevronRight className="ml-2 h-4 w-4 text-gray-400 group-hover:text-gray-600" />
-          )}
-        </div>
-      )}
-      <AnimatePresence>
-        {showSubMenu && item.subItems && item.subItems.length > 0 && (
-          <motion.ul
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -10 }}
-            transition={{ duration: 0.15, ease: "easeInOut" }}
-            className="absolute left-full top-0 z-20 bg-white shadow-md rounded-md w-48"
-          >
-            {item.subItems.map((subItem) => (
-              <ThirdLevelItem key={subItem.name} item={subItem} />
-            ))}
-          </motion.ul>
-        )}
-      </AnimatePresence>
-    </li>
-  );
-};
-
-interface FirstLevelSectionProps {
-  section: {
-    title: string;
-    items: {
-      name: string;
-      href?: string;
-      subItems?: { name: string; href?: string }[];
-    }[];
-  };
-}
-
-const FirstLevelSection: React.FC<FirstLevelSectionProps> = ({ section }) => (
-  <div key={section.title}>
-    <h3 className="text-sm font-semibold text-gray-900 w-full py-2">
-      {section.title}
-    </h3>
-    <ul className="mt-2 space-y-1">
-      {section.items.map((secondLevelItem) => (
-        <SecondLevelItem key={secondLevelItem.name} item={secondLevelItem} />
-      ))}
-    </ul>
-  </div>
-);
-
-interface MenuItemProps {
-  item: NavItem;
-  activeMenu: string | null;
-  handleMenuClick: (label: string, event: React.MouseEvent) => void;
-}
-
-const MenuItem: React.FC<MenuItemProps> = ({
-  item,
-  activeMenu,
-  handleMenuClick,
-}) => {
-  return (
-    <div key={item.label} className="relative nav-menu">
-      <button
-        className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
-        onClick={(e) => handleMenuClick(item.label, e)}
-      >
-        {item.label}
-        {activeMenu === item.label ? (
-          <ChevronUp className="ml-1 h-4 w-4 transition-transform duration-200" />
-        ) : (
-          <ChevronDown className="ml-1 h-4 w-4 transition-transform duration-200" />
-        )}
-      </button>
-
-      {/* First level dropdown menu */}
-      <AnimatePresence>
-        {activeMenu === item.label && item.items && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="absolute left-0 z-10 mt-2 w-screen max-w-[780px] bg-white shadow-2xl"
-          >
-            <div className="grid grid-cols-3 gap-8 p-8">
-              {item.items.map((firstLevelSection) => (
-                <FirstLevelSection
-                  key={firstLevelSection.title}
-                  section={firstLevelSection}
-                />
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-};
+import { useCategories } from "@/app/hooks/useCategories";
 
 const Navbar: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
-  const [isClient, setIsClient] = useState(false);
-  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
-  type UserData = { role?: string; name?: string; email?: string };
-  const [localUserData, setLocalUserData] = useState<UserData | null>(null);
+  const [isClient, setIsClient] = useState(false); // New state to track if on client
+  const [localUserData, setLocalUserData] = useState<unknown>(null); // New state for local user data
 
   // Get user data from Zustand store
   const { role: userRole, name: userName, email: userEmail } = useUserStore();
 
-  // Get notification data from store
-  const {
-    notifications,
-    markAsRead,
-    markAllAsRead,
-    getUnreadCount,
-    fetchNotifications,
-    isLoading: notificationsLoading,
-    error: notificationsError,
-  } = useNotificationStore();
+  const { categories } = useCategories();
 
-  // Track client and local storage user data
+  const parentCategories = categories.filter(cat => !cat.parentId);
+  const subCategoriesMap = categories
+    .filter(cat => typeof cat.parentId === "string" && cat.parentId)
+    .reduce((acc, sub) => {
+      if (!acc[sub.parentId!]) acc[sub.parentId!] = [];
+      acc[sub.parentId!].push(sub);
+      return acc;
+    }, {} as Record<string, typeof categories>);
+
+  const featuresSections = parentCategories.map(parent => ({
+    title: parent.name,
+    items: [
+      {
+        name: parent.name,
+        href: `/category/${parent.slug || parent.id}`,
+        subItems: (subCategoriesMap[parent.id] || []).map(sub => ({
+          name: sub.name,
+          href: `/category/${parent.slug || parent.id}/${sub.slug || sub.id}`,
+        })),
+      },
+    ],
+  }));
+
   useEffect(() => {
+    // This code only runs on the client after hydration
     setIsClient(true);
     setLocalUserData(getUserDataFromLocalStorage());
-    // Only add "click outside" listener after mount
+
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (!target.closest(".nav-menu")) setActiveMenu(null);
+      if (!target.closest(".nav-menu")) {
+        setActiveMenu(null);
+      }
     };
+
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  // Fetch notifications only when client and user data are set
-  useEffect(() => {
-    if (isClient && localUserData) {
-      fetchNotifications();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isClient, localUserData]);
-
   const handleMenuClick = (label: string, event: React.MouseEvent) => {
     event.stopPropagation();
     setActiveMenu(activeMenu === label ? null : label);
-  };
-
-  const handleNotificationClick = async () => {
-    // Refresh notifications when opening the modal
-    await fetchNotifications();
-    setIsNotificationModalOpen(true);
-  };
-
-  const handleNotificationClose = () => {
-    setIsNotificationModalOpen(false);
-  };
-
-  const handleMarkAsRead = (id: string) => {
-    markAsRead(id);
-  };
-
-  const handleMarkAllAsRead = () => {
-    markAllAsRead();
   };
 
   return (
@@ -235,22 +73,63 @@ const Navbar: React.FC = () => {
           <div className="flex items-center">
             {/* Logo */}
             <Link href="/">
-              <div className="flex-shrink-0 flex items-center">
-                <Building2 className="h-8 w-8 text-green-600" />
-                <span className="ml-2 text-xl font-semibold">KVV Pro</span>
+              <div className="flex-shrink-0 flex items-center mr-5">
+                <Image src="/kvv-logo.png" alt="KVV Pro" width={42} height={42} />
+                <span className="ml-2 text-xl text-amber-500 font-semibold">kvv</span>
               </div>
             </Link>
 
             {/* Main navigation */}
             <div className="hidden md:ml-6 md:flex md:space-x-8">
-              {navItems.map((item) => (
-                <MenuItem
-                  key={item.label}
-                  item={item}
-                  activeMenu={activeMenu}
-                  handleMenuClick={handleMenuClick}
-                />
-              ))}
+              <div className="relative nav-menu">
+                <button
+                  className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
+                  onClick={(e) => handleMenuClick("Features", e)}
+                >
+                  Features
+                  {activeMenu === "Features" ? (
+                    <ChevronUp className="ml-1 h-4 w-4 transition-transform duration-200" />
+                  ) : (
+                    <ChevronDown className="ml-1 h-4 w-4 transition-transform duration-200" />
+                  )}
+                </button>
+                <AnimatePresence>
+                  {activeMenu === "Features" && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2, ease: "easeInOut" }}
+                      className="absolute left-0 z-10 mt-2 w-screen max-w-[700px] bg-white shadow-2xl"
+                    >
+                      <div className="grid grid-cols-3 gap-8 p-8">
+                        {featuresSections.map(section => (
+                          <div key={section.title}>
+                            <Link className="text-sm font-semibold text-gray-900 w-full py-2 hover:text-amber-500" href={`/${section.title}`}>{section.title}</Link>
+                            <ul className="mt-2 space-y-1">
+                              {section.items.map(item => (
+                                <li key={item.name}>
+                                  {item.subItems && item.subItems.length > 0 && (
+                                    <ul className="mt-1 space-y-1">
+                                      {item.subItems.map(sub => (
+                                        <li key={sub.name}>
+                                          <Link href={sub.href || '#'} className="block p-2 text-sm text-gray-600 hover:bg-gray-100">
+                                            {sub.name}
+                                          </Link>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  )}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
               <Link
                 href="/build-house"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
@@ -259,10 +138,10 @@ const Navbar: React.FC = () => {
               </Link>
 
               <Link
-                href="/projects"
+                href="/store"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
               >
-                Projects
+                Store
               </Link>
 
               <Link
@@ -282,16 +161,6 @@ const Navbar: React.FC = () => {
             >
               <p>Help</p>
             </Link>
-
-            {/* Notification Icon (client only) */}
-            {isClient && (
-              <NotificationIcon
-                count={getUnreadCount()}
-                onClick={handleNotificationClick}
-                className="text-amber-600 hover:text-amber-700"
-              />
-            )}
-
             <Link
               href="/cart"
               className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
@@ -299,8 +168,8 @@ const Navbar: React.FC = () => {
               <ShoppingCart />
             </Link>
             {/* Conditionally render based on isClient and localUserData */}
-            {isClient &&
-              (localUserData ? (
+            {isClient && (
+              localUserData ? (
                 userRole === "ADMIN" || userRole === "SELLER" ? (
                   <Profile
                     NK={""}
@@ -308,11 +177,7 @@ const Navbar: React.FC = () => {
                     userEmail={userEmail || ""}
                   />
                 ) : (
-                  <CustomerProfile
-                    NK={""}
-                    userName={userName || ""}
-                    userEmail={userEmail || ""}
-                  />
+                  <CustomerProfile/>
                 )
               ) : (
                 <Link href="/signin" className="border-l-1">
@@ -320,24 +185,12 @@ const Navbar: React.FC = () => {
                     Sign In
                   </p>
                 </Link>
-              ))}
+              )
+            )}
             <FlagToggle />
           </div>
         </div>
       </div>
-
-      {/* Notification Modal (client only) */}
-      {isClient && (
-        <NotificationModal
-          isOpen={isNotificationModalOpen}
-          onClose={handleNotificationClose}
-          notifications={notifications}
-          onMarkAsRead={handleMarkAsRead}
-          onMarkAllAsRead={handleMarkAllAsRead}
-          isLoading={notificationsLoading}
-          error={notificationsError}
-        />
-      )}
     </nav>
   );
 };
