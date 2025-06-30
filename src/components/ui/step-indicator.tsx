@@ -18,8 +18,8 @@ export function StepIndicator({ className }: StepIndicatorProps) {
     "Exterior",
     "Interior",
     "Outdoor",
-    "Preferences",
-    "Contact"
+    "Summary",
+    "Submission"
   ];
 
   return (

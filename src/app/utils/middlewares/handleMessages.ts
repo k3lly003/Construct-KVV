@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useState } from "react";
 import { Message } from "@/app/utils/dtos/chat.dtos";
@@ -6,13 +6,13 @@ import { Message } from "@/app/utils/dtos/chat.dtos";
 export function useHandleSendMessages() {
   const [messages, setMessages] = useState<Message[]>([
     {
-      id: '1',
+      id: "1",
       content: "Hi, do you have any questions? I'm happy to help.",
       isUser: false,
       timestamp: new Date(),
-    }
+    },
   ]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
 
   const handleQuickAction = (action: string) => {
     const newMessage: Message = {
@@ -21,7 +21,7 @@ export function useHandleSendMessages() {
       isUser: true,
       timestamp: new Date(),
     };
-    setMessages(prev => [...prev, newMessage]);
+    setMessages((prev) => [...prev, newMessage]);
 
     // Simulate assistant response
     setTimeout(() => {
@@ -31,11 +31,12 @@ export function useHandleSendMessages() {
         isUser: false,
         timestamp: new Date(),
       };
-      setMessages(prev => [...prev, response]);
+      setMessages((prev) => [...prev, response]);
     }, 1000);
   };
 
-  const handleSendMessage = () => { // Moved sendMessage logic here
+  const handleSendMessage = async () => {
+    // Now async for API call
     if (!inputValue.trim()) return;
 
     const newMessage: Message = {
@@ -44,20 +45,48 @@ export function useHandleSendMessages() {
       isUser: true,
       timestamp: new Date(),
     };
-    setMessages(prev => [...prev, newMessage]);
-    setInputValue(''); // Clear input after sending
+    setMessages((prev) => [...prev, newMessage]);
+    setInputValue(""); // Clear input after sending
 
-    // Simulate assistant response
-    setTimeout(() => {
+    // Call FAQ API
+    try {
+      const res = await fetch(
+        "https://construct-kvv-bn-fork.onrender.com/api/v1/faqs/ask",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: newMessage.content }),
+        }
+      );
+      if (!res.ok) throw new Error("Network response was not ok");
+      const data = await res.json();
       const response: Message = {
         id: (Date.now() + 1).toString(),
-        content: "Thank you for your message. I'm processing your request and will provide you with a detailed response shortly.",
+        content:
+          data.answer || "Sorry, I couldn't find an answer to your question.",
         isUser: false,
         timestamp: new Date(),
       };
-      setMessages(prev => [...prev, response]);
-    }, 1000);
+      setMessages((prev) => [...prev, response]);
+      // Optionally, handle data.relevantFAQs here
+    } catch {
+      const errorMsg: Message = {
+        id: (Date.now() + 2).toString(),
+        content:
+          "Sorry, there was a problem reaching the assistant. Please try again later.",
+        isUser: false,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMsg]);
+    }
   };
 
-  return { messages, setMessages, inputValue, setInputValue, handleQuickAction, handleSendMessage };
+  return {
+    messages,
+    setMessages,
+    inputValue,
+    setInputValue,
+    handleQuickAction,
+    handleSendMessage,
+  };
 }

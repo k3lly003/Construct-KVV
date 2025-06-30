@@ -21,9 +21,9 @@ export default function RootLayout({
       <body className="flex flex-col justify-start min-h-screen">
         <Providers>
           {children}
-          <Toaster />
+          <Toaster position="top-right" richColors />
         </Providers>
       </body>
     </html>
   );
-} 
+}
