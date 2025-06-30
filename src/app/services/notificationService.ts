@@ -112,17 +112,16 @@ class NotificationService {
       return response.data as MarkAsReadResponse;
     } catch (error) {
       const err = error as { response?: { data?: { message?: string } } };
-      console.error("Error marking all notifications as read:", error);
+      console.error("Error marking all as read:", error);
       throw new Error(
-        err.response?.data?.message ||
-          "Failed to mark all notifications as read"
+        err.response?.data?.message || "Failed to mark all as read"
       );
     }
   }
 
   async getUnreadCount(): Promise<number> {
     try {
-      const response = await this.getAllNotifications(1, 100); // Get all notifications to count unread
+      const response = await this.getAllNotifications(1, 100); // Get all to count unread
       return response.data.notifications.filter(
         (notification) => !notification.isRead
       ).length;

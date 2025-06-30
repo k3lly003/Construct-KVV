@@ -50,7 +50,7 @@ function ProjectPage({ params }: ProjectPageProps) {
       estimatedCost: 0,
     }
   );
-
+ 
   // Initialize form data when project loads
   React.useEffect(() => {
     if (project) {

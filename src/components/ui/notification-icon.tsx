@@ -4,7 +4,7 @@ import React from "react";
 import { Bell } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
-interface NotificationIconProps {
+interface NotificationIconProps { 
   count: number;
   onClick: () => void;
   className?: string;

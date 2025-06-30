@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { GenericButton } from "@/components/ui/generic-button";
-import { Bell, X, Clock } from "lucide-react";
+import { Bell, Clock } from "lucide-react";
 import { formatNotificationTime } from "@/utils/formatTime";
 
 export interface Notification {
@@ -76,7 +76,11 @@ export function NotificationModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md w-full bg-white border-amber-200">
+      <DialogContent
+        className="max-w-md w-full bg-white border-amber-200"
+        onPointerDownOutside={onClose}
+        onEscapeKeyDown={onClose}
+      >
         <DialogHeader className="border-b border-amber-200 pb-4">
           <div className="flex items-center justify-between">
             <DialogTitle className="text-lg font-semibold text-amber-900 flex items-center gap-2">
@@ -88,14 +92,6 @@ export function NotificationModal({
                 </Badge>
               )}
             </DialogTitle>
-            <GenericButton
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
-            >
-              <X className="h-4 w-4" />
-            </GenericButton>
           </div>
         </DialogHeader>
 
@@ -116,25 +112,24 @@ export function NotificationModal({
           ) : notifications.length === 0 ? (
             <div className="text-center py-8">
               <Bell className="h-12 w-12 text-amber-300 mx-auto mb-4" />
-              <p className="text-amber-700 font-medium">No notifications</p>
+              <p className="text-amber-700 font-medium">No Notifications</p>
               <p className="text-amber-600 text-sm mt-1">
-                You&apos;re all caught up!
+                You have no notifications at the moment.
               </p>
             </div>
           ) : (
             <div className="space-y-3">
-              {unreadCount > 0 && (
-                <div className="flex justify-end pb-2">
-                  <GenericButton
-                    variant="outline"
-                    size="sm"
-                    onClick={onMarkAllAsRead}
-                    className="text-amber-600 border-amber-300 hover:bg-amber-50 text-xs"
-                  >
-                    Mark all as read
-                  </GenericButton>
-                </div>
-              )}
+              <div className="flex pb-2 w-full">
+                <GenericButton
+                  variant="outline"
+                  size="sm"
+                  onClick={onMarkAllAsRead}
+                  className="text-amber-600 border-amber-300 hover:bg-amber-50 text-xs w-full sm:w-auto"
+                  disabled={notifications.length === 0}
+                >
+                  Mark read all
+                </GenericButton>
+              </div>
 
               {notifications.map((notification) => (
                 <div
