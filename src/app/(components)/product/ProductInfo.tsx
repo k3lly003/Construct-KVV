@@ -22,11 +22,11 @@ interface ProductInfoProps {
   setQuantity: (quantity: number) => void;
 }
 
-export default function ProductInfo({
+const ProductInfo = ({
   product,
   quantity,
   setQuantity,
-}: ProductInfoProps) {
+}: ProductInfoProps) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
 
   const incrementQuantity = () => {
@@ -160,3 +160,4 @@ export default function ProductInfo({
     </div>
   );
 }
+export default ProductInfo;

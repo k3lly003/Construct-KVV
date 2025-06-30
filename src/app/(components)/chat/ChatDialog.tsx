@@ -83,7 +83,7 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
             </div>
             <button
               onClick={onClose}
-              className="text-white hover:bg-amber-600 h-8 w-8 p-3 border"
+              className="text-white flex justify-center items-center hover:bg-amber-600 h-8 w-8 border rounded-full"
             >
               <X className="w-4 h-4" />
             </button>
@@ -125,7 +125,7 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
                     <button
                       key={index}
                       // variant="outline"
-                      className="w-full justify-start text-amber-600 border-amber-200 hover:bg-emerald-50 hover:border-amber-300 transition-colors"
+                      className="w-full justify-start text-amber-600 border-2 border-amber-200 hover:bg-emerald-50 hover:border-amber-300 transition-colors"
                       onClick={() => handleQuickAction(action)}
                     >
                       {action}
@@ -147,7 +147,7 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
               />
               <button
                 onClick={handleSendMessage} // Call the returned handleSendMessage
-                className="h-24 bg-amber-500 hover:bg-amber-600 text-white"
+                className="w-10 flex justify-center items-center bg-amber-500 hover:bg-amber-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send className="w-4 h-4" />
               </button>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Building2, Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Phone, MapPin } from 'lucide-react';
 import Image from 'next/image';
 
 const constructionImages = [
@@ -17,10 +17,10 @@ export const Footer: React.FC = () => {
           {/* Logo and Company Info */}
           <div className="space-y-8">
             <div className="flex items-center space-x-3">
-              <Building2 className="h-8 w-8" />
-              <h2 className="text-2xl font-bold">KVV Ltd</h2>
+              <Image src='/kvv-logo.png' alt='kvv-logo' width={34} height={34} />
+              <h2 className="text-2xl font-bold">kvv Ltd</h2>
             </div>
-            
+
             {/* Social Links */}
             <div className="flex space-x-6">
               <a href="#" className="hover:text-yellow-400 transition-colors">
@@ -69,14 +69,11 @@ export const Footer: React.FC = () => {
                   <p>Kigali, Rwanda</p>
                 </div>
               </div>
-              <div className="space-y-2">
-                <div className="flex items-center space-x-3">
-                  <Phone className="h-6 w-6 text-yellow-400" />
-                  <a href="tel:+250 7888 507" className="hover:text-yellow-400 transition-colors">+250 7888 507</a>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Phone className="h-6 w-6 text-yellow-400" />
-                  <a href="tel:+250 7888 600" className="hover:text-yellow-400 transition-colors">+250 7888 600</a>
+              <div className="flex items-start space-x-3">
+                <Phone className="h-6 w-6 text-yellow-400" />
+                <div>
+                  <p>+250 7888 507</p>
+                  <p>+250 7888 600</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
@@ -108,14 +105,12 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* About Us */}
-          <div className="space-y-6">
+          <div className="space-y-6 w-[350px]">
             <h3 className="text-xl font-semibold">About Us</h3>
             <div className="space-y-4">
-              <p className="text-gray-400 leading-relaxed">
-                Lorem ipsum dolor sit ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud e ex ea commodo consequat.
-              </p>
-              <p className="text-gray-400 leading-relaxed">
-                Lorem ipsum dolor sit ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud e ex ea commodo consequat.
+              <p className="text-gray-400 text-md leading-relaxed">
+                At <strong className='text-amber-300'>KVV Construction</strong>, we understand that successful projects require more than just quality tools. We supply top-tier construction equipment while offering professional services that complement every purchase. <br /><br />
+                Our integrated approach means you get the right products backed by the expertise to use them effectively. From initial consultation to project completion, we&apos;re your trusted construction partner.
               </p>
             </div>
           </div>

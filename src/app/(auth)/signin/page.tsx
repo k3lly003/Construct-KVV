@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { BackgroundBeams } from "@/components/ui/background-beams";
 import { Mail, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { IoLogoFacebook } from "react-icons/io5";
@@ -69,7 +68,6 @@ const Page = () => {
     }
 
     toast.success("Login successful!");
-    // Comment out navigation for debugging
     router.push("/");
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -236,7 +234,6 @@ const Page = () => {
           </div>
         </div>
       </div>
-      <BackgroundBeams />
     </>
   );
 };
