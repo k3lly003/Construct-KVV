@@ -50,7 +50,7 @@ const CustomerProfile = () => {
         </SheetTrigger>
         <SheetContent className="w-[500px] p-3 sm:w-[540px] border-none bg-transparent">
           <SheetHeader>
-            <SheetTitle>Profile</SheetTitle>
+            <SheetTitle></SheetTitle>
           </SheetHeader>
           <CustomerProfileSheet
             firstName={profile.firstName}

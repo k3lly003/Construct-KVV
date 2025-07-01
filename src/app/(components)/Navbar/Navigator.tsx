@@ -11,16 +11,56 @@ import { useUserStore } from "@/store/userStore";
 import CustomerProfile from "@/app/(components)/Navbar/CustomerProfile";
 import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
 import { useCategories } from "@/app/hooks/useCategories";
+import { NotificationIcon } from "@/components/ui/notification-icon";
+import { NotificationModal } from "@/components/ui/notification-modal";
+import { useNotificationStore } from "@/store/notificationStore";
+
 
 const Navbar: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false); // New state to track if on client
-  const [localUserData, setLocalUserData] = useState<unknown>(null); // New state for local user data
+  const [localUserData, setLocalUserData] = useState<unknown>(null);
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
 
   // Get user data from Zustand store
   const { role: userRole, name: userName, email: userEmail } = useUserStore();
-
+  // Get notification data from store
+  const {
+    notifications,
+    markAsRead,
+    markAllAsRead,
+    getUnreadCount,
+    fetchNotifications,
+    isLoading: notificationsLoading,
+    error: notificationsError,
+  } = useNotificationStore();
   const { categories } = useCategories();
+
+    // Fetch notifications only when client and user data are set
+    useEffect(() => {
+      if (isClient && localUserData) {
+        fetchNotifications();
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isClient, localUserData]);
+
+    const handleNotificationClick = async () => {
+      // Refresh notifications when opening the modal
+      await fetchNotifications();
+      setIsNotificationModalOpen(true);
+    };
+  
+    const handleNotificationClose = () => {
+      setIsNotificationModalOpen(false);
+    };
+
+    const handleMarkAsRead = (id: string) => {
+      markAsRead(id);
+    };
+  
+    const handleMarkAllAsRead = () => {
+      markAllAsRead();
+    };
 
   const parentCategories = categories.filter(cat => !cat.parentId);
   const subCategoriesMap = categories
@@ -138,10 +178,10 @@ const Navbar: React.FC = () => {
               </Link>
 
               <Link
-                href="/store"
+                href="/projects"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
               >
-                Store
+                Projects
               </Link>
 
               <Link
@@ -160,7 +200,17 @@ const Navbar: React.FC = () => {
               className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
             >
               <p>Help</p>
+
             </Link>
+             {/* Notification Icon (client only) */}
+             {isClient && (
+              <NotificationIcon
+                count={getUnreadCount()}
+                onClick={handleNotificationClick}
+                className="text-amber-600 hover:text-amber-700"
+              />
+            )}
+
             <Link
               href="/cart"
               className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
@@ -191,6 +241,18 @@ const Navbar: React.FC = () => {
           </div>
         </div>
       </div>
+       {/* Notification Modal (client only) */}
+       {isClient && (
+        <NotificationModal
+          isOpen={isNotificationModalOpen}
+          onClose={handleNotificationClose}
+          notifications={notifications}
+          onMarkAsRead={handleMarkAsRead}
+          onMarkAllAsRead={handleMarkAllAsRead}
+          isLoading={notificationsLoading}
+          error={notificationsError}
+        />
+      )}
     </nav>
   );
 };
