@@ -13,6 +13,7 @@ import {
   Tag,
   Layers,
   Bell,
+  TableProperties,
   User, // New icon for Profile
   DollarSign, // New icon for Sales Report
 } from "lucide-react";
@@ -172,6 +173,12 @@ const SideBar = () => {
 
           {userRole === "SELLER" && (
             <>
+            <SidebarLink
+            href="/dashboard/projects"
+            icon={TableProperties}
+            label="Projects"
+            isCollapsed={isSidebarCollapsed}
+          />
               <SidebarLink
                 href="/dashboard/profile" // Assuming profile path for sellers
                 icon={User}
