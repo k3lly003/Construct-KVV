@@ -72,7 +72,7 @@ const Page = () => {
   const { myShop, isMyShopLoading } = useShop();
 
   const form = useForm<CreateServiceFormInput>({
-    resolver: zodResolver(createServiceSchema),
+    resolver: zodResolver(createServiceSchema) as any,
     defaultValues: {
       title: '',
       category: '',

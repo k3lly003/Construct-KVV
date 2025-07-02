@@ -14,7 +14,6 @@ export const categoryService = {
           'Authorization': `Bearer ${authToken}`
         },
       });
-      console.log("CREATED-CATEGORY-DATA",response.data);
       return response.data as Category;
     } catch (error) {
       console.error('Error creating category:', error);
@@ -25,7 +24,9 @@ export const categoryService = {
   async getCategories(): Promise<Category[]> {
     try {
       const response = await axios.get(`${API_URL}/api/v1/categories`);
-      return response.data as Category[];
+      // console.log("0000000000000000000000000000000",response.data.data);
+      const categories = response.data;
+      return categories.data as Category[];
     } catch (error: unknown) {
       console.error('Error fetching categories:', error);
       throw error instanceof Error ? error : new Error(String(error));

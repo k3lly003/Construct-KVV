@@ -34,7 +34,8 @@ const Navbar: React.FC = () => {
     isLoading: notificationsLoading,
     error: notificationsError,
   } = useNotificationStore();
-  const { categories } = useCategories();
+  const { categories: rawCategories } = useCategories();
+  const categories = Array.isArray(rawCategories) ? rawCategories : [];
 
     // Fetch notifications only when client and user data are set
     useEffect(() => {
@@ -61,7 +62,7 @@ const Navbar: React.FC = () => {
     const handleMarkAllAsRead = () => {
       markAllAsRead();
     };
-
+    // console.log("NAVVVVVVVVVVVVV: ",categories);
   const parentCategories = categories.filter(cat => !cat.parentId);
   const subCategoriesMap = categories
     .filter(cat => typeof cat.parentId === "string" && cat.parentId)
