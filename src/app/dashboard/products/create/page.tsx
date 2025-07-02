@@ -252,7 +252,7 @@ const Page = () => {
 
             {/* Product Media */}
             <ProductImageUpload
-              images={form.watch("images") as { url: string; alt?: string }[]}
+              images={form.watch("images")}
               onAddImages={files => {
                 const newImages = Array.from(files).map(file => ({
                   url: URL.createObjectURL(file),
@@ -314,11 +314,7 @@ const Page = () => {
           name={watchAllFields.name}
           description={watchAllFields.description}
           price={watchAllFields.price}
-          images={
-            (watchAllFields.images ?? []).filter(
-              (img): img is { url: string; alt?: string } => !!img.url
-            )
-          }
+          images={watchAllFields.images}
         />
       </div>
     </div>
