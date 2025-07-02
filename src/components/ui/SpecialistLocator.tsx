@@ -94,8 +94,8 @@ const SpecialistLocator: React.FC = () => {
         );
         fetchAreaName(position.coords.latitude, position.coords.longitude);
       },
-      (error) => {
-        setLocationError("Unable to retrieve your location.", error);
+      (error: GeolocationPositionError) => {
+        setLocationError("Unable to retrieve your location.");
       }
     );
   };

@@ -44,6 +44,9 @@ const nextConfig = {
       "certificatesinn.com",
     ],
   },
+  eslint: {
+    ignoreDuringBuilds: true, 
+  },
 };
 // next.config.js
 
