@@ -10,12 +10,42 @@ import {
   BrickWall,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, circOut } from "framer-motion";
+import type { Variants } from "framer-motion";
 import { ChatDialogProps } from "@/app/utils/dtos/chat.dtos";
 import { quickActions } from "@/app/utils/fakes/ChatFakes";
 import { useHandleSendMessages } from "@/app/utils/middlewares/handleMessages";
+
+const dialogVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 100,
+    x: 0,
+    scale: 0.95,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    x: 0,
+    scale: 1,
+    transition: {
+      duration: 0.4,
+      ease: circOut, // <--- most type-safe!
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: 100,
+    x: 0,
+    scale: 0.95,
+    transition: {
+      duration: 0.2,
+      ease: circOut, // <--- most type-safe!
+    },
+  },
+};
+
 const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
-  
   const {
     messages,
     inputValue,
@@ -23,7 +53,7 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
     handleQuickAction,
     handleSendMessage,
   } = useHandleSendMessages();
-  // Dialog-specific useEffect for Escape key
+
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -39,34 +69,7 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
       document.removeEventListener("keydown", handleEscape);
     };
   }, [isOpen, onClose]);
-  const dialogVariants = {
-    hidden: {
-      opacity: 0,
-      y: 100,
-      x: 0,
-      scale: 0.95,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      x: 0,
-      scale: 1,
-      transition: {
-        duration: 0.4,
-        ease: "easeOut",
-      },
-    },
-    exit: {
-      opacity: 0,
-      y: 100,
-      x: 0,
-      scale: 0.95,
-      transition: {
-        duration: 0.2,
-        ease: "easeOut",
-      },
-    },
-  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -144,7 +147,6 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
                   {quickActions.map((action, index) => (
                     <button
                       key={index}
-                      // variant="outline"
                       className="w-full justify-start text-amber-600 border-2 border-amber-200 hover:bg-emerald-50 hover:border-amber-300 transition-colors"
                       onClick={() => handleQuickAction(action)}
                     >
@@ -163,10 +165,10 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Choose an option or type your message..."
                 className="flex-1"
-                onKeyPress={(e) => e.key === "Enter" && handleSendMessage()} // Call the returned handleSendMessage
+                onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
               />
               <button
-                onClick={handleSendMessage} // Call the returned handleSendMessage
+                onClick={handleSendMessage}
                 className="w-10 flex justify-center items-center bg-amber-500 hover:bg-amber-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send className="w-4 h-4" />

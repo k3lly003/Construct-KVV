@@ -5,9 +5,6 @@ import Button from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
 import SpecialistModal from "./SpecialistModal";
 
-
-
-
 const SPECIALIST_TYPES = [
   "Architect",
   "Plumber",

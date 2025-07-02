@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack -p 3001",
+    "clean": "rimraf .next",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -89,6 +90,7 @@
     "@types/uuid": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.0",
+    "rimraf": "^5.0.10",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

@@ -68,7 +68,7 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
           initial="hidden"
           animate="visible"
           exit="exit"
-          variants={dialogVariants}
+          variants={dialogVariants as any}
         >
           {/* HEADER */}
           <div className="bg-amber-500 text-white p-4 rounded-t-lg flex items-center justify-between">

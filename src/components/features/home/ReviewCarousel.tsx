@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // Conceptual ReviewCarousel.tsx
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -22,7 +24,9 @@ const ReviewCarousel: React.FC<Props> = ({ reviews }) => {
   return (
     <>
       <div className="flex self-center">
-        <h1 className="font-bold text-4xl my-10">Why use Kvv for your project ?</h1>
+        <h1 className="font-bold text-4xl my-10">
+          Why use Kvv for your project ?
+        </h1>
       </div>
       <div className="relative max-w-6xl flex justify-center self-center w-full overflow-hidden">
         <AnimatePresence initial={false} custom={reviews[currentIndex]?.id}>
@@ -33,7 +37,7 @@ const ReviewCarousel: React.FC<Props> = ({ reviews }) => {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
-            transition={{ type: "", damping: 20 }}
+            transition={{ type: "spring", damping: 20 }}
           >
             <CarouselCard review={reviews[currentIndex]} />
           </motion.div>
