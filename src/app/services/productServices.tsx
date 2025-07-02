@@ -23,10 +23,9 @@ export const categoryService = {
 
   async getCategories(): Promise<Category[]> {
     try {
-      const response = await axios.get(`${API_URL}/api/v1/categories`);
-      // console.log("0000000000000000000000000000000",response.data.data);
-      const categories = response.data;
-      return categories.data as Category[];
+      const response = await axios.get<{ data: Category[] }>(`${API_URL}/api/v1/categories`);
+      // console.log("RESPONSE-DATA",response.data.data);
+      return Array.isArray(response.data.data) ? response.data.data : [];
     } catch (error: unknown) {
       console.error('Error fetching categories:', error);
       throw error instanceof Error ? error : new Error(String(error));
