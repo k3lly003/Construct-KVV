@@ -7,11 +7,11 @@ dotenv.config();
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const serviceService = {
-  async createService(shopId: string, service: Omit<Service, 'id' | 'createdAt'>, authToken: string): Promise<Service> {
+  async createService(shopId: string, formData: FormData, authToken: string): Promise<Service> {
     try {
-      const response = await axios.post(`${API_URL}/api/v1/services/shop/${shopId}`, service, {
+      const response = await axios.post(`${API_URL}/api/v1/services/shop/${shopId}`, formData, {
         headers: {
-          'Content-Type': 'application/json',
+          //'Content-Type': 'multipart/form-data', // Let browser set this
           'Authorization': `Bearer ${authToken}`
         },
       });
