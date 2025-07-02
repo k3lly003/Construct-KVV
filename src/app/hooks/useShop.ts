@@ -1,10 +1,30 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ShopService } from '@/app/services/shopServices';
-import axios from 'axios';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { ShopService } from "@/app/services/shopServices";
+
+// Define a custom AxiosError-like interface
+interface CustomAxiosError {
+  isAxiosError: boolean;
+  response?: {
+    status: number;
+    data: unknown;
+  };
+  message: string;
+}
+
+// Custom isAxiosError function
+const isAxiosError = (error: unknown): error is CustomAxiosError => {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "isAxiosError" in error &&
+    (error as Record<string, unknown>).isAxiosError === true
+  );
+};
 
 export const useShop = () => {
   const queryClient = useQueryClient();
-  const authToken = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+  const authToken =
+    typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
 
   // Mutation to create a shop
   const createShopMutation = useMutation({
@@ -13,8 +33,8 @@ export const useShop = () => {
       return ShopService.createShop(data, authToken);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['myShop'] });
-      queryClient.invalidateQueries({ queryKey: ['shops'] });
+      queryClient.invalidateQueries({ queryKey: ["myShop"] });
+      queryClient.invalidateQueries({ queryKey: ["shops"] });
     },
   });
 
@@ -25,22 +45,25 @@ export const useShop = () => {
       return ShopService.updateShop(id, data, authToken);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['myShop'] });
-      queryClient.invalidateQueries({ queryKey: ['shops'] });
+      queryClient.invalidateQueries({ queryKey: ["myShop"] });
+      queryClient.invalidateQueries({ queryKey: ["shops"] });
     },
   });
 
   // Query to get the current user's shop
-  const { data: myShop, isLoading: isMyShopLoading, error: myShopError } = useQuery({
-    queryKey: ['myShop'],
+  const {
+    data: myShop,
+    isLoading: isMyShopLoading,
+    error: myShopError,
+  } = useQuery({
+    queryKey: ["myShop"],
     queryFn: async () => {
       if (!authToken) return null;
       try {
         const shop = await ShopService.getMyShop(authToken);
-        return shop || null; // Return null if no shop found
-      } catch (error) {
-        // If it's a 404 or no shops found, return null instead of throwing
-        if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return shop || null;
+      } catch (error: unknown) {
+        if (isAxiosError(error) && error.response?.status === 404) {
           return null;
         }
         throw error;
@@ -50,31 +73,31 @@ export const useShop = () => {
   });
 
   // Query to get all shops
-  const { data: shops, isLoading: areShopsLoading, error: shopsError } = useQuery({
-    queryKey: ['shops'],
+  const {
+    data: shops,
+    isLoading: areShopsLoading,
+    error: shopsError,
+  } = useQuery({
+    queryKey: ["shops"],
     queryFn: () => ShopService.getAllShops(),
     enabled: true,
   });
 
   return {
-    // Create Shop
     createShop: createShopMutation.mutate,
     isCreating: createShopMutation.isPending,
     createError: createShopMutation.error,
-    
-    // Update Shop
+
     updateShop: updateShopMutation.mutate,
     isUpdating: updateShopMutation.isPending,
     updateError: updateShopMutation.error,
 
-    // Get My Shop
     myShop,
     isMyShopLoading,
     myShopError,
 
-    // Get All Shops
     shops,
     areShopsLoading,
     shopsError,
   };
-}; 
+};

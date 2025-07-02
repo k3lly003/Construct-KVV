@@ -230,7 +230,7 @@ const ProjectsPage = () => {
           {/* Get Your Specialist Section */}
           <div className="mt-8 mb-8 p-6 bg-white border border-amber-200 rounded-lg shadow-md">
             <h3 className="text-xl font-bold text-amber-900 mb-2">
-              Get Your Specialist
+              Get Your professionals
             </h3>
             <p className="text-amber-800 mb-4">
               Find certified professionals near your location.

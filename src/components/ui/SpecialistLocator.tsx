@@ -5,6 +5,9 @@ import Button from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
 import SpecialistModal from "./SpecialistModal";
 
+
+
+
 const SPECIALIST_TYPES = [
   "Architect",
   "Plumber",
@@ -16,7 +19,8 @@ const SPECIALIST_TYPES = [
   "General Contractor",
 ];
 
-const OPENCAGE_API_KEY = "6c60f4897ac349b7a34b8341e7d50014";
+const opencageApi = process.env.NEXT_PUBLIC_OPENCAGE_API_KEY;
+console.log("OPENCAGE_API_KEY:", opencageApi);
 
 function getDistance(lat1: number, lng1: number, lat2: number, lng2: number) {
   // Haversine formula
@@ -48,7 +52,7 @@ const SpecialistLocator: React.FC = () => {
   const fetchAreaName = async (lat: number, lng: number) => {
     try {
       const res = await fetch(
-        `https://api.opencagedata.com/geocode/v1/json?q=${lat},${lng}&key=${OPENCAGE_API_KEY}`
+        `https://api.opencagedata.com/geocode/v1/json?q=${lat},${lng}&key=${opencageApi}`
       );
       const data = await res.json();
       console.log("OpenCageData response:", data); // Log full response for testing
@@ -65,7 +69,8 @@ const SpecialistLocator: React.FC = () => {
       const area =
         city && country ? `${city}, ${country}` : country || city || "";
       setAreaName(area || "");
-    } catch (e) {
+    } catch (error) {
+      console.error("Error fetching area name:", error);
       setAreaName("");
     }
   };
@@ -89,8 +94,8 @@ const SpecialistLocator: React.FC = () => {
         );
         fetchAreaName(position.coords.latitude, position.coords.longitude);
       },
-      (err) => {
-        setLocationError("Unable to retrieve your location.");
+      (error) => {
+        setLocationError("Unable to retrieve your location.", error);
       }
     );
   };

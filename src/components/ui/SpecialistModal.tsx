@@ -2,6 +2,7 @@ import React from "react";
 import { Worker } from "@/app/utils/fakes/workersFakes";
 import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
 import { Badge } from "./badge";
+import Image from "next/image";
 
 interface SpecialistModalProps {
   worker: Worker | null;
@@ -67,10 +68,12 @@ const SpecialistModal: React.FC<SpecialistModalProps> = ({
                 rel="noopener noreferrer"
                 className="block"
               >
-                <img
+                <Image
                   src={worker.certificateLink}
                   alt="Certificate Preview"
-                  className="mx-auto mb-2 max-h-40 rounded shadow cursor-pointer border border-amber-200"
+                  width={320}
+                  height={160}
+                  className="mx-auto mb-2 max-h-40 rounded shadow cursor-pointer border border-amber-200 object-contain"
                 />
                 <div className="text-xs text-amber-700 underline text-center">
                   Click to view full certificate
