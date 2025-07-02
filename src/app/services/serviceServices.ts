@@ -16,7 +16,7 @@ export const serviceService = {
         },
       });
       console.log("CREATED-SERVICE-DATA",response.data);
-      return response.data;
+      return response.data as Service;
     } catch (error) {
       console.error('Error creating service:', error);
       throw error;
@@ -26,21 +26,17 @@ export const serviceService = {
   async getServices(): Promise<Service[]> {
     try {
       const response = await axios.get(`${API_URL}/api/v1/services`);
-      return response.data.data;
-    } catch (error) {
+      return response.data as Service[];
+    } catch (error: unknown) {
       console.error('Error fetching services:', error);
-      if (axios.isAxiosError(error) && error.response) {
-        console.error('API Error Response:', error.response.data);
-        console.error('API Error Status:', error.response.status);
-      }
-      throw error;
+      throw error instanceof Error ? error : new Error(String(error));
     }
   },
 
   async getServiceById(id: string): Promise<Service> {
     try {
       const response = await axios.get(`${API_URL}/api/v1/services/${id}`);
-      return response.data.data;
+      return response.data as Service;
     } catch (error) {
       console.error('Error fetching service by id:', error);
       throw error;
@@ -56,7 +52,7 @@ export const serviceService = {
         }
       });
       toast.success("Service updated successfully!");
-      return response.data.data;
+      return response.data as Service;
     } catch (error) {
       console.error('Error updating service:', error);
       throw error;

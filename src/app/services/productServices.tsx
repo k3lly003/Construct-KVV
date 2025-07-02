@@ -15,7 +15,7 @@ export const categoryService = {
         },
       });
       console.log("CREATED-CATEGORY-DATA",response.data);
-      return response.data;
+      return response.data as Category;
     } catch (error) {
       console.error('Error creating category:', error);
       throw error;
@@ -25,14 +25,10 @@ export const categoryService = {
   async getCategories(): Promise<Category[]> {
     try {
       const response = await axios.get(`${API_URL}/api/v1/categories`);
-      return response.data.data;
-    } catch (error) {
+      return response.data as Category[];
+    } catch (error: unknown) {
       console.error('Error fetching categories:', error);
-      if (axios.isAxiosError(error) && error.response) {
-        console.error('API Error Response:', error.response.data);
-        console.error('API Error Status:', error.response.status);
-      }
-      throw error;
+      throw error instanceof Error ? error : new Error(String(error));
     }
   },
 
