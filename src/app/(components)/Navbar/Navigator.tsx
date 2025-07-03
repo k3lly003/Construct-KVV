@@ -62,8 +62,8 @@ const Navbar: React.FC = () => {
     const handleMarkAllAsRead = () => {
       markAllAsRead();
     };
-    // console.log("NAVVVVVVVVVVVVV: ",categories);
   const parentCategories = categories.filter(cat => !cat.parentId);
+  console.log("--------------",parentCategories);
   const subCategoriesMap = categories
     .filter(cat => typeof cat.parentId === "string" && cat.parentId)
     .reduce((acc, sub) => {

@@ -21,7 +21,7 @@ export const ShopService = {
       throw error;
     }
   },
-
+  
   async getAllShops(): Promise<Shop[]> {
     try {
       const response = await axios.get(`${API_URL}/api/v1/shops?page=1&limit=10&active=true&sort=createdAt&order=desc`);
@@ -54,12 +54,14 @@ export const ShopService = {
 
   async getMyShop(authToken: string): Promise<Shop> { 
     try {
-      const response = await axios.get(`${API_URL}/api/v1/shops/my-shops?page=1&limit=10&active=true&sort=createdAt&order=desc`, {
+      const myshopdata = await axios.get(`${API_URL}/api/v1/shops/my-shops?page=1&limit=10&active=true&sort=createdAt&order=desc`, {
         headers: {
           'Authorization': `Bearer ${authToken}`
         }
       });
-      return response.data as Shop;
+      const response = myshopdata.data.data[0];
+      console.log("MY-SHOP-DATA",response);
+      return response as Shop;
     } catch (error: unknown) {
       console.error('Error fetching my shop:', error);
       throw error instanceof Error ? error : new Error(String(error));

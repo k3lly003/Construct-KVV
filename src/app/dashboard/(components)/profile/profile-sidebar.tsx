@@ -34,7 +34,7 @@ export function ProfileSidebar() {
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Full Name:</span>
+            <span className="text-gray-500">Seller Name:</span>
             <span>{userData ? `${userData.firstName} ${userData.lastName}` : <Skeleton className="h-4 w-24" />}</span>
           </div>
           <div className="flex justify-between text-sm">
@@ -80,10 +80,6 @@ export function ProfileSidebar() {
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">E-mail:</span>
                 <span>{userData?.email || 'N/A'}</span>
-              </div>
-               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Description:</span>
-                <span className='text-wrap'>{myShop.description}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Joining Date:</span>
