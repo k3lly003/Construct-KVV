@@ -54,7 +54,7 @@ export const ShopService = {
 
   async getMyShop(authToken: string): Promise<Shop> { 
     try {
-      const myshopdata = await axios.get(`${API_URL}/api/v1/shops/my-shops?page=1&limit=10&active=true&sort=createdAt&order=desc`, {
+      const myshopdata = await axios.get<{ data: Shop[] }>(`${API_URL}/api/v1/shops/my-shops?page=1&limit=10&active=true&sort=createdAt&order=desc`, {
         headers: {
           'Authorization': `Bearer ${authToken}`
         }
