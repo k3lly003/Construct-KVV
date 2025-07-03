@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { NegotiationChat } from "@/app/dashboard/(components)/negotiation/NegotiationChat";
 import { BidStatus } from "@/types/project";
+import ProgressTracker from "@/app/(components)/projects/ProgressTracker";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -505,6 +506,7 @@ function ProjectPage({ params }: ProjectPageProps) {
                 </div>
               )}
             </Card>
+            <ProgressTracker projectId={project.id} />
           </div>
 
           {/* Sidebar */}
