@@ -446,7 +446,6 @@ const ChatContent = ({
               let displayName = "";
               let profilePic = undefined;
               if (isSellerMsg) {
-                // Seller info from msg.bid.seller if available
                 if (
                   "bid" in msg &&
                   typeof msg.bid === "object" &&
@@ -457,15 +456,23 @@ const ChatContent = ({
                 ) {
                   const seller = msg.bid.seller as {
                     businessName?: string;
-                    user?: { profilePic?: string };
+                    user?: {
+                      profilePic?: string;
+                      firstName?: string;
+                      lastName?: string;
+                    };
                   };
-                  displayName = seller.businessName || "";
                   profilePic = seller.user?.profilePic || undefined;
-                  let displayNameSafe = displayName || "";
-                  if (!profilePic && displayNameSafe) {
-                    displayNameSafe = getBusinessInitials(displayNameSafe);
-                  } else if (!profilePic) {
-                    displayNameSafe = "";
+                  if (profilePic) {
+                    displayName = `${seller.user?.firstName ?? ""} ${
+                      seller.user?.lastName ?? ""
+                    }`.trim();
+                  } else if (seller.user?.firstName && seller.user?.lastName) {
+                    displayName = `${seller.user.firstName[0].toUpperCase()}${seller.user.lastName[0].toUpperCase()}`;
+                  } else if (seller.businessName) {
+                    displayName = getBusinessInitials(seller.businessName);
+                  } else {
+                    displayName = "S";
                   }
                 } else {
                   displayName = "Seller";
