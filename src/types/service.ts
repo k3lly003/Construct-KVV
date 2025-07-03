@@ -1,9 +1,15 @@
 export interface Service {
   id: string;
-  name: string;
+  title: string;
+  category: string;
   description: string;
-  price: number;
-  discountedPrice?: number;
-  isActive: boolean;
+  availability: string;
+  features: string[];
+  specifications: { key: string; value: string }[];
+  provider: string;
+  pricing: string;
+  location: string;
+  warranty: string;
+  gallery: string[];
   createdAt?: string;
 } 

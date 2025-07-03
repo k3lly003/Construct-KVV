@@ -14,6 +14,7 @@ export const useCategories = () => {
     queryKey: ['categories'],
     queryFn: categoryService.getCategories,
   });
+  // console.log("HOOOOOOOOOOK: ",categories);
 
   const createCategoryMutation = useMutation({
     mutationFn: async ({ 

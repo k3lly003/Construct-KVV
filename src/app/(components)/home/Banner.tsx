@@ -18,7 +18,7 @@ export const Banner: React.FC = () => {
   const currentSlideData = HomeBannerSlides[currentSlide];
 
   return (
-    <div className="relative h-[600px] overflow-hidden bg-black shadow-md">
+    <div className="relative h-[600px] w-[100vw] overflow-hidden bg-black shadow-md">
       {currentSlideData?.image && (
         <div className="absolute inset-0 ">
           <Image

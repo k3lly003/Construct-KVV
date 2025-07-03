@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import SpecialistLocator from "@/components/ui/SpecialistLocator";
 
 const ProjectsPage = () => {
   const { projects, isLoading, error, deleteProject } = useProjects();
@@ -224,6 +225,17 @@ const ProjectsPage = () => {
             >
               🔨 General Contractors
             </Badge>
+          </div>
+
+          {/* Get Your Specialist Section */}
+          <div className="mt-8 mb-8 p-6 bg-white border border-amber-200 rounded-lg shadow-md">
+            <h3 className="text-xl font-bold text-amber-900 mb-2">
+              Get Your professionals
+            </h3>
+            <p className="text-amber-800 mb-4">
+              Find certified professionals near your location.
+            </p>
+            <SpecialistLocator />
           </div>
 
           {/* Call to Action */}

@@ -16,12 +16,12 @@ export const useServices = () => {
   });
 
   const createServiceMutation = useMutation({
-    mutationFn: async ({ shopId, serviceData }: { shopId: string, serviceData: CreateServiceInput }) => {
+    mutationFn: async ({ shopId, formData }: { shopId: string, formData: FormData }) => {
       if (!authToken) {
         toast.error("Not authenticated");
         throw new Error("Not authenticated");
       }
-      return serviceService.createService(shopId, serviceData, authToken);
+      return serviceService.createService(shopId, formData, authToken);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['services'] });
@@ -46,8 +46,8 @@ export const useServices = () => {
     }
   });
 
-  const createService = useCallback(async (shopId: string, serviceData: CreateServiceInput) => {
-    return createServiceMutation.mutateAsync({ shopId, serviceData });
+  const createService = useCallback(async (shopId: string, formData: FormData) => {
+    return createServiceMutation.mutateAsync({ shopId, formData });
   }, [createServiceMutation]);
 
   const deleteService = useCallback(async (id: string) => {
