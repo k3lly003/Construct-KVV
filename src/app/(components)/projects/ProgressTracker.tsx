@@ -121,28 +121,28 @@ const ProgressTracker = ({ projectId }: ProgressTrackerProps) => {
   return (
     <div className="mt-6 flex flex-col gap-8">
       {/* Budget Tracker */}
-      <div className="bg-white border-2 border-amber-500 rounded-2xl p-6 shadow-xl flex flex-col">
+      <div className="bg-white border-2 border-amber-500 rounded-2xl p-4 sm:p-6 shadow-xl flex flex-col">
         <h4 className="font-bold text-amber-600 mb-2 text-lg flex items-center gap-2">
           <span>Budget Tracker</span>
           <span className="ml-auto text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full">
             Detailed
           </span>
         </h4>
-        <div className="mb-2 flex justify-between text-base font-medium">
+        <div className="mb-2 flex flex-col xs:flex-row justify-between text-base font-medium gap-1 xs:gap-0">
           <span>Total Budget:</span>
-          <span className="text-amber-700">
+          <span className="text-amber-700 text-right xs:text-left">
             {currencyFormat(budget.total, budget.currency)}
           </span>
         </div>
-        <div className="mb-2 flex justify-between text-base font-medium">
+        <div className="mb-2 flex flex-col xs:flex-row justify-between text-base font-medium gap-1 xs:gap-0">
           <span>Spent:</span>
-          <span className="text-amber-700">
+          <span className="text-amber-700 text-right xs:text-left">
             {currencyFormat(budget.spent, budget.currency)}
           </span>
         </div>
-        <div className="mb-2 flex justify-between text-base font-medium">
+        <div className="mb-2 flex flex-col xs:flex-row justify-between text-base font-medium gap-1 xs:gap-0">
           <span>Remaining:</span>
-          <span className="text-amber-700">
+          <span className="text-amber-700 text-right xs:text-left">
             {currencyFormat(remaining, budget.currency)}
           </span>
         </div>
@@ -166,22 +166,29 @@ const ProgressTracker = ({ projectId }: ProgressTrackerProps) => {
           ) : (
             <ul className="divide-y divide-amber-100">
               {expenses.map((exp, idx) => (
-                <li key={idx} className="py-2 flex items-center gap-2">
-                  <span className="inline-block w-2 h-2 rounded-full mr-2 bg-amber-400" />
-                  <span className="font-medium text-amber-900">
-                    {currencyFormat(exp.amount, budget.currency)}
-                  </span>
-                  <span className="text-gray-600 ml-2 flex-1">
-                    {exp.description}
-                    <span className="ml-2 text-xs text-amber-500 font-semibold bg-amber-50 px-2 py-0.5 rounded-full">
-                      {exp.stage}
+                <li
+                  key={idx}
+                  className="py-2 flex flex-col sm:flex-row sm:items-center gap-2"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="inline-block w-2 h-2 rounded-full bg-amber-400" />
+                    <span className="font-medium text-amber-900">
+                      {currencyFormat(exp.amount, budget.currency)}
                     </span>
-                    <span className="ml-2 text-xs text-gray-400">
-                      {exp.createdAt
-                        ? new Date(exp.createdAt).toLocaleDateString()
-                        : ""}
+                  </div>
+                  <div className="flex flex-col sm:flex-row sm:items-center flex-1">
+                    <span className="text-gray-600 flex-1">
+                      {exp.description}
+                      <span className="ml-2 text-xs text-amber-500 font-semibold bg-amber-50 px-2 py-0.5 rounded-full">
+                        {exp.stage}
+                      </span>
+                      <span className="ml-2 text-xs text-gray-400 block sm:inline">
+                        {exp.createdAt
+                          ? new Date(exp.createdAt).toLocaleDateString()
+                          : ""}
+                      </span>
                     </span>
-                  </span>
+                  </div>
                 </li>
               ))}
             </ul>
