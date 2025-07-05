@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -11,14 +11,13 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { GenericButton } from "@/components/ui/generic-button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Funnel, Plus, Upload } from "lucide-react";
+import { ChevronDown, Funnel, Pencil, Plus, Trash2, Upload } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -26,9 +25,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { dummyOrders } from "../../utils/fakes/ProductFakes"
 import Link from "next/link";
-// import { Pagination } from '@/components/ui/pagination'; // Assuming you'll create this
+import { useProducts } from "@/app/hooks/useProduct";
+import { useShop } from '@/app/hooks/useShop';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
+import CategorySelect from "../products/create/CategorySelect";
 
 // Temporary Pagination component implementation
 interface PaginationProps {
@@ -69,33 +78,72 @@ const Pagination = ({ total, current, onPageChange }: PaginationProps) => {
     </div>
   );
 };
+//   { value: "all", label: "All goods" },
+//   { value: "products", label: "Products" },
+//   { value: "services", label: "Services" },
+// ];
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [resultsPerPage, setResultsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
+  const { myShop, myShopError, isMyShopLoading } = useShop();
+  const sellerId = myShop?.seller?.id || null;
+  const {
+    getProductsBySellerId,
+    isLoading,
+    error,
+    deleteProduct,
+    updateProduct,
+    isLoading: isProductLoading,
+  } = useProducts();
 
-  // Filter orders based on the active tab
-  const filteredOrders = dummyOrders.filter((order) => {
-    if (activeTab === "all") return true;
-    if (activeTab === "pending") return order.status === "pending";
-    if (activeTab === "approved") return order.status === "Approved";
-    if (activeTab === "sold") return order.status === "sold";
-    return true;
-  });
+  const [products, setProducts] = useState<any[]>([]);
 
-  // Filter orders based on the search term (basic implementation)
-  const searchedOrders = filteredOrders.filter((order) =>
-    Object.values(order).some((value) =>
+  // Dialog state
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
+  const [editForm, setEditForm] = useState<any | null>(null);
+
+  // Fetch products for this seller
+  useEffect(() => {
+    if (!sellerId) return;
+    getProductsBySellerId(sellerId)
+      .then((data) => setProducts(data))
+      .catch(() => setProducts([]));
+  }, [sellerId, getProductsBySellerId]);
+
+  // Filter products based on the active tab
+  useEffect(() => {
+    let filtered: any[] = [];
+    if (activeTab === "all") {
+      // Show both products and services
+      filtered = products;
+    } else if (activeTab === "products") {
+      // Show only products
+      filtered = products.filter((p) => p.type === "product");
+    } else if (activeTab === "services") {
+      // Show only services
+      filtered = products.filter((p) => p.type === "service");
+    }
+    setFilteredProducts(filtered);
+    setCurrentPage(1); // Reset page on tab change
+  }, [activeTab, products]);
+
+  // Filter products based on the search term
+  const searchedProducts = filteredProducts.filter((product) =>
+    Object.values(product).some((value) =>
       String(value).toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
 
-  const totalResults = searchedOrders.length;
+  const totalResults = searchedProducts.length;
   const startIndex = (currentPage - 1) * resultsPerPage;
   const endIndex = startIndex + resultsPerPage;
-  const currentOrders = searchedOrders.slice(startIndex, endIndex);
+  const currentProducts = searchedProducts.slice(startIndex, endIndex);
   const totalPages = Math.ceil(totalResults / resultsPerPage);
 
   const handleTabChange = (value: string) => {
@@ -117,20 +165,68 @@ const Page = () => {
     setCurrentPage(page);
   };
 
+  // Delete handler
+  const handleDelete = async () => {
+    if (!selectedProduct) return;
+    try {
+      await deleteProduct(selectedProduct.id);
+      toast.success("Product deleted successfully");
+      setDeleteDialogOpen(false);
+      setSelectedProduct(null);
+      // Refresh product list
+      if (sellerId) {
+        getProductsBySellerId(sellerId)
+          .then((data) => setProducts(data))
+          .catch(() => setProducts([]));
+      }
+    } catch (err) {
+      toast.error("Failed to delete product");
+    }
+  };
 
+  // Edit handler
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedProduct || !editForm) return;
+    try {
+      // Prepare FormData for update (reuse create logic if needed)
+      const formData = new FormData();
+      // Convert price and discountedPrice to strings
+      if (editForm.price !== undefined && editForm.price !== null) {
+        editForm.price = String(editForm.price);
+      }
+      if (editForm.discountedPrice !== undefined && editForm.discountedPrice !== null) {
+        editForm.discountedPrice = String(editForm.discountedPrice);
+      }
+      // Remove images from editForm for now (unless you want to support image update)
+      const { images, ...productData } = editForm;
+      formData.append('data', JSON.stringify(productData));
+      // If you want to support image update, add imageData and images here
+      await updateProduct(selectedProduct.id, formData);
+      toast.success("Product updated successfully");
+      setEditDialogOpen(false);
+      setSelectedProduct(null);
+      // Refresh product list
+      if (sellerId) {
+        getProductsBySellerId(sellerId)
+          .then((data) => setProducts(data))
+          .catch(() => setProducts([]));
+      }
+    } catch (err) {
+      toast.error("Failed to update product");
+    }
+  };
 
-
-  //        INTERACTION LOGIC GOES BELOW        //                INTEGRATION LOGIC GOES BELOW        //                                INTEGRATION LOGIC GOES BELOW        //
-
-
-
+  let first = myShop?.seller;
+  if (isMyShopLoading) return <div>Loading...</div>;
+  
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
         <div>
-          <h1 className="text-2xl font-semibold">Orders Management</h1>
+          <h1 className="text-2xl font-semibold">Products Management</h1> 
           <p className="text-sm text-muted-foreground">
-            View and check all orders registered on your platform and edit them
+            View and check all products registered on your platform and edit them
             if necessary. The changes will be notified to users through the user
             dashboard and email.
           </p>
@@ -156,14 +252,6 @@ const Page = () => {
       </div>
 
       <div className="mb-4 flex items-center justify-between">
-        <Tabs value={activeTab} onValueChange={handleTabChange}>
-          <TabsList>
-            <TabsTrigger value="all">All Orders</TabsTrigger>
-            <TabsTrigger value="pending">pending</TabsTrigger>
-            <TabsTrigger value="approved">Approved</TabsTrigger>
-            <TabsTrigger value="sold">sold</TabsTrigger>
-          </TabsList>
-        </Tabs>
         <div className="flex items-center space-x-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -181,7 +269,7 @@ const Page = () => {
           </DropdownMenu>
           <Input
             type="search"
-            placeholder="Search by any order details..."
+            placeholder="Search by any product details..."
             className="w-[300px] sm:w-[400px]"
             value={searchTerm}
             onChange={handleSearchChange}
@@ -194,45 +282,49 @@ const Page = () => {
           <TableHeader>
             <TableRow>
               <TableHead className="text-amber-300">Photo</TableHead>
-              <TableHead className="text-amber-300">Product-name</TableHead>
+              <TableHead className="text-amber-300">Product Name</TableHead>
               <TableHead className="text-amber-300">Description</TableHead>
               <TableHead className="text-amber-300">Date & Time</TableHead>
-              <TableHead className="text-amber-300">Status</TableHead>
-              <TableHead className="text-amber-300">Cost per unit(Rfw)</TableHead>
+              <TableHead className="text-amber-300">Type</TableHead>
+              <TableHead className="text-amber-300">Price</TableHead>
               <TableHead className="text-amber-300">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentOrders.map((order) => (
-              <TableRow key={order.orderId}>
+            {currentProducts.map((product) => (
+              <TableRow key={product.id}>
                 <TableCell className="font-medium py-4">
-                  {order.orderId}
+                  {product.imageUrl ? (
+                    <img src={product.imageUrl} alt={product.name} className="w-12 h-12 object-cover rounded" />
+                  ) : (
+                    <span>No Image</span>
+                  )}
                 </TableCell>
-                <TableCell className="py-4">{order.name}</TableCell>
-                <TableCell className="py-4">{order.product}</TableCell>
-                <TableCell className="py-4">{order.dateTime}</TableCell>
-                <TableCell className="py-4">
-                  <div
-                    className={`inline-flex items-center rounded-full px-5 py-1 text-xs font-semibold ${
-                      order.status === "pending"
-                        ? "bg-green-100 text-green-800"
-                        : order.status === "Approved"
-                        ? "bg-amber-500 text-white"
-                        : order.status === "sold"
-                        ? "bg-red-100 text-red-800"
-                        : "bg-gray-100 text-gray-800"
-                    }`}
-                  >
-                    {order.status}
-                  </div>
+                <TableCell className="py-4">{product.name}</TableCell>
+                <TableCell className="py-4">{product.description}</TableCell>
+                <TableCell className="py-4">{product.createdAt ? new Date(product.createdAt).toLocaleString() : "-"}</TableCell>
+                <TableCell className="py-4">{product.type}</TableCell>
+                <TableCell className="">{product.price ? `$${product.price}` : "-"}</TableCell>
+                <TableCell className="flex gap-3">
+                  <Trash2
+                    className="cursor-pointer hover:text-red-500 w-[30px]"
+                    onClick={() => {
+                      setSelectedProduct(product);
+                      setDeleteDialogOpen(true);
+                    }}
+                  />
+                  <Pencil
+                    className="cursor-pointer hover:text-green-400 w-[30px]"
+                    onClick={() => {
+                      setSelectedProduct(product);
+                      setEditForm({ ...product });
+                      setEditDialogOpen(true);
+                    }}
+                  />
                 </TableCell>
-                <TableCell className="">
-                  ${order.totalPaid.toFixed(2)}
-                </TableCell>
-                <TableCell>{order.paymentMethod}</TableCell>
               </TableRow>
             ))}
-            {currentOrders.length === 0 && (
+            {currentProducts.length === 0 && (
               <TableRow>
                 <TableCell
                   colSpan={7}
@@ -249,8 +341,7 @@ const Page = () => {
       {totalResults > 0 && (
         <div className="flex items-center justify-between mt-4">
           <p className="text-sm text-muted-foreground">
-            Showing {startIndex + 1} - {Math.min(endIndex, totalResults)} of{" "}
-            {totalResults} Results
+            Showing {startIndex + 1} - {Math.min(endIndex, totalResults)} of {totalResults} Results
           </p>
           <div className="flex items-center space-x-4">
             <Pagination
@@ -278,6 +369,98 @@ const Page = () => {
           </div>
         </div>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Product</DialogTitle>
+          </DialogHeader>
+          <p>Are you sure you want to delete <b>{selectedProduct?.name}</b>?</p>
+          <DialogFooter>
+            <DialogClose asChild>
+              <GenericButton variant="outline">Cancel</GenericButton>
+            </DialogClose>
+            <GenericButton
+              onClick={handleDelete}
+              disabled={isProductLoading}
+            >
+              Confirm Delete
+            </GenericButton>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Product</DialogTitle>
+          </DialogHeader>
+          {editForm && (
+            <form onSubmit={handleEditSubmit} className="space-y-4">
+              {/* Image Preview at the top */}
+              <div className="flex justify-center mb-4">
+                {editForm.imageUrl ? (
+                  <img src={editForm.imageUrl} alt={editForm.name} className="w-24 h-24 object-cover rounded" />
+                ) : (
+                  <span className="text-gray-400">No Image</span>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Name</label>
+                <Input
+                  value={editForm.name}
+                  onChange={e => setEditForm({ ...editForm, name: e.target.value })}
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Description</label>
+                <Input
+                  value={editForm.description}
+                  onChange={e => setEditForm({ ...editForm, description: e.target.value })}
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Price</label>
+                <Input
+                  type="number"
+                  value={editForm.price}
+                  onChange={e => setEditForm({ ...editForm, price: e.target.value })}
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Discounted Price</label>
+                <Input
+                  type="number"
+                  value={editForm.discountedPrice}
+                  onChange={e => setEditForm({ ...editForm, discountedPrice: e.target.value })}
+                />
+              </div>
+              {/* Category dropdown */}
+              <div>
+                <label className="block text-sm font-medium">Category</label>
+                <CategorySelect
+                  value={editForm.categoryId || ''}
+                  onChange={val => setEditForm({ ...editForm, categoryId: val })}
+                />
+              </div>
+              {/* Add more fields as needed, similar to create page */}
+              <DialogFooter>
+                <DialogClose asChild>
+                  <GenericButton variant="outline">Cancel</GenericButton>
+                </DialogClose>
+                <GenericButton type="submit" disabled={isProductLoading}>
+                  Save Changes
+                </GenericButton>
+              </DialogFooter>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

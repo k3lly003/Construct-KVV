@@ -50,7 +50,7 @@ const DynamicProductGallery = ({ images }: { images: { url: string; alt?: string
         )}
       </div>
       {images.length > 1 && (
-        <div className="flex gap-2 justify-center">
+        <div className="flex gap-2 justify-center border border-red-500">
           {images.map((img, idx) => (
             <div
               key={idx}
@@ -92,7 +92,7 @@ const ProductPreview: React.FC<ProductPreviewProps> = ({
   const product = {
     id: "preview",
     name: name || "Product Name",
-    price: price || 0,
+    price: String(price || 0),
     description: description || "Product description...",
     details: details.length ? details : ["Feature 1", "Feature 2"],
     rating: rating || 4.8,
@@ -105,7 +105,10 @@ const ProductPreview: React.FC<ProductPreviewProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
           <DynamicProductGallery images={images} />
           <ProductInfo
-            product={product}
+            product={{
+              ...product,
+              price: Number(product.price)
+            }}
             quantity={quantity}
             setQuantity={setQuantity}
           />

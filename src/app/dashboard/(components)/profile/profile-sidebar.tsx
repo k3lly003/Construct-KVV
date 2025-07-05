@@ -10,12 +10,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 export function ProfileSidebar() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const { myShop, isMyShopLoading, myShopError } = useShop();
-
+  
   useEffect(() => {
     const data = getUserDataFromLocalStorage();
     setUserData(data);
   }, []);
-
+  
   const formatDate = (dateString: string | undefined) => {
     if (!dateString) return 'no data';
     return new Date(dateString).toLocaleDateString('en-US', {

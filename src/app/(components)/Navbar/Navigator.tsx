@@ -71,6 +71,7 @@ const Navbar: React.FC = () => {
       acc[sub.parentId!].push(sub);
       return acc;
     }, {} as Record<string, typeof categories>);
+    console.log("++++++++++++",subCategoriesMap)
 
   const featuresSections = parentCategories.map(parent => ({
     title: parent.name,

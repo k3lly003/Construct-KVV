@@ -5,11 +5,8 @@ import jacket02 from "../../../../public/jacket02.webp";
 import jacket03 from "../../../../public/jacket03.webp";
 import jacket04 from "../../../../public/jacket04.webp";
 import { useState } from "react";
-import Image from "next/image"; // Import the Image component
+import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-// No more ProductGalleryProps with selectedColor
-// interface ProductGalleryProps {}
 
 export default function ProductGallery() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);

@@ -2,7 +2,7 @@ import Image from "next/image";
 import React from "react";
 
 type ProductImageUploadProps = {
-  images: { url: string; alt?: string }[];
+  images: { url: string; alt: string; isDefault: boolean; fileKey?: string; file?: File }[];
   onAddImages: (files: FileList) => void;
   onRemoveImage: (index: number) => void;
 };
@@ -37,7 +37,15 @@ const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
             ref={fileInputRef}
             className="hidden"
             onChange={e => {
-              if (e.target.files) onAddImages(e.target.files);
+              if (e.target.files) {
+                console.log('=== PRODUCT IMAGE UPLOAD DEBUG ===');
+                console.log('Files selected:', e.target.files);
+                console.log('Number of files:', e.target.files.length);
+                Array.from(e.target.files).forEach((file, index) => {
+                  console.log(`File ${index}:`, file.name, file.size, file.type);
+                });
+                onAddImages(e.target.files);
+              }
             }}
           />
         </div>
@@ -50,7 +58,7 @@ const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
                   src={img.url}
                   width={34}
                   height={34}
-                  alt={img.alt || `Product image ${idx + 1}`}
+                  alt={img.alt}
                   className="object-cover w-full h-full"
                 />
               )

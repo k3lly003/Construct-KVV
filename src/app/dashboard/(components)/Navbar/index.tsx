@@ -6,8 +6,16 @@ import { useAppDispatch, useAppSelector } from '../../../redux';
 import { setIsSidebarCollapsed } from '../../../../state';
 import CustomSheet from '../shad_/CustomSheet';
 import ModeToggle from '../../../../components/mode-toggle';
-import { useUserStore } from '../../../../store/userStore'; 
-
+import { useUserStore } from '../../../../store/userStore';
+import { getInitials } from '../../../../lib/utils';
+import { Avatar, AvatarFallback } from '../../../../components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '../../../../components/ui/dropdown-menu';
+import Link from 'next/link';
 
 const Navbar: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -30,7 +38,7 @@ const Navbar: React.FC = () => {
   };
 
   // Get user data from Zustand store
-  const { role: userRole, name: userName, isHydrated } = useUserStore();
+  const { role: userRole, firstName, lastName, name: userName, email: userEmail, isHydrated } = useUserStore();
 
   if (!isHydrated) {
     return (
@@ -92,15 +100,25 @@ const Navbar: React.FC = () => {
             </span>
           </div>
           <hr className='hidden md:flex w-0 h-7 border border-solid border-l border-gray-300 mx-3' />
-          <div
-            className='hidden md:flex items-center gap-3 cursor-pointer'
-            onClick={handleOpenSheet}
-          >
-            <div className='w-9 h-9 p-5 bg-blue-100 rounded-full'></div>
-            {isSheetOpen && userName &&(
-              <CustomSheet open={<span className='font-normal text-sm'>{userName}</span>} />
-            )}
-          </div>
+          {userName && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Avatar className="cursor-pointer">
+                  <AvatarFallback className="bg-primary text-primary-foreground">
+                    {getInitials(userName)}
+                  </AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem asChild>
+                  <Link href="/dashboard/profile">Profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/">Back Home</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </div>
     </div>

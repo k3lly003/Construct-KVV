@@ -2,48 +2,50 @@
 
 import React, { useState } from 'react';
 import { Phone, Mail, Clock, BadgeCheck } from 'lucide-react';
+import { Shop } from '@/types/shop';
 
 interface Certification {
   name: string;
   url?: string;
 }
 
-interface Supplier {
-  name: string;
-  location: string;
-  rating: number;
-  reviews: number;
-  yearEstablished: number;
-  certifications: Certification[];
-  responseTime: string;
-  deliveryTime: string;
-  contact: {
-    phone: string;
-    email: string;
-    website: string;
-  };
+interface ContactInfoProps {
+  shop?: Shop;
 }
 
-const supplierInfo: Supplier = {
-  name: "KVV Construction Supply",
-  location: "KG 400 St, Kigali, Rwanda",
-  rating: 4.8,
-  reviews: 256,
-  yearEstablished: 2010,
-  certifications: [
-    { name: "ISO 9001:2015", url: "https://www.iso.org/standard/62913.html" },
-    { name: "Green Building Certified", url: "https://www.usgbc.org/" },
-    { name: "Safety First Partner", url: "https://www.usgbc.org/" },
-    { name: "Rwanda Standards Board Certified", url: "https://www.rsb.gov.rw/" },
-  ],
-  responseTime: "24 hours",
-  deliveryTime: "5hrs -3days",
-  contact: {
-    phone: "+250 7888 507",
-    email: "sales@kvvltd.com",
-    website: "www.kvvltd.com"
-  }
-};
+export const ContactInfo: React.FC<ContactInfoProps> = ({ shop }) => {
+  console.log('=== ContactInfo Component ===');
+  console.log('Received shop prop:', shop);
+  console.log('Shop name:', shop?.name);
+  console.log('Shop seller businessName:', shop?.seller?.businessName);
+  console.log('Shop seller businessAddress:', shop?.seller?.businessAddress);
+  console.log('Shop seller email:', shop?.seller?.email);
+  console.log('Shop phone:', shop?.phone);
+  console.log('Shop seller businessPhone:', shop?.seller?.businessPhone);
+  console.log('Shop seller phone:', shop?.seller?.phone);
+  console.log('Shop createdAt:', shop?.createdAt);
+  
+  // Use actual shop data with fallbacks
+  const shopInfo = {
+    name: shop?.name || shop?.seller?.businessName || "KVV Construction Supply",
+    location: shop?.seller?.businessAddress || "KG 400 St, Kigali, Rwanda", // Use seller business address
+    rating: 4.8, // Default rating (could be added to shop model later)
+    reviews: 256, // Default reviews count (could be added to shop model later)
+    yearEstablished: shop?.createdAt ? new Date(shop.createdAt).getFullYear() : 2010,
+    certifications: [
+      { name: "ISO 9001:2015", url: "https://www.iso.org/standard/62913.html" },
+      { name: "Green Building Certified", url: "https://www.usgbc.org/" },
+      { name: "Safety First Partner", url: "https://www.usgbc.org/" },
+      { name: "Rwanda Standards Board Certified", url: "https://www.rsb.gov.rw/" },
+    ],
+    responseTime: "24 hours",
+    deliveryTime: "5hrs -3days",
+    contact: {
+      phone: shop?.phone || shop?.seller?.businessPhone || shop?.seller?.phone || "+250 7888 507",
+      email: shop?.seller?.email || "sales@kvvltd.com", // Use seller email
+      website: "www.kvvltd.com" // Default website
+    }
+  };
 
 const categories = [
   'All Products',
@@ -56,7 +58,6 @@ const categories = [
   'Finishing Materials'
 ];
 
-export const ContactInfo: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('All Products');
 
   return (
@@ -69,19 +70,19 @@ export const ContactInfo: React.FC = () => {
             <div className="space-y-3">
               <div className="flex items-center">
                 <Phone className="h-5 w-5 text-gray-400 mr-3" />
-                <a href={`tel:${supplierInfo.contact.phone}`} className="text-yellow-500 hover:underline">
-                  {supplierInfo.contact.phone}
+                <a href={`tel:${shopInfo.contact.phone}`} className="text-yellow-500 hover:underline">
+                  {shopInfo.contact.phone}
                 </a>
               </div>
               <div className="flex items-center">
                 <Mail className="h-5 w-5 text-gray-400 mr-3" />
-                <a href={`mailto:${supplierInfo.contact.email}`} className="text-yellow-500 hover:underline">
-                  {supplierInfo.contact.email}
+                <a href={`mailto:${shopInfo.contact.email}`} className="text-yellow-500 hover:underline">
+                  {shopInfo.contact.email}
                 </a>
               </div>
               <div className="flex items-center">
                 <Clock className="h-5 w-5 text-gray-400 mr-3" />
-                <p>Response time: <span className='text-yellow-500 font-semibold'>{supplierInfo.responseTime}</span></p>
+                <p>Response time: <span className='text-yellow-500 font-semibold'>{shopInfo.responseTime}</span></p>
               </div>
             </div>
           </div>
@@ -90,7 +91,7 @@ export const ContactInfo: React.FC = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Certifications</h3>
             <div className="space-y-2">
-              {supplierInfo.certifications.map((cert, index) => (
+              {shopInfo.certifications.map((cert, index) => (
                 <div key={index} className="flex items-center">
                   <BadgeCheck className="h-5 w-5 text-green-500 mr-2" />
                   {cert.url ? (

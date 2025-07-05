@@ -1,78 +1,98 @@
 import { useCallback } from 'react';
-import { Category } from '@/types/category';
-import { categoryService } from '@/app/services/productServices';
-import { v4 as uuidv4 } from 'uuid';
+import { productService } from '@/app/services/productServices';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-
-export const useCategories = () => {
+export const useProducts = () => {
   const queryClient = useQueryClient();
   const authToken = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
-  const { data: categories = [], isLoading, error } = useQuery({
-    queryKey: ['categories'],
-    queryFn: categoryService.getCategories,
+
+  // Fetch all products
+  const { data: products = [], isLoading, error } = useQuery({
+    queryKey: ['products'],
+    queryFn: productService.getAllProducts,
   });
 
-  const createCategoryMutation = useMutation({
-    mutationFn: async ({ 
-      name, 
-      description,
-      subCategories
-    }: { 
-      name: string; 
-      description: string;
-      subCategories: string[];
-    }) => {
-      if (!authToken) toast.error("Not authenticated");
-      const newCategory: Omit<Category, 'id'> = {
-        name: name.trim(),
-        description: description.trim(),
-        slug: name.trim().toLowerCase().replace(/\s+/g, '-'),
-        items: subCategories
-          .map(sub => sub.trim())
-          .filter(sub => sub !== '')
-          .map(name => ({
-            id: uuidv4(),
-            name,
-            description: '',
-            slug: name.toLowerCase().replace(/\s+/g, '-'),
-          })),
-        dateCreated: new Date().toISOString(),
-      };
+  // Create product
+  const createProductMutation = useMutation({
+    mutationFn: async (formData: FormData) => {
       if (!authToken) {
-        toast.error("No auth token");
+        toast.error("Not authenticated");
+        throw new Error("Not authenticated");
       }
-      return categoryService.createCategory(newCategory, authToken as string);
+      return productService.createProduct(formData, authToken);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      toast.success('Product created successfully');
     },
   });
 
-  const deleteCategoryMutation = useMutation({
+  // Update product
+  const updateProductMutation = useMutation({
+    mutationFn: async ({ id, formData }: { id: string; formData: FormData }) => {
+      if (!authToken) {
+        toast.error("Not authenticated");
+        throw new Error("Not authenticated");
+      }
+      return productService.updateProduct(id, formData, authToken);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      toast.success('Product updated successfully');
+    },
+  });
+
+  // Delete product
+  const deleteProductMutation = useMutation({
     mutationFn: async (id: string) => {
       if (!authToken) throw new Error("Not authenticated");
-      return categoryService.deleteCategory(id, authToken);
+      return productService.deleteProduct(id, authToken);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+      toast.success('Product deleted successfully');
     },
   });
 
-  const createCategory = useCallback(async (name: string, description: string, subCategories: string[]) => {
-    return createCategoryMutation.mutateAsync({ name, description, subCategories });
-  }, [createCategoryMutation]);
+  // Get product by id
+  const getProductById = useCallback(async (id: string) => {
+    return productService.getProductById(id);
+  }, []);
 
-  const deleteCategory = useCallback(async (id: string) => {
-    return deleteCategoryMutation.mutateAsync(id);
-  }, [deleteCategoryMutation]);
+  // Get product by slug
+  const getProductBySlug = useCallback(async (slug: string) => {
+    return productService.getProductBySlug(slug);
+  }, []);
+
+  // Get products by seller id
+  const getProductsBySellerId = useCallback(async (sellerId: string) => {
+    if (!authToken) throw new Error("Not authenticated");
+    // console.log(pro);
+    return productService.getProductsBySellerId(sellerId, authToken);
+  }, [authToken]);
+
+  const createProduct = useCallback(async (formData: FormData) => {
+    return createProductMutation.mutateAsync(formData);
+  }, [createProductMutation]);
+
+  const updateProduct = useCallback(async (id: string, formData: FormData) => {
+    return updateProductMutation.mutateAsync({ id, formData });
+  }, [updateProductMutation]);
+
+  const deleteProduct = useCallback(async (id: string) => {
+    return deleteProductMutation.mutateAsync(id);
+  }, [deleteProductMutation]);
 
   return {
-    categories,
-    isLoading: isLoading || createCategoryMutation.isPending || deleteCategoryMutation.isPending,
-    error: error || createCategoryMutation.error || deleteCategoryMutation.error,
-    createCategory,
-    deleteCategory,
+    products,
+    isLoading: isLoading || createProductMutation.isPending || updateProductMutation.isPending || deleteProductMutation.isPending,
+    error: error || createProductMutation.error || updateProductMutation.error || deleteProductMutation.error,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+    getProductById,
+    getProductBySlug,
+    getProductsBySellerId,
   };
 }; 

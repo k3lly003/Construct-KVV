@@ -4,6 +4,7 @@ import comp2 from "../../../../public/comp-2.jpg";
 import comp3 from "../../../../public/comp3.webp";
 
 export interface Profile {
+  id: string;
   name: string;
   title: string;
   rating: number;
@@ -16,6 +17,7 @@ export interface Profile {
 
 export const profilesFakes: Profile[] = [
   {
+    id: "1",
     name: "Apex Builders Ltd.",
     title:
       "Specializing in high-rise commercial building construction and infrastructure development.",
@@ -27,6 +29,7 @@ export const profilesFakes: Profile[] = [
     serviceCost: 50000,
   },
   {
+    id: "2",
     name: "Solid Foundations Inc.",
     title:
       "Providing expert residential construction services, from custom homes to renovations.",
@@ -38,6 +41,7 @@ export const profilesFakes: Profile[] = [
     serviceCost: 25000,
   },
   {
+    id: "3",
     name: "Urban Structures Co.",
     title:
       "Focused on sustainable construction practices for both residential and commercial projects.",
@@ -49,6 +53,7 @@ export const profilesFakes: Profile[] = [
     serviceCost: 35000,
   },
   {
+    id: "4",
     name: "Precision Civil Works",
     title:
       "Experts in excavation, land development, and all aspects of civil engineering projects.",
@@ -60,6 +65,7 @@ export const profilesFakes: Profile[] = [
     serviceCost: 60000,
   },
   {
+    id: "5",
     name: "Elite Roofing Solutions",
     title:
       "Offering comprehensive roofing services including installation, repair, and maintenance for all roof types.",
@@ -71,6 +77,7 @@ export const profilesFakes: Profile[] = [
     serviceCost: 15000,
   },
   {
+    id: "6",
     name: "GreenBuild Constructions",
     title:
       "Dedicated to eco-friendly building solutions and the use of sustainable materials.",
@@ -82,6 +89,7 @@ export const profilesFakes: Profile[] = [
     serviceCost: 40000,
   },
   {
+    id: "7",
     name: "Master Paving Group",
     title:
       "Specialists in asphalt and concrete paving for driveways, parking lots, and roadways.",
@@ -93,6 +101,7 @@ export const profilesFakes: Profile[] = [
     serviceCost: 30000,
   },
   {
+    id: "8",
     name: "Ironclad Steel Erectors",
     title:
       "Providing professional steel frame erection services for industrial and commercial buildings.",
@@ -104,6 +113,7 @@ export const profilesFakes: Profile[] = [
     serviceCost: 60000,
   },
   {
+    id: "9",
     name: "AquaTech Plumbing & Piping",
     title:
       "Offering complete plumbing and piping solutions for new constructions and renovations.",
@@ -115,6 +125,7 @@ export const profilesFakes: Profile[] = [
     serviceCost: 10000,
   },
   {
+    id: "10",
     name: "BrightLine Electrical",
     title:
       "Providing comprehensive electrical services for residential, commercial, and industrial construction projects.",

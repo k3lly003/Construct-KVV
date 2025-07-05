@@ -25,16 +25,19 @@ export const ShopService = {
   async getAllShops(): Promise<Shop[]> {
     try {
       const response = await axios.get(`${API_URL}/api/v1/shops?page=1&limit=10&active=true&sort=createdAt&order=desc`);
-      return response.data as Shop[];
+      // Handle both direct array response and nested data response
+      const data = response.data;
+      return Array.isArray(data) ? data : (data.data || []);
     } catch (error: unknown) {
-      console.error('Error fetching categories:', error);
+      console.error('Error fetching shops:', error);
       throw error instanceof Error ? error : new Error(String(error));
     }
   },
 
   async getShopById(id: string): Promise<Shop> { 
     try {
-      const response = await axios.get(`${API_URL}/api/v1/shops/${id}`);
+      const response = await axios.get(`${API_URL}/api/v1/shops/id/${id}`);
+      console.log("killllllllll", response.data)
       return response.data as Shop;
     } catch (error: unknown) {
       console.error('Error fetching shop by id:', error);
@@ -60,6 +63,7 @@ export const ShopService = {
         }
       });
       const response = myshopdata.data.data[0];
+
       console.log("MY-SHOP-DATA",response);
       return response as Shop;
     } catch (error: unknown) {

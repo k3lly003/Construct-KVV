@@ -1,13 +1,14 @@
 "use client";
 
-// components/ProfileCard.tsx
 import React from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { GenericButton } from "@/components/ui/generic-button";
 import { CalendarDays, Eye, Mail, Star, Images } from "lucide-react";
 import { Profile } from "@/app/utils/fakes/shopsFakes";
 
-const ProfileCard: React.FC<Profile> = ({
+const ShopCard: React.FC<Profile> = ({
+  id,
   name,
   title,
   rating,
@@ -15,6 +16,11 @@ const ProfileCard: React.FC<Profile> = ({
   since,
   imageSrc,
 }) => {
+  const router = useRouter();
+
+  const handleViewProfile = () => {
+    router.push(`/shops/${id}`);
+  };
   return (
     <div className="bg-white rounded-2xl overflow-hidden w-full max-w-xs">
       <div className="relative w-full h-72">
@@ -66,8 +72,8 @@ const ProfileCard: React.FC<Profile> = ({
             Contact us
           </GenericButton>
           <GenericButton
-            className="bg-black py-2 tezt-sm flex-grow border border-amber-500 text-white hover:bg-amber-500 cursor-pointer focus:outline-none"
-            onClick={() => console.log("Bookmark clicked")}
+            className="bg-black py-2 text-sm flex-grow border border-amber-500 text-white hover:bg-amber-500 cursor-pointer focus:outline-none"
+            onClick={handleViewProfile}
           >
             <Eye />
             View Profile
@@ -78,5 +84,5 @@ const ProfileCard: React.FC<Profile> = ({
   );
 };
 
-export default ProfileCard;
+export default ShopCard;
 

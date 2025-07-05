@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-// import { zodResolver } from '@hookform/resolvers/zod';
+import { useFieldArray } from 'react-hook-form';
 import { Loader2 } from 'lucide-react';
 
 import {
@@ -16,37 +16,33 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { GenericButton } from "@/components/ui/generic-button";
-// import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
-// import Image from 'next/image';
 import {type CreateProductInput } from '../../../utils/middlewares/Validation';
-import { useCreateProduct } from '../../../../state/use-create-product';
+import { useProducts } from '@/app/hooks/useProduct';
 import ProductPreview from "../../(components)/products/ProductPreview";
-// import ProductMedia from "./ProductMedia";
 import CategorySelect from "./CategorySelect";
 import ProductImageUpload from "./ProductImageUpload";
 import { useShop } from '@/app/hooks/useShop';
 import { useCustomerProfile } from '@/app/hooks/useCustomerProfile';
-// import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-// import { Terminal } from "lucide-react";
-// import Link from 'next/link';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Terminal } from "lucide-react";
+import Link from 'next/link';
 
 
 const Page = () => {
-  const createProduct = useCreateProduct();
+  const { createProduct, isLoading } = useProducts();
   const { myShop, isMyShopLoading } = useShop();
   const { profile, isLoading: isProfileLoading } = useCustomerProfile();
 
   // Console logs to verify fetched data
-  console.log("Fetched Shop Data:", myShop);
-  console.log("Fetched User Profile Data:", profile);
+  // console.log("Fetched Shop Data:", myShop);
 
-  const form = useForm<CreateProductInput>({
+  const form = useForm<CreateProductInput & { images: { url: string; alt: string; isDefault: boolean; file?: File }[] }>({
     // resolver: zodResolver(createProductSchema),
     defaultValues: {
       name: '',
       description: '',
-      price: 0,
+      price: '',
       stock: 0,
       inventory: 0,
       sku: '',
@@ -55,27 +51,26 @@ const Page = () => {
       sellerId: '',
       categoryId: "",
       shopId: '',
-      discountedPrice: 0,
+      discountedPrice: '',
       attributes: {},
       images: [],
     },
   });
+  useEffect(() => {
+    if (profile?.id) {
+      form.setValue('sellerId', profile.id);
+      console.log("Setting sellerId in form:", profile.id);
+    }
+    if (myShop?.id) {
+      form.setValue('shopId', myShop.id);
+      console.log("Setting shopId in form:", myShop.id);
+    }
+  }, [profile, myShop, form]);
 
-  // useEffect(() => {
-  //   if (profile?.id) {
-  //     form.setValue('sellerId', profile.id);
-  //     console.log("Setting sellerId in form:", profile.id);
-  //   }
-  //   if (myShop?.id) {
-  //     form.setValue('shopId', myShop.id);
-  //     console.log("Setting shopId in form:", myShop.id);
-  //   }
-  // }, [profile, myShop, form]);
-
-  // const { fields, append, remove } = useFieldArray({
-  //   control: form.control,
-  //   name: "images"
-  // });
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "images"
+  });
 
   // Auto-generate slug and sku from name
   const watchName = form.watch('name');
@@ -100,12 +95,36 @@ const Page = () => {
     form.setValue('inventory', watchStock || 0);
   }, [watchStock, form]);
 
-  const onSubmit = async (data: CreateProductInput) => {
+  const onSubmit = async (data: CreateProductInput & { images: { url: string; alt: string; isDefault: boolean; file?: File }[] }) => {
     try {
-      const createdProduct = await createProduct.mutateAsync(data);
-      console.log('Created Product Data:', createdProduct);
+      const formData = new FormData();
+
+      // Get the current images from form state (which includes the file property)
+      const currentImages = form.getValues("images") as { url: string; alt: string; isDefault: boolean; file?: File }[];
+      
+      // Separate images and the rest of the product data
+      const { images, ...productData } = data;
+
+      // Append product data as JSON string
+      formData.append('data', JSON.stringify(productData));
+
+      // Build and append image metadata as JSON string
+      const imageData = currentImages.map((img, index) => ({
+        fileKey: img.file ? img.file.name : `image_${index}`,
+        alt: img.alt,
+        isDefault: img.isDefault,
+      }));
+      formData.append('imageData', JSON.stringify(imageData));
+
+      // Append each file as 'images'
+      currentImages.forEach(img => {
+        if (img.file) {
+          formData.append('images', img.file);
+        }
+      });
+
+      await createProduct(formData);
       form.reset();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       // Error handled by mutation
     }
@@ -122,22 +141,22 @@ const Page = () => {
     );
   }
 
-  // if (!myShop) {
-  //   return (
-  //      <div className="p-8">
-  //        <Alert>
-  //          <Terminal className="h-4 w-4" />
-  //          <AlertTitle>Shop Required!</AlertTitle>
-  //          <AlertDescription>
-  //            You need to create a shop before you can add products. 
-  //            <Link href="/dashboard/profile" className="font-bold text-amber-600 hover:underline ml-1">
-  //               Go to your profile to create one.
-  //            </Link>
-  //          </AlertDescription>
-  //        </Alert>
-  //      </div>
-  //   );
-  // }
+  if (!myShop) {
+    return (
+       <div className="p-8">
+         <Alert>
+           <Terminal className="h-4 w-4" />
+           <AlertTitle>Shop Required!</AlertTitle>
+           <AlertDescription>
+             You need to create a shop before you can add products. 
+             <Link href="/dashboard/profile" className="font-bold text-amber-600 hover:underline ml-1">
+                Go to your profile to create one.
+             </Link>
+           </AlertDescription>
+         </Alert>
+       </div>
+    );
+  }
 
   return (
     <div className="flex flex-col md:flex-row gap-5 p-8 w-[100%]">
@@ -197,11 +216,9 @@ const Page = () => {
                       <FormLabel>Price</FormLabel>
                       <FormControl>
                         <Input
-                          type="number"
-                          step="0.01"
-                          placeholder="0.00"
-                          {...field}
-                          onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                          type="text"
+                          value={form.watch('price')}
+                          onChange={e => form.setValue('price', e.target.value)}
                         />
                       </FormControl>
                       <FormMessage />
@@ -216,11 +233,9 @@ const Page = () => {
                       <FormLabel>Discounted Price</FormLabel>
                       <FormControl>
                         <Input
-                          type="number"
-                          step="0.01"
-                          placeholder="0.00"
-                          {...field}
-                          onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                          type="text"
+                          value={form.watch('discountedPrice')}
+                          onChange={e => form.setValue('discountedPrice', e.target.value)}
                         />
                       </FormControl>
                       <FormMessage />
@@ -252,11 +267,12 @@ const Page = () => {
 
             {/* Product Media */}
             <ProductImageUpload
-              images={form.watch("images")}
+              images={form.watch("images") as { url: string; alt: string; isDefault: boolean; file?: File }[]}
               onAddImages={files => {
                 const newImages = Array.from(files).map(file => ({
                   url: URL.createObjectURL(file),
-                  alt: file.name,
+                  file, // store the actual file
+                                    alt: file.name,
                   isDefault: false,
                 }));
                 form.setValue("images", [...form.getValues("images"), ...newImages]);
@@ -294,12 +310,12 @@ const Page = () => {
                 type="button"
                 variant="outline"
                 onClick={() => {}}
-                disabled={createProduct.isPending}
+                disabled={isLoading}
               >
                 Cancel
               </GenericButton>
-              <GenericButton type="submit" disabled={createProduct.isPending} className="gap-2">
-                {createProduct.isPending && <Loader2 className="h-4 w-4 animate-spin" />}
+              <GenericButton type="submit" disabled={isLoading} className="gap-2">
+                {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                 Create Product
               </GenericButton>
             </div>

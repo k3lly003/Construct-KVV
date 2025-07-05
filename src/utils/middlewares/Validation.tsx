@@ -40,13 +40,13 @@ export const createServiceSchema = z.object({
   category: z.string().nonempty({ message: "Category is required" }),
   description: z.string().nonempty({ message: "Description is required" }),
   availability: z.string().nonempty({ message: "Availability is required" }),
-  features: z.array(z.object({ value: z.string().nonempty({ message: "Feature cannot be empty" }) })).min(1, { message: "At least one feature is required" }),
-  specifications: z.array(z.object({ key: z.string().nonempty({ message: "Key is required" }), value: z.string().nonempty({ message: "Value is required" }) })).min(1, { message: "At least one specification is required" }),
-  provider: z.string().nonempty({ message: "Provider is required" }),
-  pricing: z.string().nonempty({ message: "Pricing is required" }),
-  location: z.string().nonempty({ message: "Location is required" }),
-  warranty: z.string().nonempty({ message: "Warranty is required" }),
-  gallery: z.array(z.object({ url: z.string().nonempty({ message: "Image URL is required" }) })).min(1, { message: "At least one image is required" }),
+  features: z.array(z.string()).min(1, { message: "At least one feature is required" }),
+  specifications: z.record(z.string()).refine(val => Object.keys(val).length > 0, { message: "At least one specification is required" }),
+  provider: z.string().nonempty({ message: "Provider name is required" }),
+  pricing: z.string().nonempty({ message: "Price is required" }),
+  location: z.string().nonempty({ message: "Address is required" }),
+  warranty: z.string().nonempty({ message: "Warranty details are required" }),
+  gallery: z.array(z.string()).min(1, { message: "At least one image is required" }),
 });
 
 export type CreateServiceInput = z.infer<typeof createServiceSchema>;

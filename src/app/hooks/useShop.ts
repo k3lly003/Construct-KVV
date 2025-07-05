@@ -1,5 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ShopService } from "@/app/services/shopServices";
+import { useState, useEffect } from 'react';
+import { Shop } from '@/types/shop';
 
 // Define a custom AxiosError-like interface
 interface CustomAxiosError {
@@ -99,5 +101,36 @@ export const useShop = () => {
     shops,
     areShopsLoading,
     shopsError,
+  };
+};
+
+export const useShops = () => {
+  const [shops, setShops] = useState<Shop[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchShops = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await ShopService.getAllShops();
+      setShops(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch shops');
+      console.error('Error fetching shops:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchShops();
+  }, []);
+
+  return {
+    shops,
+    loading,
+    error,
+    refetch: fetchShops
   };
 };
