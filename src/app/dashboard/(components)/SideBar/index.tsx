@@ -146,13 +146,6 @@ const SideBar = () => {
             isCollapsed={isSidebarCollapsed}
           />
 
-          <SidebarLink
-            href="/dashboard/products"
-            icon={Layers}
-            label="Products"
-            isCollapsed={isSidebarCollapsed}
-          />
-
           {/* Role-specific links */}
           {userRole === "ADMIN" && (
             <>
