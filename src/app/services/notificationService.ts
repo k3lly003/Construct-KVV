@@ -130,6 +130,62 @@ class NotificationService {
       return 0;
     }
   }
+
+  async deleteNotification(notificationId: string): Promise<MarkAsReadResponse> {
+    const token = this.getAuthToken();
+
+    if (!token) {
+      throw new Error("No authentication token found");
+    }
+
+    try {
+      const response = await axios.delete(
+        `${API_BASE_URL}/api/v1/notification/${notificationId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      return response.data as MarkAsReadResponse;
+    } catch (error) {
+      const err = error as { response?: { data?: { message?: string } } };
+      console.error("Error deleting notification:", error);
+      throw new Error(
+        err.response?.data?.message || "Failed to delete notification"
+      );
+    }
+  }
+
+  async deleteAllNotifications(): Promise<MarkAsReadResponse> {
+    const token = this.getAuthToken();
+
+    if (!token) {
+      throw new Error("No authentication token found");
+    }
+
+    try {
+      const response = await axios.delete(
+        `${API_BASE_URL}/api/v1/notification`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      return response.data as MarkAsReadResponse;
+    } catch (error) {
+      const err = error as { response?: { data?: { message?: string } } };
+      console.error("Error deleting all notifications:", error);
+      throw new Error(
+        err.response?.data?.message || "Failed to delete all notifications"
+      );
+    }
+  }
 }
 
 export const notificationService = new NotificationService();
