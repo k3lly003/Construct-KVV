@@ -56,7 +56,8 @@ const Page = () => {
   const shopId = params.shopId as string;
   
   const [shop, setShop] = useState<ExtendedShop | null>(null);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
+  const [productsLoading, setProductsLoading] = useState(false);
   const [stats, setStats] = useState<ShopStats>({
     totalProducts: 0,
     totalSales: 0,
@@ -67,7 +68,8 @@ const Page = () => {
   const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
-    const fetchShopData = async () => {
+    const fetchShopAndProducts = async () => {
+
       setLoading(true);
       try {
         const USER = getUserDataFromLocalStorage();
@@ -86,13 +88,30 @@ const Page = () => {
           productCount: shopData.productsCount || 0,
           status: shopData.isActive ? 'active' : 'inactive',
           createdAt: shopData.createdAt || new Date().toISOString(),
+          sellerId: shopData.sellerId
+
         });
         setStats((prev) => ({
           ...prev,
           totalProducts: shopData.productsCount || 0,
         }));
-        setProducts([]); // If you have a real endpoint for products, fetch here
+        // Fetch products for this sellerId
+        if (shopData.sellerId) {
+          setProductsLoading(true);
+          try {
+            const { products } = await ShopService.getProductsBySellerId(shopData.sellerId, 1, 10, authToken);
+            setProducts(products);
+          } catch (err) {
+            console.error('Failed to fetch products:', err);
+            setProducts([]);
+          } finally {
+            setProductsLoading(false);
+          }
+        } else {
+          setProducts([]);
+        }
       } catch (error) {
+        console.error('Failed to fetch shop details:', error);
         toast.error('Failed to fetch shop details');
         setShop(null);
       } finally {
@@ -100,7 +119,7 @@ const Page = () => {
       }
     };
     if (shopId) {
-      fetchShopData();
+      fetchShopAndProducts();
     }
   }, [shopId]);
 
@@ -387,7 +406,7 @@ const Page = () => {
                 </TabsContent>
 
                 <TabsContent value="products" className="p-6">
-                  <ProductsTab sellerId={String(shop.sellerId || '')} />
+                  <ProductsTab products={products} loading={productsLoading} />
                 </TabsContent>
 
                 <TabsContent value="analytics" className="p-6">
@@ -405,49 +424,25 @@ const Page = () => {
   );
 };
 
-function ProductsTab({ sellerId }: { sellerId: string }) {
-  const [products, setProducts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (!sellerId) return;
-    setLoading(true);
-    const fetchProducts = async () => {
-      try {
-        const USER = getUserDataFromLocalStorage();
-        const token = USER?.token;
-        const res = await axios.get(`/api/v1/products/seller/${sellerId}?page=1&limit=10`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const data = res.data as any;
-        setProducts(data.data || []);
-      } catch (err) {
-        setProducts([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProducts();
-  }, [sellerId]);
-
+function ProductsTab({ products, loading }: { products: any[]; loading: boolean }) {
   if (loading) return <div>Loading products...</div>;
   if (!products.length) return <div>No products found for this shop.</div>;
-
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3 max-h-96 overflow-y-auto pr-2">
       {products.map(product => (
-        <div key={product.id} className="flex items-center gap-4 p-4 border rounded-lg shadow-sm">
-          <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
+        <div key={product.id} className="flex items-center gap-3 p-2 border rounded-md shadow-sm bg-white">
+          <div className="w-10 h-10 bg-gray-100 rounded-md overflow-hidden flex items-center justify-center">
             {product.image ? (
               <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
             ) : (
-              <Package className="w-8 h-8 text-gray-400" />
+              <Package className="w-6 h-6 text-gray-400" />
             )}
           </div>
           <div className="flex-1">
-            <h4 className="font-semibold">{product.name}</h4>
-            <p className="text-sm text-gray-500">Price: ${product.price}</p>
-            <p className="text-sm text-gray-500">Stock: {product.stock}</p>
+            <h4 className="font-medium text-base">{product.name}</h4>
+            <p className="text-xs text-gray-500">Price: ${product.price}</p>
+            <p className="text-xs text-gray-500">Stock: {product.inventory}</p>
+
           </div>
         </div>
       ))}

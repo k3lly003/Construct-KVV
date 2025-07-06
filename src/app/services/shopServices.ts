@@ -159,5 +159,35 @@ export const ShopService = {
       console.error('Error fetching shop products count:', error);
       return 0;
     }
+  },
+
+  // Fetch products for a seller (admin view)
+  async getProductsBySellerId(sellerId: string, page: number = 1, limit: number = 10, authToken?: string): Promise<{ products: any[]; meta?: any }> {
+    try {
+      const response = await axios.get(`${API_URL}/api/v1/products/seller/${sellerId}?page=${page}&limit=${limit}`, {
+        headers: authToken ? { Authorization: `Bearer ${authToken}` } : undefined
+      });
+      // The response may have products in data.products or data.data
+      const data: any = response.data;
+      return {
+        products: data && (data.products || data.data) || [],
+        meta: data && data.meta || undefined
+      };
+    } catch (error) {
+      console.error('Error fetching products by sellerId:', error);
+      throw error instanceof Error ? error : new Error(String(error));
+    }
+  },
+
+  // Get products count for a shop
+  async getShopProductsCount(shopId: string): Promise<number> {
+    try {
+      const response = await axios.get(`${API_URL}/api/v1/products?shopId=${shopId}`);
+      const data = response.data as any;
+      return data.meta?.total || 0;
+    } catch (error: unknown) {
+      console.error('Error fetching shop products count:', error);
+      return 0;
+    }
   }
 };
