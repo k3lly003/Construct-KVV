@@ -1,12 +1,15 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Menu, Bell, Search } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../../../redux';
 import { setIsSidebarCollapsed } from '../../../../state';
 import CustomSheet from '../shad_/CustomSheet';
 import ModeToggle from '../../../../components/mode-toggle';
-import { useUserStore } from '../../../../store/userStore'; 
+import { useUserStore } from '../../../../store/userStore';
+import { NotificationModal } from '@/components/ui/notification-modal';
+import { useNotificationStore } from '../../../../store/notificationStore';
+import { useSocket } from '@/app/hooks/useSocket';
 
 
 const Navbar: React.FC = () => {
@@ -31,6 +34,43 @@ const Navbar: React.FC = () => {
 
   // Get user data from Zustand store
   const { role: userRole, name: userName, isHydrated } = useUserStore();
+
+  // Notification modal state
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const {
+    notifications,
+    isLoading,
+    error,
+    fetchNotifications,
+    markAsRead,
+    markAllAsRead,
+    getUnreadCount,
+  } = useNotificationStore();
+
+  // Real-time notifications
+  const { socket, isConnected } = useSocket();
+
+  // Fetch notifications when modal opens
+  useEffect(() => {
+    if (isNotificationOpen) {
+      fetchNotifications();
+    }
+  }, [isNotificationOpen, fetchNotifications]);
+
+  // Listen for new notifications from socket
+  useEffect(() => {
+    if (!socket) return;
+    const handler = (notification: any) => {
+      // If you have addNotification in your store, use it:
+      // addNotification(notification);
+      // For now, just refetch notifications for simplicity:
+      fetchNotifications();
+    };
+    socket.on('newNotification', handler);
+    return () => {
+      socket.off('newNotification', handler);
+    };
+  }, [socket, fetchNotifications]);
 
   if (!isHydrated) {
     return (
@@ -86,10 +126,25 @@ const Navbar: React.FC = () => {
             <ModeToggle />
           </div>
           <div className='relative hidden md:flex'>
-            <Bell className='cursor-pointer text-gray-500' size={24} />
-            <span className='absolute top-2 right-2 inline-flex items-center justify-center px-[0.4rem] py-1 text-xs font-semibold leading-none text-red-100 bg-red-400 rounded-full'>
-              3
-            </span>
+            <Bell
+              className='cursor-pointer text-gray-500'
+              size={24}
+              onClick={() => setIsNotificationOpen(true)}
+            />
+            {getUnreadCount() > 0 && (
+              <span className='absolute top-2 right-2 inline-flex items-center justify-center px-[0.4rem] py-1 text-xs font-semibold leading-none text-red-100 bg-red-400 rounded-full'>
+                {getUnreadCount()}
+              </span>
+            )}
+            <NotificationModal
+              isOpen={isNotificationOpen}
+              onClose={() => setIsNotificationOpen(false)}
+              notifications={notifications}
+              onMarkAsRead={markAsRead}
+              onMarkAllAsRead={markAllAsRead}
+              isLoading={isLoading}
+              error={error}
+            />
           </div>
           <hr className='hidden md:flex w-0 h-7 border border-solid border-l border-gray-300 mx-3' />
           <div
