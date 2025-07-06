@@ -69,6 +69,7 @@ const Page = () => {
 
   useEffect(() => {
     const fetchShopAndProducts = async () => {
+
       setLoading(true);
       try {
         const USER = getUserDataFromLocalStorage();
@@ -88,6 +89,7 @@ const Page = () => {
           status: shopData.isActive ? 'active' : 'inactive',
           createdAt: shopData.createdAt || new Date().toISOString(),
           sellerId: shopData.sellerId
+
         });
         setStats((prev) => ({
           ...prev,
@@ -440,6 +442,7 @@ function ProductsTab({ products, loading }: { products: any[]; loading: boolean 
             <h4 className="font-medium text-base">{product.name}</h4>
             <p className="text-xs text-gray-500">Price: ${product.price}</p>
             <p className="text-xs text-gray-500">Stock: {product.inventory}</p>
+
           </div>
         </div>
       ))}
