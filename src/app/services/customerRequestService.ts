@@ -1,6 +1,5 @@
 import { customerRequest } from '@/types/customer-request';
-import axios from 'axios';
-
+import axios, { isAxiosError } from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -32,13 +31,19 @@ export const customerRequestService = {
       return response.data;
     } catch (error) {
       console.error('Error creating seller request:', error);
-
-      if (axios.isAxiosError(error)) {
-        console.error('Response status:', error.response?.status);
-        console.error('Response data:', error.response?.data);
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "isAxiosError" in error &&
+        (error as any).isAxiosError &&
+        "response" in error &&
+        (error as any).response
+      ) {
+        const errResponse = (error as any).response;
+        console.error("API Error Response:", errResponse.data);
+        console.error("API Error Status:", errResponse.status);
       }
-
-      throw error;
+      throw error instanceof Error ? error : new Error(String(error));
     }
   },
 };
