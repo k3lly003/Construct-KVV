@@ -2,28 +2,14 @@
 
 import React, { useState } from 'react';
 import { Phone, Mail, Clock, BadgeCheck } from 'lucide-react';
-import { Shop } from '@/types/shop';
+import type { Shop } from '@/types/shop';
 
-interface Certification {
-  name: string;
-  url?: string;
-}
 
 interface ContactInfoProps {
   shop?: Shop;
 }
 
 export const ContactInfo: React.FC<ContactInfoProps> = ({ shop }) => {
-  console.log('=== ContactInfo Component ===');
-  console.log('Received shop prop:', shop);
-  console.log('Shop name:', shop?.name);
-  console.log('Shop seller businessName:', shop?.seller?.businessName);
-  console.log('Shop seller businessAddress:', shop?.seller?.businessAddress);
-  console.log('Shop seller email:', shop?.seller?.email);
-  console.log('Shop phone:', shop?.phone);
-  console.log('Shop seller businessPhone:', shop?.seller?.businessPhone);
-  console.log('Shop seller phone:', shop?.seller?.phone);
-  console.log('Shop createdAt:', shop?.createdAt);
   
   // Use actual shop data with fallbacks
   const shopInfo = {

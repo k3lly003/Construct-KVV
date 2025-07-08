@@ -4,7 +4,13 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { Providers } from "@/app/providers";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ 
+  subsets: ["latin"],
+  display: 'swap',
+  fallback: ['system-ui', 'arial'],
+  preload: false,
+  adjustFontFallback: true
+});
 
 export const metadata: Metadata = {
   title: "Construct KVV",
