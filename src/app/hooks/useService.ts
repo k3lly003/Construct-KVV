@@ -4,7 +4,7 @@ import { serviceService } from '@/app/services/serviceServices';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-type CreateServiceInput = Omit<Service, 'id' | 'createdAt'>;
+// type CreateServiceInput = Omit<Service, 'id' | 'createdAt'>;
 
 export const useServices = () => {
   const queryClient = useQueryClient();

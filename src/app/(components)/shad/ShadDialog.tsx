@@ -11,8 +11,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Shop } from '@/types/shop';
 
-export function DialogDemo() {
+interface DialogDemoProps {
+  shop?: Shop;
+}
+
+export function DialogDemo({ shop }: DialogDemoProps) {
+  console.log('=== DialogDemo Component ===');
+  console.log('Received shop prop:', shop);
+  console.log('Shop name:', shop?.name);
+  console.log('Shop seller businessName:', shop?.seller?.businessName);
+  
+  const shopName = shop?.name || shop?.seller?.businessName || 'this shop';
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -20,9 +31,9 @@ export function DialogDemo() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add your feedback here</DialogTitle>
+          <DialogTitle>Add your feedback for {shopName}</DialogTitle>
           <DialogDescription>
-            Help us to improve our products and services by your valuable insights and suggestions.
+            Help {shopName} improve their products and services by your valuable insights and suggestions.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">

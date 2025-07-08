@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 // import { Category } from '@/types/category';
-import { categoryService } from '@/app/services/productServices';
+import { categoryService } from '@/app/services/categoryServices';
 // import { v4 as uuidv4 } from 'uuid';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 

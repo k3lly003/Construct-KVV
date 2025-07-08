@@ -33,7 +33,6 @@ const ReviewCarousel: React.FC<Props> = ({ reviews }) => {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
-            transition={{ type: "", damping: 20 }}
           >
             <CarouselCard review={reviews[currentIndex]} />
           </motion.div>

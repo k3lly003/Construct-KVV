@@ -14,6 +14,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChatDialogProps } from "@/app/utils/dtos/chat.dtos";
 import { quickActions } from "@/app/utils/fakes/ChatFakes";
 import { useHandleSendMessages } from "@/app/utils/middlewares/handleMessages";
+import { easeInOut } from "framer-motion";
+
 const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
   
   const {
@@ -51,10 +53,7 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
       y: 0,
       x: 0,
       scale: 1,
-      transition: {
-        duration: 0.4,
-        ease: "easeOut",
-      },
+      transition: { duration: 0.3, ease: easeInOut },
     },
     exit: {
       opacity: 0,
@@ -63,7 +62,7 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
       scale: 0.95,
       transition: {
         duration: 0.2,
-        ease: "easeOut",
+        ease: easeInOut,
       },
     },
   };

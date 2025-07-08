@@ -98,10 +98,18 @@ const Page = () => {
     name: 'specifications',
   });
 
-  const galleryImages = form.watch('gallery') as { url: string }[];
+  const galleryImages = (form.watch('gallery') as { url: string }[]).map((img, idx) => ({
+    url: img.url,
+    alt: `Gallery image ${idx + 1}`,
+    isDefault: idx === 0, // first image as default, others false
+  }));
   const handleAddGalleryImages = (files: FileList) => {
-    const newImages = Array.from(files).map(file => ({ url: URL.createObjectURL(file) }));
-    form.setValue('gallery', [...galleryImages, ...newImages]);
+    const newImages = Array.from(files).map((file, idx) => ({
+      url: URL.createObjectURL(file),
+      alt: `Gallery image ${galleryImages.length + idx + 1}`,
+      isDefault: false,
+    }));
+    form.setValue('gallery', [...form.watch('gallery'), ...newImages]);
   };
   const handleRemoveGalleryImage = (idx: number) => {
     form.setValue('gallery', galleryImages.filter((_, i) => i !== idx));
@@ -118,22 +126,22 @@ const Page = () => {
     formData.append('category', data.category);
     formData.append('description', data.description);
     formData.append('availability', data.availability);
-    formData.append('features', data.features.map(f => f.value).join(','));
-    // For now, treat specifications, provider, pricing, location, warranty as flat JSON strings
-    formData.append('specifications', JSON.stringify(data.specifications.reduce((acc, cur) => {
-      if (cur.key && cur.value) acc[cur.key] = cur.value;
-      return acc;
-    }, {} as Record<string, string>)));
-    formData.append('provider', JSON.stringify({ name: data.provider }));
-    formData.append('pricing', JSON.stringify({ basePrice: data.pricing, unit: 'per service', estimatedTotal: data.pricing }));
-    formData.append('location', JSON.stringify({ city: data.location, serviceRadius: '25 miles' }));
-    formData.append('warranty', JSON.stringify({ duration: data.warranty, coverage: ['Manufacturing defects', 'Wear and tear protection', 'Water damage coverage'] }));
-    // Gallery: if File, append as file, else as string
-    (data.gallery as { url: string }[]).forEach((g, idx) => {
-      // Try to get the File from the URL if possible (for demo, just append the URL string)
-      // If you have File objects, use: formData.append('gallery', file)
-      formData.append('gallery', g.url);
+    // features: array of strings
+    formData.append('features', JSON.stringify(data.features.map(f => f.value)));
+    // specifications: object { key: value, ... }
+    const specsObj: Record<string, string> = {};
+    data.specifications.forEach((spec) => {
+      if (spec.key && spec.value) specsObj[spec.key] = spec.value;
     });
+    formData.append('specifications', JSON.stringify(specsObj));
+    // provider, pricing, location, warranty: objects
+    formData.append('provider', JSON.stringify({ name: data.provider }));
+    formData.append('pricing', JSON.stringify({ price: data.pricing }));
+    formData.append('location', JSON.stringify({ address: data.location }));
+    formData.append('warranty', JSON.stringify({ details: data.warranty }));
+    // gallery: array of strings
+    formData.append('gallery', JSON.stringify(data.gallery.map(g => g.url)));
+    formData.append('shopId', myShop.id);
     await createService(myShop.id, formData);
     form.reset();
   };
@@ -333,9 +341,14 @@ const Page = () => {
               >
                 Cancel
               </GenericButton>
-              <GenericButton type="submit" disabled={isCreating} className="gap-2">
-                {isCreating && <Loader2 className="h-4 w-4 animate-spin" />}
-                Create Service
+              <GenericButton type="submit" disabled={isCreating}>
+                {isCreating ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="animate-spin h-4 w-4" /> Creating...
+                  </span>
+                ) : (
+                  "Create Service"
+                )}
               </GenericButton>
             </div>
           </form>
