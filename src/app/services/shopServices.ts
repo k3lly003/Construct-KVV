@@ -25,9 +25,16 @@ export const ShopService = {
   async getAllShops(): Promise<Shop[]> {
     try {
       const response = await axios.get(`${API_URL}/api/v1/shops?page=1&limit=10&active=true&sort=createdAt&order=desc`);
-      // Handle both direct array response and nested data response
-      const data = response.data;
-      return Array.isArray(data) ? data : (data.data || []);
+      // Handle both direct array response and nested data response, with proper type checking
+      const data: unknown = response.data;
+      if (Array.isArray(data)) {
+        return data as Shop[];
+      } else if (data && typeof data === 'object' && 'data' in data && Array.isArray((data as any).data)) {
+        return (data as { data: Shop[] }).data;
+      } else {
+        throw new Error('Unexpected response format when fetching shops');
+      }
+      // End of try block
     } catch (error: unknown) {
       console.error('Error fetching shops:', error);
       throw error instanceof Error ? error : new Error(String(error));
@@ -37,7 +44,6 @@ export const ShopService = {
   async getShopById(id: string): Promise<Shop> { 
     try {
       const response = await axios.get(`${API_URL}/api/v1/shops/id/${id}`);
-      console.log("killllllllll", response.data)
       return response.data as Shop;
     } catch (error: unknown) {
       console.error('Error fetching shop by id:', error);

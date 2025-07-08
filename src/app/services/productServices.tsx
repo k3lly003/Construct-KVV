@@ -42,9 +42,17 @@ export const productService = {
       return response.data as Product;
     } catch (error) {
       console.error('Error creating product:', error);
-      if (axios.isAxiosError(error)) {
-        console.error('Response status:', error.response?.status);
-        console.error('Response data:', error.response?.data);
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "isAxiosError" in error &&
+        (error as any).isAxiosError &&
+        "response" in error &&
+        (error as any).response
+      ) {
+        const errResponse = (error as any).response;
+        console.error("API Error Response:", errResponse.data);
+        console.error("API Error Status:", errResponse.status);
       }
       throw error;
     }
@@ -99,14 +107,12 @@ export const productService = {
   },
 
   async getProductsBySellerId(sellerId: string, authToken: string): Promise<Product[]> {
-    // console.log("777777777",sellerId);
     try {
       const response = await axios.get<{ data: Product[] }>(`${API_URL}/api/v1/products/seller/${sellerId}`, {
         headers: {
           'Authorization': `Bearer ${authToken}`
         }
       });
-      // console.log("777777777",sellerId);
       return Array.isArray(response.data.data) ? response.data.data : [];
     } catch (error: unknown) {
       console.error('Error fetching products by seller ID:', error);
