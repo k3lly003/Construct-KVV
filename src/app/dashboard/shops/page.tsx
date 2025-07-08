@@ -66,6 +66,7 @@ const Pagination = ({ total, current, onPageChange }: PaginationProps) => {
   );
 };
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { easeInOut } from "framer-motion";
 
 // Define the type for an order item
 interface Order {
