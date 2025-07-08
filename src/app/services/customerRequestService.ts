@@ -1,49 +1,36 @@
 import { customerRequest } from '@/types/customer-request';
-import axios, { isAxiosError } from 'axios';
+import axios from 'axios';
+import dotenv from "dotenv";
+dotenv.config();
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-interface SellerRequestPayload {
-  email: string;
-  businessName: string;
-  businessAddress: string;
-  businessPhone: string;
-  taxId: string;
-}
-
 export const customerRequestService = {
   async requestToBecomeSeller(
-    data: SellerRequestPayload,
+    data: {
+      email: string;
+      businessName: string;
+      businessAddress: string;
+      businessPhone: string;
+      taxId: string;
+    },
     authToken: string
   ): Promise<customerRequest> {
     try {
-      const response = await axios.post<customerRequest>(
+      const response = await axios.post(
         `${API_URL}/api/v1/seller/request`,
         data,
         {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${authToken}`,
+            'Authorization': `Bearer ${authToken}`,
           },
         }
       );
-
-      return response.data;
+      return response.data as customerRequest;
     } catch (error) {
       console.error('Error creating seller request:', error);
-      if (
-        typeof error === "object" &&
-        error !== null &&
-        "isAxiosError" in error &&
-        (error as any).isAxiosError &&
-        "response" in error &&
-        (error as any).response
-      ) {
-        const errResponse = (error as any).response;
-        console.error("API Error Response:", errResponse.data);
-        console.error("API Error Status:", errResponse.status);
-      }
-      throw error instanceof Error ? error : new Error(String(error));
+      throw error;
     }
   },
 };
