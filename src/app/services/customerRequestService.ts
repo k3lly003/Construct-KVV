@@ -1,5 +1,5 @@
 import { customerRequest } from '@/types/customer-request';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -28,7 +28,7 @@ export const customerRequestService = {
       return response.data as customerRequest;
     } catch (error) {
       console.error('Error creating seller request:', error);
-      if (axios.isAxiosError(error)) {
+      if (isAxiosError(error)) {
         console.error('Response status:', error.response?.status);
         console.error('Response data:', error.response?.data);
       }

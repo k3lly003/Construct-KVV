@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import CarouselCard from "@/app/(components)/home/carouselCard";
 import { Review } from "@/app/utils/fakes/HomeFakes";
+import axios, { isAxiosError } from 'axios';
 
 interface Props {
   reviews: Review[];
