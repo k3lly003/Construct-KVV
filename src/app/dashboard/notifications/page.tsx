@@ -103,11 +103,11 @@ const Page = () => {
       if (activeTab === "read") return !notification.isUnread;
       if (activeTab === "unread") return notification.isUnread;
       if (activeTab === "orders") return notification.type === "order";
-      return true;
+    return true;
     })
     .filter(
       (notification) =>
-        notification.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    notification.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (notification.description &&
           notification.description
             .toLowerCase()
@@ -265,9 +265,9 @@ const Page = () => {
     <div className="p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-4">
-          <h1 className="text-2xl font-semibold flex items-center">
-            <Bell className="mr-2 h-5 w-5" /> Notifications
-          </h1>
+        <h1 className="text-2xl font-semibold flex items-center">
+          <Bell className="mr-2 h-5 w-5" /> Notifications
+        </h1>
           {unreadCount > 0 && (
             <Badge className="bg-amber-500 text-white">
               {unreadCount} unread
@@ -324,9 +324,9 @@ const Page = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Notifications List */}
         <div className="lg:col-span-2">
-          <ScrollArea className="h-[700px] w-full rounded-md border">
-            <div className="p-4">
-              {filteredNotifications.map((notification) => (
+      <ScrollArea className="h-[700px] w-full rounded-md border">
+        <div className="p-4">
+          {filteredNotifications.map((notification) => (
                 <Card
                   key={notification.id}
                   className={`mb-3 cursor-pointer transition-all hover:shadow-md ${getNotificationColor(
@@ -335,13 +335,13 @@ const Page = () => {
                   onClick={() => handleViewDetails(notification)}
                 >
                   <CardContent className="p-4">
-                    <div className="flex items-start space-x-4">
+              <div className="flex items-start space-x-4">
                       <div className="flex-shrink-0">
                         <Avatar className="h-10 w-10">
                           <AvatarFallback className="bg-gray-100">
                             {getNotificationIcon(notification.type)}
                           </AvatarFallback>
-                        </Avatar>
+                </Avatar>
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-1">
@@ -361,7 +361,7 @@ const Page = () => {
                             </span>
                           </div>
                         </div>
-                        {notification.description && (
+                  {notification.description && (
                           <p className="text-sm text-gray-600 mb-2">
                             {notification.description}
                           </p>
@@ -392,14 +392,14 @@ const Page = () => {
                               <XCircle className="w-3 h-3 mr-1" />
                               Reject
                             </GenericButton>
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                </div>
+                )}
+              </div>
+            </div>
                   </CardContent>
                 </Card>
-              ))}
-              {filteredNotifications.length === 0 && (
+          ))}
+          {filteredNotifications.length === 0 && (
                 <div className="py-6 text-center text-sm text-gray-500">
                   <Bell className="w-12 h-12 mx-auto mb-2 text-gray-300" />
                   <p>No notifications found.</p>
