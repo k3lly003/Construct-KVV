@@ -2,7 +2,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Table,
   TableHeader,
@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { GenericButton } from "@/components/ui/generic-button";
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,8 +25,20 @@ import {
   Funnel,
   Plus,
   Upload,
+  Eye,
+  Trash2,
+  CheckCircle,
+  XCircle,
+  Store,
+  Package,
 } from 'lucide-react';
-// import { Pagination } from '@/components/ui/pagination'; // Assuming you'll create this
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { Shop } from '@/types/shop';
+import { useRouter } from 'next/navigation';
+import { ShopService, ShopResponse } from '@/app/services/shopServices';
+import { toast } from 'sonner';
+import { getUserDataFromLocalStorage } from '@/app/utils/middlewares/UserCredentions';
 
 // Temporary Pagination component implementation
 interface PaginationProps {
@@ -65,81 +77,150 @@ const Pagination = ({ total, current, onPageChange }: PaginationProps) => {
     </div>
   );
 };
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { easeInOut } from "framer-motion";
 
-// Define the type for an order item
-interface Order {
-  orderId: string;
-  name: string;
-  product: string;
-  dateTime: string;
-  status: 'Completed' | 'In Progress' | 'Canceled';
-  totalPaid: number;
-  paymentMethod: 'Paypal' | 'Credit Card' | 'Wallet';
+// Extended Shop interface with additional fields
+interface ExtendedShop extends Shop {
+  sellerName?: string;
+  productsCount?: number;
+  status: 'active' | 'inactive' | 'pending';
+  createdAt: string;
 }
 
-// Dummy order data (replace with your actual data fetching)
-const dummyOrders: Order[] = [
-  { orderId: 'A26TOJ1M', name: 'Nick Patterson', product: 'Pull & Bear Shirt', dateTime: 'Mar 18, 2022 (08:19)', status: 'Completed', totalPaid: 428.67, paymentMethod: 'Paypal' },
-  { orderId: 'AAYR74J5', name: 'Ayda Zyne', product: 'Kotton Corduroy Pants', dateTime: 'Mar 18, 2022 (08:02)', status: 'Completed', totalPaid: 89.00, paymentMethod: 'Credit Card' },
-  { orderId: 'ABU6BF03', name: 'Islam Abroni...', product: 'Apple Airpods Pro, Desk Shelf, Sta...', dateTime: 'Mar 18, 2022 (07:34)', status: 'In Progress', totalPaid: 1259.00, paymentMethod: 'Wallet' },
-  { orderId: 'ABZR9NE1', name: 'Ahmed Gül', product: 'Tom Ford Black Orchid, Cactus So...', dateTime: 'Mar 18, 2022 (07:20)', status: 'Completed', totalPaid: 4099.00, paymentMethod: 'Wallet' },
-  { orderId: 'AD60VQ7V', name: 'James Jones', product: 'Redmi Power Bank - 20000mAh', dateTime: 'Mar 18, 2022 (06:52)', status: 'In Progress', totalPaid: 36.00, paymentMethod: 'Wallet' },
-  { orderId: 'AS0B9BE5', name: 'Ario Chilver', product: 'Faber-Castell Polychromos 120', dateTime: 'Mar 18, 2022 (03:35)', status: 'Completed', totalPaid: 249.45, paymentMethod: 'Paypal' },
-  { orderId: 'ATM502ND', name: 'Fred Wade Jr.', product: 'H&M Hat, Nike Air Zoom', dateTime: 'Mar 18, 2022 (00:49)', status: 'Completed', totalPaid: 1600.00, paymentMethod: 'Paypal' },
-  { orderId: 'AW0OR5F5', name: 'Hille Johnson', product: 'New Balance Suit', dateTime: 'Mar 17, 2022 (23:36)', status: 'Canceled', totalPaid: 899.00, paymentMethod: 'Credit Card' },
-  { orderId: 'B04FV6IO', name: 'Matheus Brown', product: 'Apple Watch Series 7', dateTime: 'Mar 17, 2022 (23:32)', status: 'In Progress', totalPaid: 740.00, paymentMethod: 'Paypal' },
-  { orderId: 'B3MPFKQ2', name: 'Udein Battier', product: 'Michelin Pilot Sport 4', dateTime: 'Mar 17, 2022 (21:05)', status: 'Completed', totalPaid: 430.00, paymentMethod: 'Credit Card' },
-  // ... more dummy data
-];
-
 const Page = () => {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [resultsPerPage, setResultsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [shops, setShops] = useState<ExtendedShop[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [totalShops, setTotalShops] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
-  // Filter orders based on the active tab
-  const filteredOrders = dummyOrders.filter((order) => {
-    if (activeTab === 'all') return true;
-    if (activeTab === 'completed') return order.status === 'Completed';
-    if (activeTab === 'inProgress') return order.status === 'In Progress';
-    if (activeTab === 'canceled') return order.status === 'Canceled';
-    return true;
-  });
+  const USER = getUserDataFromLocalStorage();
+  const authToken = USER?.token;
 
-  // Filter orders based on the search term (basic implementation)
-  const searchedOrders = filteredOrders.filter((order) =>
-    Object.values(order).some((value) =>
-      String(value).toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
+  // Fetch shops data
+  const fetchShops = async () => {
+    if (!authToken) {
+      toast.error('Authentication required');
+      return;
+    }
 
-  const totalResults = searchedOrders.length;
-  const startIndex = (currentPage - 1) * resultsPerPage;
-  const endIndex = startIndex + resultsPerPage;
-  const currentOrders = searchedOrders.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(totalResults / resultsPerPage);
+    setLoading(true);
+    try {
+      const response = await ShopService.getShopsForAdmin(
+        currentPage,
+        resultsPerPage,
+        searchTerm || undefined,
+        true,
+        undefined,
+        'createdAt',
+        'desc',
+        authToken // Pass the token here
+      );
+
+      // Transform the response to match our ExtendedShop interface
+      const transformedShops: ExtendedShop[] = await Promise.all(response.data.map(async shop => {
+        let productCount = 0;
+        try {
+          productCount = await ShopService.getShopProductsCount(shop.id);
+        } catch (e) {
+          productCount = 0;
+        }
+        return {
+          ...shop,
+          sellerName: shop.seller?.businessName || 'Unknown Seller',
+          productCount,
+          status: shop.isActive ? 'active' : 'inactive',
+          createdAt: shop.createdAt || new Date().toISOString()
+        };
+      }));
+
+      setShops(transformedShops);
+      setTotalShops(response.meta.total);
+      setTotalPages(response.meta.totalPages);
+    } catch (error) {
+      console.error('Error fetching shops:', error);
+      toast.error('Failed to fetch shops');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch shops when dependencies change
+  useEffect(() => {
+    fetchShops();
+  }, [currentPage, resultsPerPage, searchTerm]);
+
+  // Local filtering by isActive for tabs
+  let currentShops = shops;
+  if (activeTab === 'active') {
+    currentShops = shops.filter(shop => shop.isActive === true);
+  } else if (activeTab === 'inactive') {
+    currentShops = shops.filter(shop => shop.isActive === false);
+  }
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
-    setCurrentPage(1); // Reset page on tab change
+    setCurrentPage(1);
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1); // Reset page on search
+    setCurrentPage(1);
   };
 
   const handleResultsPerPageChange = (value: string) => {
     setResultsPerPage(parseInt(value));
-    setCurrentPage(1); // Reset page on results per page change
+    setCurrentPage(1);
   };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+  const handleViewShop = (shopId: string) => {
+    router.push(`/dashboard/shops/${shopId}`);
+  };
+
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'active':
+        return <Badge className="bg-green-100 text-green-800">Active</Badge>;
+      case 'inactive':
+        return <Badge className="bg-red-100 text-red-800">Inactive</Badge>;
+      case 'pending':
+        return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>;
+      default:
+        return <Badge className="bg-gray-100 text-gray-800">Unknown</Badge>;
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
+
+  // If no inactive shops, display a message
+  const showNoInactive = activeTab === 'inactive' && currentShops.length === 0 && !loading;
+
+  if (loading && shops.length === 0) {
+    return (
+      <div className="p-6">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading shops...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">
@@ -147,7 +228,7 @@ const Page = () => {
         <div>
           <h1 className="text-2xl font-semibold">Shops Management</h1>
           <p className="text-sm text-muted-foreground">
-            View and check all shops registered on your platform and edit them if necessary.
+            View and manage all shops registered on your platform.
           </p>
         </div>
         <div className="space-x-2">
@@ -155,20 +236,15 @@ const Page = () => {
             <Upload className="h-4 w-4 mr-2" />
             Export
           </GenericButton>
-          <GenericButton>
-            <Plus className="h-4 w-4" />
-            Add new Shop
-          </GenericButton>
         </div>
       </div>
 
       <div className="mb-4 flex items-center justify-between">
         <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsList>
-            <TabsTrigger value="all">All Orders</TabsTrigger>
-            <TabsTrigger value="completed">Completed</TabsTrigger>
-            <TabsTrigger value="inProgress">In Progress</TabsTrigger>
-            <TabsTrigger value="canceled">Canceled</TabsTrigger>
+            <TabsTrigger value="all">All Shops</TabsTrigger>
+            <TabsTrigger value="active">Active</TabsTrigger>
+            <TabsTrigger value="inactive">Inactive</TabsTrigger>
           </TabsList>
         </Tabs>
         <div className="flex items-center space-x-2">
@@ -181,14 +257,13 @@ const Page = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[200px]">
               <DropdownMenuItem>Filter by Name</DropdownMenuItem>
-              <DropdownMenuItem>Filter by Product</DropdownMenuItem>
+              <DropdownMenuItem>Filter by Seller</DropdownMenuItem>
               <DropdownMenuItem>Filter by Date</DropdownMenuItem>
-              {/* Add more filter options */}
             </DropdownMenuContent>
           </DropdownMenu>
           <Input
             type="search"
-            placeholder="Search by any order details..."
+            placeholder="Search shops..."
             className="w-[300px] sm:w-[400px]"
             value={searchTerm}
             onChange={handleSearchChange}
@@ -200,45 +275,59 @@ const Page = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className='text-amber-300'>ID</TableHead>
-              <TableHead className='text-amber-300'>Name</TableHead>
-              <TableHead className='text-amber-300'>Product(s)</TableHead>
-              <TableHead className='text-amber-300'>Date & Time</TableHead>
+              <TableHead className='text-amber-300'>Shop</TableHead>
+              <TableHead className='text-amber-300'>Seller</TableHead>
+              <TableHead className='text-amber-300'>Products</TableHead>
               <TableHead className='text-amber-300'>Status</TableHead>
-              <TableHead className='text-amber-300'>Total Paid</TableHead>
-              <TableHead className='text-amber-300'>Payment Method</TableHead>
+              <TableHead className='text-amber-300'>Created</TableHead>
+              <TableHead className='text-amber-300'>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentOrders.map((order) => (
-              <TableRow key={order.orderId}>
-                <TableCell className="font-medium py-4">{order.orderId}</TableCell>
-                <TableCell className="py-4">{order.name}</TableCell>
-                <TableCell className="py-4">{order.product}</TableCell>
-                <TableCell className="py-4">{order.dateTime}</TableCell>
+            {currentShops.map((shop) => (
+              <TableRow key={shop.id}>
                 <TableCell className="py-4">
-                  <div
-                    className={`inline-flex items-center rounded-full px-5 py-1 text-xs font-semibold ${
-                      order.status === 'Completed'
-                        ? 'bg-green-100 text-green-800'
-                        : order.status === 'In Progress'
-                        ? 'bg-blue-100 text-blue-800'
-                        : order.status === 'Canceled'
-                        ? 'bg-red-100 text-red-800'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}
-                  >
-                    {order.status}
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                      <Store className="w-5 h-5 text-gray-600" />
+                    </div>
+                    <div>
+                      <div className="font-medium">{shop.name}</div>
+                      <div className="text-sm text-gray-500">{shop.phone}</div>
+                    </div>
                   </div>
                 </TableCell>
-                <TableCell className="">${order.totalPaid.toFixed(2)}</TableCell>
-                <TableCell>{order.paymentMethod}</TableCell>
+                <TableCell className="py-4">{shop.sellerName}</TableCell>
+                <TableCell className="py-4">
+                  <div className="flex items-center space-x-1">
+                    <Package className="w-4 h-4 text-gray-500" />
+                    <span>{shop.productsCount || 0}</span>
+                  </div>
+                </TableCell>
+                <TableCell className="py-4">
+                  {getStatusBadge(shop.status)}
+                </TableCell>
+                <TableCell className="py-4">{formatDate(shop.createdAt)}</TableCell>
+                <TableCell className="py-4">
+                  <div className="flex items-center space-x-2">
+                    <GenericButton
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleViewShop(shop.id)}
+                    >
+                      <Eye className="w-4 h-4" />
+                    </GenericButton>
+                  </div>
+                </TableCell>
               </TableRow>
             ))}
-            {currentOrders.length === 0 && (
+            {currentShops.length === 0 && !loading && (
               <TableRow>
-                <TableCell colSpan={7} className="text-red-500 text-center py-4">
-                  No Products found.
+                <TableCell colSpan={6} className="text-center py-8">
+                  <div className="text-gray-500">
+                    <Store className="w-12 h-12 mx-auto mb-2 text-gray-300" />
+                    <p>No shops found.</p>
+                  </div>
                 </TableCell>
               </TableRow>
             )}
@@ -246,10 +335,10 @@ const Page = () => {
         </Table>
       </div>
 
-      {totalResults > 0 && (
+      {totalShops > 0 && (
         <div className="flex items-center justify-between mt-4">
           <p className="text-sm text-muted-foreground">
-            Showing {startIndex + 1} - {Math.min(endIndex, totalResults)} of {totalResults} Results
+            Showing {((currentPage - 1) * resultsPerPage) + 1} - {Math.min(currentPage * resultsPerPage, totalShops)} of {totalShops} Results
           </p>
           <div className="flex items-center space-x-4">
             <Pagination
