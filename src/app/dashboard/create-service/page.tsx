@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { Loader2 } from 'lucide-react';
 import {
@@ -22,7 +22,6 @@ import { useShop } from '@/app/hooks/useShop';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
 import Link from 'next/link';
-import ServicePreview from './ServicePreview';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import ProductImageUpload from '../products/create/ProductImageUpload';
@@ -48,6 +47,8 @@ import {
 } from "lucide-react";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createServiceSchema } from '@/utils/middlewares/Validation';
+import { ServiceCategorySelect } from '../products/create/CategorySelect';
+import { categoryService } from "@/app/services/categoryServices";
 
 type CreateServiceFormInput = {
   title: string;
@@ -66,6 +67,7 @@ type CreateServiceFormInput = {
 const defaultGallery = [
   "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2",
 ];
+
 
 const Page = () => {
   const { createService, isLoading: isCreating } = useServices();
@@ -147,9 +149,25 @@ const Page = () => {
   };
 
   const watchAllFields = form.watch();
-
   const [selectedImage, setSelectedImage] = React.useState(0);
   const [isFavorited, setIsFavorited] = React.useState(false);
+  const [categoryName, setCategoryName] = useState("");
+
+  useEffect(() => {
+    async function fetchCategoryName() {
+      if (!watchAllFields.category) {
+        setCategoryName("");
+        return;
+      }
+      try {
+        const cat = await categoryService.getCategoryById(watchAllFields.category);
+        setCategoryName(cat.name);
+      } catch {
+        setCategoryName("Unknown");
+      }
+    }
+    fetchCategoryName();
+  }, [watchAllFields.category]);
 
   if (isMyShopLoading) {
     return (
@@ -204,7 +222,10 @@ const Page = () => {
                 <FormItem>
                   <FormLabel>Category</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Flooring Services" {...field} />
+                    <ServiceCategorySelect
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -355,7 +376,7 @@ const Page = () => {
         </Form>
       </div>
       <Separator orientation="vertical" className="hidden md:block h-auto" />
-      {/* Soso-style Preview Section */}
+      {/* Service-style Preview Section */}
       <div className="flex-1 max-w-4xl">
         <h1 className="text-2xl font-bold mb-6">Live Preview</h1>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -414,7 +435,7 @@ const Page = () => {
               <CardContent className="p-6">
                 <div className="space-y-4">
                   <div>
-                    <Badge variant="secondary" className="mb-2">{watchAllFields.category || 'Category'}</Badge>
+                    <Badge variant="secondary" className="mb-2">{categoryName || 'Category'}</Badge>
                     <h1 className="text-3xl font-bold text-gray-900">{watchAllFields.title || 'Service Title'}</h1>
                     <p className="text-gray-600 mt-2">{watchAllFields.description || 'Service description goes here...'}</p>
                   </div>

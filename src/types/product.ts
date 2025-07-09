@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 
 export interface Product {
+  categoryId: string;
   attributes: any;
   data(data: any): unknown;
   imageUrl: any;
