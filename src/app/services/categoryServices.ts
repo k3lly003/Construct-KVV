@@ -86,4 +86,26 @@ export const categoryService = {
       throw error;
     }
   },
+
+  async getCategoryById(id: string, authToken?: string): Promise<Category> {
+    try {
+      const response = await axios.get(`${API_URL}/api/v1/categories/${id}`, {
+        headers: authToken
+          ? { Authorization: `Bearer ${authToken}` }
+          : undefined,
+      });
+      if (
+        response.data &&
+        typeof response.data === "object" &&
+        "data" in response.data
+      ) {
+        return response.data.data as Category;
+      } else {
+        throw new Error("Invalid response data when fetching category by ID");
+      }
+    } catch (error) {
+      console.error("Error getting category:", error);
+      throw error;
+    }
+  }
 };

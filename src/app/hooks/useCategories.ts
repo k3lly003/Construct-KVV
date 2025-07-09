@@ -14,7 +14,6 @@ export const useCategories = () => {
     queryKey: ['categories'],
     queryFn: categoryService.getCategories,
   });
-  // console.log("HOOOOOOOOOOK: ",categories);
 
   const createCategoryMutation = useMutation({
     mutationFn: async ({ 
@@ -70,6 +69,16 @@ export const useCategories = () => {
     },
   });
 
+  const getCategoryByIdMutation = useMutation({
+    mutationFn: async (id: string) => {
+      if (!authToken) throw new Error("Not authenticated");
+      return categoryService.getCategoryById(id, authToken);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['categories'] });
+    },
+  });
+
   const createCategory = useCallback(async (name: string, description: string, subCategories: string[]) => {
     return createCategoryMutation.mutateAsync({ name, description, subCategories });
   }, [createCategoryMutation]);
@@ -78,11 +87,16 @@ export const useCategories = () => {
     return deleteCategoryMutation.mutateAsync(id);
   }, [deleteCategoryMutation]);
 
+  const getCategoryById = useCallback(async (id: string) => {
+    return getCategoryByIdMutation.mutateAsync(id);
+  }, [getCategoryByIdMutation]);
+
   return {
     categories,
-    isLoading: isLoading || createCategoryMutation.isPending || deleteCategoryMutation.isPending,
-    error: error || createCategoryMutation.error || deleteCategoryMutation.error,
+    isLoading: isLoading || createCategoryMutation.isPending || deleteCategoryMutation.isPending || getCategoryByIdMutation.isPending,
+    error: error || createCategoryMutation.error || deleteCategoryMutation.error || getCategoryByIdMutation.error,
     createCategory,
     deleteCategory,
+    getCategoryById
   };
 }; 
