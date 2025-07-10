@@ -56,6 +56,7 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { NegotiationChat } from "@/app/dashboard/(components)/negotiation/NegotiationChat";
+import { workers } from "@/app/utils/fakes/workersFakes";
 
 // Temporary Pagination component implementation
 interface PaginationProps {
@@ -172,6 +173,63 @@ const Page = () => {
   // --- Negotiation Drawer State ---
   const [negotiationDrawerOpen, setNegotiationDrawerOpen] = useState(false);
   const [negotiationBid, setNegotiationBid] = useState<any | null>(null);
+
+  // --- Assign Specialist Modal State ---
+  const [assignModalOpen, setAssignModalOpen] = useState(false);
+  const [assignBid, setAssignBid] = useState<any | null>(null);
+  const [selectedRole, setSelectedRole] = useState("");
+  const [selectedWorkerId, setSelectedWorkerId] = useState("");
+  const [assignedWorkers, setAssignedWorkers] = useState<{
+    [bidId: string]: { role: string; worker: any }[];
+  }>({});
+
+  // Load assigned workers from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("assignedWorkers");
+      if (stored) setAssignedWorkers(JSON.parse(stored));
+    }
+  }, []);
+  // Save assigned workers to localStorage when changed
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("assignedWorkers", JSON.stringify(assignedWorkers));
+    }
+  }, [assignedWorkers]);
+
+  const specialistRoles = [
+    "Architect",
+    "Plumber",
+    "Painter",
+    "Electrician",
+    "Contractor",
+    "Landscaper",
+    "Interior Designer",
+    "General Contractor",
+  ];
+
+  function openAssignModal(bid: any) {
+    setAssignBid(bid);
+    setSelectedRole("");
+    setSelectedWorkerId("");
+    setAssignModalOpen(true);
+  }
+
+  function handleAssignWorker() {
+    if (!assignBid || !selectedRole || !selectedWorkerId) return;
+    const worker = workers.find((w) => w.id === selectedWorkerId);
+    if (!worker) return;
+    setAssignedWorkers((prev) => {
+      const prevArr = prev[assignBid.id] || [];
+      // Prevent duplicate role assignment
+      const filtered = prevArr.filter((aw) => aw.role !== selectedRole);
+      return {
+        ...prev,
+        [assignBid.id]: [...filtered, { role: selectedRole, worker }],
+      };
+    });
+    setAssignModalOpen(false);
+  }
 
   useEffect(() => {
     async function fetchProjects() {
@@ -1507,12 +1565,136 @@ const Page = () => {
           </div>
         );
       case "assign":
+        // List all accepted bids
+        const acceptedBidsAssign = bids.filter(
+          (bid) => bid.status === "ACCEPTED"
+        );
         return (
           <div className="p-6">
-            {" "}
-            <span className="text-amber-700">
-              Assign specialist/workers coming soon...
-            </span>{" "}
+            <Dialog open={assignModalOpen} onOpenChange={setAssignModalOpen}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Assign Specialist/Worker</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block mb-1 font-medium">
+                      Select Role
+                    </label>
+                    <select
+                      className="w-full border rounded px-3 py-2"
+                      value={selectedRole}
+                      onChange={(e) => setSelectedRole(e.target.value)}
+                    >
+                      <option value="">-- Select Role --</option>
+                      {specialistRoles.map((role) => (
+                        <option key={role} value={role}>
+                          {role}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  {selectedRole && (
+                    <div>
+                      <label className="block mb-1 font-medium">
+                        Select Worker
+                      </label>
+                      <select
+                        className="w-full border rounded px-3 py-2"
+                        value={selectedWorkerId}
+                        onChange={(e) => setSelectedWorkerId(e.target.value)}
+                      >
+                        <option value="">-- Select Worker --</option>
+                        {workers
+                          .filter(
+                            (w) => w.specialist === selectedRole && w.available
+                          )
+                          .map((w) => (
+                            <option key={w.id} value={w.id}>
+                              {w.name} ({w.email})
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  )}
+                </div>
+                <DialogFooter>
+                  <button
+                    type="button"
+                    className="px-4 py-2 rounded border"
+                    onClick={() => setAssignModalOpen(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="px-4 py-2 rounded bg-amber-500 text-white hover:bg-amber-600 disabled:opacity-50"
+                    disabled={!selectedRole || !selectedWorkerId}
+                    onClick={handleAssignWorker}
+                  >
+                    Assign
+                  </button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+            <h2 className="text-xl font-bold text-amber-800 mb-4">
+              Assign Specialists/Workers
+            </h2>
+            {acceptedBidsAssign.length === 0 ? (
+              <div className="text-amber-700">
+                No accepted bids to assign specialists.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {acceptedBidsAssign.map((bid) => (
+                  <div
+                    key={bid.id}
+                    className="bg-gradient-to-br from-amber-50 via-white to-amber-100 rounded-xl shadow p-5 border border-amber-200"
+                  >
+                    <div className="font-bold text-amber-800 mb-2">
+                      Project ID:{" "}
+                      <span className="font-mono">{bid.finalProjectId}</span>
+                    </div>
+                    <div className="text-sm text-gray-700 mb-2">
+                      <span className="font-semibold">Bid Amount:</span>{" "}
+                      {bid.amount?.toLocaleString()} RWF
+                    </div>
+                    <div className="text-xs text-gray-500 mb-2">
+                      Message: {bid.message}
+                    </div>
+                    <div className="mt-2">
+                      <button
+                        className="bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600"
+                        onClick={() => openAssignModal(bid)}
+                      >
+                        Assign Work
+                      </button>
+                    </div>
+                    {/* Show assigned workers for this bid */}
+                    {assignedWorkers[bid.id] &&
+                      assignedWorkers[bid.id].length > 0 && (
+                        <div className="mt-4">
+                          <div className="font-semibold text-amber-700 mb-1">
+                            Assigned Workers:
+                          </div>
+                          <ul className="space-y-1">
+                            {assignedWorkers[bid.id].map((aw, idx) => (
+                              <li key={idx} className="flex items-center gap-2">
+                                <span className="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+                                  {aw.role}
+                                </span>
+                                <span className="font-medium">
+                                  {aw.worker.name}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         );
       default:
