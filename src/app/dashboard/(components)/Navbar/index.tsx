@@ -132,7 +132,7 @@ const Navbar: React.FC = () => {
               onClick={() => setIsNotificationOpen(true)}
             />
             {getUnreadCount() > 0 && (
-              <span className="absolute top-2 right-2 inline-flex items-center justify-center px-[0.4rem] py-1 text-xs font-semibold leading-none text-red-100 bg-red-400 rounded-full">
+              <span className="absolute top-2 right-2 inline-flex items-center justify-center px-[0.4rem] py-1 text-xs font-semibold leading-none text-amber-100 bg-amber-400 rounded-full">
                 {getUnreadCount()}
               </span>
             )}
