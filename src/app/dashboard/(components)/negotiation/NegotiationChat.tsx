@@ -420,7 +420,7 @@ const ChatContent = ({
       >
         <div className="p-4 border-b flex justify-between items-center">
           <h2 className="text-xl font-bold">Negotiation Chat</h2>
-          {isSeller && (
+          {/* {isSeller && (
             <button
               onClick={() => setIsModalOpen(true)}
               className="px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
@@ -428,7 +428,7 @@ const ChatContent = ({
             >
               Accept Bid
             </button>
-          )}
+          )} */}
         </div>
         <ScrollArea
           className="flex-grow p-4"

@@ -15,7 +15,8 @@ import {
   Bell,
   TableProperties,
   User, // New icon for Profile
-  DollarSign, // New icon for Sales Report
+  DollarSign,
+  Package // New icon for Sales Report
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -24,6 +25,7 @@ import CustomSheet from "../shad_/CustomSheet";
 import Image from "next/image";
 import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
 import { useRouter } from 'next/navigation';
+
 
 
 interface SidebarLinkProps {
@@ -161,11 +163,29 @@ const SideBar = () => {
                 label="Categories"
                 isCollapsed={isSidebarCollapsed}
               />
+              <SidebarLink
+                href="/dashboard/users"
+                icon={User}
+                label="Users"
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/seller-requests"
+                icon={Layers}
+                label="Seller Requests"
+                isCollapsed={isSidebarCollapsed}
+              />
             </>
           )}
 
           {userRole === "SELLER" && (
             <>
+            <SidebarLink
+                href="/dashboard/products"
+                icon={Package}
+                label="Products"
+                isCollapsed={isSidebarCollapsed}
+              />
             <SidebarLink
             href="/dashboard/projects"
             icon={TableProperties}

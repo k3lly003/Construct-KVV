@@ -488,21 +488,25 @@ function ProjectPage({ params }: ProjectPageProps) {
                           initialBidData={bid}
                         />
                       </div>
+                      {/* Per-bid Accept/Update Bid Status section */}
+                      <div className="mt-4 p-4 bg-amber-500 rounded-lg border border-amber-600">
+                        <h4 className="font-semibold text-white mb-2">
+                          Handle Your Project to Our Professionals?
+                        </h4>
+                        <p className="text-white/90 text-sm mb-3">
+                          Accept or Reject the bids from our professionals.
+                        </p>
+                        {/* Show current status before dropdown */}
+                        <div className="mb-2">
+                          <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-white text-amber-700 border border-amber-300">
+                            Current Status:{" "}
+                            {bid.status ? bid.status : "Unknown"}
+                          </span>
+                        </div>
+                        <BidStatusDropdown bidId={bid.id} />
+                      </div>
                     </div>
                   ))}
-
-                  {/* Call to Action even when bids exist */}
-                  <div className="mt-4 p-4 bg-amber-500 rounded-lg border border-amber-600">
-                    <h4 className="font-semibold text-white mb-2">
-                      Handle Your Project to Our Professionals?
-                    </h4>
-                    <p className="text-white/90 text-sm">
-                      Accept or Reject the bids from our professionals.
-                    </p>
-                    {project.bids[0]?.id && (
-                      <BidStatusDropdown bidId={project.bids[0].id} />
-                    )}
-                  </div>
                 </div>
               )}
             </Card>
@@ -901,7 +905,7 @@ function ProjectPage({ params }: ProjectPageProps) {
                     {project.bids.length === 1 ? "bid" : "bids"}
                   </p>
                 </div>
-                <div className="pt-3 border-t border-amber-200">
+                {/* <div className="pt-3 border-t border-amber-200">
                   <GenericButton
                     variant="outline"
                     fullWidth
@@ -909,7 +913,7 @@ function ProjectPage({ params }: ProjectPageProps) {
                   >
                     💼 Your Bids
                   </GenericButton>
-                </div>
+                </div> */}
               </div>
             </Card>
           </div>
