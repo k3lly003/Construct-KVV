@@ -108,9 +108,18 @@ const Page = () => {
   const handleTabChange = (value: string) => {
     setActiveTab(value);
   };
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+  const getNotificationColor = (type: string, isRead: boolean) => {
+    if (isRead) return "border-gray-200 bg-white";
+    switch (type) {
+      case "SUCCESS":
+        return "border-green-200 bg-green-50";
+      case "WARNING":
+        return "border-yellow-200 bg-yellow-50";
+      case "ERROR":
+        return "border-red-200 bg-red-50";
+      default:
+        return "border-amber-200 bg-amber-50";
+    }
   };
 
   const handleMarkAsRead = async (notificationId: string) => {
@@ -236,7 +245,7 @@ const Page = () => {
             placeholder="Search notifications..."
             className="w-64"
             value={searchTerm}
-            onChange={handleSearchChange}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
           <GenericButton 
             variant="outline" 
@@ -248,8 +257,7 @@ const Page = () => {
           </GenericButton>
         </div>
       </div>
-
-      <Tabs value={activeTab} onValueChange={handleTabChange} className="mb-4">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-4">
         <TabsList>
           <TabsTrigger value="all">
             All
@@ -278,7 +286,6 @@ const Page = () => {
           <TabsTrigger value="system">System</TabsTrigger>
           <TabsTrigger value="orders">Orders</TabsTrigger>
         </TabsList>
-        <Separator />
       </Tabs>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
