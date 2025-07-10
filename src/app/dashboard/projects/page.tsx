@@ -47,6 +47,15 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 // import { Pagination } from '@/components/ui/pagination'; // Assuming you'll create this
 import { useRef } from "react";
+import { calculateOverExpense } from "@/app/utils/overExpense";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetClose,
+} from "@/components/ui/sheet";
+import { NegotiationChat } from "@/app/dashboard/(components)/negotiation/NegotiationChat";
 
 // Temporary Pagination component implementation
 interface PaginationProps {
@@ -159,6 +168,10 @@ const Page = () => {
   const [timelineId, setTimelineId] = useState<string | null>(null);
   const [timelineLoading, setTimelineLoading] = useState(false);
   const [timelineError, setTimelineError] = useState<string | null>(null);
+
+  // --- Negotiation Drawer State ---
+  const [negotiationDrawerOpen, setNegotiationDrawerOpen] = useState(false);
+  const [negotiationBid, setNegotiationBid] = useState<any | null>(null);
 
   useEffect(() => {
     async function fetchProjects() {
@@ -683,8 +696,6 @@ const Page = () => {
     if (error) return <div className="text-red-500 p-8">{error}</div>;
     switch (activeTab) {
       case "budgetExpense":
-        if (projects.length === 0)
-          return <div className="text-amber-700 p-8">No projects found.</div>;
         // List all accepted bids (status === 'ACCEPTED')
         const acceptedBidsBudget = bids.filter(
           (bid) => bid.status === "ACCEPTED"
@@ -716,16 +727,20 @@ const Page = () => {
                   </div>
                   <div>
                     <Label htmlFor="stage">Stage</Label>
-                    <input
+                    <select
                       id="stage"
-                      type="text"
                       className="w-full border rounded px-3 py-2 mt-1"
                       value={budgetData.stage}
                       onChange={(e) =>
                         setBudgetData((d) => ({ ...d, stage: e.target.value }))
                       }
                       required
-                    />
+                    >
+                      <option value="">Select Stage</option>
+                      <option value="Foundation">Foundation</option>
+                      <option value="Roofing">Roofing</option>
+                      <option value="Finishing">Finishing</option>
+                    </select>
                   </div>
                   <div>
                     <Label htmlFor="expenseAmount">Expense Amount (RWF)</Label>
@@ -743,6 +758,12 @@ const Page = () => {
                       required
                       min={0}
                     />
+                    {budgetData.expenseAmount &&
+                      Number(budgetData.expenseAmount) < 5000 && (
+                        <div className="text-red-600 text-xs mt-1">
+                          Expense amount must be at least 5,000 RWF
+                        </div>
+                      )}
                   </div>
                   <DialogFooter>
                     <button
@@ -756,7 +777,9 @@ const Page = () => {
                     <button
                       type="submit"
                       className="px-4 py-2 rounded bg-amber-500 text-white hover:bg-amber-600 disabled:opacity-50"
-                      disabled={budgetLoading}
+                      disabled={
+                        budgetLoading || Number(budgetData.expenseAmount) < 5000
+                      }
                     >
                       {budgetLoading ? "Saving..." : "Create Entry"}
                     </button>
@@ -775,25 +798,72 @@ const Page = () => {
                     </div>
                   ) : (
                     <ul className="space-y-2">
-                      {budgetEntries.map((entry, idx) => (
-                        <li
-                          key={entry.id || idx}
-                          className="border rounded p-2"
-                        >
-                          <div>
-                            <span className="font-semibold">Description:</span>{" "}
-                            {entry.description}
-                          </div>
-                          <div>
-                            <span className="font-semibold">Stage:</span>{" "}
-                            {entry.stage}
-                          </div>
-                          <div>
-                            <span className="font-semibold">Amount:</span>{" "}
-                            {entry.expenseAmount?.toLocaleString()} RWF
-                          </div>
-                        </li>
-                      ))}
+                      {budgetEntries.map((entry, idx) => {
+                        const bidBudgetEntries = budgetEntries.filter(
+                          (e) => e.finalProjectId === entry.finalProjectId
+                        );
+                        const totalExpense = bidBudgetEntries.reduce(
+                          (sum, e) => sum + Number(e.expenseAmount),
+                          0
+                        );
+                        const { overSpent, percentUsed } = calculateOverExpense(
+                          bidBudgetEntries,
+                          entry.amount
+                        );
+                        return (
+                          <li
+                            key={entry.id || idx}
+                            className="border rounded p-2"
+                          >
+                            <div>
+                              <span className="font-semibold">
+                                Description:
+                              </span>{" "}
+                              {entry.description}
+                            </div>
+                            <div>
+                              <span className="font-semibold">Stage:</span>{" "}
+                              {entry.stage}
+                            </div>
+                            <div>
+                              <span className="font-semibold">Amount:</span>{" "}
+                              {entry.expenseAmount?.toLocaleString()} RWF
+                            </div>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="font-semibold">
+                                {percentUsed}% used
+                              </span>
+                              {overSpent && (
+                                <span className="text-red-600 font-bold ml-2">
+                                  (Over Spent)
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold">Remaining:</span>
+                              <span
+                                className={
+                                  overSpent
+                                    ? "text-red-600 font-bold"
+                                    : "text-amber-800 font-bold"
+                                }
+                              >
+                                {overSpent
+                                  ? 0
+                                  : (
+                                      entry.amount - totalExpense
+                                    ).toLocaleString()}{" "}
+                                RWF
+                              </span>
+                              {overSpent && (
+                                <span className="ml-2 text-xs bg-red-100 text-red-700 px-2 py-1 rounded">
+                                  Over Spent
+                                </span>
+                              )}
+                            </div>
+                          </li>
+                        );
+                      })}
                     </ul>
                   )}
                 </div>
@@ -810,40 +880,55 @@ const Page = () => {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {acceptedBidsBudget.map((bid) => (
-                    <div
-                      key={bid.id}
-                      className="bg-gradient-to-br from-amber-50 via-white to-amber-100 rounded-xl shadow p-5 border border-amber-200"
-                    >
-                      <div className="font-bold text-amber-800 mb-2">
-                        Project ID:{" "}
-                        <span className="font-mono">{bid.finalProjectId}</span>
-                      </div>
-                      <div className="text-sm text-gray-700 mb-2">
-                        <span className="font-semibold">Bid Amount:</span>{" "}
-                        {bid.amount?.toLocaleString()} RWF
-                      </div>
-                      <div className="text-xs text-gray-500 mb-2">
-                        Accepted At:{" "}
-                        {new Date(
-                          bid.updatedAt || bid.createdAt
-                        ).toLocaleDateString()}
-                      </div>
-                      <div className="text-xs text-gray-500 mb-2">
-                        Message: {bid.message}
-                      </div>
-                      <div className="text-xs text-gray-500 mb-2">
-                        Owner: {bid.finalProject?.ownerId}
-                      </div>
-                      <button
-                        className="mt-2 bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600"
-                        onClick={() => openBudgetModal(bid)}
-                        disabled={budgetLoading}
+                  {acceptedBidsBudget.map((bid) => {
+                    const bidBudgetEntries = budgetEntries.filter(
+                      (e) => e.finalProjectId === bid.finalProjectId
+                    );
+                    const totalExpense = bidBudgetEntries.reduce(
+                      (sum, entry) => sum + Number(entry.expenseAmount),
+                      0
+                    );
+                    const { overSpent, percentUsed } = calculateOverExpense(
+                      bidBudgetEntries,
+                      bid.amount
+                    );
+                    return (
+                      <div
+                        key={bid.id}
+                        className="bg-gradient-to-br from-amber-50 via-white to-amber-100 rounded-xl shadow p-5 border border-amber-200"
                       >
-                        Manage Budget & Expense
-                      </button>
-                    </div>
-                  ))}
+                        <div className="font-bold text-amber-800 mb-2">
+                          Project ID:{" "}
+                          <span className="font-mono">
+                            {bid.finalProjectId}
+                          </span>
+                        </div>
+                        <div className="text-sm text-gray-700 mb-2">
+                          <span className="font-semibold">Bid Amount:</span>{" "}
+                          {bid.amount?.toLocaleString()} RWF
+                        </div>
+                        <div className="text-xs text-gray-500 mb-2">
+                          Accepted At:{" "}
+                          {new Date(
+                            bid.updatedAt || bid.createdAt
+                          ).toLocaleDateString()}
+                        </div>
+                        <div className="text-xs text-gray-500 mb-2">
+                          Message: {bid.message}
+                        </div>
+                        <div className="text-xs text-gray-500 mb-2">
+                          Owner: {bid.finalProject?.ownerId}
+                        </div>
+                        <button
+                          className="mt-2 bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600"
+                          onClick={() => openBudgetModal(bid)}
+                          disabled={budgetLoading}
+                        >
+                          Manage Budget & Expense
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -1356,10 +1441,69 @@ const Page = () => {
       case "negotiation":
         return (
           <div className="p-6">
-            {" "}
-            <span className="text-amber-700">
-              Negotiation chat coming soon...
-            </span>{" "}
+            <Sheet
+              open={negotiationDrawerOpen}
+              onOpenChange={setNegotiationDrawerOpen}
+            >
+              <SheetContent side="right" className="max-w-lg w-full">
+                <SheetHeader>
+                  <SheetTitle>Negotiation Chat</SheetTitle>
+                </SheetHeader>
+                {negotiationBid && (
+                  <NegotiationChat
+                    bidId={String(negotiationBid.id)}
+                    initialBidData={negotiationBid}
+                  />
+                )}
+                <SheetClose className="mt-4 px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600">
+                  Close
+                </SheetClose>
+              </SheetContent>
+              <div>
+                <h2 className="text-xl font-bold text-amber-800 mb-4">
+                  Your Bids (Negotiation)
+                </h2>
+                {bidsLoading ? (
+                  <div className="text-amber-600">Loading bids...</div>
+                ) : bidsError ? (
+                  <div className="text-red-500">{bidsError}</div>
+                ) : bids.length === 0 ? (
+                  <div className="text-amber-700">No bids found.</div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {bids.map((bid) => (
+                      <div
+                        key={bid.id}
+                        className="bg-gradient-to-br from-amber-50 via-white to-amber-100 rounded-xl shadow p-5 border border-amber-200"
+                      >
+                        <div className="font-bold text-amber-800 mb-2">
+                          Project ID:{" "}
+                          <span className="font-mono">
+                            {bid.finalProjectId}
+                          </span>
+                        </div>
+                        <div className="text-sm text-gray-700 mb-2">
+                          <span className="font-semibold">Bid Amount:</span>{" "}
+                          {bid.amount?.toLocaleString()} RWF
+                        </div>
+                        <div className="text-xs text-gray-500 mb-2">
+                          Message: {bid.message}
+                        </div>
+                        <button
+                          className="mt-2 bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600"
+                          onClick={() => {
+                            setNegotiationBid(bid);
+                            setNegotiationDrawerOpen(true);
+                          }}
+                        >
+                          Negotiate
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </Sheet>
           </div>
         );
       case "assign":
