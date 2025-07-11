@@ -16,7 +16,7 @@ export default function ClientLayout({
   return (
     <>
       <UserStoreInitializer />
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense>
         <ProgressBarProvider>
           <div className="flex flex-col min-h-screen">
             <Navbar />

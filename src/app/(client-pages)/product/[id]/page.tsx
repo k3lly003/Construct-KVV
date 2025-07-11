@@ -15,8 +15,10 @@ interface ProductPageProps {
 }
 
 function ProductPage({ params }: ProductPageProps) {
+
   //@ts-ignore
   const resolvedParams = React.use(params) as { id: string };
+
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
