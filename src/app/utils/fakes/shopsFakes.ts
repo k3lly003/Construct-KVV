@@ -8,7 +8,7 @@ export interface Profile {
   name: string;
   title: string;
   rating: number;
-  pictures: string;
+  location?: string;
   since: string;
   imageSrc: StaticImageData | string;
   category: string;
@@ -22,7 +22,7 @@ export const profilesFakes: Profile[] = [
     title:
       "Specializing in high-rise commercial building construction and infrastructure development.",
     rating: 4.7,
-    pictures: "1",
+    location: "Kigali",
     since: "2019",
     imageSrc: comp2,
     category: "Commercial Construction",
@@ -34,7 +34,7 @@ export const profilesFakes: Profile[] = [
     title:
       "Providing expert residential construction services, from custom homes to renovations.",
     rating: 4.9,
-    pictures: "3",
+    location: "Musanze",
     since: "2020",
     imageSrc: comp1,
     category: "Residential Construction",
@@ -46,7 +46,7 @@ export const profilesFakes: Profile[] = [
     title:
       "Focused on sustainable construction practices for both residential and commercial projects.",
     rating: 4.6,
-    pictures: "22",
+    location: "Nyaruguru",
     since: "2021",
     imageSrc: comp3,
     category: "Mixed Use Development",
@@ -58,7 +58,7 @@ export const profilesFakes: Profile[] = [
     title:
       "Experts in excavation, land development, and all aspects of civil engineering projects.",
     rating: 4.8,
-    pictures: "14",
+    location: "Rusizi",
     since: "2022",
     imageSrc: comp1,
     category: "Civil Engineering",
@@ -70,7 +70,7 @@ export const profilesFakes: Profile[] = [
     title:
       "Offering comprehensive roofing services including installation, repair, and maintenance for all roof types.",
     rating: 4.5,
-    pictures: "10",
+    location: "Nyamagabe",
     since: "2022",
     imageSrc: comp2,
     category: "Roofing",
@@ -82,7 +82,7 @@ export const profilesFakes: Profile[] = [
     title:
       "Dedicated to eco-friendly building solutions and the use of sustainable materials.",
     rating: 4.7,
-    pictures: "22",
+    location: "Kigali",
     since: "2022",
     imageSrc: comp1,
     category: "Eco-Friendly Construction",
@@ -94,7 +94,7 @@ export const profilesFakes: Profile[] = [
     title:
       "Specialists in asphalt and concrete paving for driveways, parking lots, and roadways.",
     rating: 4.9,
-    pictures: "5",
+    location: "Kigali",
     since: "2022",
     imageSrc: comp2,
     category: "Paving",
@@ -106,7 +106,7 @@ export const profilesFakes: Profile[] = [
     title:
       "Providing professional steel frame erection services for industrial and commercial buildings.",
     rating: 4.6,
-    pictures: "2",
+    location: "Nyanza",
     since: "2022",
     imageSrc: comp3,
     category: "Steel Erection", 
@@ -118,7 +118,7 @@ export const profilesFakes: Profile[] = [
     title:
       "Offering complete plumbing and piping solutions for new constructions and renovations.",
     rating: 4.8,
-    pictures: "13",
+    location: "Musanze",
     since: "2022",
     imageSrc: comp2,
     category: "Plumbing",
@@ -130,7 +130,7 @@ export const profilesFakes: Profile[] = [
     title:
       "Providing comprehensive electrical services for residential, commercial, and industrial construction projects.",
     rating: 4.7,
-    pictures: "15",
+    location: "Rusizi",
     since: "2022",
     imageSrc: comp1,
     category: "Electrical",

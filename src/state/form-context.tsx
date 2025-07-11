@@ -66,8 +66,6 @@ export const FormProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const completeForm = useCallback(() => {
-    // Here you would typically submit the form data to your backend
-    console.log("Form submitted:", formData);
     setIsFormCompleted(true);
   }, [formData]);
 

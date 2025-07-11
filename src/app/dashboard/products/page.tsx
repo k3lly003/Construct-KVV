@@ -218,7 +218,7 @@ const Page = () => {
   };
 
   let first = myShop?.seller;
-  if (isMyShopLoading) return <div>Loading...</div>;
+  // if (isMyShopLoading) return <div>Loading...</div>;
   
   return (
     <div className="p-6">

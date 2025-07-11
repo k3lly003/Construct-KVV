@@ -5,7 +5,6 @@ import { Star, ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/app/(components)/Button";
-import { initialProducts } from "@/app/utils/fakes/ProductFakes";
 import { ProductFilters } from "@/app/(components)/product/ProductFilters";
 import { productService } from '@/app/services/productServices';
 
@@ -17,51 +16,26 @@ interface ShopProductsProps {
 }
 
 export const ShopProducts: React.FC<ShopProductsProps> = ({ shopId, shop }) => {
-  console.log('=== ShopProducts Component ===');
-  console.log('Received shopId:', shopId);
-  console.log('Received shop prop:', shop);
-  console.log('Shop ID:', shop?.id);
-  console.log('Shop name:', shop?.name);
-  console.log('Shop description:', shop?.description);
-  console.log('Shop seller businessName:', shop?.seller?.businessName);
-  console.log('Shop seller businessAddress:', shop?.seller?.businessAddress);
-  console.log('Shop phone:', shop?.phone);
-  console.log('Shop seller email:', shop?.seller?.email);
-  
+  const seller = shop?.data?.seller ?? {};
+  const sellerId = (seller as { id?: string }).id;
+  // const sellerSellerId = (seller as { sellerId?: string }).sellerId;
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Products");
   const [sortBy, setSortBy] = useState("featured");
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-
-  const filteredProducts = initialProducts
-    .filter((product) => {
-      const matchesSearch = product.name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
-      const matchesCategory =
-        selectedCategory === "All Products" ||
-        product.category === selectedCategory;
-      return matchesSearch && matchesCategory;
-    })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case "price-low":
-          return a.originalPrice - b.originalPrice;
-        case "price-high":
-          return b.originalPrice - a.originalPrice;
-        default:
-          return 0;
-      }
-    });
-
+  const authToken = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+  // const { id: sellerId, sellerId: sellerSellerId } = seller;
   useEffect(() => {
-    if (!shop?.seller?.sellerId || !shopId) return;
+    if (!sellerId || !authToken) return;
     setLoading(true);
-    productService.getProductsBySellerId(shop.seller.sellerId, shopId)
-      .then((data) => setProducts(data))
+    productService.getProductsBySellerId(sellerId, authToken)
+      .then((data) => {
+        console.log('Products fetched from getProductsBySellerId:', data);
+        setProducts(data);
+      })
       .finally(() => setLoading(false));
-  }, [shop?.seller?.sellerId, shopId]);
+  }, [sellerId, authToken]);
 
   return (
     <div className="min-h-screen ">
@@ -83,9 +57,8 @@ export const ShopProducts: React.FC<ShopProductsProps> = ({ shopId, shop }) => {
             </div>
           </div>
         )} */}
-        
+
         {/* Products Grid */}
-        <div className="lg:col-span-3">
           {/* Filters */}
           <ProductFilters
             // initialProducts={initialProducts}
@@ -94,8 +67,8 @@ export const ShopProducts: React.FC<ShopProductsProps> = ({ shopId, shop }) => {
             selectedCategory={selectedCategory}
             onSelectedCategoryChange={setSelectedCategory}
             sortBy={sortBy}
-            onSortByChange={setSortBy} 
-            initialProducts={[]} 
+            onSortByChange={setSortBy}
+            initialProducts={[]}
             availableCategories={[]}
             shop={shop}
           />
@@ -114,7 +87,7 @@ export const ShopProducts: React.FC<ShopProductsProps> = ({ shopId, shop }) => {
                 >
                   <div className="relative">
                     <Image
-                      src={product.imageSrc}
+                      src={product.thumbnailUrl}
                       alt={product.altText || "alt text"}
                       width={100}
                       height={100}
@@ -129,19 +102,25 @@ export const ShopProducts: React.FC<ShopProductsProps> = ({ shopId, shop }) => {
                       <h3 className="text-md font-semibold text-gray-900 w-[60%] mb-1">
                         {product.name}
                       </h3>
-                      <div className="text-green-500 text-sm">
+                      {/* <div className="text-green-500 text-sm">
                         <Star className="h-4 w-4 text-yellow-400 fill-current inline-block mr-1" />
                         {product.rating}
-                      </div>
+                      </div> */}
                     </div>
                     <p className="text-sm text-gray-500 mb-2 overflow">
                       {product.description}
                     </p>
                     <div className="flex items-center justify-between mb-3">
-                      <p className="font-semibold text-md text-yellow-400">
-                        {product.originalPrice}
+                      <p className="font-semibold text-md text-yellow-400 line-through">
+                        {product.price}
                         <span className="text-sm text-yellow-400"> Rwf</span>
                       </p>
+                      {product.discountedPrice && (
+                        <p className="font-semibold text-md text-yellow-400">
+                          {product.discountedPrice}
+                          <span className="text-sm text-yellow-400"> Rwf</span>
+                        </p>
+                      )}
                     </div>
                     <Button
                       text={"Add to cart"}
@@ -177,7 +156,6 @@ export const ShopProducts: React.FC<ShopProductsProps> = ({ shopId, shop }) => {
               <ChevronRight className="h-5 w-5" />
             </button>
           </div>
-        </div>
       </div>
     </div>
   );

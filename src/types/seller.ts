@@ -1,5 +1,6 @@
 // src/types/seller.ts
 export interface Seller {
+    logo: string;
     email: string;
     password: string;
     firstName: string;

@@ -1,37 +1,66 @@
 import React from 'react';
-import { MapPin, Star, Shield, Truck, } from 'lucide-react';
+import { MapPin, Star, Shield, Truck } from 'lucide-react';
 import { Shop } from '@/types/shop';
+import { useSellerProfile } from '@/app/hooks/useSeller';
 
 interface ShopBannerProps {
-  shop?: Shop;
+  shop?: Shop | { data?: Shop };
 }
 
 export const ShopBanner: React.FC<ShopBannerProps> = ({ shop }) => {
-  console.log('=== ShopBanner Component ===');
-  console.log('Received shop prop:', shop);
-  console.log('Shop name:', shop?.name);
-  console.log('Shop seller:', shop?.seller);
-  console.log('Shop seller businessName:', shop?.seller?.businessName);
-  console.log('Shop seller businessAddress:', shop?.seller?.businessAddress);
-  console.log('Shop seller email:', shop?.seller?.email);
-  console.log('Shop phone:', shop?.phone);
-  console.log('Shop createdAt:', shop?.createdAt);
-  
-  // Use actual shop data with fallbacks
+  // Support both shop and shop.data as the source, but ensure type safety
+  let realShop: Shop | undefined = undefined;
+  if (shop) {
+    if ('data' in shop && shop.data) {
+      realShop = shop.data as Shop;
+    } else if (
+      typeof shop === 'object' &&
+      'id' in shop &&
+      'name' in shop &&
+      'description' in shop &&
+      'createdAt' in shop &&
+      'seller' in shop
+    ) {
+      realShop = shop as Shop;
+    }
+  }
+
+  const {
+    logo,
+    name,
+    seller,
+    phone,
+    createdAt
+  } = realShop || {};
+  const productCount = (realShop && 'productsCount' in realShop) ? (realShop as any).productsCount : 0;
+  const serviceCount = (realShop && 'servicesCount' in realShop) ? (realShop as any).servicesCount : 0;
+
+  // Get sellerId for API
+  const sellerId = seller?.id || seller?.sellerId;
+  const token = (typeof window !== 'undefined') ? localStorage.getItem('token') || '' : '';
+  const { data: sellerProfile, isLoading } = useSellerProfile(sellerId, token);
+  // Use actual shop data with fallbacks, prefer API data if available
   const shopInfo = {
-    name: shop?.name || shop?.seller?.businessName || "Murenzi Construction Supply",
-    location: shop?.seller?.businessAddress || "KG 400 St, Kigali, Rwanda", // Use seller business address
+    logo: logo || seller?.logo || '',
+    name: name || sellerProfile?.businessName || seller?.businessName || 'Murenzi Construction Supply',
+    location: sellerProfile?.businessAddress || seller?.businessAddress || 'KG 400 St, Kigali, Rwanda',
+    productCount: productCount,
+    serviceCount: serviceCount,
     rating: 4.8, // Default rating (could be added to shop model later)
     reviews: 256, // Default reviews count (could be added to shop model later)
-    yearEstablished: shop?.createdAt ? new Date(shop.createdAt).getFullYear() : 2010,
-    certifications: ["ISO 9001:2015", "Green Building Certified", "Safety First Partner"],
-    responseTime: "24 hours",
-    deliveryTime: "1hr - 3days",
+    yearEstablished: createdAt ? new Date(createdAt).getFullYear() : 2010,
+    certifications: ['ISO 9001:2015', 'Green Building Certified', 'Safety First Partner'],
+    responseTime: '24 hours',
+    deliveryTime: '1hr - 3days',
     contact: {
-      phone: shop?.phone || shop?.seller?.businessPhone || shop?.seller?.phone || "+250 7888 507",
-      email: shop?.seller?.email || "sales@kvvltd.com", // Use seller email
-      website: "www.kvvltd.com" // Default website
-    }
+      phone: sellerProfile?.businessPhone || phone || seller?.businessPhone || seller?.phone || '+250 7888 507',
+      email: sellerProfile?.user?.email || seller?.email || 'sales@kvvltd.com',
+      website: 'www.kvvltd.com', // Default website
+    },
+    status: sellerProfile?.status,
+    taxId: sellerProfile?.taxId,
+    commissionRate: sellerProfile?.commissionRate,
+    payoutMethod: sellerProfile?.payoutMethod,
   };
 
   return (
@@ -40,7 +69,12 @@ export const ShopBanner: React.FC<ShopBannerProps> = ({ shop }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold mb-4">{shopInfo.name}</h1>
+              <div className='flex justify-center items-center gap-2'>
+                {shopInfo.logo && (
+                  <img src={shopInfo.logo} alt="Shop Logo" className="h-16 w-16 rounded-full mb-2" />
+                )}
+                <h1 className="text-4xl font-bold mb-4">{shopInfo.name}</h1>
+              </div>
               <div className="flex items-center space-x-4 mb-2">
                 <div className="flex items-center">
                   <Star className="h-5 w-5 text-yellow-400 fill-current" />
@@ -53,11 +87,25 @@ export const ShopBanner: React.FC<ShopBannerProps> = ({ shop }) => {
                   <span>{shopInfo.location}</span>
                 </div>
               </div>
+              <div className="flex gap-4 mb-2">
+                <div>Products: <span className="font-bold">{shopInfo.productCount}</span></div>
+                <div>Services: <span className="font-bold">{shopInfo.serviceCount}</span></div>
+              </div>
+              {/* Display extra seller info from API */}
+              {sellerProfile && (
+                <div className="mb-2 text-yellow-100 text-sm">
+                  <div>Status: <span className="font-bold">{shopInfo.status}</span></div>
+                  <div>Tax ID: <span className="font-bold">{shopInfo.taxId}</span></div>
+                  <div>Commission Rate: <span className="font-bold">{shopInfo.commissionRate ?? 'N/A'}</span></div>
+                  <div>Payout Method: <span className="font-bold">{shopInfo.payoutMethod ?? 'N/A'}</span></div>
+                  <div>Contact Email: <span className="font-bold">{shopInfo.contact.email}</span></div>
+                </div>
+              )}
               <div className="flex space-x-4 mt-6">
                 <button className="bg-white text-yellow-600 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-50 transition-colors">
                   Contact Supplier
                 </button>
-                <a href="#catalogue"className="border border-white text-white px-6 py-2 rounded-lg font-semibold hover:bg-white/10 transition-colors">
+                <a href="#catalogue" className="border border-white text-white px-6 py-2 rounded-lg font-semibold hover:bg-white/10 transition-colors">
                   View Catalog
                 </a>
               </div>
@@ -85,4 +133,4 @@ export const ShopBanner: React.FC<ShopBannerProps> = ({ shop }) => {
       </div>
     </>
   );
-};
+}

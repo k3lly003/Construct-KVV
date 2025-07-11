@@ -11,7 +11,7 @@ export const mapShopToProfile = (shop: Shop): Profile => {
   const rating = Math.floor(Math.random() * 10) / 10 + 4.0;
 
   // Generate a random number of photos for demo purposes
-  const photosCount = Math.floor(Math.random() * 20) + 1;
+  // const photosCount = Math.floor(Math.random() * 20) + 1;
 
   // Map shop category to a construction category
   const getCategory = (shopName: string): string => {
@@ -64,7 +64,6 @@ export const mapShopToProfile = (shop: Shop): Profile => {
     name: shop.name,
     title: shop.description || `Professional ${category} services`,
     rating: parseFloat(rating.toFixed(1)),
-    pictures: photosCount.toString(),
     since: establishedYear,
     imageSrc: '/store-img.jpg', // Use default image for now since logo might be File object
     category,
