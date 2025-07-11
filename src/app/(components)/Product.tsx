@@ -68,7 +68,7 @@ export const Products: React.FC = () => {
           ) : (
             <div className="flex flex-wrap px-4 gap-7 justify-center lg:flex lg:justify-start">
               {filteredProducts.map((product) => (
-                <div
+                <><div
                   key={product.id}
                   className="bg-white overflow-hidden w-64 m-2 hover:shadow-lg cursor-pointer hover:rounded-xl transition-shadow"
                   onClick={() => router.push(`/product/${product.id}`)}
@@ -80,8 +80,7 @@ export const Products: React.FC = () => {
                         alt={product.name}
                         width={100}
                         height={100}
-                        className="w-full h-56 object-cover rounded-xl"
-                      />
+                        className="w-full h-56 object-cover rounded-xl" />
                     ) : (
                       <div className="w-full h-56 flex items-center justify-center bg-gray-100 rounded-xl text-gray-400">
                         No Image
@@ -114,16 +113,11 @@ export const Products: React.FC = () => {
                       bgCol={"white"}
                       textCol={"text-gray-800"}
                       border={"border-1"}
-                      handleButton={() =>
-                        alert(`Add to Cart clicked for ${product.name}`)
-                      }
+                      handleButton={() => alert(`Add to Cart clicked for ${product.name}`)}
                       padding={"p-3"}
-                      round={"rounded-full"}
-                    />
+                      round={"rounded-full"} />
                   </div>
-                </div>
-
-                <ProductCard key={product.id} product={product} />
+                </div><ProductCard key={product.id} product={product} /></>
 
               ))}
             </div>

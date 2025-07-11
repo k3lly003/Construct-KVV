@@ -156,19 +156,15 @@ export const productService = {
     }
   },
 
-  async getProductReviews(productId: string, page = 1, limit = 10): Promise<any[]> {
+  async getProductReviews(productId: string, page = 1, limit = 10): Promise<Product[]> {
     try {
       const response = await axios.get(`${API_URL}/api/v1/reviews/product/${productId}?page=${page}&limit=${limit}`);
       const data = response.data as any;
       return (data.data?.reviews || []);
     } catch (error) {
       console.error('Error fetching reviews for product:', error);
-      
-  /**
-   * Get all products for a specific shop
-   * @param shopId - Shop ID
-   * @returns Product[]
-   */
+    } 
+  },
   async getProductsByShopId(shopId: string): Promise<Product[]> {
     try {
       const response = await axios.get<{ data: Product[] }>(`${API_URL}/api/v1/products?shopId=${shopId}`);
@@ -177,5 +173,5 @@ export const productService = {
       console.error('Error fetching products by shop ID:', error);
       throw error instanceof Error ? error : new Error(String(error));
     }
-  }
-}; 
+   }
+}
