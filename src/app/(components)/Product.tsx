@@ -86,7 +86,7 @@ export const Products: React.FC = () => {
                         No Image
                       </div>
                     )}
-                    <div className="absolute top-2 right-2 border rounded-full p-3 flex items-center justify-center cursor-pointer shadow-sm hover:bg-yellow-400 hover:border-yellow-400 transition-colors">
+                    <div className="absolute top-2 right-2 border text-gray-100 rounded-full p-3 flex items-center justify-center cursor-pointer shadow-sm hover:bg-yellow-400 hover:border-yellow-400 transition-colors">
                       <Heart className="text-gray-100" />
                     </div>
                   </div>

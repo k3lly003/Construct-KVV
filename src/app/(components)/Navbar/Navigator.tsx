@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ChevronDown, ChevronUp, ShoppingCart } from "lucide-react";
+import { ChevronDown, ChevronUp, ShoppingCart, Menu, X } from "lucide-react";
 import Link from "next/link";
 import FlagToggle from "@/app/(components)/Navbar/ToggleFlag";
 import { motion, AnimatePresence } from "framer-motion";
@@ -21,6 +21,8 @@ const Navbar: React.FC = () => {
   const [isClient, setIsClient] = useState(false); // New state to track if on client
   const [localUserData, setLocalUserData] = useState<unknown>(null);
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileFeaturesOpen, setMobileFeaturesOpen] = useState(false);
 
   // Get user data from Zustand store
   const { role: userRole, name: userName, email: userEmail } = useUserStore();
@@ -109,7 +111,7 @@ const Navbar: React.FC = () => {
   return (
     <nav className="bg-white border-b border-gray-200 px-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
-        <div className="flex justify-between h-16">
+        <div className="flex justify-between h-16 items-center">
           <div className="flex items-center">
             {/* Logo */}
             <Link href="/">
@@ -118,8 +120,7 @@ const Navbar: React.FC = () => {
                 <span className="ml-2 text-xl text-amber-500 font-semibold">kvv</span>
               </div>
             </Link>
-
-            {/* Main navigation */}
+            {/* Main navigation (desktop only) */}
             <div className="hidden md:ml-6 md:flex md:space-x-8">
               <div className="relative nav-menu">
                 <button
@@ -176,14 +177,12 @@ const Navbar: React.FC = () => {
               >
                 Build your house
               </Link>
-
               <Link
                 href="/projects"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
               >
                 Projects
               </Link>
-
               <Link
                 href="/shops"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
@@ -193,56 +192,192 @@ const Navbar: React.FC = () => {
             </div>
           </div>
 
-          {/* Right side buttons */}
+          {/* Right side buttons (desktop only) and hamburger (mobile only) */}
           <div className="flex items-center space-x-5">
-            <Link
-              href="/help"
-              className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
-            >
-              <p>Help</p>
-
-            </Link>
-             {/* Notification Icon (client only) */}
-             {isClient && (
-              <NotificationIcon
-                count={getUnreadCount()}
-                onClick={handleNotificationClick}
-                className="text-amber-600 hover:text-amber-700"
-              />
-            )}
-
-            <Link
-              href="/cart"
-              className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
-            >
-              <ShoppingCart />
-            </Link>
-            {/* Conditionally render based on isClient and localUserData */}
-            {isClient && (
-              localUserData ? (
-                userRole === "ADMIN" || userRole === "SELLER" ? (
-                  <Profile
-                    NK={""}
-                    userName={userName || ""}
-                    userEmail={userEmail || ""}
-                  />
+            {/* Desktop actions */}
+            <div className="hidden md:flex items-center space-x-5">
+              <Link
+                href="/help"
+                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
+              >
+                <p>Help</p>
+              </Link>
+              {/* Notification Icon (client only) */}
+              {isClient && (
+                <NotificationIcon
+                  count={getUnreadCount()}
+                  onClick={handleNotificationClick}
+                  className="text-amber-600 hover:text-amber-700"
+                />
+              )}
+              <Link
+                href="/cart"
+                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
+              >
+                <ShoppingCart />
+              </Link>
+              {/* Conditionally render based on isClient and localUserData */}
+              {isClient && (
+                localUserData ? (
+                  userRole === "ADMIN" || userRole === "SELLER" ? (
+                    <Profile
+                      NK={""}
+                      userName={userName || ""}
+                      userEmail={userEmail || ""}
+                    />
+                  ) : (
+                    <CustomerProfile/>
+                  )
                 ) : (
-                  <CustomerProfile/>
+                  <Link href="/signin" className="border-l-1">
+                    <p className="pl-5 px-4 py-2 hover:text-yellow-400 font-medium">
+                      Sign In
+                    </p>
+                  </Link>
                 )
-              ) : (
-                <Link href="/signin" className="border-l-1">
-                  <p className="pl-5 px-4 py-2 hover:text-yellow-400 font-medium">
-                    Sign In
-                  </p>
-                </Link>
-              )
-            )}
-            <FlagToggle />
+              )}
+              <FlagToggle />
+            </div>
+            {/* Hamburger for mobile */}
+            <button
+              className="md:hidden ml-2 p-2 rounded focus:outline-none focus:ring-2 focus:ring-amber-500"
+              aria-label="Open menu"
+              onClick={() => setMobileMenuOpen(true)}
+            >
+              <Menu className="h-7 w-7 text-amber-500" />
+            </button>
           </div>
+
+          {/* Hamburger mobile menu overlay */}
+          <AnimatePresence>
+            {mobileMenuOpen && (
+              <motion.div
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%" }}
+                transition={{ duration: 0.25 }}
+                className="fixed inset-0 z-50 bg-transparent bg-opacity-20 flex justify-end md:hidden"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <motion.div
+                  initial={{ x: "100%" }}
+                  animate={{ x: 0 }}
+                  exit={{ x: "100%" }}
+                  transition={{ duration: 0.25 }}
+                  className="w-72 h-full bg-white shadow-xl p-6 flex flex-col gap-6 relative"
+                  onClick={e => e.stopPropagation()}
+                >
+                  <button
+                    className="absolute top-4 right-4 p-2 rounded focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    aria-label="Close menu"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <X className="h-6 w-6 text-amber-500" />
+                  </button>
+                  {/* Logo */}
+                  <Link href="/" onClick={() => setMobileMenuOpen(false)}>
+                    <div className="flex items-center mb-4">
+                      <Image src="/kvv-logo.png" alt="KVV Pro" width={36} height={36} />
+                      <span className="ml-2 text-lg text-amber-500 font-semibold">kvv</span>
+                    </div>
+                  </Link>
+                  {/* Features collapsible for mobile */}
+                  <div className="border-b">
+                    <button
+                      className="w-full flex items-center justify-between py-2 text-gray-900 hover:text-amber-500 focus:outline-none"
+                      onClick={() => setMobileFeaturesOpen((prev) => !prev)}
+                      aria-expanded={mobileFeaturesOpen}
+                      aria-controls="mobile-features-menu"
+                    >
+                      <span>Features</span>
+                      {mobileFeaturesOpen ? (
+                        <ChevronUp className="h-4 w-4 ml-2" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4 ml-2" />
+                      )}
+                    </button>
+                    {mobileFeaturesOpen && (
+                      <div id="mobile-features-menu" className="pl-4 py-2 space-y-2">
+                        {featuresSections.map(section => (
+                          <div key={section.title}>
+                            <Link href={`/${section.title}`} className="block text-sm font-semibold text-gray-900 py-1 hover:text-amber-500" onClick={() => setMobileMenuOpen(false)}>{section.title}</Link>
+                            {section.items.map(item => (
+                              <div key={item.name}>
+                                {item.subItems && item.subItems.length > 0 && (
+                                  <ul className="ml-3 border-l border-gray-200 pl-2 mt-1 space-y-1">
+                                    {item.subItems.map(sub => (
+                                      <li key={sub.name}>
+                                        <Link href={sub.href || '#'} className="block text-sm text-gray-600 hover:text-amber-500 py-1" onClick={() => setMobileMenuOpen(false)}>
+                                          {sub.name}
+                                        </Link>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <Link href="/build-house" className="py-2 text-gray-900 hover:text-amber-500 border-b" onClick={() => setMobileMenuOpen(false)}>
+                    Build your house
+                  </Link>
+                  <Link href="/projects" className="py-2 text-gray-900 hover:text-amber-500 border-b" onClick={() => setMobileMenuOpen(false)}>
+                    Projects
+                  </Link>
+                  <Link href="/shops" className="py-2 text-gray-900 hover:text-amber-500 border-b" onClick={() => setMobileMenuOpen(false)}>
+                    Shops
+                  </Link>
+                  <Link href="/help" className="py-2 text-gray-900 hover:text-amber-500 border-b" onClick={() => setMobileMenuOpen(false)}>
+                    Help
+                  </Link>
+                  <Link href="/cart" className="py-2 text-gray-900 hover:text-amber-500 border-b flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
+                    <ShoppingCart className="h-5 w-5" /> Cart
+                  </Link>
+                  {/* Notification Icon (client only) */}
+                  {isClient && (
+                    <div className="py-2 border-b">
+                      <NotificationIcon
+                        count={getUnreadCount()}
+                        onClick={() => {
+                          handleNotificationClick();
+                          setMobileMenuOpen(false);
+                        }}
+                        className="text-amber-600 hover:text-amber-700"
+                      />
+                    </div>
+                  )}
+                  {/* Auth/Profile */}
+                  {isClient && (
+                    localUserData ? (
+                      userRole === "ADMIN" || userRole === "SELLER" ? (
+                        <Profile
+                          NK={""}
+                          userName={userName || ""}
+                          userEmail={userEmail || ""}
+                        />
+                      ) : (
+                        <CustomerProfile/>
+                      )
+                    ) : (
+                      <Link href="/signin" className="py-2 text-gray-900 hover:text-amber-500 border-b" onClick={() => setMobileMenuOpen(false)}>
+                        Sign In
+                      </Link>
+                    )
+                  )}
+                  <div className="py-2">
+                    <FlagToggle />
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
-       {/* Notification Modal (client only) */}
-       {isClient && (
+      {/* Notification Modal (client only) */}
+      {isClient && (
         <NotificationModal
           isOpen={isNotificationModalOpen}
           onClose={handleNotificationClose}
