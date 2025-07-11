@@ -9,6 +9,7 @@ import { ProductFilters } from "@/app/(components)/product/ProductFilters";
 import { productService } from "@/app/services/productServices";
 import { Product } from "@/types/product";
 import { useRouter } from "next/navigation";
+import ProductCard from "@/app/(components)/ProductCard";
 
 export const Products: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -121,6 +122,9 @@ export const Products: React.FC = () => {
                     />
                   </div>
                 </div>
+
+                <ProductCard key={product.id} product={product} />
+
               ))}
             </div>
           )}

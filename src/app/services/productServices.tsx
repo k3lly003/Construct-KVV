@@ -68,9 +68,9 @@ export const productService = {
 
   async getProductById(id: string): Promise<Product> {
     try {
-      const response = await axios.get<{ success: boolean; data: Product }>(`${API_URL}/api/v1/products/${id}`);
-      // Unwrap product from response.data.data
-      return response.data.data;
+      const response = await axios.get(`${API_URL}/api/v1/products/${id}`);
+      return (response.data as any).data as Product;
+
     } catch (error: unknown) {
       console.error('Error fetching product by id:', error);
       throw error instanceof Error ? error : new Error(String(error));
@@ -129,6 +129,41 @@ export const productService = {
     }
   },
 
+
+  async getPaidOrdersForUser(page = 1, limit = 10, authToken?: string): Promise<any[]> {
+    try {
+      const response = await axios.get(
+        `${API_URL}/api/v1/orders/user/orders?page=${page}&limit=${limit}&status=PAID&sort=createdAt&order=desc`,
+        authToken ? { headers: { Authorization: `Bearer ${authToken}` } } : undefined
+      );
+      // The orders may be in response.data.data.orders or response.data.orders
+      const data = response.data as any;
+      return (data.data?.orders || data.orders || []);
+    } catch (error) {
+      console.error('Error fetching paid orders for user:', error);
+      throw error instanceof Error ? error : new Error(String(error));
+    }
+  },
+
+  async getProductsByCategorySlug(categorySlug: string, page = 1, limit = 10): Promise<Product[]> {
+    try {
+      const response = await axios.get(`${API_URL}/api/v1/products/category/${categorySlug}?page=${page}&limit=${limit}`);
+      const data = response.data as any;
+      return (data.data || []);
+    } catch (error) {
+      console.error('Error fetching products by category slug:', error);
+      throw error instanceof Error ? error : new Error(String(error));
+    }
+  },
+
+  async getProductReviews(productId: string, page = 1, limit = 10): Promise<any[]> {
+    try {
+      const response = await axios.get(`${API_URL}/api/v1/reviews/product/${productId}?page=${page}&limit=${limit}`);
+      const data = response.data as any;
+      return (data.data?.reviews || []);
+    } catch (error) {
+      console.error('Error fetching reviews for product:', error);
+      
   /**
    * Get all products for a specific shop
    * @param shopId - Shop ID

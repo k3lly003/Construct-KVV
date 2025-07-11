@@ -10,10 +10,12 @@ interface Product {
   id: string;
   name: string;
   price: number;
+  discountedPrice?: number;
   description: string;
-  details: string[];
-  rating: number;
-  reviewCount: number;
+  attributes?: Record<string, string>;
+  details?: string[];
+  rating?: number;
+  reviewCount?: number;
 }
 
 interface ProductInfoProps {
@@ -52,31 +54,44 @@ const ProductInfo = ({
     toast("Share link copied to clipboard");
   };
 
+  // Fallback for details: use attributes if details not present
+  const details = product.details || (product.attributes ? Object.entries(product.attributes).map(([k, v]) => `${k}: ${v}`) : []);
+
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold tracking-tight mt-1">{product.name}</h1>
-        
         {/* Rating */}
-        <div className="flex items-center gap-2 mt-3">
-          <div className="flex">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                size={16}
-                className={i < Math.floor(product.rating) ? "fill-chart-4 text-chart-4" : "text-muted"}
-              />
-            ))}
+        {(product.rating !== undefined && product.reviewCount !== undefined) && (
+          <div className="flex items-center gap-2 mt-3">
+            <div className="flex">
+              {[...Array(5)].map((_, i) => (
+                <Star
+                  key={i}
+                  size={16}
+                  className={i < Math.floor(product.rating || 0) ? "fill-chart-4 text-chart-4" : "text-muted"}
+                />
+              ))}
+            </div>
+            <span className="text-sm text-muted-foreground">
+              {product.rating} ({product.reviewCount} reviews)
+            </span>
           </div>
-          <span className="text-sm text-muted-foreground">
-            {product.rating} ({product.reviewCount} reviews)
-          </span>
-        </div>
-        
+        )}
         {/* Price */}
-        <p className="text-2xl font-semibold mt-4">{product.price} Rfw</p>
+        <div className="flex items-center gap-3 mt-4">
+          <p className="text-2xl font-semibold">
+            {product.discountedPrice ? (
+              <>
+                <span className="line-through text-gray-400 mr-2">{product.price} Rfw</span>
+                <span>{product.discountedPrice} Rfw</span>
+              </>
+            ) : (
+              <>{product.price} Rfw</>
+            )}
+          </p>
+        </div>
       </div>
-      
       {/* Quantity and Add to Cart */}
       <div className="flex gap-4 items-center">
         <div className="flex items-center border rounded-md">
@@ -99,7 +114,6 @@ const ProductInfo = ({
             <Plus size={16} />
           </GenericButton>
         </div>
-        
         <GenericButton 
           className="flex-1 h-10 gap-2"
           onClick={addToCart}
@@ -107,7 +121,6 @@ const ProductInfo = ({
           <ShoppingCart size={16} />
           Add to Cart
         </GenericButton>
-        
         <GenericButton
           variant="outline"
           size="sm"
@@ -120,7 +133,6 @@ const ProductInfo = ({
             className={isWishlisted ? "fill-destructive text-destructive" : ""}
           />
         </GenericButton>
-        
         <GenericButton
           variant="outline"
           size="sm"
@@ -131,7 +143,6 @@ const ProductInfo = ({
           <Share2 size={18} />
         </GenericButton>
       </div>
-      
       {/* Product information tabs */}
       <Tabs defaultValue="description" className="mt-8">
         <TabsList className="w-full grid grid-cols-3">
@@ -144,9 +155,9 @@ const ProductInfo = ({
         </TabsContent>
         <TabsContent value="details" className="mt-4">
           <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
-            {product.details.map((detail, index) => (
+            {details.length > 0 ? details.map((detail, index) => (
               <li key={index}>{detail}</li>
-            ))}
+            )) : <li>No details available.</li>}
           </ul>
         </TabsContent>
         <TabsContent value="shipping" className="mt-4">
