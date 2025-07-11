@@ -1,10 +1,10 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { getUserDataFromLocalStorage } from "../utils/middlewares/UserCredentions";
-import { StatCard } from "./(components)/overview/stat-card";
-import { TopCountries } from "./(components)/overview/top-countries";
-import { TopCustomers } from "./(components)/overview/top-customers";
+import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
+import { StatCard } from "../(components)/overview/stat-card";
+import { TopCountries } from "../(components)/overview/top-countries";
+import { TopCustomers } from "../(components)/overview/top-customers";
 import {
   Table,
   TableHeader,
@@ -17,7 +17,7 @@ import { useProducts } from "@/app/hooks/useProduct";
 import { Input } from "@/components/ui/input";
 import { useCategories } from "@/app/hooks/useCategories";
 import axios from 'axios';
-import { analyticsService } from '../services/analyticsService';
+import { analyticsService } from '@/app/services/analyticsService';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend
 } from 'recharts';

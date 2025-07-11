@@ -63,7 +63,6 @@ const Navbar: React.FC = () => {
       markAllAsRead();
     };
   const parentCategories = categories.filter(cat => !cat.parentId);
-  console.log("--------------",parentCategories);
   const subCategoriesMap = categories
     .filter(cat => typeof cat.parentId === "string" && cat.parentId)
     .reduce((acc, sub) => {
@@ -71,7 +70,6 @@ const Navbar: React.FC = () => {
       acc[sub.parentId!].push(sub);
       return acc;
     }, {} as Record<string, typeof categories>);
-    console.log("++++++++++++",subCategoriesMap)
 
   const featuresSections = parentCategories.map(parent => ({
     title: parent.name,

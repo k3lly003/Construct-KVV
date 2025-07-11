@@ -120,19 +120,19 @@ const Navbar: React.FC = () => {
         </div>
       )}
       {/* RIGHT SIDE */}
-      <div className="flex justify-between items-center gap-5">
-        <div className="md:flex justify-between items-center gap-5">
+      <div className='flex justify-end gap-5 w-full'>
+        <div className='flex justify-between items-center text-right gap-5'>
           <div>
             <ModeToggle />
           </div>
-          <div className="relative hidden md:flex">
+          <div className='relative md:flex border p-2 rounded-lg focus:outline-none'>
             <Bell
               className="cursor-pointer text-gray-500"
               size={24}
               onClick={() => setIsNotificationOpen(true)}
             />
             {getUnreadCount() > 0 && (
-              <span className="absolute top-2 right-2 inline-flex items-center justify-center px-[0.4rem] py-1 text-xs font-semibold leading-none text-amber-100 bg-amber-400 rounded-full">
+              <span className='absolute top-2 right-2 inline-flex items-center justify-center px-[0.4rem] py-1 text-xs font-semibold leading-none text-red-100 bg-amber-500 rounded-full'>
                 {getUnreadCount()}
               </span>
             )}

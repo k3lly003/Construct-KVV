@@ -92,7 +92,7 @@ const Page = () => {
       <div className="min-h-screen bg-black flex justify-center items-center">
         <div className="z-20 bg-black shadow-2xl rounded-sx overflow-hidden flex w-full max-w-5xl">
           {/* Left Side: Sign Up Form */}
-          <div className="p-8 w-1/2">
+          <div className="p-8 mx-10  w-full md:mx-0 md:w-1/2 ">
             <div className="text-amber-800 flex gap-5 items-center mb-8">
               <ArrowLeft />
               <Link href="/" className="text-2xl font-semibold">
@@ -220,7 +220,7 @@ const Page = () => {
           </div>
 
           {/* Right Side: Construction Image */}
-          <div className="w-1/2 relative">
+          <div className="w-1/2 relative hidden md:flex">
             <Image
               src="/architect.jpg"
               alt="Construction"

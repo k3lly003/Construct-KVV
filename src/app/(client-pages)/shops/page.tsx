@@ -1,14 +1,14 @@
 "use client"
 
 import type { NextPage } from 'next';
-import ProfileCard from '@/app/(components)/supplier/SupplierCard';
+import ShopCard from '@/app/(components)/supplier/SupplierCard';
 import { useState, useMemo, useEffect } from 'react';
 import CategoryServicesFilter from '@/app/(components)/sections/CategoriesServicesFilter';
 import DefaultPageBanner from '@/app/(components)/DefaultPageBanner';
 import { mapShopToProfile } from '@/app/utils/mappers/shopMapper';
 import { ShopService } from '@/app/services/shopServices';
 import { Shop } from '@/types/shop';
-import { Skeleton } from '@/components/ui/skeleton';
+import { ShopSkeleton } from '@/app/utils/skeleton/Shop';
 
 const Page: NextPage = () => {
   const [shops, setShops] = useState<Shop[]>([]);
@@ -16,6 +16,7 @@ const Page: NextPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [serviceRange, setServiceRange] = useState<[number, number]>([0, 100000]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Fetch all shops using shopService
   const fetchShops = async () => {
@@ -35,15 +36,15 @@ const Page: NextPage = () => {
   };
 
   // Function to fetch a specific shop by ID (for future use)
-  const fetchShopById = async (id: string) => {
-    try {
-      const shop = await ShopService.getShopById(id);
-      return shop;
-    } catch (err) {
-      console.error('Error fetching shop by ID:', err);
-      throw err;
-    }
-  };
+  // const fetchShopById = async (id: string) => {
+  //   try {
+  //     const shop = await ShopService.getShopById(id);
+  //     return shop;
+  //   } catch (err) {
+  //     console.error('Error fetching shop by ID:', err);
+  //     throw err;
+  //   }
+  // };
 
   useEffect(() => {
     fetchShops();
@@ -61,10 +62,19 @@ const Page: NextPage = () => {
   const filteredProfiles = useMemo(() => {
     let results = profiles;
 
+    // Search filter
+    if (searchTerm.trim()) {
+      results = results.filter(profile =>
+        profile.name?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Category filter
     if (selectedCategories.length > 0) {
       results = results.filter((profile) => selectedCategories.includes(profile.category));
     }
 
+    // Service range filter
     results = results.filter(
       (profile) =>
         typeof profile.serviceCost === 'number' &&
@@ -73,7 +83,7 @@ const Page: NextPage = () => {
     );
 
     return results;
-  }, [profiles, selectedCategories, serviceRange]);
+  }, [profiles, searchTerm, selectedCategories, serviceRange]);
 
   // Get all available categories from the profiles
   const allCategories = useMemo(() => {
@@ -122,57 +132,29 @@ const Page: NextPage = () => {
     );
   }
 
-  if (loading) {
-    return (
-      <div>
-        {/* Banner Skeleton */}
-        <Skeleton className="w-full h-48 mb-8" />
-        <div className="flex max-w-7xl mx-auto px-4 sm:px-6 lg:px-2 py-12">
-          {/* Contact Info Skeleton */}
-          <div className="w-[35%] mr-8">
-            <Skeleton className="h-64 w-full mb-4" />
-            <Skeleton className="h-32 w-full" />
-          </div>
-          {/* Products Skeleton */}
-          <div className="flex-1 flex flex-col gap-4">
-            <Skeleton className="h-10 w-1/2 mb-4" />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {[...Array(6)].map((_, i) => (
-                <Skeleton key={i} className="h-64 w-full" />
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
       <DefaultPageBanner backgroundImage='/building.jpg' title='Available Shops'/>
       <section className="container max-w-7xl mx-auto py-10 flex">
-        <div className="sticky top-4 w-1/4 pr-5">
-          <h2 className="text-xl font-semibold mb-4">Filter</h2>
-          <CategoryServicesFilter
-            categories={allCategories}
-            selectedCategories={selectedCategories}
-            onCategoryChange={handleCategoryChange}
-            minServiceCost={minServiceCost}
-            maxServiceCost={maxServiceCost}
-            currentServiceRange={serviceRange}
-            onServiceRangeChange={handleServiceRangeChange}
-          />
-        </div>
-        <div className="w-3/4">
+        <div className="w-full">
+          <div className="mb-6 flex justify-center p-4 mb-6 bg-white rounded-xl shadow-sm">
+            <input
+              type="text"
+              placeholder="Search shops..."
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              className="border border-gray-300 rounded-md px-4 py-2 w-full"
+            />
+          </div>
           {filteredProfiles.length === 0 ? (
             <div className="text-center py-10">
-              <h3 className="text-xl font-semibold text-gray-600 mb-2">No shops found</h3>
-              <p className="text-gray-500">Try adjusting your filters to see more results.</p>
+              <ShopSkeleton/>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {filteredProfiles.map((profile, index) => (
-                <ProfileCard key={index} {...profile} />
+                <ShopCard key={index} {...profile} />
               ))}
             </div>
           )}
