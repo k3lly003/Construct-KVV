@@ -38,9 +38,12 @@ interface ExtendedShop extends Shop {
   productCount?: number;
   status: 'active' | 'inactive' | 'pending';
   createdAt: string;
-  location?: string;
+  location?: string; // optional, may not be present
   rating?: number;
   totalSales?: number;
+  averageRating?: number;
+  totalOrders?: number;
+  sellerId?: string;
 }
 
 interface ShopStats {
@@ -85,14 +88,18 @@ const Page = () => {
           sellerName: shopData.seller?.businessName || '',
           status: shopData.isActive ? 'active' : 'inactive',
           createdAt: shopData.createdAt || new Date().toISOString(),
+          phone: shopData.phone || '',
+          location: shopData.location || '', // only if present
+          description: shopData.description || '',
+          sellerId: shopData.seller?.id || shopData.sellerId,
         });
         // Fetch products for this sellerId
-        let sellerId = shopData.seller?.sellerId || shopData.seller?.id;
+        const sellerId = shopData.seller?.id || shopData.sellerId;
         let fetchedProducts: any[] = [];
         if (sellerId) {
           setProductsLoading(true);
           try {
-            const { products } = await ShopService.getProductsBySellerId(sellerId, 1, 10, authToken);
+            const { products } = await ShopService.getProductsBySellerId(sellerId, 1, 100, authToken);
             setProducts(products);
             fetchedProducts = products;
           } catch (err) {
@@ -106,10 +113,13 @@ const Page = () => {
           setProducts([]);
           fetchedProducts = [];
         }
-        setStats((prev) => ({
-          ...prev,
+        // Set stats from real data
+        setStats({
           totalProducts: fetchedProducts.length,
-        }));
+          totalSales: 0, // default to 0 unless API provides
+          averageRating: 0, // default to 0 unless API provides
+          totalOrders: 0, // default to 0 unless API provides
+        });
       } catch (error) {
         console.error('Failed to fetch shop details:', error);
         toast.error('Failed to fetch shop details');
@@ -296,7 +306,7 @@ const Page = () => {
                   <User className="w-4 h-4 text-gray-500" />
                   <div>
                     <p className="text-sm font-medium">Seller</p>
-                    <p className="text-sm text-gray-600">{shop.seller?.businessName || ''}</p>
+                    <p className="text-sm text-gray-600">{shop.seller?.businessName || shop.sellerName || ''}</p>
                   </div>
                 </div>
 

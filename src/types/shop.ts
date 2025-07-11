@@ -14,6 +14,8 @@ export interface Shop {
     seller?: Seller;
     // Add other properties as needed
   };
+  location?: string;
+  sellerId?: string;
 }
 
 

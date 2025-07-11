@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { UsersService } from "@/app/services/usersService";
+import { UsersService } from "@/app/services/usersServices";
 import { User } from "@/types/user";
 import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";

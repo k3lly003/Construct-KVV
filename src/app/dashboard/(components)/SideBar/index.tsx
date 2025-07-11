@@ -15,8 +15,8 @@ import {
   TableProperties,
   Package,
   User, // New icon for Profile
-  DollarSign,
-  Layers
+  Layers,
+  DollarSign, // New icon for Sales Report
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -151,13 +151,19 @@ const SideBar = () => {
           <SidebarLink
             href="/dashboard"
             icon={LayoutDashboard}
-            label="Overview"
+            label="Dashboard"
             isCollapsed={isSidebarCollapsed}
           />
 
           {/* Role-specific links */}
           {userRole === "ADMIN" && (
             <>
+              <SidebarLink
+            href="/dashboard"
+            icon={LayoutDashboard}
+            label="Overview"
+            isCollapsed={isSidebarCollapsed}
+          />
               <SidebarLink
                 href="/dashboard/shops"
                 icon={Store}
