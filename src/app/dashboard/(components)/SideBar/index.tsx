@@ -15,8 +15,8 @@ import {
   TableProperties,
   Package,
   User, // New icon for Profile
-  DollarSign,
   Layers,
+  DollarSign, // New icon for Sales Report
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
