@@ -1,7 +1,6 @@
 "use client"
 
 import Reviews from '@/app/(components)/product/Reviews'
-import { ContactInfo } from '@/app/(components)/supplier/ContactInfo'
 import { ShopBanner } from '@/app/(components)/supplier/ShopBanner'
 import { ShopProducts } from '@/app/(components)/supplier/ShopProducts'
 import React, { useEffect, useState, use } from 'react'
@@ -26,9 +25,8 @@ const Page = ({ params }: PageProps) => {
       try {
         setLoading(true)
         setError(null)
-        console.log('Attempting to fetch shop with ID:', id)
+        console.log('Received shop prop:', shop);
         const shopData = await ShopService.getShopById(id)
-        console.log('Shop data received:', shopData)
         setShop(shopData)
       } catch (err) {
         console.error('Error fetching shop:', err)
@@ -92,9 +90,9 @@ const Page = ({ params }: PageProps) => {
   return (
     <>
       <ShopBanner shop={shop}/>
-      <div className='flex max-w-7xl mx-auto px-4 sm:px-6 lg:px-2 py-12'>
-       <ContactInfo shop={shop}/>
-       <div className='flex flex-col'>
+      <div className='flex flex-col max-w-7xl mx-auto px-4 sm:px-6 lg:px-2 py-12 md:flex-row'>
+       {/* <ContactInfo shop={shop}/> */}
+       <div className='flex flex-col w-[100%]'>
        <ShopProducts shopId={shop.id} shop={shop}/>
        <Reviews reviews={[]} shop={shop} />
       </div>

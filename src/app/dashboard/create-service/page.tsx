@@ -56,7 +56,7 @@ type CreateServiceFormInput = {
   description: string;
   availability: string;
   features: { value: string }[];
-  specifications: { key: string; value: string }[];
+  specifications: { value: string }[];
   provider: string;
   pricing: string;
   location: string;
@@ -81,7 +81,7 @@ const Page = () => {
       description: '',
       availability: '',
       features: [{ value: '' }],
-      specifications: [{ key: '', value: '' }],
+      specifications: [{ value: '' }],
       provider: '',
       pricing: '',
       location: '',
@@ -133,7 +133,7 @@ const Page = () => {
     // specifications: object { key: value, ... }
     const specsObj: Record<string, string> = {};
     data.specifications.forEach((spec) => {
-      if (spec.key && spec.value) specsObj[spec.key] = spec.value;
+      if (spec.value) specsObj[`spec-${Date.now()}`] = spec.value; // Assign a unique key
     });
     formData.append('specifications', JSON.stringify(specsObj));
     // provider, pricing, location, warranty: objects
@@ -332,20 +332,14 @@ const Page = () => {
                 <div key={item.id} className="flex gap-2 mb-2">
                   <FormControl>
                     <Input
-                      {...form.register(`specifications.${idx}.key` as const)}
-                      placeholder="Key (e.g., Product Length)"
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <Input
                       {...form.register(`specifications.${idx}.value` as const)}
-                      placeholder="Value (e.g., 47.8 in)"
+                      placeholder="e.g., 47.8 in"
                     />
                   </FormControl>
                   <GenericButton type="button" variant="outline" onClick={() => removeSpec(idx)} disabled={specFields.length === 1}>Remove</GenericButton>
                 </div>
               ))}
-              <GenericButton type="button" variant="secondary" onClick={() => appendSpec({ key: '', value: '' })}>Add Specification</GenericButton>
+              <GenericButton type="button" variant="secondary" onClick={() => appendSpec({ value: '' })}>Add Specification</GenericButton>
             </div>
             {/* Gallery image upload */}
             <ProductImageUpload
@@ -444,13 +438,17 @@ const Page = () => {
                       <MapPin className="w-4 h-4" />
                       {watchAllFields.location || 'Location'}
                     </div>
-                    <div className="flex items-center gap-1">
+                    {/* <div className="flex items-center gap-1">
                       <Truck className="w-4 h-4" />
                       25 miles radius
-                    </div>
+                    </div> */}
                     <div className="flex items-center gap-1">
                       <Clock className="w-4 h-4" />
                       {watchAllFields.availability || 'Availability'}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Shield className="w-4 h-4" />
+                      {watchAllFields.warranty || 'warranty'}
                     </div>
                   </div>
                 </div>
@@ -460,52 +458,27 @@ const Page = () => {
             <Card>
               <CardContent className="p-6">
                 <Tabs defaultValue="features" className="w-full">
-                  <TabsList className="grid w-full grid-cols-3 md:grid-cols-4">
+                  <TabsList className="flex justify-between w-full">
                     <TabsTrigger value="features">Features</TabsTrigger>
                     <TabsTrigger value="specifications">Specifications</TabsTrigger>
-                    <TabsTrigger value="warranty">Warranty</TabsTrigger>
                   </TabsList>
                   <TabsContent value="features" className="mt-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="w-full border">
                       {watchAllFields.features?.filter(f => f.value).map((feature, index) => (
-                        <div key={index} className="flex items-center gap-2">
+                        <div key={index} className="flex items-center py-2">
                           <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-                          <span className="text-sm">{feature.value}</span>
+                          <span className="text-sm break-words">{feature.value}</span>
                         </div>
                       ))}
                     </div>
                   </TabsContent>
                   <TabsContent value="specifications" className="mt-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {watchAllFields.specifications?.filter(s => s.key && s.value).map((spec, idx) => (
-                        <div key={idx} className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-sm font-medium text-gray-600">{spec.key}</span>
-                          <span className="text-sm text-gray-900">{spec.value}</span>
+                    <div className="w-full border">
+                      {watchAllFields.specifications?.filter(spec => typeof spec?.value === 'string' && spec.value.trim()).map((spec, idx) => (
+                        <div key={idx} className="py-2 border-b border-gray-100 w-full">
+                          <span className="text-sm text-gray-900 break-words">{spec.value}</span>
                         </div>
                       ))}
-                    </div>
-                  </TabsContent>
-                  <TabsContent value="warranty" className="mt-6">
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-2">
-                        <Shield className="w-5 h-5 text-blue-600" />
-                        <span className="font-semibold">{watchAllFields.warranty || 'Warranty'}</span>
-                      </div>
-                      <div className="space-y-2">
-                        <h4 className="font-medium">Coverage includes:</h4>
-                        <div className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-600" />
-                          <span className="text-sm">Manufacturing defects</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-600" />
-                          <span className="text-sm">Wear and tear protection</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-600" />
-                          <span className="text-sm">Water damage coverage</span>
-                        </div>
-                      </div>
                     </div>
                   </TabsContent>
                 </Tabs>

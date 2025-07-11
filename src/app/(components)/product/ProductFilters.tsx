@@ -29,11 +29,6 @@ export const ProductFilters: React.FC<FilteredProductsProps> = ({
   onSortByChange,
   availableCategories,
 }) => {
-  console.log('=== ProductFilters Component ===');
-  console.log('Received shop prop:', shop);
-  console.log('Shop name:', shop?.name);
-  console.log('Shop seller businessName:', shop?.seller?.businessName);
-  console.log('Search term:', searchTerm);
   
   const shopName = shop?.name || shop?.seller?.businessName || 'this shop';
   return (

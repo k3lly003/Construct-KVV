@@ -10,12 +10,6 @@ interface ReviewsProps {
 }
 
 const Reviews: React.FC<ReviewsProps> = ({ reviews, shop }) => {
-  console.log('=== Reviews Component ===');
-  console.log('Received shop prop:', shop);
-  console.log('Shop name:', shop?.name);
-  console.log('Shop seller businessName:', shop?.seller?.businessName);
-  console.log('Reviews array:', reviews);
-  
   const shopName = shop?.name || shop?.seller?.businessName || 'this shop';
   
   if (!reviews || reviews.length === 0) {

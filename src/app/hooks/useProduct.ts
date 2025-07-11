@@ -68,7 +68,6 @@ export const useProducts = () => {
   // Get products by seller id
   const getProductsBySellerId = useCallback(async (sellerId: string) => {
     if (!authToken) throw new Error("Not authenticated");
-    // console.log(pro);
     return productService.getProductsBySellerId(sellerId, authToken);
   }, [authToken]);
 
