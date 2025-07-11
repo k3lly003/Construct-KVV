@@ -16,13 +16,21 @@ export const productService = {
     }
   },
 
+  /**
+   * Create a new product (seller/admin)
+   * @param formData - FormData with:
+   *   - data: JSON string of product info
+   *   - imageData: JSON string array describing images
+   *   - image files: keys matching fileKey in imageData
+   * @param authToken - Bearer token
+   * @returns Product
+   */
   async createProduct(formData: FormData, authToken: string): Promise<Product> {
     try {
       // Debug: Log what's being sent
       console.log('=== PRODUCT SERVICE DEBUG ===');
       console.log('API URL:', `${API_URL}/api/v1/products`);
       console.log('Auth Token:', authToken ? 'Present' : 'Missing');
-      
       // Log FormData contents
       console.log('FormData contents:');
       for (let [key, value] of formData.entries()) {
@@ -32,14 +40,14 @@ export const productService = {
           console.log(`${key}:`, value);
         }
       }
-      
-      const response = await axios.post(`${API_URL}/api/v1/products`, formData, {
+      const response = await axios.post<{ success: boolean; data: Product }>(`${API_URL}/api/v1/products`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${authToken}`
         },
       });
-      return response.data as Product;
+      // Unwrap product from response.data.data
+      return response.data.data;
     } catch (error) {
       console.error('Error creating product:', error);
       if (
@@ -62,6 +70,7 @@ export const productService = {
     try {
       const response = await axios.get(`${API_URL}/api/v1/products/${id}`);
       return (response.data as any).data as Product;
+
     } catch (error: unknown) {
       console.error('Error fetching product by id:', error);
       throw error instanceof Error ? error : new Error(String(error));
@@ -120,6 +129,7 @@ export const productService = {
     }
   },
 
+
   async getPaidOrdersForUser(page = 1, limit = 10, authToken?: string): Promise<any[]> {
     try {
       const response = await axios.get(
@@ -153,6 +163,18 @@ export const productService = {
       return (data.data?.reviews || []);
     } catch (error) {
       console.error('Error fetching reviews for product:', error);
+      
+  /**
+   * Get all products for a specific shop
+   * @param shopId - Shop ID
+   * @returns Product[]
+   */
+  async getProductsByShopId(shopId: string): Promise<Product[]> {
+    try {
+      const response = await axios.get<{ data: Product[] }>(`${API_URL}/api/v1/products?shopId=${shopId}`);
+      return Array.isArray(response.data.data) ? response.data.data : [];
+    } catch (error: unknown) {
+      console.error('Error fetching products by shop ID:', error);
       throw error instanceof Error ? error : new Error(String(error));
     }
   }

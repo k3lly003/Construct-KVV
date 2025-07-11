@@ -108,18 +108,22 @@ const Page = () => {
       // Append product data as JSON string
       formData.append('data', JSON.stringify(productData));
 
-      // Build and append image metadata as JSON string
-      const imageData = currentImages.map((img, index) => ({
-        fileKey: img.file ? img.file.name : `image_${index}`,
-        alt: img.alt,
-        isDefault: img.isDefault,
-      }));
+      // Build and append image metadata as JSON string, using unique fileKeys
+      const imageData = currentImages.map((img, index) => {
+        const fileKey = `image${index + 1}`;
+        return {
+          fileKey,
+          alt: img.alt,
+          isDefault: img.isDefault,
+        };
+      });
       formData.append('imageData', JSON.stringify(imageData));
 
-      // Append each file as 'images'
-      currentImages.forEach(img => {
+      // Append each file with a unique key matching fileKey
+      currentImages.forEach((img, index) => {
         if (img.file) {
-          formData.append('images', img.file);
+          const fileKey = `image${index + 1}`;
+          formData.append(fileKey, img.file);
         }
       });
 
