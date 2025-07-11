@@ -11,8 +11,8 @@ const constructionImages = [
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-black text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <footer className="bg-black text-white w-full">
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Logo and Company Info */}
           <div className="space-y-8">
@@ -119,7 +119,7 @@ export const Footer: React.FC = () => {
 
       {/* Copyright Bar */}
       <div className="bg-yellow-400 py-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full">
           <p className="text-black text-center">
             Copyright ©2025 <a href="#" className="font-semibold hover:text-white transition-colors">KVVLtd</a>. All rights reserved.
           </p>

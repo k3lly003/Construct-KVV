@@ -30,9 +30,14 @@ export const SellerRequestService = {
   async getAllRequests(authToken?: string): Promise<SellerRequest[]> {
     const headers = authToken ? { Authorization: `Bearer ${authToken}` } : undefined;
     const response = await axios.get(`${API_URL}/api/v1/seller/requests`, { headers });
-    const data = response.data;
-    if (Array.isArray(data.data)) {
-      return data.data as SellerRequest[];
+    const data: unknown = response.data;
+    if (
+      typeof data === 'object' &&
+      data !== null &&
+      'data' in data &&
+      Array.isArray((data as { data: unknown }).data)
+    ) {
+      return (data as { data: SellerRequest[] }).data;
     } else {
       throw new Error('Unexpected response format when fetching seller requests');
     }
