@@ -15,8 +15,8 @@ import {
   TableProperties,
   Package,
   User, // New icon for Profile
-  DollarSign,
-  Layers
+  Layers,
+  DollarSign, // New icon for Sales Report
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -148,16 +148,15 @@ const SideBar = () => {
       <div className="flex-grow mt-8 flex flex-col">
         {/* DASHBOARD LINK (Common) */}
         <div className="mt-10">
-          <SidebarLink
-            href="/dashboard"
-            icon={LayoutDashboard}
-            label="Overview"
-            isCollapsed={isSidebarCollapsed}
-          />
-
           {/* Role-specific links */}
           {userRole === "ADMIN" && (
             <>
+              <SidebarLink
+                href="/dashboard"
+                icon={LayoutDashboard}
+                label="Overview"
+                isCollapsed={isSidebarCollapsed}
+              />
               <SidebarLink
                 href="/dashboard/shops"
                 icon={Store}
@@ -189,18 +188,24 @@ const SideBar = () => {
 
             <>
               <SidebarLink
+                href="/dashboard/overview"
+                icon={LayoutDashboard}
+                label="Overview"
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
 
                 href="/dashboard/products"
                 icon={Package}
                 label="Products"
                 isCollapsed={isSidebarCollapsed}
               />
-            <SidebarLink
-            href="/dashboard/projects"
-            icon={TableProperties}
-            label="Projects"
-            isCollapsed={isSidebarCollapsed}
-          />
+              <SidebarLink
+                href="/dashboard/projects"
+                icon={TableProperties}
+                label="Projects"
+                isCollapsed={isSidebarCollapsed}
+              />
               <SidebarLink
                 href="/dashboard/profile" // Assuming profile path for sellers
                 icon={User}

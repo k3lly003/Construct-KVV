@@ -15,7 +15,10 @@ interface ProductPageProps {
 }
 
 function ProductPage({ params }: ProductPageProps) {
-  const resolvedParams = use(params) as { id: string };
+
+  //@ts-ignore
+  const resolvedParams = React.use(params) as { id: string };
+
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -115,5 +118,4 @@ function ProductPage({ params }: ProductPageProps) {
     </div>
   );
 }
-
 export default ProductPage;
