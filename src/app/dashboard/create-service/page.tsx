@@ -49,6 +49,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createServiceSchema } from '@/utils/middlewares/Validation';
 import { ServiceCategorySelect } from '../products/create/CategorySelect';
 import { categoryService } from "@/app/services/categoryServices";
+import { serviceService } from '@/app/services/serviceServices';
+import { toast } from 'sonner';
 
 type CreateServiceFormInput = {
   title: string;
@@ -57,11 +59,20 @@ type CreateServiceFormInput = {
   availability: string;
   features: { value: string }[];
   specifications: { value: string }[];
-  provider: string;
-  pricing: string;
-  location: string;
-  warranty: string;
-  gallery: { url: string }[];
+  providerName: string;
+  providerAvatarFile: File | null;
+  providerRating?: string;
+  providerReviews?: string;
+  providerVerified?: boolean;
+  providerYearsExperience: string;
+  basePrice: string;
+  unit: string;
+  estimatedTotal: string;
+  city: string;
+  serviceRadius: string;
+  warrantyDuration: string;
+  warrantyCoverage: { value: string }[];
+  gallery: File[];
 };
 
 const defaultGallery = [
@@ -74,7 +85,6 @@ const Page = () => {
   const { myShop, isMyShopLoading } = useShop();
 
   const form = useForm<CreateServiceFormInput>({
-    resolver: zodResolver(createServiceSchema) as any,
     defaultValues: {
       title: '',
       category: '',
@@ -82,10 +92,19 @@ const Page = () => {
       availability: '',
       features: [{ value: '' }],
       specifications: [{ value: '' }],
-      provider: '',
-      pricing: '',
-      location: '',
-      warranty: '',
+      providerName: '',
+      providerAvatarFile: null,
+      providerRating: '',
+      providerReviews: '',
+      providerVerified: false,
+      providerYearsExperience: '',
+      basePrice: '',
+      unit: '',
+      estimatedTotal: '',
+      city: '',
+      serviceRadius: '',
+      warrantyDuration: '',
+      warrantyCoverage: [{ value: '' }],
       gallery: [],
     },
   });
@@ -99,59 +118,126 @@ const Page = () => {
     control: form.control,
     name: 'specifications',
   });
+  // Add field array for warrantyCoverage
+  const { fields: coverageFields, append: appendCoverage, remove: removeCoverage } = useFieldArray({
+    control: form.control,
+    name: 'warrantyCoverage',
+  });
 
-  const galleryImages = (form.watch('gallery') as { url: string }[]).map((img, idx) => ({
-    url: img.url,
+  // Gallery image preview logic
+  const galleryFiles = (form.watch('gallery') as File[]);
+  const galleryImages = galleryFiles.map((file, idx) => ({
+    url: URL.createObjectURL(file),
     alt: `Gallery image ${idx + 1}`,
-    isDefault: idx === 0, // first image as default, others false
+    isDefault: idx === 0,
   }));
+
   const handleAddGalleryImages = (files: FileList) => {
-    const newImages = Array.from(files).map((file, idx) => ({
-      url: URL.createObjectURL(file),
-      alt: `Gallery image ${galleryImages.length + idx + 1}`,
-      isDefault: false,
-    }));
-    form.setValue('gallery', [...form.watch('gallery'), ...newImages]);
+    const currentImages = form.watch('gallery') as File[];
+    if (currentImages.length >= 3) {
+      alert('You can only upload up to 3 images.');
+      return;
+    }
+    const filesToAdd = Array.from(files).slice(0, 3 - currentImages.length);
+    form.setValue('gallery', [...currentImages, ...filesToAdd]);
   };
   const handleRemoveGalleryImage = (idx: number) => {
-    form.setValue('gallery', galleryImages.filter((_, i) => i !== idx));
+    const currentImages = form.watch('gallery') as File[];
+    form.setValue('gallery', currentImages.filter((_, i) => i !== idx));
   };
 
   const onSubmit = async (data: CreateServiceFormInput) => {
-    if (!myShop?.id) {
-      alert("You must have a shop to create a service.");
-      return;
+    try {
+      if (!myShop?.id) {
+        toast.error("You must have a shop to create a service.");
+        return;
+      }
+      if (!data.availability) {
+        toast.error('Availability is required.');
+        return;
+      }
+      const authToken = typeof window !== 'undefined' ? localStorage.getItem('authToken') : undefined;
+      const formData = new FormData();
+      formData.append('title', data.title);
+      formData.append('category', data.category);
+      formData.append('description', data.description);
+      formData.append('availability', data.availability);
+      // Features as array (multiple fields)
+      const featuresArr = data.features.map(f => f.value).filter(Boolean);
+      if (featuresArr.length === 0) {
+        toast.error('At least one feature is required.');
+        return;
+      }
+      featuresArr.forEach(feature => formData.append('features', feature));
+      // Specifications as object
+      const specsObj: Record<string, string> = {};
+      data.specifications.forEach((spec) => {
+        const [key, value] = spec.value.split(':').map(s => s.trim());
+        if (key && value) specsObj[key] = value;
+      });
+      if (Object.keys(specsObj).length === 0) {
+        toast.error('At least one valid specification (key: value) is required.');
+        return;
+      }
+      formData.append('specifications', JSON.stringify(specsObj));
+      // Provider object (without avatar)
+      formData.append('provider', JSON.stringify({
+        name: data.providerName,
+        yearsExperience: Number(data.providerYearsExperience)
+      }));
+      // Pricing object
+      formData.append('pricing', JSON.stringify({
+        basePrice: Number(data.basePrice),
+        unit: data.unit,
+        estimatedTotal: data.estimatedTotal
+      }));
+      // Location object
+      formData.append('location', JSON.stringify({
+        city: data.city,
+        serviceRadius: data.serviceRadius
+      }));
+      // Warranty object
+      formData.append('warranty', JSON.stringify({
+        duration: data.warrantyDuration,
+        coverage: data.warrantyCoverage.map(c => c.value).filter(Boolean)
+      }));
+      // Gallery images
+      if (!data.gallery || data.gallery.length === 0) {
+        toast.error('At least one image is required.');
+        return;
+      }
+      data.gallery.forEach((file) => {
+        formData.append('gallery', file);
+      });
+      // Provider avatar image
+      if (data.providerAvatarFile) {
+        formData.append('avatar', data.providerAvatarFile);
+      }
+      formData.append('shopId', myShop.id);
+      // Log all FormData entries
+      for (let pair of formData.entries()) {
+        console.log('FormData:', pair[0], pair[1]);
+      }
+      await serviceService.createService(myShop.id, formData, authToken!);
+      toast.success('Service created successfully!');
+      form.reset();
+    } catch (error: any) {
+      let message = 'Failed to create service. Please try again.';
+      if (error?.response?.data?.message) {
+        message = error.response.data.message;
+      } else if (error?.message) {
+        message = error.message;
+      }
+      toast.error(message);
     }
-    // Build FormData for multipart/form-data
-    const formData = new FormData();
-    formData.append('title', data.title);
-    formData.append('category', data.category);
-    formData.append('description', data.description);
-    formData.append('availability', data.availability);
-    // features: array of strings
-    formData.append('features', JSON.stringify(data.features.map(f => f.value)));
-    // specifications: object { key: value, ... }
-    const specsObj: Record<string, string> = {};
-    data.specifications.forEach((spec) => {
-      if (spec.value) specsObj[`spec-${Date.now()}`] = spec.value; // Assign a unique key
-    });
-    formData.append('specifications', JSON.stringify(specsObj));
-    // provider, pricing, location, warranty: objects
-    formData.append('provider', JSON.stringify({ name: data.provider }));
-    formData.append('pricing', JSON.stringify({ price: data.pricing }));
-    formData.append('location', JSON.stringify({ address: data.location }));
-    formData.append('warranty', JSON.stringify({ details: data.warranty }));
-    // gallery: array of strings
-    formData.append('gallery', JSON.stringify(data.gallery.map(g => g.url)));
-    formData.append('shopId', myShop.id);
-    await createService(myShop.id, formData);
-    form.reset();
   };
 
   const watchAllFields = form.watch();
   const [selectedImage, setSelectedImage] = React.useState(0);
   const [isFavorited, setIsFavorited] = React.useState(false);
   const [categoryName, setCategoryName] = useState("");
+  const [categories, setCategories] = useState<any[]>([]);
+  const [loadingCategories, setLoadingCategories] = useState(true);
 
   useEffect(() => {
     async function fetchCategoryName() {
@@ -168,6 +254,27 @@ const Page = () => {
     }
     fetchCategoryName();
   }, [watchAllFields.category]);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      setLoadingCategories(true);
+      try {
+        const cats = await categoryService.getCategories();
+        setCategories(cats);
+      } catch {
+        setCategories([]);
+      } finally {
+        setLoadingCategories(false);
+      }
+    }
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    if (myShop?.name && !form.getValues('providerName')) {
+      form.setValue('providerName', myShop.name);
+    }
+  }, [myShop, form]);
 
   if (isMyShopLoading) {
     return (
@@ -222,9 +329,41 @@ const Page = () => {
                 <FormItem>
                   <FormLabel>Category</FormLabel>
                   <FormControl>
-                    <ServiceCategorySelect
-                      value={field.value}
-                      onChange={field.onChange}
+                    <select {...field} className="w-full border rounded px-3 py-2">
+                      <option value="">Select a category</option>
+                      {categories.map((cat: any) => (
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                      ))}
+                    </select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="providerName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Provider Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., Robin's Construction" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="providerAvatarFile"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Provider Avatar (Image Upload)</FormLabel>
+                  <FormControl>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={e => field.onChange(e.target.files ? e.target.files[0] : null)}
                     />
                   </FormControl>
                   <FormMessage />
@@ -233,12 +372,12 @@ const Page = () => {
             />
             <FormField
               control={form.control}
-              name="provider"
+              name="providerYearsExperience"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Provider Name</FormLabel>
+                  <FormLabel>Provider Years Experience</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., ProFloor Masters" {...field} />
+                    <Input placeholder="e.g., 12" type="number" min="0" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -246,12 +385,12 @@ const Page = () => {
             />
             <FormField
               control={form.control}
-              name="pricing"
+              name="basePrice"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Pricing (e.g., 8.50 per sq ft)</FormLabel>
+                  <FormLabel>Base Price</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., 8.50 per sq ft" {...field} />
+                    <Input placeholder="e.g., 8.50" type="number" step="0.01" min="0" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -259,12 +398,12 @@ const Page = () => {
             />
             <FormField
               control={form.control}
-              name="location"
+              name="unit"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Location</FormLabel>
+                  <FormLabel>Unit</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., San Francisco, CA" {...field} />
+                    <Input placeholder="e.g., per sq ft" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -272,12 +411,12 @@ const Page = () => {
             />
             <FormField
               control={form.control}
-              name="availability"
+              name="estimatedTotal"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Availability</FormLabel>
+                  <FormLabel>Estimated Total</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Available this week" {...field} />
+                    <Input placeholder="e.g., $1000" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -285,10 +424,36 @@ const Page = () => {
             />
             <FormField
               control={form.control}
-              name="warranty"
+              name="city"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Warranty</FormLabel>
+                  <FormLabel>City</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., Kigali" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="serviceRadius"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Service Radius</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., 25 miles" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="warrantyDuration"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Warranty Duration</FormLabel>
                   <FormControl>
                     <Input placeholder="e.g., Lifetime Residential" {...field} />
                   </FormControl>
@@ -296,6 +461,22 @@ const Page = () => {
                 </FormItem>
               )}
             />
+            {/* Warranty Coverage dynamic list */}
+            <div>
+              <FormLabel>Warranty Coverage</FormLabel>
+              {coverageFields.map((item, idx) => (
+                <div key={item.id} className="flex gap-2 mb-2">
+                  <FormControl>
+                    <Input
+                      {...form.register(`warrantyCoverage.${idx}.value` as const)}
+                      placeholder="e.g., Full coverage guarantee"
+                    />
+                  </FormControl>
+                  <GenericButton type="button" variant="outline" onClick={() => removeCoverage(idx)} disabled={coverageFields.length === 1}>Remove</GenericButton>
+                </div>
+              ))}
+              <GenericButton type="button" variant="secondary" onClick={() => appendCoverage({ value: '' })}>Add Coverage</GenericButton>
+            </div>
             <FormField
               control={form.control}
               name="description"
@@ -347,6 +528,19 @@ const Page = () => {
               onAddImages={handleAddGalleryImages}
               onRemoveImage={handleRemoveGalleryImage}
             />
+            <FormField
+              control={form.control}
+              name="availability"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Availability</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., Available this week" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <div className="flex justify-end gap-3 pt-4 border-t">
               <GenericButton
                 type="button"
@@ -356,15 +550,20 @@ const Page = () => {
               >
                 Cancel
               </GenericButton>
-              <GenericButton type="submit" disabled={isCreating}>
+              {/* Use a native button for submit */}
+              <button
+                type="submit"
+                disabled={isCreating}
+                className="ml-2 px-4 py-2 rounded bg-amber-400 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 {isCreating ? (
                   <span className="flex items-center gap-2">
                     <Loader2 className="animate-spin h-4 w-4" /> Creating...
                   </span>
                 ) : (
-                  "Create Service"
+                  "Create Service (New)"
                 )}
-              </GenericButton>
+              </button>
             </div>
           </form>
         </Form>
@@ -436,19 +635,19 @@ const Page = () => {
                   <div className="flex items-center gap-6 text-sm text-gray-600">
                     <div className="flex items-center gap-1">
                       <MapPin className="w-4 h-4" />
-                      {watchAllFields.location || 'Location'}
+                      {watchAllFields.city || 'Location'}
                     </div>
-                    {/* <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1">
                       <Truck className="w-4 h-4" />
-                      25 miles radius
-                    </div> */}
+                      {watchAllFields.serviceRadius || 'Radius'}
+                    </div>
                     <div className="flex items-center gap-1">
                       <Clock className="w-4 h-4" />
                       {watchAllFields.availability || 'Availability'}
                     </div>
                     <div className="flex items-center gap-1">
                       <Shield className="w-4 h-4" />
-                      {watchAllFields.warranty || 'warranty'}
+                      {watchAllFields.warrantyDuration || 'Warranty'}
                     </div>
                   </div>
                 </div>
@@ -493,11 +692,11 @@ const Page = () => {
                 <div className="space-y-4">
                   <div>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-3xl font-bold">{watchAllFields.pricing || '$0.00'}</span>
+                      <span className="text-3xl font-bold">{watchAllFields.basePrice || '$0.00'}</span>
                       <span className="text-gray-600">per service</span>
                     </div>
                     <p className="text-sm text-gray-600">
-                      Estimated total: $0.00
+                      Estimated total: {watchAllFields.estimatedTotal || '$0.00'}
                     </p>
                   </div>
                   <Separator />
@@ -521,12 +720,12 @@ const Page = () => {
                       src="https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&dpr=2"
                       width={48}
                       height={48}
-                      alt={watchAllFields.provider || 'Provider'}
+                      alt={watchAllFields.providerName || 'Provider'}
                       className="w-12 h-12 rounded-full object-cover"
                     />
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <h3 className="font-semibold">{watchAllFields.provider || 'Provider Name'}</h3>
+                        <h3 className="font-semibold">{watchAllFields.providerName || 'Provider Name'}</h3>
                         <Badge variant="secondary" className="text-xs">
                           <Shield className="w-3 h-3 mr-1" />
                           Verified

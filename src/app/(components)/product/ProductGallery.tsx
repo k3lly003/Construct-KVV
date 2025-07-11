@@ -1,18 +1,25 @@
 "use client";
 
-import jacket01 from "../../../../public/jacket01.webp";
-import jacket02 from "../../../../public/jacket02.webp";
-import jacket03 from "../../../../public/jacket03.webp";
-import jacket04 from "../../../../public/jacket04.webp";
 import { useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-export default function ProductGallery() {
+interface ProductImage {
+  id: string;
+  url: string;
+  alt: string;
+  isDefault: boolean;
+}
+
+interface ProductGalleryProps {
+  images: ProductImage[];
+}
+
+export default function ProductGallery({ images }: ProductGalleryProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Array of all images
-  const allImages = [jacket01, jacket02, jacket03, jacket04];
+  // Use product images from props
+  const allImages = images || [];
   const mainImage = allImages[currentImageIndex];
   const thumbnails = allImages;
 
@@ -43,8 +50,8 @@ export default function ProductGallery() {
         {/* Display the main image */}
         {mainImage && (
           <Image
-            src={mainImage}
-            alt={`Product image ${currentImageIndex + 1}`}
+            src={mainImage.url}
+            alt={mainImage.alt || `Product image ${currentImageIndex + 1}`}
             fill
             style={{ objectFit: "cover" }}
           />
@@ -74,9 +81,9 @@ export default function ProductGallery() {
       {/* Thumbnails */}
       {allImages.length > 1 && (
         <div className="flex gap-2 justify-center">
-          {thumbnails.map((thumbnailSrc, index) => (
+          {thumbnails.map((img, index) => (
             <div
-              key={index}
+              key={img.id || index}
               onClick={() => goToThumbnail(index)}
               className={`relative w-16 h-16 rounded-md  overflow-hidden transition-all cursor-pointer ${
                 currentImageIndex === index
@@ -86,8 +93,8 @@ export default function ProductGallery() {
               aria-label={`View thumbnail ${index + 1}`}
             >
               <Image
-                src={thumbnailSrc}
-                alt={`Thumbnail ${index + 1}`}
+                src={img.url}
+                alt={img.alt || `Thumbnail ${index + 1}`}
                 fill
                 style={{ objectFit: "cover" }}
               />
