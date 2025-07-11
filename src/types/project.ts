@@ -39,6 +39,7 @@ export interface Bid {
   createdAt: string;
   sellerId?: string;
   description?: string;
+  status?: BidStatus; // Added for UI status display
   // Add any other fields as needed
 }
 

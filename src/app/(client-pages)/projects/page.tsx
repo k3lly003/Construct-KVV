@@ -240,23 +240,26 @@ const ProjectsPage = () => {
 
           {/* Call to Action */}
           <div className="bg-amber-500 p-6 rounded-lg border border-amber-600 shadow-md">
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex-1">
                 <h3 className="text-lg font-semibold text-white mb-2">
-                  Ready to Bid?
+                  Ready to create project
                 </h3>
-                <p className="text-white/90 text-sm">
-                  Submit your professional bids on these house construction
-                  projects. Connect with homeowners and grow your business.
+                <p className="text-white/90 text-sm mb-2">
+                  Start your next house construction journey by creating a new
+                  project. Share your requirements and connect with top
+                  professionals.
                 </p>
               </div>
-              <div className="text-right">
-                <p className="text-sm text-white/80 mb-2">
-                  Have a project to share?
-                </p>
-                <Link href="/build-house">
-                  <GenericButton className="bg-white hover:bg-gray-100 text-amber-600 shadow-md font-semibold">
-                    🏠 Create New Project
+              <div className="flex justify-start sm:justify-end w-full sm:w-auto">
+                <Link href="/build-house" className="w-full sm:w-auto">
+                  <GenericButton className="w-full sm:w-auto bg-white hover:bg-gray-100 text-amber-600 shadow-md font-semibold flex items-center justify-center gap-2 px-4 py-3 text-base">
+                    <span className="text-xl flex items-center justify-center">
+                      🏠
+                    </span>
+                    <span className="whitespace-nowrap">
+                      Create New Project
+                    </span>
                   </GenericButton>
                 </Link>
               </div>
