@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Minus, Plus, Heart, Share2, Star, ShoppingCart } from "lucide-react";
 import { GenericButton } from "@/components/ui/generic-button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { productService } from "@/app/services/productServices";
+import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
 
 interface Product {
   id: string;
@@ -24,12 +26,43 @@ interface ProductInfoProps {
   setQuantity: (quantity: number) => void;
 }
 
-const ProductInfo = ({
-  product,
-  quantity,
-  setQuantity,
-}: ProductInfoProps) => {
+const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const startTimeRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    startTimeRef.current = Date.now();
+    return () => {
+      if (startTimeRef.current) {
+        const timeSpent = Math.floor(
+          (Date.now() - startTimeRef.current) / 1000
+        );
+        const user = getUserDataFromLocalStorage();
+        if (user && user.id && user.token) {
+          productService
+            .postProductInteraction({
+              userId: user.id,
+              productId: product.id,
+              type: "viewed",
+              timeSpent,
+              token: user.token,
+            })
+            .then((res) => {
+              console.log(
+                "[ProductInfo] Viewed (unmount) interaction sent:",
+                res
+              );
+            })
+            .catch((err) => {
+              console.log(
+                "[ProductInfo] Viewed (unmount) interaction error:",
+                err
+              );
+            });
+        }
+      }
+    };
+  }, [product.id]);
 
   const incrementQuantity = () => {
     setQuantity(quantity + 1);
@@ -41,35 +74,99 @@ const ProductInfo = ({
     }
   };
 
-  const addToCart = () => {
+  const addToCart = async () => {
     toast.success(`Added ${quantity} ${product.name} to your cart`);
+    // Product interaction: clicked
+    const user = getUserDataFromLocalStorage();
+    if (user && user.id && user.token) {
+      productService
+        .postProductInteraction({
+          userId: user.id,
+          productId: product.id,
+          type: "clicked",
+          timeSpent: 0,
+          token: user.token,
+        })
+        .then((res) => {
+          console.log("[ProductInfo] Clicked interaction sent:", res);
+        })
+        .catch((err) => {
+          console.log("[ProductInfo] Clicked interaction error:", err);
+        });
+    }
   };
 
-  const toggleWishlist = () => {
+  const toggleWishlist = async () => {
     setIsWishlisted(!isWishlisted);
     toast(isWishlisted ? "Removed from wishlist" : "Added to wishlist");
+    // Product interaction: wishlist
+    const user = getUserDataFromLocalStorage();
+    if (user && user.id && user.token) {
+      productService
+        .postProductInteraction({
+          userId: user.id,
+          productId: product.id,
+          type: "wishlist",
+          timeSpent: 0,
+          token: user.token,
+        })
+        .then((res) => {
+          console.log("[ProductInfo] Wishlist interaction sent:", res);
+        })
+        .catch((err) => {
+          console.log("[ProductInfo] Wishlist interaction error:", err);
+        });
+    }
   };
 
-  const shareProduct = () => {
+  const shareProduct = async () => {
     toast("Share link copied to clipboard");
+    // Product interaction: shared
+    const user = getUserDataFromLocalStorage();
+    if (user && user.id && user.token) {
+      productService
+        .postProductInteraction({
+          userId: user.id,
+          productId: product.id,
+          type: "shared",
+          timeSpent: 0,
+          token: user.token,
+        })
+        .then((res) => {
+          console.log("[ProductInfo] Shared interaction sent:", res);
+        })
+        .catch((err) => {
+          console.log("[ProductInfo] Shared interaction error:", err);
+        });
+    }
   };
 
   // Fallback for details: use attributes if details not present
-  const details = product.details || (product.attributes ? Object.entries(product.attributes).map(([k, v]) => `${k}: ${v}`) : []);
+  const details =
+    product.details ||
+    (product.attributes
+      ? Object.entries(product.attributes).map(([k, v]) => `${k}: ${v}`)
+      : []);
 
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight mt-1">{product.name}</h1>
+        <h1 className="text-3xl font-bold tracking-tight mt-1">
+          {product.name}
+        </h1>
         {/* Rating */}
-        {(product.rating !== undefined && product.reviewCount !== undefined) && (
+        {product.rating !== undefined && product.reviewCount !== undefined && (
           <div className="flex items-center gap-2 mt-3">
             <div className="flex">
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
                   size={16}
-                  className={i < Math.floor(product.rating || 0) ? "fill-chart-4 text-chart-4" : "text-muted"}
+                  className={
+                    i < Math.floor(product.rating || 0)
+                      ? "fill-chart-4 text-chart-4"
+                      : "text-muted"
+                  }
                 />
               ))}
             </div>
@@ -83,7 +180,9 @@ const ProductInfo = ({
           <p className="text-2xl font-semibold">
             {product.discountedPrice ? (
               <>
-                <span className="line-through text-gray-400 mr-2">{product.price} Rfw</span>
+                <span className="line-through text-gray-400 mr-2">
+                  {product.price} Rfw
+                </span>
                 <span>{product.discountedPrice} Rfw</span>
               </>
             ) : (
@@ -114,10 +213,7 @@ const ProductInfo = ({
             <Plus size={16} />
           </GenericButton>
         </div>
-        <GenericButton 
-          className="flex-1 h-10 gap-2"
-          onClick={addToCart}
-        >
+        <GenericButton className="flex-1 h-10 gap-2" onClick={addToCart}>
           <ShoppingCart size={16} />
           Add to Cart
         </GenericButton>
@@ -129,7 +225,7 @@ const ProductInfo = ({
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
           <Heart
-            size={18} 
+            size={18}
             className={isWishlisted ? "fill-destructive text-destructive" : ""}
           />
         </GenericButton>
@@ -155,9 +251,11 @@ const ProductInfo = ({
         </TabsContent>
         <TabsContent value="details" className="mt-4">
           <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
-            {details.length > 0 ? details.map((detail, index) => (
-              <li key={index}>{detail}</li>
-            )) : <li>No details available.</li>}
+            {details.length > 0 ? (
+              details.map((detail, index) => <li key={index}>{detail}</li>)
+            ) : (
+              <li>No details available.</li>
+            )}
           </ul>
         </TabsContent>
         <TabsContent value="shipping" className="mt-4">
@@ -170,5 +268,5 @@ const ProductInfo = ({
       </Tabs>
     </div>
   );
-}
+};
 export default ProductInfo;
