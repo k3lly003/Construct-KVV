@@ -17,7 +17,6 @@ import { useHandleSendMessages } from "@/app/utils/middlewares/handleMessages";
 import { easeInOut } from "framer-motion";
 
 const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
-  
   const {
     messages,
     inputValue,
@@ -111,6 +110,15 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
                       ? "bg-amber-500 text-white"
                       : "bg-white text-gray-800 shadow-sm border"
                   }`}
+                  style={
+                    !message.isUser
+                      ? {
+                          maxHeight: "300px", // allow up to 300px for long answers
+                          overflowY: "auto",
+                          transition: "max-height 0.3s",
+                        }
+                      : undefined
+                  }
                 >
                   {!message.isUser && (
                     <div className="flex items-center space-x-2 mb-2">
