@@ -47,6 +47,17 @@ export default function Home() {
     <>
       <Banner />
       <ProjectShowcase />
+      {/* Visualize Dream Home Section */}
+      <section className="w-full bg-gradient-to-r from-amber-50 to-amber-100 py-16 flex flex-col items-center justify-center text-center my-8">
+        <h2 className="text-3xl md:text-4xl font-bold mb-6 text-amber-900">
+          Want to visualize your dream home?
+        </h2>
+        <Link href="/visualize">
+          <button className="mt-2 px-8 py-4 bg-amber-500 hover:bg-amber-600 text-white text-lg font-semibold rounded-full shadow-lg transition-all flex items-center gap-2">
+            Start Visualizing <span aria-hidden="true">→</span>
+          </button>
+        </Link>
+      </section>
       {/* UN-COMMENT THIS REVIEW ONCE THE TOOL HAVE GOME MANY REVIEW */}
       {/* <ReviewCarousel reviews={reviewsData} /> */}
       <ProductCarousel />
