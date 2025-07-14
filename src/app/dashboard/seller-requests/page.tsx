@@ -43,7 +43,7 @@ export default function SellerRequestsPage() {
       await SellerRequestService.updateRequestStatus(id, status, token);
       setRequests((prev) => prev.filter((req) => req.id !== id));
     } catch (err: any) {
-      setActionError(status === "APPROVED" ? t(dashboardFakes.sellerRequest.approveError) : t(dashboardFakes.sellerRequests.rejectError));
+      setActionError(status === "APPROVED" ? t(dashboardFakes.sellerRequest.approveError) : t(dashboardFakes.sellerRequest.rejectError));
     } finally {
       setActionLoading(null);
     }
@@ -100,14 +100,14 @@ export default function SellerRequestsPage() {
                         disabled={actionLoading === req.id + "APPROVED"}
                         onClick={() => handleAction(req.id, "APPROVED")}
                       >
-                        {actionLoading === req.id + "APPROVED" ? t(dashboardFakes.sellerRequest.approving) : t(dashboardFakes.sellerRequests.approve)}
+                        {actionLoading === req.id + "APPROVED" ? t(dashboardFakes.sellerRequest.approving) : t(dashboardFakes.sellerRequest.approve)}
                       </button>
                       <button
                         className="px-3 py-1 rounded-lg bg-red-600 text-white hover:bg-red-700 transition text-xs font-semibold shadow-sm disabled:opacity-50"
                         disabled={actionLoading === req.id + "REJECTED"}
                         onClick={() => handleAction(req.id, "REJECTED")}
                       >
-                        {actionLoading === req.id + "REJECTED" ? t(dashboardFakes.sellerRequest.rejecting) : t(dashboardFakes.sellerRequests.reject)}
+                        {actionLoading === req.id + "REJECTED" ? t(dashboardFakes.sellerRequest.rejecting) : t(dashboardFakes.sellerRequest.reject)}
                       </button>
                     </div>
                     {actionError && (

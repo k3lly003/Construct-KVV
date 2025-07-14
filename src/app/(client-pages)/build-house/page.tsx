@@ -1,3 +1,4 @@
+"use client";
 import DefaultPageBanner from '@/app/(components)/DefaultPageBanner'
 import { FormContainer } from '@/app/(components)/build-house/form-container'
 // import { PageHeader } from '../../(components)/build-house/page-header'

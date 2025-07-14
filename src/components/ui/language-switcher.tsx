@@ -3,7 +3,7 @@
 import { useTranslation } from 'react-i18next';
 import { locales, localeNames, type Locale } from '@/app/i18n/config';
 import { setUserLocale } from '@/app/libs/locale';
-import { Button } from './button';
+import Button from './button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './dropdown-menu';
 import { Globe } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -26,20 +26,38 @@ export function LanguageSwitcher() {
   // Don't render until client-side and i18n is ready
   if (!isClient || !ready) {
     return (
-      <Button variant="ghost" size="sm" className="gap-2">
-        <Globe className="h-4 w-4" />
-        <span className="hidden sm:inline">Language</span>
-      </Button>
+      <Button
+        text="Language"
+        texSize="text-sm"
+        hoverBg="hover:bg-gray-200"
+        borderCol="border-gray-300"
+        bgCol="bg-white"
+        textCol="text-black"
+        border="border"
+        padding="px-4 py-2"
+        round="rounded"
+        handleButton={() => {/* your handler */}}
+      />
     );
   }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-2">
-          <Globe className="h-4 w-4" />
-          <span className="hidden sm:inline">{t('common.language')}</span>
-        </Button>
+        <Button
+          text={t('common.language')}
+          texSize="text-sm"
+          hoverBg="hover:bg-gray-200"
+          borderCol="border-gray-300"
+          bgCol="bg-white"
+          textCol="text-black"
+          border="border"
+          padding="px-4 py-2"
+          round="rounded"
+          handleButton={() => {}}
+          icon={<Globe className="h-4 w-4" />}
+          className="gap-2"
+        />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {locales.map((locale) => (

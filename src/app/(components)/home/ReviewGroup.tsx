@@ -81,6 +81,7 @@ interface Review {
   text: string;
   author: string;
   date: string;
+  id?: string; // Added id to the interface
 }
 
 const TrustpilotSection: React.FC = () => {
@@ -91,6 +92,7 @@ const TrustpilotSection: React.FC = () => {
       text: 'Start to finish amazing! Truly free samples and good sized? The "fee in room"...',
       author: 'Suzi Stepanovich',
       date: 'April 5',
+      id: 'review1', // Added id for the first review
     },
     {
       rating: 5,
@@ -98,6 +100,7 @@ const TrustpilotSection: React.FC = () => {
       text: 'Had an issue with my flooring being damaged and BuildDirect and Mark in the Cust...',
       author: 'David S.',
       date: 'October 15',
+      id: 'review2', // Added id for the second review
     },
     {
       rating: 5,
@@ -105,6 +108,7 @@ const TrustpilotSection: React.FC = () => {
       text: 'I received a shipment of flooring today from BuildDirect. When it arrived there...',
       author: 'Mike G.',
       date: 'March 8',
+      id: 'review3', // Added id for the third review
     },
     {
       rating: 5,
@@ -112,6 +116,7 @@ const TrustpilotSection: React.FC = () => {
       text: 'Mark Stansfield was unbelievably helpful. He went over and above and beyond to s...',
       author: 'J. Jang',
       date: 'February 16',
+      id: 'review4', // Added id for the fourth review
     },
   ];
 
@@ -124,8 +129,8 @@ const TrustpilotSection: React.FC = () => {
             <span>⭐⭐⭐⭐⭐</span>
             <p>Based on 500 reviews</p>
         </div>
-        {reviewsData.map((review, index) => (
-          <ReviewCard key={index}>
+        {reviewsData.map((review) => (
+          <ReviewCard key={review.id || (review.author + review.date)}>
             <Rating>
               {Array.from({ length: review.rating }).map((_, i) => (
                 <FaStar key={i} />

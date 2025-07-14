@@ -9,14 +9,12 @@ import ReviewDialog from '@/app/(components)/product/ReviewDialog';
 import { productService } from '@/app/services/productServices';
 import {  ProductViewSkeleton } from '@/app/utils/skeleton/ProductSkeletons'
 
-interface ProductPageProps {
-  params: { id: string };
+interface PageProps {
+  params: Promise<{ id: string }>
 }
 
-function ProductPage({ params }: ProductPageProps) {
-
-  //@ts-ignore
-  const resolvedParams = React.use(params) as { id: string };
+const Page = ({ params }: PageProps) => {
+  const { id } = React.use(params);
 
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -35,7 +33,7 @@ function ProductPage({ params }: ProductPageProps) {
       setLoading(true);
       setError(null);
       try {
-        const prod = await productService.getProductById(resolvedParams.id);
+        const prod = await productService.getProductById(id);
         if (isMounted) setProduct(prod);
       } catch {
         if (isMounted) setError('Product not found.');
@@ -45,21 +43,21 @@ function ProductPage({ params }: ProductPageProps) {
     }
     fetchProduct();
     return () => { isMounted = false; };
-  }, [resolvedParams.id]);
+  }, [id]);
 
   // Fetch reviews
   const fetchReviews = React.useCallback(async () => {
     setReviewsLoading(true);
     setReviewsError(null);
     try {
-      const reviews = await productService.getProductReviews(resolvedParams.id, 1, 10);
+      const reviews = await productService.getProductReviews(id, 1, 10);
       setReviews(reviews);
     } catch {
       setReviewsError('Failed to load reviews.');
     } finally {
       setReviewsLoading(false);
     }
-  }, [resolvedParams.id]);
+  }, [id]);
 
   useEffect(() => {
     fetchReviews();
@@ -122,4 +120,4 @@ function ProductPage({ params }: ProductPageProps) {
     </div>
   );
 }
-export default ProductPage;
+export default Page;

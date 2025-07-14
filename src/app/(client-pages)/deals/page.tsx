@@ -1,3 +1,5 @@
+"use client";
+
 import DealsPage from "@/app/(components)/deals/DealsPage";
 import DefaultPageBanner from "@/app/(components)/DefaultPageBanner";
 import { dealsHeaderData } from "@/app/utils/fakes/DealFakes";

@@ -1,3 +1,4 @@
+"use client";
 import DefaultPageBanner from "@/app/(components)/DefaultPageBanner";
 import { CartPage } from "@/app/(components)/product/Cart";
 import React from "react";

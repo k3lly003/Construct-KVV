@@ -23,7 +23,7 @@ export const ProjectShowcase: React.FC = () => {
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-10">
           {projectItems.map((item, index) => (
             <div
-              key={index}
+              key={item.titleKey}
               className="group relative h-[300px] overflow-hidden cursor-pointer rounded-2xl"
               onMouseEnter={() => setActiveIndex(index)}
               onMouseLeave={() => setActiveIndex(null)}
