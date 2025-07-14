@@ -85,10 +85,9 @@ export const Products: React.FC = () => {
             </div>
           ) : (
             <div className="flex flex-wrap px-4 gap-7 justify-center lg:flex lg:justify-start">
-              {filteredProducts.map((product) => (
-                <>
+              {filteredProducts.map((product, index) => (
                   <div
-                    key={product.id}
+                    key={`${product.id}-${index}`}
                     className="bg-white overflow-hidden w-64 m-2 hover:shadow-lg cursor-pointer hover:rounded-xl transition-shadow"
                     onClick={() => router.push(`/product/${product.id}`)}
                   >
@@ -138,7 +137,6 @@ export const Products: React.FC = () => {
                         round={"rounded-full"} />
                     </div>
                   </div>
-                </>
               ))}
             </div>
           )}
