@@ -10,6 +10,7 @@ import Profile from "@/app/(components)/Navbar/Profile";
 import { useUserStore } from "@/store/userStore";
 import CustomerProfile from "@/app/(components)/Navbar/CustomerProfile";
 import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
+import { useTranslation } from "react-i18next";
 
 
 interface SecondLevelItemProps {
@@ -132,6 +133,7 @@ const Navbar: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false); // New state to track if on client
   const [localUserData, setLocalUserData] = useState<unknown>(null); // New state for local user data
+  const { t, ready } = useTranslation();
 
   // Get user data from Zustand store
   const { role: userRole, name: userName, email: userEmail } = useUserStore();
@@ -155,6 +157,14 @@ const Navbar: React.FC = () => {
   const handleMenuClick = (label: string, event: React.MouseEvent) => {
     event.stopPropagation();
     setActiveMenu(activeMenu === label ? null : label);
+  };
+
+  // Fallback text for when translations aren't ready
+  const getText = (key: string, fallback: string) => {
+    if (isClient && ready) {
+      return t(key);
+    }
+    return fallback;
   };
 
   return (
@@ -184,21 +194,21 @@ const Navbar: React.FC = () => {
                 href="/build-house"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
               >
-                Build your house
+                {getText('navigation.buildHouse', 'Build House')}
               </Link>
 
               <Link
                 href="/store"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
               >
-                Store
+                {getText('navigation.products', 'Products')}
               </Link>
 
               <Link
                 href="/shops"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
               >
-                Shops
+                {getText('navigation.shops', 'Shops')}
               </Link>
             </div>
           </div>
@@ -209,7 +219,7 @@ const Navbar: React.FC = () => {
               href="/help"
               className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
             >
-              <p>Help</p>
+              <p>{getText('navigation.help', 'Help')}</p>
             </Link>
             <Link
               href="/cart"
@@ -232,7 +242,7 @@ const Navbar: React.FC = () => {
               ) : (
                 <Link href="/signin" className="border-l-1">
                   <p className="pl-5 px-4 py-2 hover:text-yellow-400 font-medium">
-                    Sign In
+                    {getText('navigation.login', 'Sign In')}
                   </p>
                 </Link>
               )

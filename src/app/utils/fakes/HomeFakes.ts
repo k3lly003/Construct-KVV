@@ -9,29 +9,30 @@ import user4 from "../../../../public/user4.jpeg"
 export const HomeBannerSlides = [
   {
     id: 1,
-    title: "Construction Services",
-    subtitle: "We Provide",
-    description: "Transform your vision into reality with our comprehensive construction solutions. Expert teams, quality materials, and timely delivery.Transform your vision into reality with our comprehensive construction solutions. Expert teams, quality materials, and timely delivery",
-    buttonText: "View Services",
+    titleKey: "banner.slide1.title",
+    subtitleKey: "banner.slide1.subtitle",
+    descriptionKey: "banner.slide1.description",
+    buttonTextKey: "banner.slide1.buttonText",
     image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80",
   },
   {
     id: 2,
-    title: "Project Management",
-    subtitle: "Excellence In",
-    description: "Stay on track with advanced project management tools. Real-time updates, resource allocation, and milestone tracking.Transform your vision into reality with our comprehensive construction solutions. Expert teams, quality materials, and timely delivery",
-    buttonText: "Learn More",
+    titleKey: "banner.slide2.title",
+    subtitleKey: "banner.slide2.subtitle",
+    descriptionKey: "banner.slide2.description",
+    buttonTextKey: "banner.slide2.buttonText",
     image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80",
   },
   {
     id: 3,
-    title: "Design Solutions",
-    subtitle: "Innovative",
-    description: "Cutting-edge design solutions that blend aesthetics with functionality. 3D visualization and custom planning services.Transform your vision into reality with our comprehensive construction solutions. Expert teams, quality materials, and timely delivery",
-    buttonText: "Explore Designs",
+    titleKey: "banner.slide3.title",
+    subtitleKey: "banner.slide3.subtitle",
+    descriptionKey: "banner.slide3.description",
+    buttonTextKey: "banner.slide3.buttonText",
     image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80",
   },
 ];
+
 
 export interface Review {
   id: number;

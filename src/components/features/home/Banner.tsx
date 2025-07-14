@@ -4,9 +4,11 @@ import React, { useState, useEffect } from "react";
 import { ArrowRight } from "lucide-react";
 import { HomeBannerSlides } from "@/app/utils/fakes/HomeFakes";
 import Image from "next/image";
+import { useTranslation } from "react-i18next";
 
 export const Banner: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { t, ready } = useTranslation();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -16,6 +18,14 @@ export const Banner: React.FC = () => {
   }, []);
 
   const currentSlideData = HomeBannerSlides[currentSlide];
+
+  // Fallback text for when translations aren't ready
+  const getText = (key: string, fallback: string) => {
+    if (ready) {
+      return t(key);
+    }
+    return fallback;
+  };
 
   return (
     <div className="relative h-[600px] overflow-hidden bg-black shadow-md">
@@ -43,18 +53,18 @@ export const Banner: React.FC = () => {
           )}
           {currentSlideData?.title && (
             <h2 className="text-green-500 text-5xl font-bold mb-4">
-              {currentSlideData.title}
+              {getText('home.hero.title', 'Your One-Stop Solution for Construction Needs')}
             </h2>
           )}
           {currentSlideData?.description && (
             <p className="text-gray-100 text-lg mb-6">
-              {currentSlideData.description}
+              {getText('home.hero.subtitle', 'Find the best materials, services, and professionals for your construction projects')}
             </p>
           )}
           {currentSlideData?.buttonText && (
             <>
               <button className="inline-flex items-center bg-yellow-500 text-gray-900 px-5 py-2 rounded-md font-semibold hover:bg-yellow-400 transition-colors w-fit">
-                {currentSlideData.buttonText}
+                {getText('home.hero.cta', 'Get Started')}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </button>
             </>

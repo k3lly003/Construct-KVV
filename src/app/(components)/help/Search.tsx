@@ -25,7 +25,11 @@ const SearchContainer = styled.div`
   }
 `;
 
-const SearchBar: React.FC = () => {
+interface SearchBarProps {
+  placeholder: string;
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ placeholder }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,7 +43,7 @@ const SearchBar: React.FC = () => {
       <FiSearch />
       <input
         type="text"
-        placeholder="Search our help articles..."
+        placeholder={placeholder}
         value={searchTerm}
         onChange={handleSearchChange}
       />

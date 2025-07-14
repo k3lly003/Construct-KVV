@@ -5,6 +5,8 @@ import { Minus, Plus, Heart, Share2, Star, ShoppingCart } from "lucide-react";
 import { GenericButton } from "@/components/ui/generic-button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { useTranslations } from '@/app/hooks/useTranslations';
+import { dashboardFakes } from '@/app/utils/fakes/DashboardFakes';
 
 interface Product {
   id: string;
@@ -30,6 +32,7 @@ const ProductInfo = ({
   setQuantity,
 }: ProductInfoProps) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const { t } = useTranslations();
 
   const incrementQuantity = () => {
     setQuantity(quantity + 1);
@@ -74,13 +77,13 @@ const ProductInfo = ({
               ))}
             </div>
             <span className="text-sm text-muted-foreground">
-              {product.rating} ({product.reviewCount} reviews)
+              {product.rating} ({product.reviewCount} {t(dashboardFakes.productInfo.reviews)})
             </span>
           </div>
         )}
         {/* Price */}
         <div className="flex items-center gap-3 mt-4">
-          <p className="text-2xl font-semibold">
+          <p className="text-2xl font-semibold flex justify-between w-full">
             {product.discountedPrice ? (
               <>
                 <span className="line-through text-gray-400 mr-2">{product.price} Rfw</span>
@@ -119,14 +122,14 @@ const ProductInfo = ({
           onClick={addToCart}
         >
           <ShoppingCart size={16} />
-          Add to Cart
+          {t(dashboardFakes.productInfo.addToCart)}
         </GenericButton>
         <GenericButton
           variant="outline"
           size="sm"
           className="h-10 w-10"
           onClick={toggleWishlist}
-          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+          aria-label={isWishlisted ? t(dashboardFakes.productInfo.removeFromWishlist) : t(dashboardFakes.productInfo.addToWishlist)}
         >
           <Heart
             size={18} 
@@ -138,17 +141,16 @@ const ProductInfo = ({
           size="sm"
           className="h-10 w-10"
           onClick={shareProduct}
-          aria-label="Share product"
+          aria-label={t(dashboardFakes.productInfo.shareProduct)}
         >
           <Share2 size={18} />
         </GenericButton>
       </div>
       {/* Product information tabs */}
       <Tabs defaultValue="description" className="mt-8">
-        <TabsList className="w-full grid grid-cols-3">
-          <TabsTrigger value="description">Description</TabsTrigger>
-          <TabsTrigger value="details">Details</TabsTrigger>
-          <TabsTrigger value="shipping">Shipping</TabsTrigger>
+        <TabsList className="w-full grid grid-cols-2">
+          <TabsTrigger value="description">{t(dashboardFakes.productInfo.description)}</TabsTrigger>
+          <TabsTrigger value="details">{t(dashboardFakes.productInfo.details)}</TabsTrigger>
         </TabsList>
         <TabsContent value="description" className="mt-4">
           <p className="text-muted-foreground">{product.description}</p>
@@ -157,15 +159,8 @@ const ProductInfo = ({
           <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
             {details.length > 0 ? details.map((detail, index) => (
               <li key={index}>{detail}</li>
-            )) : <li>No details available.</li>}
+            )) : <li>{t(dashboardFakes.productInfo.noDetails)}</li>}
           </ul>
-        </TabsContent>
-        <TabsContent value="shipping" className="mt-4">
-          <div className="space-y-4 text-muted-foreground">
-            <p>Free standard shipping on all orders over $100.</p>
-            <p>Estimated delivery time: 3-5 business days.</p>
-            <p>Express shipping available at checkout.</p>
-          </div>
         </TabsContent>
       </Tabs>
     </div>

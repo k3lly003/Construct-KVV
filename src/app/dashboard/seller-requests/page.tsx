@@ -5,8 +5,11 @@ import { SellerRequestService, SellerRequest } from "@/app/services/sellerReques
 import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { useTranslations } from '@/app/hooks/useTranslations';
+import { dashboardFakes } from '@/app/utils/fakes/DashboardFakes';
 
 export default function SellerRequestsPage() {
+  const { t } = useTranslations();
   const [requests, setRequests] = useState<SellerRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -23,13 +26,13 @@ export default function SellerRequestsPage() {
         const data = await SellerRequestService.getAllRequests(token);
         setRequests(Array.isArray(data) ? data : []);
       } catch (err: any) {
-        setError("Failed to fetch seller requests");
+        setError(t(dashboardFakes.sellerRequest.fetchError));
       } finally {
         setLoading(false);
       }
     };
     fetchRequests();
-  }, []);
+  }, [t]);
 
   const handleAction = async (id: string, status: "APPROVED" | "REJECTED") => {
     setActionLoading(id + status);
@@ -40,7 +43,7 @@ export default function SellerRequestsPage() {
       await SellerRequestService.updateRequestStatus(id, status, token);
       setRequests((prev) => prev.filter((req) => req.id !== id));
     } catch (err: any) {
-      setActionError(`Failed to ${status.toLowerCase()} request.`);
+      setActionError(status === "APPROVED" ? t(dashboardFakes.sellerRequest.approveError) : t(dashboardFakes.sellerRequests.rejectError));
     } finally {
       setActionLoading(null);
     }
@@ -48,28 +51,28 @@ export default function SellerRequestsPage() {
 
   return (
     <div className="p-6 min-h-screen bg-gradient-to-br from-gray-50 to-white">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">Seller Requests</h1>
+      <h1 className="text-3xl font-bold mb-6 text-gray-800">{t(dashboardFakes.sellerRequest.title)}</h1>
       <div className="bg-white rounded-2xl shadow-lg p-4 md:p-8 overflow-x-auto">
         {loading ? (
-          <div className="text-center py-8 text-gray-500">Loading requests...</div>
+          <div className="text-center py-8 text-gray-500">{t(dashboardFakes.sellerRequest.loading)}</div>
         ) : error ? (
           <div className="text-center text-red-500 py-8">{error}</div>
         ) : requests.length === 0 ? (
-          <div className="text-center text-gray-400 py-8">No pending seller requests.</div>
+          <div className="text-center text-gray-400 py-8">{t(dashboardFakes.sellerRequest.noRequestsFound)}</div>
         ) : (
           <Table className="min-w-[900px]">
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Phone</TableHead>
-                <TableHead>Business Name</TableHead>
-                <TableHead>Business Address</TableHead>
-                <TableHead>Business Phone</TableHead>
-                <TableHead>Tax ID</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Submitted</TableHead>
-                <TableHead className="text-center">Actions</TableHead>
+                <TableHead>{t(dashboardFakes.sellerRequest.tableName)}</TableHead>
+                <TableHead>{t(dashboardFakes.sellerRequest.tableEmail)}</TableHead>
+                <TableHead>{t(dashboardFakes.sellerRequest.tablePhone)}</TableHead>
+                <TableHead>{t(dashboardFakes.sellerRequest.tableBusinessName)}</TableHead>
+                <TableHead>{t(dashboardFakes.sellerRequest.tableBusinessAddress)}</TableHead>
+                <TableHead>{t(dashboardFakes.sellerRequest.tableBusinessPhone)}</TableHead>
+                <TableHead>{t(dashboardFakes.sellerRequest.tableTaxId)}</TableHead>
+                <TableHead>{t(dashboardFakes.sellerRequest.tableStatus)}</TableHead>
+                <TableHead>{t(dashboardFakes.sellerRequest.tableSubmitted)}</TableHead>
+                <TableHead className="text-center">{t(dashboardFakes.sellerRequest.tableActions)}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -84,7 +87,9 @@ export default function SellerRequestsPage() {
                   <TableCell>{req.taxId}</TableCell>
                   <TableCell>
                     <Badge variant={req.status === "PENDING" ? "secondary" : req.status === "APPROVED" ? "default" : "destructive"}>
-                      {req.status}
+                      {req.status === "PENDING" ? t(dashboardFakes.sellerRequest.statusPending) : 
+                       req.status === "APPROVED" ? t(dashboardFakes.sellerRequest.statusApproved) : 
+                       t(dashboardFakes.sellerRequest.statusRejected)}
                     </Badge>
                   </TableCell>
                   <TableCell>{req.createdAt ? new Date(req.createdAt).toLocaleDateString() : ""}</TableCell>
@@ -95,14 +100,14 @@ export default function SellerRequestsPage() {
                         disabled={actionLoading === req.id + "APPROVED"}
                         onClick={() => handleAction(req.id, "APPROVED")}
                       >
-                        {actionLoading === req.id + "APPROVED" ? "Approving..." : "Approve"}
+                        {actionLoading === req.id + "APPROVED" ? t(dashboardFakes.sellerRequest.approving) : t(dashboardFakes.sellerRequests.approve)}
                       </button>
                       <button
                         className="px-3 py-1 rounded-lg bg-red-600 text-white hover:bg-red-700 transition text-xs font-semibold shadow-sm disabled:opacity-50"
                         disabled={actionLoading === req.id + "REJECTED"}
                         onClick={() => handleAction(req.id, "REJECTED")}
                       >
-                        {actionLoading === req.id + "REJECTED" ? "Rejecting..." : "Reject"}
+                        {actionLoading === req.id + "REJECTED" ? t(dashboardFakes.sellerRequest.rejecting) : t(dashboardFakes.sellerRequests.reject)}
                       </button>
                     </div>
                     {actionError && (

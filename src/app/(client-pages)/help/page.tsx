@@ -8,7 +8,7 @@ import GuidesSection from '@/app/(components)/help/GuideSection';
 import SearchBar from '@/app/(components)/help/Search';
 import { NextPage } from 'next';
 import DefaultPageBanner from '@/app/(components)/DefaultPageBanner';
-import { HelpData } from '@/app/utils/fakes/HelpFakes';
+import { useTranslations } from '@/app/hooks/useTranslations';
 
 
 const HelpPageContainer = styled.div`
@@ -19,17 +19,42 @@ const HelpPageContainer = styled.div`
   }
 `;
 
+interface HelpCenterMessages {
+  pageTitle: string;
+  bannerTitle: string;
+  bannerBackground: string;
+  guidesHeading: string;
+  guides: Array<{ title: string; description: string; link: string }>;
+  faqHeading: string;
+  faq: Array<{ question: string; answer: string }>;
+  faqNotFound: string;
+  faqContactButton: string;
+  contactHeading: string;
+  contactDescription: string;
+  contactEmail: string;
+  contactPhone: string;
+  searchPlaceholder: string;
+}
+
 const page: NextPage = () => {
-  const {title, backgroundImage} = HelpData;
+  const { t } = useTranslations();
+  const helpCenter = t('helpCenter', { returnObjects: true }) as HelpCenterMessages;
+  const guidesWithDetails = Array.isArray(helpCenter.guides)
+    ? helpCenter.guides.map(g => ({ details: false, ...g }))
+    : [];
   return (
     <>
-      <DefaultPageBanner title={title} backgroundImage={backgroundImage} />
+      <DefaultPageBanner title={helpCenter.bannerTitle} backgroundImage={helpCenter.bannerBackground} />
       <HelpPageContainer>
-        <SearchBar />
-        <GuidesSection backgroundImage={HelpData.backgroundImage} title={HelpData.title} guideData={[]} />
-        <FaqSection />
-        <ContactSection />
-        {/* POTTENTIALLY ADD A "A QUICK LINK TO VISUAL GUIDE" */}
+        <SearchBar placeholder={helpCenter.searchPlaceholder} />
+        <GuidesSection backgroundImage={helpCenter.bannerBackground} title={helpCenter.guidesHeading} guideData={guidesWithDetails} />
+        <FaqSection
+          faqHeading={helpCenter.faqHeading}
+          faqData={Array.isArray(helpCenter.faq) ? helpCenter.faq : []}
+          notFoundText={helpCenter.faqNotFound}
+          contactButton={helpCenter.faqContactButton}
+        />
+        <ContactSection heading={helpCenter.contactHeading} description={helpCenter.contactDescription} email={helpCenter.contactEmail} phone={helpCenter.contactPhone} />
       </HelpPageContainer>
     </>
   );

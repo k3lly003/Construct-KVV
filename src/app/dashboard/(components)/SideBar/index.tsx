@@ -25,7 +25,7 @@ import CustomSheet from "../shad_/CustomSheet";
 import Image from "next/image";
 import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
 import { useRouter } from 'next/navigation';
-
+import { useTranslations } from '@/app/hooks/useTranslations';
 
 
 interface SidebarLinkProps {
@@ -83,6 +83,7 @@ const SidebarLink = ({
 const SideBar = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const { t } = useTranslations();
 
   const isSidebarCollapsed = useAppSelector(
     (state) => state.global.isSidebarCollapsed
@@ -154,31 +155,31 @@ const SideBar = () => {
               <SidebarLink
                 href="/dashboard"
                 icon={LayoutDashboard}
-                label="Overview"
+                label={t('dashboard.overviews')}
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
                 href="/dashboard/shops"
                 icon={Store}
-                label="Shops"
+                label={t('navigation.shops')}
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
                 href="/dashboard/categories"
                 icon={Tag}
-                label="Categories"
+                label={t('navigation.categories', 'Categories')}
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
                 href="/dashboard/users"
                 icon={User}
-                label="Users"
+                label={t('navigation.users', 'Users')}
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
                 href="/dashboard/seller-requests"
                 icon={Layers}
-                label="Seller Requests"
+                label={t('dashboard.sellerRequests')}
                 isCollapsed={isSidebarCollapsed}
               />
             </>
@@ -190,32 +191,32 @@ const SideBar = () => {
               <SidebarLink
                 href="/dashboard/overview"
                 icon={LayoutDashboard}
-                label="Overview"
+                label={t('dashboard.overviews')}
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
 
                 href="/dashboard/products"
                 icon={Package}
-                label="Products"
+                label={t('navigation.products')}
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
                 href="/dashboard/projects"
                 icon={TableProperties}
-                label="Projects"
+                label={t('navigation.projects')}
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
                 href="/dashboard/profile" // Assuming profile path for sellers
                 icon={User}
-                label="Profile"
+                label={t('navigation.profile')}
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
                 href="/dashboard/sales-report" // Assuming sales report path for sellers
                 icon={DollarSign}
-                label="Sales Report"
+                label={t('dashboard.salesReport', 'Sales Report')}
                 isCollapsed={isSidebarCollapsed}
               />
             </>
@@ -224,7 +225,7 @@ const SideBar = () => {
           <SidebarLink
             href="/dashboard/notifications"
             icon={Bell}
-            label="Notifications"
+            label={t('dashboard.notification','notifications')}
             isCollapsed={isSidebarCollapsed}
           />
         </div>
@@ -235,7 +236,7 @@ const SideBar = () => {
             <SidebarLink
               href="/dashboard/guide"
               icon={CircleHelp}
-              label="Guide"
+              label={t('dashboard.guides')}
               isCollapsed={isSidebarCollapsed}
             />
           )}
@@ -243,7 +244,7 @@ const SideBar = () => {
             <SidebarLink
               href="/dashboard/support" // Assuming a support page for sellers
               icon={CircleHelp} // Using CircleHelp for support
-              label="Support"
+              label={t('dashboard.support')}
               isCollapsed={isSidebarCollapsed}
             />
           )}
@@ -251,7 +252,7 @@ const SideBar = () => {
           <SidebarLink
             href="/dashboard/settings"
             icon={Settings}
-            label="Settings"
+            label={t('dashboard.settings')}
             isCollapsed={isSidebarCollapsed}
           />
         </div>
@@ -267,7 +268,7 @@ const SideBar = () => {
           <SidebarLink
             href="/logout"
             icon={LogOut}
-            label="Logout"
+            label={t('navigation.logout')}
             onClick={() => {
               localStorage.clear();
               window.location.href = '/signin';

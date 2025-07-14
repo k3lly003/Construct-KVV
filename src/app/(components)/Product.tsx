@@ -10,6 +10,8 @@ import { productService } from "@/app/services/productServices";
 import { Product } from "@/types/product";
 import { useRouter } from "next/navigation";
 import ProductCard from "@/app/(components)/ProductCard";
+import { dashboardFakes } from '@/app/utils/fakes/DashboardFakes';
+import { useTranslations } from '@/app/hooks/useTranslations';
 
 export const Products: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -19,6 +21,7 @@ export const Products: React.FC = () => {
   const [sortBy, setSortBy] = useState("featured");
   const availableCategories: string[] = ["All Products"];
   const router = useRouter();
+  const { t } = useTranslations();
 
   // Fetch all products on mount
   useEffect(() => {
@@ -64,7 +67,22 @@ export const Products: React.FC = () => {
 
           {/* Products */}
           {loading ? (
-            <div>Loading products...</div>
+            <div className="flex flex-wrap px-4 gap-7 justify-center lg:flex lg:justify-start">
+              {[...Array(6)].map((_, i) => (
+                <div
+                  key={i}
+                  className="bg-gray-100 animate-pulse overflow-hidden w-64 m-2 rounded-xl"
+                >
+                  <div className="w-full h-56 bg-gray-200" />
+                  <div className="p-4">
+                    <div className="h-5 bg-gray-200 rounded w-3/4 mb-2" />
+                    <div className="h-4 bg-gray-200 rounded w-1/2 mb-2" />
+                    <div className="h-4 bg-gray-200 rounded w-1/3 mb-4" />
+                    <div className="h-10 bg-gray-200 rounded w-full" />
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : (
             <div className="flex flex-wrap px-4 gap-7 justify-center lg:flex lg:justify-start">
               {filteredProducts.map((product) => (
@@ -108,7 +126,7 @@ export const Products: React.FC = () => {
                         </p>
                       </div>
                       <Button
-                        text={"Add to cart"}
+                        text={t(dashboardFakes.common.addToCart)}
                         texSize={"text-sm"}
                         hoverBg={"hover:bg-yellow-400"}
                         borderCol={"border-yellow-300"}

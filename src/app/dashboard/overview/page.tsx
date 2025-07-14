@@ -16,6 +16,8 @@ import {
 import { useProducts } from "@/app/hooks/useProduct";
 import { Input } from "@/components/ui/input";
 import { useCategories } from "@/app/hooks/useCategories";
+import { useTranslations } from '@/app/hooks/useTranslations';
+import { dashboardFakes } from '@/app/utils/fakes/DashboardFakes';
 
 export default function Home() {
   
@@ -23,6 +25,7 @@ export default function Home() {
   const { products, isLoading } = useProducts();
   const { categories, isLoading: categoriesLoading } = useCategories();
   const [searchTerm, setSearchTerm] = useState("");
+  const { t } = useTranslations();
 
   useEffect(() => {
     const user = getUserDataFromLocalStorage();
@@ -47,27 +50,27 @@ export default function Home() {
         {/* Header */}
         <div className="mb-10">
           <h1 className="text-2xl font-semibold">
-            Welcome Back, {userCredentials?.firstName || ""} {userCredentials?.lastName || ""}!
+            {t(dashboardFakes.overview.welcomeBack)}, {userCredentials?.firstName || ""} {userCredentials?.lastName || ""}!
           </h1>
           <p className="text-gray-500">
-            Here is what happening with your store today
+            {t(dashboardFakes.overview.happeningToday)}
           </p>
         </div>
         {/* Stats Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <StatCard
-            title="Total Customer"
+            title={t(dashboardFakes.overview.totalCustomer)}
             value="307.48K"
             change={30}
             trend="up"
           />
           <StatCard
-            title="Total Revenue"
+            title={t(dashboardFakes.overview.totalRevenue)}
             value="$30.58K"
             change={-15}
             trend="down"
           />
-          <StatCard title="Total Deals" value="2.48K" change={23} trend="up" />
+          <StatCard title={t(dashboardFakes.overview.totalDeals)} value="2.48K" change={23} trend="up" />
         </div>
 
         {/* Main Content Section */}
@@ -77,7 +80,7 @@ export default function Home() {
             <div className="mb-4 flex items-center justify-between">
               <Input
                 type="search"
-                placeholder="Search by any product details..."
+                placeholder={t(dashboardFakes.overview.searchProductPlaceholder)}
                 className="w-[300px] sm:w-[400px]"
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
@@ -86,11 +89,11 @@ export default function Home() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-amber-300">Product Name</TableHead>
-                  <TableHead className="text-amber-300">Description</TableHead>
-                  <TableHead className="text-amber-300">Date & Time</TableHead>
-                  <TableHead className="text-amber-300">Category ID</TableHead>
-                  <TableHead className="text-amber-300">Price</TableHead>
+                  <TableHead className="text-amber-300">{t(dashboardFakes.overview.productName)}</TableHead>
+                  <TableHead className="text-amber-300">{t(dashboardFakes.overview.description)}</TableHead>
+                  <TableHead className="text-amber-300">{t(dashboardFakes.overview.dateTime)}</TableHead>
+                  <TableHead className="text-amber-300">{t(dashboardFakes.overview.category)}</TableHead>
+                  <TableHead className="text-amber-300">{t(dashboardFakes.overview.price)}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -108,7 +111,7 @@ export default function Home() {
                 {searchedProducts.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={6} className="text-red-500 text-center py-4">
-                      No Products found.
+                      {t(dashboardFakes.overview.noProductsFound)}
                     </TableCell>
                   </TableRow>
                 )}

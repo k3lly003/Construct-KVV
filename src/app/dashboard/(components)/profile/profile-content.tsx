@@ -6,9 +6,11 @@ import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin } from "react-icons/fa";
 import { useShop } from '@/app/hooks/useShop';
 import { Skeleton } from '@/components/ui/skeleton';
 import ActivitySection from './profile-activity';
+import { useTranslations } from '@/app/hooks/useTranslations';
 
 export function ProfileContent() {
   const { myShop, isMyShopLoading, myShopError } = useShop();
+  const { t } = useTranslations();
 
   if (isMyShopLoading) {
     return (
@@ -33,9 +35,9 @@ export function ProfileContent() {
         <CardContent className="pt-6">
           <div className="text-center text-red-500">
             <Store className="h-12 w-12 mx-auto mb-4 text-red-300" />
-            <h3 className="text-lg font-semibold mb-2">Shop Not Found</h3>
+            <h3 className="text-lg font-semibold mb-2">{t('dashboard.shopNotFound')}</h3>
             <p className="text-sm text-gray-600">
-              {myShopError.message || 'Unable to load shop information. Please create a shop first.'}
+              {myShopError.message || t('dashboard.unableToLoadShop')}
             </p>
           </div>
         </CardContent>
@@ -49,9 +51,9 @@ export function ProfileContent() {
         <CardContent className="pt-6">
           <div className="text-center text-gray-500">
             <Store className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-            <h3 className="text-lg font-semibold mb-2">No Shop Found</h3>
+            <h3 className="text-lg font-semibold mb-2">{t('dashboard.noShopFound')}</h3>
             <p className="text-sm text-gray-600">
-              You haven&apos;t created a shop yet. Create one to get started!
+              {t('dashboard.createShopMessage')}
             </p>
           </div>
         </CardContent>
@@ -64,11 +66,9 @@ export function ProfileContent() {
       {/* Shop Overview Card */}
       <Card>
           <div className="flex flex-col space-x-5">
-            <CardHeader className="text-lg font-semibold text-amber-600 font-medium">About</CardHeader>
+            <CardHeader className="text-lg font-semibold text-amber-600 font-medium">{t('dashboard.about')}</CardHeader>
               <CardContent className="flex items-center space-x-4 mt-1">
-                Hi I&apos;m Anna Adame, It will be as simple as Occidental; in fact, it will be Occidental. To an English person, it will seem like simplified English, as a skeptical Cambridge friend of mine told me what Occidental is European languages are members of the same family.
-
-                You always want to make sure that your fonts work well together and try to limit the number of fonts you use to three or less. Experiment and play around with the fonts that you already have in the software you&apos;re working with reputable font websites. This may be the most commonly encountered tip I received from the designers I spoke with. They highly encourage that you use different fonts in one design, but do not over-exaggerate and go overboard.
+                {t('dashboard.aboutDescription')}
               </CardContent>
           </div>
         <CardFooter className="space-y-4">

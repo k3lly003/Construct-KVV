@@ -1,4 +1,35 @@
-// Fake data for project progress, budget, and timeline
+import storeImg from "../../../../public/store-img.jpg";
+import customerImg from "../../../../public/customer.jpg";
+import architectImg from "../../../../public/architect.jpg";
+import { StaticImageData } from 'next/image';
+
+interface ProjectItem {
+  image: string | StaticImageData;
+  name: string;
+  description: string;
+}
+
+// Usage: Use t(item.titleKey), t(item.descriptionKey), t(item.buttonKey) for i18n
+export const projectItems = [
+  {
+    image: storeImg,
+    titleKey: "ProjectShowcase.seller.title",
+    descriptionKey: "ProjectShowcase.seller.description",
+    buttonKey: "ProjectShowcase.seller.button",
+  },
+  {
+    image: architectImg,
+    titleKey: "ProjectShowcase.architect.title",
+    descriptionKey: "ProjectShowcase.architect.description",
+    buttonKey: "ProjectShowcase.architect.button",
+  },
+  {
+    image: customerImg,
+    titleKey: "ProjectShowcase.customer.title",
+    descriptionKey: "ProjectShowcase.customer.description",
+    buttonKey: "ProjectShowcase.customer.button",
+  },
+];
 
 export const projectBudget = {
   total: 50000000, // RWF
@@ -56,3 +87,4 @@ export const projectExpenses = [
     stage: "Roofing",
   },
 ];
+

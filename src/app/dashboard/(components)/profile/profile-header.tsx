@@ -20,11 +20,13 @@ import { Switch } from '@/components/ui/switch';
 import { useShop } from '@/app/hooks/useShop';
 import { toast } from 'sonner';
 import { getUserDataFromLocalStorage } from '@/app/utils/middlewares/UserCredentions';
-import { UserData } from '@/utils/dtos/profile';
+import { UserData } from '@/app/utils/dtos/profile';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useTranslations } from '@/app/hooks/useTranslations';
 
 export function ProfileHeader() {
+  const { t } = useTranslations();
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -187,34 +189,34 @@ export function ProfileHeader() {
             {!isMyShopLoading && !myShop && (
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                   <GenericButton className="text-right">Create a shop</GenericButton>
+                   <GenericButton className="text-right">{t('dashboard.createShop')}</GenericButton>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[500px]">
                   <DialogHeader>
-                    <DialogTitle>Create a New Shop</DialogTitle>
+                    <DialogTitle>{t('dashboard.createNewShop')}</DialogTitle>
                     <DialogDescription>
-                      Fill in the details below to set up your new shop.
+                      {t('dashboard.fillDetailsToSetUpNewShop')}
                     </DialogDescription>
                   </DialogHeader>
                   <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="name" className="text-right">Name</Label>
+                      <Label htmlFor="name" className="text-right">{t('dashboard.name')}</Label>
                       <Input id="name" name="name" value={shopData.name} onChange={handleInputChange} className="col-span-3" />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="description" className="text-right">Description</Label>
+                      <Label htmlFor="description" className="text-right">{t('dashboard.description')}</Label>
                       <Textarea id="description" name="description" value={shopData.description} onChange={handleInputChange} className="col-span-3" />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="slug" className="text-right">Slug</Label>
+                      <Label htmlFor="slug" className="text-right">{t('dashboard.slug')}</Label>
                       <Input id="slug" name="slug" value={shopData.slug} onChange={handleInputChange} className="col-span-3" placeholder="e.g., my-awesome-shop" />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="logo" className="text-right">Logo</Label>
+                      <Label htmlFor="logo" className="text-right">{t('dashboard.logo')}</Label>
                       <Input id="logo" name="logo" type="file" onChange={handleFileChange} className="col-span-3" accept="image/*" />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="isActive" className="text-right">Active</Label>
+                      <Label htmlFor="isActive" className="text-right">{t('dashboard.active')}</Label>
                       <Switch id="isActive" checked={shopData.isActive} onCheckedChange={(checked) => setShopData(prev => ({ ...prev, isActive: checked }))} />
                     </div>
                   </div>
@@ -230,34 +232,32 @@ export function ProfileHeader() {
             {/* Edit Profile Dialog */}
             <Dialog open={editOpen} onOpenChange={setEditOpen}>
               <DialogTrigger asChild>
-                <GenericButton variant="secondary" className="bg-white/10 hover:bg-white/50 text-amber-600 border-2 border-amber-600/20">
-                  Edit Profile
-                </GenericButton>
+                <GenericButton variant="secondary" className="bg-white/10 hover:bg-white/50 text-amber-600 border-2 border-amber-600/20">{t('dashboard.editProfile')}</GenericButton>
               </DialogTrigger>
               <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
                 <DialogHeader>
-                  <DialogTitle>Edit Profile</DialogTitle>
+                  <DialogTitle>{t('dashboard.editProfile')}</DialogTitle>
                   <DialogDescription>
-                    Update your personal information, shop details, and profile content.
+                    {t('dashboard.updatePersonalInfoShopDetailsProfileContent')}
                   </DialogDescription>
                 </DialogHeader>
                 
                 <Tabs defaultValue="personal" className="w-full">
                   <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="personal">Personal Info</TabsTrigger>
-                    <TabsTrigger value="shop">Shop Info</TabsTrigger>
-                    <TabsTrigger value="content">Profile Content</TabsTrigger>
+                    <TabsTrigger value="personal">{t('dashboard.personalInfo')}</TabsTrigger>
+                    <TabsTrigger value="shop">{t('dashboard.shopInfo')}</TabsTrigger>
+                    <TabsTrigger value="content">{t('dashboard.profileContent')}</TabsTrigger>
                   </TabsList>
                   {/* Personal Information */}
                   <TabsContent value="personal" className="space-y-4">
                     <Card>
                       <CardHeader>
-                        <CardTitle>Personal Information</CardTitle>
+                        <CardTitle>{t('dashboard.personalInformation')}</CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
                           <div className="flex flex-col space-y-2">
-                            <Label htmlFor="firstName">First Name</Label>
+                            <Label htmlFor="firstName">{t('dashboard.firstName')}</Label>
                             <Input 
                               id="firstName" 
                               name="firstName" 
@@ -266,7 +266,7 @@ export function ProfileHeader() {
                             />
                           </div>
                           <div className="flex flex-col space-y-2">
-                            <Label htmlFor="lastName">Last Name</Label>
+                            <Label htmlFor="lastName">{t('dashboard.lastName')}</Label>
                             <Input 
                               id="lastName" 
                               name="lastName" 
@@ -276,7 +276,7 @@ export function ProfileHeader() {
                           </div>
                         </div>
                         <div className="flex flex-col space-y-2">
-                          <Label htmlFor="email">Email</Label>
+                          <Label htmlFor="email">{t('dashboard.email')}</Label>
                           <Input 
                             id="email" 
                             name="email" 
@@ -286,7 +286,7 @@ export function ProfileHeader() {
                           />
                         </div>
                         <div className="flex flex-col space-y-2">
-                          <Label htmlFor="phone">Phone</Label>
+                          <Label htmlFor="phone">{t('dashboard.phone')}</Label>
                           <Input 
                             id="phone" 
                             name="phone" 
@@ -295,7 +295,7 @@ export function ProfileHeader() {
                           />
                         </div>
                         <div className="flex flex-col space-y-2">
-                          <Label htmlFor="location">Location</Label>
+                          <Label htmlFor="location">{t('dashboard.location')}</Label>
                           <Input 
                             id="location" 
                             name="location" 
@@ -311,11 +311,11 @@ export function ProfileHeader() {
                   <TabsContent value="shop" className="space-y-4">
                     <Card>
                       <CardHeader>
-                        <CardTitle>Shop Information</CardTitle>
+                        <CardTitle>{t('dashboard.shopInformation')}</CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-4">
                         <div className="flex flex-col space-y-2">
-                          <Label htmlFor="shopName">Shop Name</Label>
+                          <Label htmlFor="shopName">{t('dashboard.shopName')}</Label>
                           <Input 
                             id="shopName" 
                             name="shopName" 
@@ -324,7 +324,7 @@ export function ProfileHeader() {
                           />
                         </div>
                         <div className="flex flex-col space-y-2">
-                          <Label htmlFor="shopPhone">Shop Phone</Label>
+                          <Label htmlFor="shopPhone">{t('dashboard.shopPhone')}</Label>
                           <Input 
                             id="shopPhone" 
                             name="shopPhone" 
@@ -333,7 +333,7 @@ export function ProfileHeader() {
                           />
                         </div>
                         <div className="flex flex-col space-y-2">
-                          <Label htmlFor="shopDescription">Shop Description</Label>
+                          <Label htmlFor="shopDescription">{t('dashboard.shopDescription')}</Label>
                           <Textarea 
                             id="shopDescription" 
                             name="shopDescription" 
@@ -343,7 +343,7 @@ export function ProfileHeader() {
                           />
                         </div>
                         <div className="flex flex-col space-y-2">
-                          <Label htmlFor="workingDays">Working Days</Label>
+                          <Label htmlFor="workingDays">{t('dashboard.workingDays')}</Label>
                           <Input 
                             id="workingDays" 
                             name="workingDays" 
@@ -359,11 +359,11 @@ export function ProfileHeader() {
                   <TabsContent value="content" className="space-y-4">
                     <Card>
                       <CardHeader>
-                        <CardTitle>Profile Content</CardTitle>
+                        <CardTitle>{t('dashboard.profileContent')}</CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-4">
                         <div className="flex flex-col space-y-2">
-                          <Label htmlFor="about">About</Label>
+                          <Label htmlFor="about">{t('dashboard.about')}</Label>
                           <Textarea 
                             id="about" 
                             name="about" 
@@ -375,10 +375,10 @@ export function ProfileHeader() {
                         </div>
                         
                         <div className="flex flex-col space-y-2">
-                          <Label>Social Media Links</Label>
+                          <Label>{t('dashboard.socialMediaLinks')}</Label>
                           <div className="grid grid-cols-2 gap-4 mt-2">
                             <div className="flex flex-col space-y-2">
-                              <Label htmlFor="facebook" className="text-sm">Facebook</Label>
+                              <Label htmlFor="facebook" className="text-sm">{t('dashboard.facebook')}</Label>
                               <Input 
                                 id="facebook" 
                                 value={editFormData.socialMedia.facebook} 
@@ -387,7 +387,7 @@ export function ProfileHeader() {
                               />
                             </div>
                             <div className="flex flex-col space-y-2">
-                              <Label htmlFor="instagram" className="text-sm">Instagram</Label>
+                              <Label htmlFor="instagram" className="text-sm">{t('dashboard.instagram')}</Label>
                               <Input 
                                 id="instagram" 
                                 value={editFormData.socialMedia.instagram} 
@@ -396,7 +396,7 @@ export function ProfileHeader() {
                               />
                             </div>
                             <div className="flex flex-col space-y-2">
-                              <Label htmlFor="twitter" className="text-sm">Twitter</Label>
+                              <Label htmlFor="twitter" className="text-sm">{t('dashboard.twitter')}</Label>
                               <Input 
                                 id="twitter" 
                                 value={editFormData.socialMedia.twitter} 
@@ -405,7 +405,7 @@ export function ProfileHeader() {
                               />
                             </div>
                             <div className="flex flex-col space-y-2">
-                              <Label htmlFor="linkedin" className="text-sm">LinkedIn</Label>
+                              <Label htmlFor="linkedin" className="text-sm">{t('dashboard.linkedin')}</Label>
                               <Input 
                                 id="linkedin" 
                                 value={editFormData.socialMedia.linkedin} 
@@ -421,9 +421,7 @@ export function ProfileHeader() {
                 </Tabs>
                 
                 <DialogFooter>
-                  <GenericButton variant="outline" onClick={() => setEditOpen(false)}>
-                    Cancel
-                  </GenericButton>
+                  <GenericButton variant="outline" onClick={() => setEditOpen(false)}>{t('dashboard.cancel')}</GenericButton>
                   <GenericButton onClick={handleSaveProfile} disabled={isUpdating}>
                     {isUpdating ? 'Saving...' : 'Save Changes'}
                   </GenericButton>

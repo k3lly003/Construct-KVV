@@ -9,6 +9,9 @@ import { ProductFilters } from "@/app/(components)/product/ProductFilters";
 import { productService } from '@/app/services/productServices';
 
 import { Shop } from '@/types/shop';
+import router from "next/router";
+import { dashboardFakes } from "@/app/utils/fakes/DashboardFakes";
+import { useTranslations } from "@/app/hooks/useTranslations";
 
 interface ShopProductsProps {
   shopId?: string;
@@ -36,28 +39,12 @@ export const ShopProducts: React.FC<ShopProductsProps> = ({ shopId, shop }) => {
       })
       .finally(() => setLoading(false));
   }, [sellerId, authToken]);
+  const { t } = useTranslations();
 
   return (
     <div className="min-h-screen ">
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Shop Information
-        {shop && (
-          <div className="mb-8 p-6 bg-white rounded-lg shadow-sm">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              {shop.name || shop.seller?.businessName || 'Shop Products'}
-            </h2>
-            <p className="text-gray-600 mb-4">
-              {shop.description || 'Browse our selection of quality products'}
-            </p>
-            <div className="flex items-center space-x-4 text-sm text-gray-500">
-              <span>📍 {shop.seller?.businessAddress || 'Location not specified'}</span>
-              <span>📞 {shop.phone || shop.seller?.businessPhone || shop.seller?.phone || 'Phone not available'}</span>
-              <span>📧 {shop.seller?.email || 'Email not available'}</span>
-            </div>
-          </div>
-        )} */}
-
         {/* Products Grid */}
           {/* Filters */}
           <ProductFilters
@@ -82,62 +69,56 @@ export const ShopProducts: React.FC<ShopProductsProps> = ({ shopId, shop }) => {
             ) : (
               products.map((product) => (
                 <div
-                  key={product.id}
-                  className="bg-white overflow-hidden w-64 m-2 hover:shadow-lg hover:rounded-xl transition-shadow"
-                >
-                  <div className="relative">
-                    <Image
-                      src={product.thumbnailUrl}
-                      alt={product.altText || "alt text"}
-                      width={100}
-                      height={100}
-                      className="w-full h-56 object-cover rounded-xl"
-                    />
-                    <div className="absolute top-2 right-2 border rounded-full p-3 flex items-center justify-center cursor-pointer shadow-sm hover:bg-yellow-400 hover:border-yellow-400 transition-colors">
-                      <Heart className="text-gray-100" />
+                    key={product.id}
+                    className="bg-white overflow-hidden w-64 m-2 hover:shadow-lg cursor-pointer hover:rounded-xl transition-shadow"
+                    onClick={() => router.push(`/product/${product.id}`)}
+                  >
+                    <div className="relative">
+                      {product.thumbnailUrl ? (
+                        <Image
+                          src={product.thumbnailUrl}
+                          alt={product.name}
+                          width={100}
+                          height={100}
+                          className="w-full h-56 object-cover rounded-xl" 
+                        />
+                      ) : (
+                        <div className="w-full h-56 flex items-center justify-center bg-gray-100 rounded-xl text-gray-400">
+                          No Image
+                        </div>
+                      )}
+                      <div className="absolute top-2 right-2 border text-gray-100 rounded-full p-3 flex items-center justify-center cursor-pointer shadow-sm hover:bg-yellow-400 hover:border-yellow-400 transition-colors">
+                        <Heart className="text-gray-100" />
+                      </div>
                     </div>
-                  </div>
-                  <div className="p-4">
-                    <div className="flex justify-between">
-                      <h3 className="text-md font-semibold text-gray-900 w-[60%] mb-1">
-                        {product.name}
-                      </h3>
-                      {/* <div className="text-green-500 text-sm">
-                        <Star className="h-4 w-4 text-yellow-400 fill-current inline-block mr-1" />
-                        {product.rating}
-                      </div> */}
-                    </div>
-                    <p className="text-sm text-gray-500 mb-2 overflow">
-                      {product.description}
-                    </p>
-                    <div className="flex items-center justify-between mb-3">
-                      <p className="font-semibold text-md text-yellow-400 line-through">
-                        {product.price}
-                        <span className="text-sm text-yellow-400"> Rwf</span>
+                    <div className="p-4">
+                      <div className="flex justify-between">
+                        <h3 className="text-md font-semibold text-gray-900 w-[60%] mb-1">
+                          {product.name}
+                        </h3>
+                      </div>
+                      <p className="text-sm text-gray-500 mb-2 overflow">
+                        {product.description}
                       </p>
-                      {product.discountedPrice && (
+                      <div className="flex items-center justify-between mb-3">
                         <p className="font-semibold text-md text-yellow-400">
-                          {product.discountedPrice}
+                          {product.price}
                           <span className="text-sm text-yellow-400"> Rwf</span>
                         </p>
-                      )}
+                      </div>
+                      <Button
+                        text={t(dashboardFakes.common.addToCart)}
+                        texSize={"text-sm"}
+                        hoverBg={"hover:bg-yellow-400"}
+                        borderCol={"border-yellow-300"}
+                        bgCol={"white"}
+                        textCol={"text-gray-800"}
+                        border={"border-1"}
+                        handleButton={() => alert(`Add to Cart clicked for ${product.name}`)}
+                        padding={"p-3"}
+                        round={"rounded-full"} />
                     </div>
-                    <Button
-                      text={"Add to cart"}
-                      texSize={"text-sm"}
-                      hoverBg={"hover:bg-yellow-400"}
-                      borderCol={"border-yellow-300"}
-                      bgCol={"white"}
-                      textCol={"text-gray-800"}
-                      border={"border-1"}
-                      handleButton={() =>
-                        alert(`Add to Cart clicked for ${product.name}`)
-                      }
-                      padding={"p-3"}
-                      round={"rounded-full"}
-                    />
                   </div>
-                </div>
               ))
             )}
           </div>

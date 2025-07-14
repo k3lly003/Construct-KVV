@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { GenericButton } from "@/components/ui/generic-button";
 import { CalendarDays, Eye, Mail, Star, MapPin } from "lucide-react";
 import { Profile } from "@/app/utils/fakes/shopsFakes";
+import { dashboardFakes } from '@/app/utils/fakes/DashboardFakes';
+import { useTranslations } from '@/app/hooks/useTranslations';
 
 const ShopCard: React.FC<Profile> = ({
   id,
@@ -17,6 +19,7 @@ const ShopCard: React.FC<Profile> = ({
   imageSrc,
 }) => {
   const router = useRouter();
+  const { t } = useTranslations();
 
   const handleViewProfile = () => {
     router.push(`/shops/${id}`);
@@ -69,14 +72,14 @@ const ShopCard: React.FC<Profile> = ({
             onClick={() => console.log("Get in Touch clicked")}
           >
             <Mail className="mr-1 inline-block" />
-            Contact us
+            {t(dashboardFakes.common.contactUs)}
           </GenericButton>
           <GenericButton
             className="flex bg-black py-2 text-sm flex-grow border border-amber-500 text-white hover:bg-amber-500 cursor-pointer focus:outline-none rounded-md"
             onClick={handleViewProfile}
           >
             <Eye className="mr-1 inline-block" />
-            View Shop
+            {t(dashboardFakes.common.viewShop)}
           </GenericButton>
         </div>
       </div>

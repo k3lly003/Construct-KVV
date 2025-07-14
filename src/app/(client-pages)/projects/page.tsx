@@ -18,17 +18,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import SpecialistLocator from "@/components/ui/SpecialistLocator";
+import { useTranslations } from '@/app/hooks/useTranslations';
 
 const ProjectsPage = () => {
+  const { t } = useTranslations();
   const { projects, isLoading, error, deleteProject } = useProjects();
   const [updatingStatuses, setUpdatingStatuses] = React.useState<{
     [key: string]: boolean;
   }>({});
-
-  console.log("🏠 Projects Page Rendered");
-  console.log("📊 Projects:", projects);
-  console.log("🔄 Loading:", isLoading);
-  console.log("❌ Error:", error);
 
   const handleDeleteProject = async (id: string, projectName: string) => {
     try {
@@ -61,7 +58,6 @@ const ProjectsPage = () => {
       // Refresh the projects list
       window.location.reload();
 
-      console.log("✅ Project status updated successfully");
       toast.success(`Project status updated to ${newStatus} successfully! 🎉`);
     } catch (error) {
       console.error("❌ Error updating project status:", error);
@@ -122,14 +118,14 @@ const ProjectsPage = () => {
     return (
       <>
         <DefaultPageBanner
-          title="My Projects"
+          title={t('projects.title')}
           backgroundImage="/store-img.jpg"
         />
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="flex items-center space-x-2">
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-amber-500"></div>
-              <span className="text-amber-800">Loading projects...</span>
+              <span className="text-amber-800">{t('common.loading')} {t('projects.title').toLowerCase()}...</span>
             </div>
           </div>
         </div>
@@ -141,16 +137,16 @@ const ProjectsPage = () => {
     return (
       <>
         <DefaultPageBanner
-          title="My Projects"
+          title={t('projects.title')}
           backgroundImage="/store-img.jpg"
         />
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="text-center">
             <h3 className="text-lg font-semibold text-red-600 mb-2">
-              Error Loading Projects
+              {t('common.error')} {t('projects.title')}
             </h3>
             <p className="text-amber-800">
-              Please try again later or contact support.
+              {t('projects.errorTryAgain')}
             </p>
           </div>
         </div>
@@ -161,18 +157,16 @@ const ProjectsPage = () => {
   return (
     <>
       <DefaultPageBanner
-        title="House Construction Marketplace"
+        title={t('projects.marketplaceTitle', 'House Construction Marketplace')}
         backgroundImage="/store-img.jpg"
       />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-amber-900 mb-2">
-            Available House Construction Projects
+            {t('projects.availableTitle')}
           </h2>
           <p className="text-amber-800 mb-4">
-            Browse and bid on house construction projects. Perfect for
-            architects, plumbers, painters, electricians, and construction
-            professionals.
+            {t('projects.availableDescription')}
           </p>
 
           {/* Professional Categories */}
@@ -230,10 +224,10 @@ const ProjectsPage = () => {
           {/* Get Your Specialist Section */}
           <div className="mt-8 mb-8 p-6 bg-white border border-amber-200 rounded-lg shadow-md">
             <h3 className="text-xl font-bold text-amber-900 mb-2">
-              Get Your professionals
+              {t('projects.getProfessionals', 'Get Your professionals')}
             </h3>
             <p className="text-amber-800 mb-4">
-              Find certified professionals near your location.
+              {t('projects.findProfessionals', 'Find certified professionals near your location.')}
             </p>
             <SpecialistLocator />
           </div>
@@ -243,12 +237,10 @@ const ProjectsPage = () => {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="flex-1">
                 <h3 className="text-lg font-semibold text-white mb-2">
-                  Ready to create project
+                  {t('projects.readyToCreate', 'Ready to create project')}
                 </h3>
                 <p className="text-white/90 text-sm mb-2">
-                  Start your next house construction journey by creating a new
-                  project. Share your requirements and connect with top
-                  professionals.
+                  {t('projects.readyToCreateDesc', 'Start your next house construction journey by creating a new project. Share your requirements and connect with top professionals.')}
                 </p>
               </div>
               <div className="flex justify-start sm:justify-end w-full sm:w-auto">
@@ -258,7 +250,7 @@ const ProjectsPage = () => {
                       🏠
                     </span>
                     <span className="whitespace-nowrap">
-                      Create New Project
+                      {t('projects.createProject')}
                     </span>
                   </GenericButton>
                 </Link>
@@ -271,17 +263,15 @@ const ProjectsPage = () => {
           <div className="text-center py-12">
             <div className="h-16 w-16 text-amber-500 mx-auto mb-4">🏠</div>
             <h3 className="text-lg font-semibold text-amber-900 mb-2">
-              No Projects Available
+              {t('projects.noProjects', 'No Projects Available')}
             </h3>
             <p className="text-amber-800 mb-6">
-              There are currently no house construction projects available for
-              bidding. Check back later or create your own project to get
-              started!
+              {t('projects.noProjectsDesc', 'There are currently no house construction projects available for bidding. Check back later or create your own project to get started!')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/build-house">
                 <GenericButton className="bg-amber-500 hover:bg-amber-600 text-white shadow-md">
-                  🏠 Create New Project
+                  🏠 {t('projects.createProject')}
                 </GenericButton>
               </Link>
               <GenericButton
@@ -289,7 +279,7 @@ const ProjectsPage = () => {
                 onClick={() => window.location.reload()}
                 className="border-amber-500 text-amber-700 hover:bg-amber-50 bg-white"
               >
-                🔄 Refresh Page
+                🔄 {t('common.reload', 'Refresh Page')}
               </GenericButton>
             </div>
           </div>
@@ -399,7 +389,7 @@ const ProjectsPage = () => {
                         fullWidth
                         className="border-amber-500 text-amber-700 hover:bg-amber-50 bg-white"
                       >
-                        👁️ View Details & Bid
+                        👁️ {t('projects.viewDetails', 'View Details & Bid')}
                       </GenericButton>
                     </Link>
                     <div className="flex flex-col space-y-1">

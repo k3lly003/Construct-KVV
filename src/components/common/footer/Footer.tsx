@@ -1,6 +1,7 @@
 import React from 'react';
 import { Building2, Mail, Phone, MapPin } from 'lucide-react';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 
 const constructionImages = [
   "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=300",
@@ -10,6 +11,16 @@ const constructionImages = [
 ];
 
 export const Footer: React.FC = () => {
+  const { t, ready } = useTranslation();
+
+  // Fallback text for when translations aren't ready
+  const getText = (key: string, fallback: string) => {
+    if (ready) {
+      return t(key);
+    }
+    return fallback;
+  };
+
   return (
     <footer className="bg-black text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -51,16 +62,16 @@ export const Footer: React.FC = () => {
 
             {/* Navigation Links */}
             <nav className="space-y-4">
-              <a href="#" className="block hover:text-yellow-400 transition-colors">About</a>
-              <a href="#" className="block hover:text-yellow-400 transition-colors">Shop</a>
-              <a href="#" className="block hover:text-yellow-400 transition-colors">Contact us</a>
-              <a href="#" className="block hover:text-yellow-400 transition-colors">Terms & condition</a>
+              <a href="#" className="block hover:text-yellow-400 transition-colors">{getText('footer.about', 'About')}</a>
+              <a href="#" className="block hover:text-yellow-400 transition-colors">{getText('navigation.products', 'Products')}</a>
+              <a href="#" className="block hover:text-yellow-400 transition-colors">{getText('footer.contact', 'Contact')}</a>
+              <a href="#" className="block hover:text-yellow-400 transition-colors">{getText('footer.terms', 'Terms & Conditions')}</a>
             </nav>
           </div>
 
           {/* Contact Information */}
           <div className="space-y-8">
-            <h3 className="text-xl font-semibold">Reach out</h3>
+            <h3 className="text-xl font-semibold">{getText('footer.contact', 'Contact')}</h3>
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
                 <MapPin className="h-6 w-6 text-yellow-400" />
@@ -109,7 +120,7 @@ export const Footer: React.FC = () => {
 
           {/* About Us */}
           <div className="space-y-6">
-            <h3 className="text-xl font-semibold">About Us</h3>
+            <h3 className="text-xl font-semibold">{getText('footer.about', 'About')}</h3>
             <div className="space-y-4">
               <p className="text-gray-400 leading-relaxed">
                 Lorem ipsum dolor sit ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud e ex ea commodo consequat.
@@ -126,7 +137,7 @@ export const Footer: React.FC = () => {
       <div className="bg-yellow-400 py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-black text-center">
-            Copyright ©2025 <a href="#" className="font-semibold hover:text-white transition-colors">KVVLtd</a>. All rights reserved.
+            {getText('footer.copyright', '© 2024 Construct KVV. All rights reserved.')}
           </p>
         </div>
       </div>

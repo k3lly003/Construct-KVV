@@ -13,9 +13,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LayoutDashboard, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getUserDataFromLocalStorage } from "@/utils/middlewares/UserCredentions";
+import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
 import { getInitials } from "@/lib/utils";
-import { profileProps, UserData } from "@/utils/dtos/profile";
+import { profileProps, UserData } from "@/app/utils/dtos/profile";
 
 
 const Profile = ({NK, userEmail, userName, profilePic}:profileProps) => {

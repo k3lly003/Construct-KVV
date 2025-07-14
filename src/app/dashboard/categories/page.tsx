@@ -28,9 +28,11 @@ import {
 import { Label } from '@/components/ui/label';
 import { useCategories } from '@/app/hooks/useCategories';
 import { toast } from 'sonner';
+import { useTranslations } from '@/app/hooks/useTranslations';
 
 const CategoriesTablePage = () => {
   const { categories, createCategory, deleteCategory } = useCategories();
+  const { t } = useTranslations();
   const [searchQuery, setSearchQuery] = useState('');
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState('');
@@ -45,9 +47,9 @@ const CategoriesTablePage = () => {
   const handleDeleteCategory = async (id: string) => {
     try {
       await deleteCategory(id);
-      toast.success('Category deleted successfully');
+      toast.success(t('categories.deleteSuccess'));
     } catch {
-      toast.error('Failed to delete category');
+      toast.error(t('categories.deleteError'));
     }
   };
 
@@ -83,9 +85,9 @@ const CategoriesTablePage = () => {
         setNewCategoryName('');
         setNewCategoryDescription('');
         setNewSubCategories(['']);
-        toast.success('Category created successfully');
+        toast.success(t('categories.createSuccess'));
       } catch {
-        toast.error('Failed to create category');
+        toast.error(t('categories.createError'));
       }
     }
   };
@@ -102,22 +104,22 @@ const CategoriesTablePage = () => {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold">Product Categories</h1>
+        <h1 className="text-2xl font-semibold">{t('categories.title')}</h1>
         <Dialog open={openAddDialog} onOpenChange={setOpenAddDialog}>
           <DialogTrigger asChild>
             <GenericButton>
               <Plus className="h-4 w-4 mr-2" />
-              Add Category
+              {t('categories.addCategory')}
             </GenericButton>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Add New Category</DialogTitle>
+              <DialogTitle>{t('categories.addNewCategory')}</DialogTitle>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="category-name" className="text-right">
-                  Category Name
+                  {t('categories.categoryName')}
                 </Label>
                 <Input
                   id="category-name"
@@ -128,23 +130,23 @@ const CategoriesTablePage = () => {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="category-description" className="text-right">
-                  Description
+                  {t('categories.description')}
                 </Label>
                 <Textarea
                   id="category-description"
                   className="col-span-3"
                   value={newCategoryDescription}
                   onChange={(e) => setNewCategoryDescription(e.target.value)}
-                  placeholder="Enter category description..."
+                  placeholder={t('categories.descriptionPlaceholder')}
                 />
               </div>
               <div>
-                <Label htmlFor="sub-categories">Sub-categories (optional)</Label>
+                <Label htmlFor="sub-categories">{t('categories.subCategories')}</Label>
                 {newSubCategories.map((sub, index) => (
                   <div key={index} className="flex items-center space-x-2 my-3">
                     <Input
                       type="text"
-                      placeholder="Sub-category name"
+                      placeholder={t('categories.subCategoryPlaceholder')}
                       value={sub}
                       onChange={(e) => handleSubCategoryInputChange(index, e.target.value)}
                     />
@@ -156,16 +158,16 @@ const CategoriesTablePage = () => {
                   </div>
                 ))}
                 <GenericButton type="button" variant="secondary" size="sm" className="mt-2" onClick={handleAddSubCategoryInput}>
-                  Add Sub-category
+                  {t('categories.addSubCategory')}
                 </GenericButton>
               </div>
             </div>
             <div className="flex justify-end">
               <GenericButton variant="secondary" onClick={() => setOpenAddDialog(false)}>
-                Cancel
+                {t('common.cancel')}
               </GenericButton>
               <GenericButton className="ml-2" onClick={handleAddCategory}>
-                Add Category
+                {t('categories.addCategory')}
               </GenericButton>
             </div>
           </DialogContent>
@@ -179,7 +181,7 @@ const CategoriesTablePage = () => {
           </span>
           <Input
             type="search"
-            placeholder="Search categories..."
+            placeholder={t('categories.searchPlaceholder')}
             className="pl-10"
             value={searchQuery}
             onChange={handleSearchChange}
@@ -189,7 +191,7 @@ const CategoriesTablePage = () => {
           <DropdownMenuTrigger asChild>
             <GenericButton variant="outline">
               <Funnel className="h-4 w-4 mr-2 md:mr-0" />
-              <span className='hidden md:inline'>Filter Category</span>
+              <span className='hidden md:inline'>{t('categories.filterCategory')}</span>
               <ChevronDown className="h-4 w-4 ml-2 md:mr-0" />
             </GenericButton>
           </DropdownMenuTrigger>
@@ -203,11 +205,11 @@ const CategoriesTablePage = () => {
         <Table>
           <TableHeader>
             <TableRow className='text-amber-300'>
-              <TableHead className='text-amber-300'>Category Name</TableHead>
-              <TableHead className='text-amber-300'>Description</TableHead>
-              <TableHead className='text-amber-300'>Sub-categories</TableHead>
-              <TableHead className='text-amber-300'>Date Created</TableHead>
-              <TableHead className='text-amber-300 text-right'>Actions</TableHead>
+              <TableHead className='text-amber-300'>{t('categories.categoryName')}</TableHead>
+              <TableHead className='text-amber-300'>{t('categories.description')}</TableHead>
+              <TableHead className='text-amber-300'>{t('categories.subCategories')}</TableHead>
+              <TableHead className='text-amber-300'>{t('categories.dateCreated')}</TableHead>
+              <TableHead className='text-amber-300 text-right'>{t('common.actions')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -231,7 +233,7 @@ const CategoriesTablePage = () => {
                       <DialogContent>
                         <DialogHeader>
                           <DialogTitle className='text-amber-500'>
-                            Sub-categories for {parent.name}
+                            {t('categories.subCategoriesFor', { name: parent.name })}
                           </DialogTitle>
                         </DialogHeader>
                         <ul className="list-disc pl-5 py-2">
@@ -242,7 +244,7 @@ const CategoriesTablePage = () => {
                       </DialogContent>
                     </Dialog>
                   ) : (
-                    <span className="text-muted-foreground italic">No sub-categories</span>
+                    <span className="text-muted-foreground italic">{t('categories.noSubCategories')}</span>
                   )}
                 </TableCell>
                 <TableCell className='py-4'>{parent.dateCreated}</TableCell>
@@ -259,7 +261,7 @@ const CategoriesTablePage = () => {
             {parentCategories.length === 0 && (
               <TableRow>
                 <TableCell colSpan={5} className="text-center py-4">
-                  No categories found.
+                  {t('categories.noCategoriesFound')}
                 </TableCell>
               </TableRow>
             )}

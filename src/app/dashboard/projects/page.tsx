@@ -57,6 +57,7 @@ import {
 } from "@/components/ui/sheet";
 import { NegotiationChat } from "@/app/dashboard/(components)/negotiation/NegotiationChat";
 import { workers } from "@/app/utils/fakes/workersFakes";
+import { useTranslations } from '@/app/hooks/useTranslations';
 
 // Temporary Pagination component implementation
 interface PaginationProps {
@@ -101,6 +102,7 @@ const Pagination = ({ total, current, onPageChange }: PaginationProps) => {
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Page = () => {
+  const { t } = useTranslations();
   // State for tabs
   const [activeTab, setActiveTab] = useState("budgetExpense");
   // State for projects
@@ -764,11 +766,11 @@ const Page = () => {
             <Dialog open={budgetModalOpen} onOpenChange={setBudgetModalOpen}>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Manage Budget & Expense</DialogTitle>
+                  <DialogTitle>{t('dashboard.manageBudgetExpense')}</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleBudgetSubmit} className="space-y-4">
                   <div>
-                    <Label htmlFor="description">Description</Label>
+                    <Label htmlFor="description">{t('dashboard.description')}</Label>
                     <input
                       id="description"
                       type="text"
@@ -784,7 +786,7 @@ const Page = () => {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="stage">Stage</Label>
+                    <Label htmlFor="stage">{t('dashboard.stage')}</Label>
                     <select
                       id="stage"
                       className="w-full border rounded px-3 py-2 mt-1"
@@ -794,14 +796,14 @@ const Page = () => {
                       }
                       required
                     >
-                      <option value="">Select Stage</option>
-                      <option value="Foundation">Foundation</option>
-                      <option value="Roofing">Roofing</option>
-                      <option value="Finishing">Finishing</option>
+                      <option value="">{t('dashboard.selectStage')}</option>
+                      <option value="Foundation">{t('dashboard.foundation')}</option>
+                      <option value="Roofing">{t('dashboard.roofing')}</option>
+                      <option value="Finishing">{t('dashboard.finishing')}</option>
                     </select>
                   </div>
                   <div>
-                    <Label htmlFor="expenseAmount">Expense Amount (RWF)</Label>
+                    <Label htmlFor="expenseAmount">{t('dashboard.expenseAmount')}</Label>
                     <input
                       id="expenseAmount"
                       type="number"
@@ -819,7 +821,7 @@ const Page = () => {
                     {budgetData.expenseAmount &&
                       Number(budgetData.expenseAmount) < 5000 && (
                         <div className="text-red-600 text-xs mt-1">
-                          Expense amount must be at least 5,000 RWF
+                          {t('dashboard.expenseAmountMustBeAtLeast')}
                         </div>
                       )}
                   </div>
@@ -830,7 +832,7 @@ const Page = () => {
                       onClick={() => setBudgetModalOpen(false)}
                       disabled={budgetLoading}
                     >
-                      Cancel
+                      {t('dashboard.cancel')}
                     </button>
                     <button
                       type="submit"
@@ -839,20 +841,18 @@ const Page = () => {
                         budgetLoading || Number(budgetData.expenseAmount) < 5000
                       }
                     >
-                      {budgetLoading ? "Saving..." : "Create Entry"}
+                      {budgetLoading ? "Saving..." : t('dashboard.createEntry')}
                     </button>
                   </DialogFooter>
                 </form>
                 {/* List existing budget/expense entries */}
                 <div className="mt-6">
-                  <h3 className="font-semibold mb-2">
-                    Existing Budget/Expense Entries
-                  </h3>
+                  <h3 className="font-semibold mb-2">{t('dashboard.existingBudgetExpenseEntries')}</h3>
                   {budgetLoading ? (
                     <div className="text-amber-600">Loading...</div>
                   ) : budgetEntries.length === 0 ? (
                     <div className="text-gray-500 italic">
-                      No entries found.
+                      {t('dashboard.noEntriesFound')}
                     </div>
                   ) : (
                     <ul className="space-y-2">
@@ -875,30 +875,30 @@ const Page = () => {
                           >
                             <div>
                               <span className="font-semibold">
-                                Description:
+                                {t('dashboard.description')}:
                               </span>{" "}
                               {entry.description}
                             </div>
                             <div>
-                              <span className="font-semibold">Stage:</span>{" "}
+                              <span className="font-semibold">{t('dashboard.stage')}:</span>{" "}
                               {entry.stage}
                             </div>
                             <div>
-                              <span className="font-semibold">Amount:</span>{" "}
+                              <span className="font-semibold">{t('dashboard.amount')}:</span>{" "}
                               {entry.expenseAmount?.toLocaleString()} RWF
                             </div>
                             <div className="flex items-center gap-2 mt-1">
                               <span className="font-semibold">
-                                {percentUsed}% used
+                                {percentUsed}% {t('dashboard.used')}
                               </span>
                               {overSpent && (
                                 <span className="text-red-600 font-bold ml-2">
-                                  (Over Spent)
+                                  ({t('dashboard.overSpent')})
                                 </span>
                               )}
                             </div>
                             <div className="flex items-center gap-2">
-                              <span className="font-semibold">Remaining:</span>
+                              <span className="font-semibold">{t('dashboard.remaining')}:</span>
                               <span
                                 className={
                                   overSpent
@@ -915,7 +915,7 @@ const Page = () => {
                               </span>
                               {overSpent && (
                                 <span className="ml-2 text-xs bg-red-100 text-red-700 px-2 py-1 rounded">
-                                  Over Spent
+                                  {t('dashboard.overSpent')}
                                 </span>
                               )}
                             </div>
@@ -930,11 +930,11 @@ const Page = () => {
 
             <div className="p-6 flex flex-col gap-8">
               <h2 className="text-xl font-bold text-amber-800 mb-4">
-                Budget & Expense Management
+                {t('dashboard.budgetExpenseManagement')}
               </h2>
               {acceptedBidsBudget.length === 0 ? (
                 <div className="text-amber-700">
-                  No assigned projects found.
+                  {t('dashboard.noAssignedProjectsFound')}
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -956,33 +956,33 @@ const Page = () => {
                         className="bg-gradient-to-br from-amber-50 via-white to-amber-100 rounded-xl shadow p-5 border border-amber-200"
                       >
                         <div className="font-bold text-amber-800 mb-2">
-                          Project ID:{" "}
+                          {t('dashboard.projectId')}:{" "}
                           <span className="font-mono">
                             {bid.finalProjectId}
                           </span>
                         </div>
                         <div className="text-sm text-gray-700 mb-2">
-                          <span className="font-semibold">Bid Amount:</span>{" "}
+                          <span className="font-semibold">{t('dashboard.bidAmount')}:</span>{" "}
                           {bid.amount?.toLocaleString()} RWF
                         </div>
                         <div className="text-xs text-gray-500 mb-2">
-                          Accepted At:{" "}
+                          {t('dashboard.acceptedAt')}:{" "}
                           {new Date(
                             bid.updatedAt || bid.createdAt
                           ).toLocaleDateString()}
                         </div>
                         <div className="text-xs text-gray-500 mb-2">
-                          Message: {bid.message}
+                          {t('dashboard.message')}: {bid.message}
                         </div>
                         <div className="text-xs text-gray-500 mb-2">
-                          Owner: {bid.finalProject?.ownerId}
+                          {t('dashboard.owner')}: {bid.finalProject?.ownerId}
                         </div>
                         <button
                           className="mt-2 bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600"
                           onClick={() => openBudgetModal(bid)}
                           disabled={budgetLoading}
                         >
-                          Manage Budget & Expense
+                          {t('dashboard.manageBudgetExpense')}
                         </button>
                       </div>
                     );
@@ -1004,11 +1004,11 @@ const Page = () => {
             >
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Manage Milestones</DialogTitle>
+                  <DialogTitle>{t('dashboard.manageMilestones')}</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleMilestoneSubmit} className="space-y-4">
                   <div>
-                    <Label htmlFor="foundation">Foundation (%)</Label>
+                    <Label htmlFor="foundation">{t('dashboard.foundation')}</Label>
                     <input
                       id="foundation"
                       type="number"
@@ -1026,7 +1026,7 @@ const Page = () => {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="roofing">Roofing (%)</Label>
+                    <Label htmlFor="roofing">{t('dashboard.roofing')}</Label>
                     <input
                       id="roofing"
                       type="number"
@@ -1044,7 +1044,7 @@ const Page = () => {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="finishing">Finishing (%)</Label>
+                    <Label htmlFor="finishing">{t('dashboard.finishing')}</Label>
                     <input
                       id="finishing"
                       type="number"
@@ -1068,7 +1068,7 @@ const Page = () => {
                       onClick={() => setMilestoneModalOpen(false)}
                       disabled={milestoneLoading}
                     >
-                      Cancel
+                      {t('dashboard.cancel')}
                     </button>
                     <button
                       type="submit"
@@ -1078,8 +1078,8 @@ const Page = () => {
                       {milestoneLoading
                         ? "Saving..."
                         : milestoneId
-                        ? "Update Milestone"
-                        : "Create Milestone"}
+                        ? t('dashboard.updateMilestone')
+                        : t('dashboard.createMilestone')}
                     </button>
                   </DialogFooter>
                 </form>
@@ -1088,7 +1088,7 @@ const Page = () => {
 
             <div className="p-6">
               <h2 className="text-xl font-bold text-amber-800 mb-4">
-                Assigned Projects (Accepted Bids)
+                {t('dashboard.assignedProjectsAcceptedBids')}
               </h2>
               {bidsLoading ? (
                 <div className="text-amber-600">Loading bids...</div>
@@ -1096,7 +1096,7 @@ const Page = () => {
                 <div className="text-red-500">{bidsError}</div>
               ) : acceptedBids.length === 0 ? (
                 <div className="text-amber-700">
-                  No assigned projects found.
+                  {t('dashboard.noAssignedProjectsFound')}
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -1106,31 +1106,31 @@ const Page = () => {
                       className="bg-gradient-to-br from-amber-50 via-white to-amber-100 rounded-xl shadow p-5 border border-amber-200"
                     >
                       <div className="font-bold text-amber-800 mb-2">
-                        Project ID:{" "}
+                        {t('dashboard.projectId')}:{" "}
                         <span className="font-mono">{bid.finalProjectId}</span>
                       </div>
                       <div className="text-sm text-gray-700 mb-2">
-                        <span className="font-semibold">Bid Amount:</span>{" "}
+                        <span className="font-semibold">{t('dashboard.bidAmount')}:</span>{" "}
                         {bid.amount?.toLocaleString()} RWF
                       </div>
                       <div className="text-xs text-gray-500 mb-2">
-                        Accepted At:{" "}
+                        {t('dashboard.acceptedAt')}:{" "}
                         {new Date(
                           bid.updatedAt || bid.createdAt
                         ).toLocaleDateString()}
                       </div>
                       <div className="text-xs text-gray-500 mb-2">
-                        Message: {bid.message}
+                        {t('dashboard.message')}: {bid.message}
                       </div>
                       <div className="text-xs text-gray-500 mb-2">
-                        Owner: {bid.finalProject?.ownerId}
+                        {t('dashboard.owner')}: {bid.finalProject?.ownerId}
                       </div>
                       <button
                         className="mt-2 bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600"
                         onClick={() => openMilestoneModal(bid)}
                         disabled={milestoneLoading}
                       >
-                        Manage Milestones
+                        {t('dashboard.manageMilestones')}
                       </button>
                     </div>
                   ))}
@@ -1153,11 +1153,11 @@ const Page = () => {
             >
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Manage Timeline</DialogTitle>
+                  <DialogTitle>{t('dashboard.manageTimeline')}</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleTimelineSubmit} className="space-y-4">
                   <div>
-                    <Label htmlFor="startedAt">Start Date & Time</Label>
+                    <Label htmlFor="startedAt">{t('dashboard.startDate')}</Label>
                     <input
                       id="startedAt"
                       type="datetime-local"
@@ -1173,7 +1173,7 @@ const Page = () => {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="endedAt">End Date & Time</Label>
+                    <Label htmlFor="endedAt">{t('dashboard.endDate')}</Label>
                     <input
                       id="endedAt"
                       type="datetime-local"
@@ -1198,7 +1198,7 @@ const Page = () => {
                       onClick={() => setTimelineModalOpen(false)}
                       disabled={timelineLoading}
                     >
-                      Cancel
+                      {t('dashboard.cancel')}
                     </button>
                     <button
                       type="submit"
@@ -1208,8 +1208,8 @@ const Page = () => {
                       {timelineLoading
                         ? "Saving..."
                         : timelineId
-                        ? "Update Timeline"
-                        : "Create Timeline"}
+                        ? t('dashboard.updateTimeline')
+                        : t('dashboard.createTimeline')}
                     </button>
                   </DialogFooter>
                 </form>
@@ -1217,7 +1217,7 @@ const Page = () => {
             </Dialog>
             <div className="p-6">
               <h2 className="text-xl font-bold text-amber-800 mb-4">
-                Assigned Projects (Accepted Bids)
+                {t('dashboard.assignedProjectsAcceptedBids')}
               </h2>
               {bidsLoading ? (
                 <div className="text-amber-600">Loading bids...</div>
@@ -1225,7 +1225,7 @@ const Page = () => {
                 <div className="text-red-500">{bidsError}</div>
               ) : acceptedBidsTimeline.length === 0 ? (
                 <div className="text-amber-700">
-                  No assigned projects found.
+                  {t('dashboard.noAssignedProjectsFound')}
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -1235,31 +1235,31 @@ const Page = () => {
                       className="bg-gradient-to-br from-amber-50 via-white to-amber-100 rounded-xl shadow p-5 border border-amber-200"
                     >
                       <div className="font-bold text-amber-800 mb-2">
-                        Project ID:{" "}
+                        {t('dashboard.projectId')}:{" "}
                         <span className="font-mono">{bid.finalProjectId}</span>
                       </div>
                       <div className="text-sm text-gray-700 mb-2">
-                        <span className="font-semibold">Bid Amount:</span>{" "}
+                        <span className="font-semibold">{t('dashboard.bidAmount')}:</span>{" "}
                         {bid.amount?.toLocaleString()} RWF
                       </div>
                       <div className="text-xs text-gray-500 mb-2">
-                        Accepted At:{" "}
+                        {t('dashboard.acceptedAt')}:{" "}
                         {new Date(
                           bid.updatedAt || bid.createdAt
                         ).toLocaleDateString()}
                       </div>
                       <div className="text-xs text-gray-500 mb-2">
-                        Message: {bid.message}
+                        {t('dashboard.message')}: {bid.message}
                       </div>
                       <div className="text-xs text-gray-500 mb-2">
-                        Owner: {bid.finalProject?.ownerId}
+                        {t('dashboard.owner')}: {bid.finalProject?.ownerId}
                       </div>
                       <button
                         className="mt-2 bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600"
                         onClick={() => openTimelineModal(bid)}
                         disabled={timelineLoading}
                       >
-                        Manage Timeline
+                        {t('dashboard.manageTimeline')}
                       </button>
                     </div>
                   ))}
@@ -1275,11 +1275,11 @@ const Page = () => {
             <Dialog open={bidModalOpen} onOpenChange={setBidModalOpen}>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Place a Bid</DialogTitle>
+                  <DialogTitle>{t('dashboard.placeABid')}</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handlePlaceBid} className="space-y-4">
                   <div>
-                    <Label htmlFor="amount">Amount (RWF)</Label>
+                    <Label htmlFor="amount">{t('dashboard.amount')}</Label>
                     <input
                       id="amount"
                       type="number"
@@ -1299,7 +1299,7 @@ const Page = () => {
                     )}
                   </div>
                   <div>
-                    <Label htmlFor="message">Message</Label>
+                    <Label htmlFor="message">{t('dashboard.message')}</Label>
                     <textarea
                       id="message"
                       className="w-full border rounded px-3 py-2 mt-1"
@@ -1326,7 +1326,7 @@ const Page = () => {
                       required
                     />
                     <Label htmlFor="agreed">
-                      I agree to the terms and conditions
+                      {t('dashboard.iAgreeToTerms')}
                     </Label>
                   </div>
                   <DialogFooter>
@@ -1336,14 +1336,14 @@ const Page = () => {
                       onClick={() => setBidModalOpen(false)}
                       disabled={placingBid}
                     >
-                      Cancel
+                      {t('dashboard.cancel')}
                     </button>
                     <button
                       type="submit"
                       className="px-4 py-2 rounded bg-amber-500 text-white hover:bg-amber-600 disabled:opacity-50"
                       disabled={placingBid}
                     >
-                      {placingBid ? "Placing..." : "Place Bid"}
+                      {placingBid ? "Placing..." : t('dashboard.placeBid')}
                     </button>
                   </DialogFooter>
                 </form>
@@ -1354,7 +1354,7 @@ const Page = () => {
               {/* --- Section 1: Manage Your Bids --- */}
               <section>
                 <h2 className="text-xl font-bold text-amber-800 mb-4">
-                  Manage Your Bids
+                  {t('dashboard.manageYourBids')}
                 </h2>
                 {bidsLoading ? (
                   <div className="text-amber-600">Loading bids...</div>
@@ -1374,7 +1374,7 @@ const Page = () => {
                         >
                           <div className="flex justify-between items-center mb-2">
                             <div className="font-bold text-amber-800">
-                              Bid: {bid.amount?.toLocaleString()} RWF
+                              {t('dashboard.bid')}: {bid.amount?.toLocaleString()} RWF
                             </div>
                             <span
                               className={`text-xs px-2 py-1 rounded-full ${
@@ -1394,13 +1394,13 @@ const Page = () => {
                             {bid.message}
                           </div>
                           <div className="text-xs text-gray-500 mb-2">
-                            Project ID:{" "}
+                            {t('dashboard.projectId')}:{" "}
                             <span className="font-mono">
                               {bid.finalProjectId}
                             </span>
                           </div>
                           <div className="text-xs text-gray-500 mb-2">
-                            Created:{" "}
+                            {t('dashboard.created')}:{" "}
                             {new Date(bid.createdAt).toLocaleDateString()}
                           </div>
                           <div className="flex gap-2 items-center mt-2">
@@ -1418,7 +1418,7 @@ const Page = () => {
                               >
                                 {withdrawing === bid.id
                                   ? "Withdrawing..."
-                                  : "Withdraw"}
+                                  : t('dashboard.withdraw')}
                               </button>
                             )}
                           </div>
@@ -1432,7 +1432,7 @@ const Page = () => {
               {/* --- Section 2: Available Projects to Bid On --- */}
               <section className="mt-12">
                 <h2 className="text-xl font-bold text-amber-800 mb-4">
-                  Available Projects to Bid On
+                  {t('dashboard.availableProjectsToBidOn')}
                 </h2>
                 {projectsLoading ? (
                   <div className="text-amber-600">
@@ -1442,7 +1442,7 @@ const Page = () => {
                   <div className="text-red-500">{projectsError}</div>
                 ) : availableProjects.length === 0 ? (
                   <div className="text-amber-700">
-                    No open projects available for bidding.
+                    {t('dashboard.noOpenProjectsAvailableForBidding')}
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -1452,28 +1452,28 @@ const Page = () => {
                         className="bg-gradient-to-br from-white via-amber-50 to-amber-100 rounded-xl shadow p-5 border border-amber-200"
                       >
                         <div className="font-bold text-amber-800 mb-2">
-                          Project ID:{" "}
+                          {t('dashboard.projectId')}:{" "}
                           <span className="font-mono">{project.id}</span>
                         </div>
                         <div className="text-sm text-gray-700 mb-2">
-                          <span className="font-semibold">Status:</span>{" "}
+                          <span className="font-semibold">{t('dashboard.status')}:</span>{" "}
                           {project.status}
                         </div>
                         <div className="text-xs text-gray-500 mb-2">
-                          Created:{" "}
+                          {t('dashboard.created')}:{" "}
                           {new Date(project.createdAt).toLocaleDateString()}
                         </div>
                         <div className="text-xs text-gray-500 mb-2">
-                          Owner: {project.owner?.firstName}{" "}
+                          {t('dashboard.owner')}: {project.owner?.firstName}{" "}
                           {project.owner?.lastName}
                         </div>
                         <div className="text-xs text-gray-500 mb-2">
-                          Est. Cost:{" "}
+                          {t('dashboard.estCost')}:{" "}
                           {project.choosenEstimation?.estimatedCost?.toLocaleString()}{" "}
                           RWF
                         </div>
                         <div className="text-xs text-gray-500 mb-2">
-                          Description:{" "}
+                          {t('dashboard.description')}:{" "}
                           {project.choosenEstimation?.description?.slice(
                             0,
                             120
@@ -1486,7 +1486,7 @@ const Page = () => {
                           className="mt-2 bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600"
                           onClick={() => openBidModal(project)}
                         >
-                          Bid
+                          {t('dashboard.bid')}
                         </button>
                       </div>
                     ))}
@@ -1505,7 +1505,7 @@ const Page = () => {
             >
               <SheetContent side="right" className="max-w-lg w-full">
                 <SheetHeader>
-                  <SheetTitle>Negotiation Chat</SheetTitle>
+                  <SheetTitle>{t('dashboard.negotiationChat')}</SheetTitle>
                 </SheetHeader>
                 {negotiationBid && (
                   <NegotiationChat
@@ -1514,12 +1514,12 @@ const Page = () => {
                   />
                 )}
                 <SheetClose className="mt-4 px-4 py-2 bg-amber-500 text-white rounded hover:bg-amber-600">
-                  Close
+                  {t('dashboard.close')}
                 </SheetClose>
               </SheetContent>
               <div>
                 <h2 className="text-xl font-bold text-amber-800 mb-4">
-                  Your Bids (Negotiation)
+                  {t('dashboard.yourBidsNegotiation')}
                 </h2>
                 {bidsLoading ? (
                   <div className="text-amber-600">Loading bids...</div>
@@ -1535,17 +1535,17 @@ const Page = () => {
                         className="bg-gradient-to-br from-amber-50 via-white to-amber-100 rounded-xl shadow p-5 border border-amber-200"
                       >
                         <div className="font-bold text-amber-800 mb-2">
-                          Project ID:{" "}
+                          {t('dashboard.projectId')}:{" "}
                           <span className="font-mono">
                             {bid.finalProjectId}
                           </span>
                         </div>
                         <div className="text-sm text-gray-700 mb-2">
-                          <span className="font-semibold">Bid Amount:</span>{" "}
+                          <span className="font-semibold">{t('dashboard.bidAmount')}:</span>{" "}
                           {bid.amount?.toLocaleString()} RWF
                         </div>
                         <div className="text-xs text-gray-500 mb-2">
-                          Message: {bid.message}
+                          {t('dashboard.message')}: {bid.message}
                         </div>
                         <button
                           className="mt-2 bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600"
@@ -1554,7 +1554,7 @@ const Page = () => {
                             setNegotiationDrawerOpen(true);
                           }}
                         >
-                          Negotiate
+                          {t('dashboard.negotiate')}
                         </button>
                       </div>
                     ))}
@@ -1574,19 +1574,17 @@ const Page = () => {
             <Dialog open={assignModalOpen} onOpenChange={setAssignModalOpen}>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Assign Specialist/Worker</DialogTitle>
+                  <DialogTitle>{t('dashboard.assignSpecialistWorker')}</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div>
-                    <label className="block mb-1 font-medium">
-                      Select Role
-                    </label>
+                    <label className="block mb-1 font-medium">{t('dashboard.selectRole')}</label>
                     <select
                       className="w-full border rounded px-3 py-2"
                       value={selectedRole}
                       onChange={(e) => setSelectedRole(e.target.value)}
                     >
-                      <option value="">-- Select Role --</option>
+                      <option value="">{t('dashboard.selectRole')}</option>
                       {specialistRoles.map((role) => (
                         <option key={role} value={role}>
                           {role}
@@ -1596,15 +1594,13 @@ const Page = () => {
                   </div>
                   {selectedRole && (
                     <div>
-                      <label className="block mb-1 font-medium">
-                        Select Worker
-                      </label>
+                      <label className="block mb-1 font-medium">{t('dashboard.selectWorker')}</label>
                       <select
                         className="w-full border rounded px-3 py-2"
                         value={selectedWorkerId}
                         onChange={(e) => setSelectedWorkerId(e.target.value)}
                       >
-                        <option value="">-- Select Worker --</option>
+                        <option value="">{t('dashboard.selectWorker')}</option>
                         {workers
                           .filter(
                             (w) => w.specialist === selectedRole && w.available
@@ -1624,7 +1620,7 @@ const Page = () => {
                     className="px-4 py-2 rounded border"
                     onClick={() => setAssignModalOpen(false)}
                   >
-                    Cancel
+                    {t('dashboard.cancel')}
                   </button>
                   <button
                     type="button"
@@ -1632,17 +1628,17 @@ const Page = () => {
                     disabled={!selectedRole || !selectedWorkerId}
                     onClick={handleAssignWorker}
                   >
-                    Assign
+                    {t('dashboard.assign')}
                   </button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
             <h2 className="text-xl font-bold text-amber-800 mb-4">
-              Assign Specialists/Workers
+              {t('dashboard.assignSpecialistsWorkers')}
             </h2>
             {acceptedBidsAssign.length === 0 ? (
               <div className="text-amber-700">
-                No accepted bids to assign specialists.
+                {t('dashboard.noAcceptedBidsToAssignSpecialists')}
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -1652,22 +1648,22 @@ const Page = () => {
                     className="bg-gradient-to-br from-amber-50 via-white to-amber-100 rounded-xl shadow p-5 border border-amber-200"
                   >
                     <div className="font-bold text-amber-800 mb-2">
-                      Project ID:{" "}
+                      {t('dashboard.projectId')}:{" "}
                       <span className="font-mono">{bid.finalProjectId}</span>
                     </div>
                     <div className="text-sm text-gray-700 mb-2">
-                      <span className="font-semibold">Bid Amount:</span>{" "}
+                      <span className="font-semibold">{t('dashboard.bidAmount')}:</span>{" "}
                       {bid.amount?.toLocaleString()} RWF
                     </div>
                     <div className="text-xs text-gray-500 mb-2">
-                      Message: {bid.message}
+                      {t('dashboard.message')}: {bid.message}
                     </div>
                     <div className="mt-2">
                       <button
                         className="bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600"
                         onClick={() => openAssignModal(bid)}
                       >
-                        Assign Work
+                        {t('dashboard.assignWork')}
                       </button>
                     </div>
                     {/* Show assigned workers for this bid */}
@@ -1675,7 +1671,7 @@ const Page = () => {
                       assignedWorkers[bid.id].length > 0 && (
                         <div className="mt-4">
                           <div className="font-semibold text-amber-700 mb-1">
-                            Assigned Workers:
+                            {t('dashboard.assignedWorkers')}:
                           </div>
                           <ul className="space-y-1">
                             {assignedWorkers[bid.id].map((aw, idx) => (
@@ -1708,48 +1704,36 @@ const Page = () => {
       <div className="mb-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         <div className="bg-amber-400 rounded-xl p-6 shadow text-center">
           <div className="text-3xl font-bold text-white">{projectsBidOn}</div>
-          <div className="text-amber-900 mt-2">Projects Bid On</div>
+          <div className="text-amber-900 mt-2">{t('dashboard.projectsBidOn')}</div>
         </div>
         <div className="bg-amber-200 rounded-xl p-6 shadow text-center">
           <div className="text-3xl font-bold text-amber-900">
             {acceptedCount}
           </div>
-          <div className="text-amber-900 mt-2">Accepted</div>
+          <div className="text-amber-900 mt-2">{t('dashboard.accepted')}</div>
         </div>
         <div className="bg-amber-100 rounded-xl p-6 shadow text-center">
           <div className="text-3xl font-bold text-amber-900">
             {rejectedCount}
           </div>
-          <div className="text-amber-900 mt-2">Rejected</div>
+          <div className="text-amber-900 mt-2">{t('dashboard.rejected')}</div>
         </div>
         <div className="bg-white rounded-xl p-6 shadow text-center border border-amber-100">
           <div className="text-3xl font-bold text-amber-900">
             {withdrawnCount}
           </div>
-          <div className="text-amber-900 mt-2">Withdrawn</div>
+          <div className="text-amber-900 mt-2">{t('dashboard.withdrawn')}</div>
         </div>
       </div>
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
         <TabsList className="bg-white dark:bg-gray-800 border border-amber-200 rounded-full shadow flex flex-wrap gap-2 p-2">
-          <TabsTrigger value="budgetExpense" className="text-amber-700">
-            Budget & Expense
-          </TabsTrigger>
-          <TabsTrigger value="milestone" className="text-amber-700">
-            Milestone
-          </TabsTrigger>
-          <TabsTrigger value="timeline" className="text-amber-700">
-            Timeline
-          </TabsTrigger>
-          <TabsTrigger value="bids" className="text-amber-700">
-            Bids
-          </TabsTrigger>
-          <TabsTrigger value="negotiation" className="text-amber-700">
-            Negotiation
-          </TabsTrigger>
-          <TabsTrigger value="assign" className="text-amber-700">
-            Assign Specialist
-          </TabsTrigger>
+          <TabsTrigger value="budgetExpense" className="text-amber-700">{t('dashboard.budgetExpense')}</TabsTrigger>
+          <TabsTrigger value="milestone" className="text-amber-700">{t('dashboard.milestone')}</TabsTrigger>
+          <TabsTrigger value="timeline" className="text-amber-700">{t('dashboard.timeline')}</TabsTrigger>
+          <TabsTrigger value="bids" className="text-amber-700">{t('dashboard.bids')}</TabsTrigger>
+          <TabsTrigger value="negotiation" className="text-amber-700">{t('dashboard.negotiation')}</TabsTrigger>
+          <TabsTrigger value="assign" className="text-amber-700">{t('dashboard.assignSpecialist')}</TabsTrigger>
         </TabsList>
       </Tabs>
       {/* Tab content */}

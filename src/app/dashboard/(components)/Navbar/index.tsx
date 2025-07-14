@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Menu, Bell, Search } from "lucide-react";
+import { Menu, Bell } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "../../../redux";
 import { setIsSidebarCollapsed } from "../../../../state";
 import CustomSheet from "../shad_/CustomSheet";
@@ -8,6 +8,7 @@ import ModeToggle from "../../../../components/mode-toggle";
 import { useUserStore } from "../../../../store/userStore";
 import { getInitials } from "../../../../lib/utils";
 import { Avatar, AvatarFallback } from "../../../../components/ui/avatar";
+import FlagToggle from "@/app/(components)/Navbar/ToggleFlag";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -18,6 +19,9 @@ import Link from "next/link";
 import { NotificationModal } from "@/components/ui/notification-modal";
 import { useNotificationStore } from "../../../../store/notificationStore";
 import { useSocket } from "@/app/hooks/useSocket";
+import { dashboardFakes } from '@/app/utils/fakes/DashboardFakes';
+import { useTranslation } from 'react-i18next';
+
 const Navbar: React.FC = () => {
   const dispatch = useAppDispatch();
   // INITIATE STATE HERE :arrow_down:
@@ -75,6 +79,7 @@ const Navbar: React.FC = () => {
       socket.off("newNotification", handler);
     };
   }, [socket, fetchNotifications]);
+  const { t } = useTranslation();
   if (!isHydrated) {
     return (
       <div className="flex justify-between items-center w-full mb-7">
@@ -106,19 +111,6 @@ const Navbar: React.FC = () => {
           <Menu className="w-4 h-4" />
         </button>
       </div>
-      {/* CENTER (Admin specific search bar) */}
-      {userRole === "ADMIN" && (
-        <div className="hidden md:flex w-50 md:w-80 border-2 e rounded-lg focus:outline-none focus:border-blue-500">
-          <input
-            type="search"
-            placeholder="type to search ..."
-            className="px-4 w-full py-2 text-muted-foreground"
-          />
-          <div className="relative insert-y-0 left-0 px-3 flex items-center pointer-events-non w-12">
-            <Search className="text-muted-foreground" size={20} />
-          </div>
-        </div>
-      )}
       {/* RIGHT SIDE */}
       <div className='flex justify-end gap-5 w-full'>
         <div className='flex justify-between items-center text-right gap-5'>
@@ -132,7 +124,7 @@ const Navbar: React.FC = () => {
               onClick={() => setIsNotificationOpen(true)}
             />
             {getUnreadCount() > 0 && (
-              <span className='absolute top-2 right-2 inline-flex items-center justify-center px-[0.4rem] py-1 text-xs font-semibold leading-none text-red-100 bg-amber-500 rounded-full'>
+              <span className='absolute top-0 left-7 inline-flex items-center justify-center p-1 text-xs font-semibold leading-none text-red-100 bg-amber-500 rounded-full'>
                 {getUnreadCount()}
               </span>
             )}
@@ -146,6 +138,7 @@ const Navbar: React.FC = () => {
               error={error}
             />
           </div>
+          <FlagToggle />
           <hr className="hidden md:flex w-0 h-7 border border-solid border-l border-gray-300 mx-3" />
           {userName && (
             <DropdownMenu>
@@ -158,10 +151,10 @@ const Navbar: React.FC = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem asChild>
-                  <Link href="/dashboard/profile">Profile</Link>
+                  <Link href="/dashboard/profile">{t(dashboardFakes.navbar.profile)}</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/">Back Home</Link>
+                  <Link href="/">{t(dashboardFakes.navbar.backHome)}</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

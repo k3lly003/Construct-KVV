@@ -5,6 +5,7 @@ import React from "react";
 import { EmptyCartProps } from "@/app/utils/dtos/cart.dtos";
 import { Button } from "@/app/(components)/Button";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 
 const EmptyCart: React.FC<EmptyCartProps> = ({
   btnText,
@@ -13,6 +14,7 @@ const EmptyCart: React.FC<EmptyCartProps> = ({
   picture,
 }) => {
   const router = useRouter();
+  const { t } = useTranslation();
   const storePageUrl = "/store";
 
   const goToStore = () => {
@@ -30,13 +32,13 @@ const EmptyCart: React.FC<EmptyCartProps> = ({
           className="opacity-90" // Adjust opacity and blur as needed
         />
       </div>
-      <h2 className="text-xl text-gray-500 mb-2 relative z-20">{title}</h2>
+      <h2 className="text-xl text-gray-500 mb-2 relative z-20">{t('cart.empty')}</h2>
       <h1 className="text-3xl font-bold mb-8 text-gray-800 relative z-20">
-        {subTitle}
+        {t('cart.emptySubtitle')}
       </h1>
       <div className="z-20">
         <Button
-          text={btnText}
+          text={t('cart.continueShopping')}
           texSize={""}
           hoverBg={"hover:bg-gray-500"}
           borderCol={""}

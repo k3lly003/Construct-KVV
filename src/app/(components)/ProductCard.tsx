@@ -1,60 +1,72 @@
 import Image from 'next/image';
 import React from 'react';
 import Link from 'next/link';
+import { Heart } from 'lucide-react';
+import { Button } from './Button';
 
 interface ProductCardProps {
   product: any;
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
-  // Extract fields from backend product
   const thumbnail = product.thumbnailUrl || (product.images && product.images[0]?.url) || '/products/placeholder.jpg';
   const altText = product.images && product.images[0]?.alt || product.name;
   const name = product.name;
   const price = product.discountedPrice || product.price;
   const originalPrice = product.discountedPrice ? product.price : null;
-  const rating = product.rating || 0;
-  const reviewCount = product.reviewCount || 0;
   const productId = product.id;
 
   return (
     <Link href={`/product/${productId}`} className="block">
-      <div className="relative hover:shadow-md transition-shadow duration-200 space-y-3 mb-5 cursor-pointer">
-        <div className="aspect-w-1 h-40 w-full overflow-hidden">
+      <div className="bg-white overflow-hidden w-64 m-2 hover:shadow-lg cursor-pointer hover:rounded-xl transition-shadow">
+        <div className="relative">
           <Image
             src={thumbnail}
             alt={altText}
             width={300}
-            height={300}
-            className="object-cover w-full h-full"
+            height={224}
+            className="w-full h-56 object-cover rounded-xl"
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).src = '/products/placeholder.jpg';
             }}
           />
+          <div className="absolute top-2 right-2 border text-gray-100 rounded-full p-3 flex items-center justify-center cursor-pointer shadow-sm hover:bg-yellow-400 hover:border-yellow-400 transition-colors">
+            <Heart className="text-gray-100" />
+          </div>
         </div>
-        <div className="p-4 h-30 flex flex-col gap-3">
-          <h3 className="text-sm font-medium text-gray-900">
-            <span aria-hidden="true" className="absolute inset-0" />
-            {name}
-          </h3>
-          <div className="mt-1 flex items-center">
-            {/* Optionally add a star rating here if available */}
-            {rating > 0 && (
-              <>
-                <span className="text-yellow-500">★</span>
-                <p className="ml-1 text-sm text-gray-500">{rating}</p>
-                {reviewCount > 0 && <span className="ml-1 text-xs text-gray-400">({reviewCount})</span>}
-              </>
-            )}
+        <div className="p-4">
+          <div className="flex justify-between">
+            <h3 className="text-md font-semibold text-gray-900 w-[60%] mb-1">
+              {name}
+            </h3>
           </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            {originalPrice && (
-              <span className="line-through text-gray-400 text-sm">RwF {originalPrice.toLocaleString()}</span>
-            )}
-            <p className="font-semibold text-gray-900">
-              RwF {price.toLocaleString()}
-            </p>
+          <p className="text-sm text-gray-500 mb-2 overflow">
+            {product.description}
+          </p>
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              {originalPrice && (
+                <span className="line-through text-gray-400 text-sm mr-2">
+                  RwF {originalPrice.toLocaleString()}
+                </span>
+              )}
+              <span className="font-semibold text-md text-yellow-400">
+                {price} <span className="text-sm text-yellow-400">Rwf</span>
+              </span>
+            </div>
           </div>
+          <Button
+            text={"Add to cart"}
+            texSize={"text-sm"}
+            hoverBg={"hover:bg-yellow-400"}
+            borderCol={"border-yellow-300"}
+            bgCol={"white"}
+            textCol={"text-gray-800"}
+            border={"border-1"}
+            handleButton={() => alert(`Add to Cart clicked for ${product.name}`)}
+            padding={"p-3"}
+            round={"rounded-full"}
+          />
         </div>
       </div>
     </Link>

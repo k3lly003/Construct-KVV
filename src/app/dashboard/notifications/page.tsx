@@ -24,7 +24,8 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { useNotificationStore } from "@/store/notificationStore";
-import { formatNotificationTime } from "@/utils/formatTime";
+import { formatNotificationTime } from "@/app/utils/middlewares/formatTime";
+import { useTranslations } from '@/app/hooks/useTranslations';
 
 interface NotificationItem {
   id: string;
@@ -46,6 +47,7 @@ interface NotificationItem {
 }
 
 const Page = () => {
+  const { t } = useTranslations();
   const [activeTab, setActiveTab] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedNotification, setSelectedNotification] =
@@ -151,13 +153,13 @@ const Page = () => {
       if (notification.type === "seller_request") {
         // TODO: Implement API call to approve seller request
         console.log(
-          "Approving seller request for:",
+          t('dashboard.notifications.logApprovingSellerRequest'),
           notification.data?.userName
         );
       } else if (notification.type === "shop_approval") {
         // TODO: Implement API call to approve shop creation
         console.log(
-          "Approving shop creation for:",
+          t('dashboard.notifications.logApprovingShopCreation'),
           notification.data?.shopName
         );
       }
@@ -177,13 +179,13 @@ const Page = () => {
       if (notification.type === "seller_request") {
         // TODO: Implement API call to reject seller request
         console.log(
-          "Rejecting seller request for:",
+          t('dashboard.notifications.logRejectingSellerRequest'),
           notification.data?.userName
         );
       } else if (notification.type === "shop_approval") {
         // TODO: Implement API call to reject shop creation
         console.log(
-          "Rejecting shop creation for:",
+          t('dashboard.notifications.logRejectingShopCreation'),
           notification.data?.shopName
         );
       }
@@ -235,28 +237,32 @@ const Page = () => {
       case "seller_request":
         return (
           <Badge className="bg-blue-100 text-blue-800 text-xs">
-            Seller Request
+            {t('dashboard.notifications.sellerRequest')}
           </Badge>
         );
       case "shop_approval":
         return (
           <Badge className="bg-green-100 text-green-800 text-xs">
-            Shop Approval
+            {t('dashboard.notifications.shopApproval')}
           </Badge>
         );
       case "system":
         return (
           <Badge className="bg-yellow-100 text-yellow-800 text-xs">
-            System
+            {t('dashboard.notifications.system')}
           </Badge>
         );
       case "order":
         return (
-          <Badge className="bg-purple-100 text-purple-800 text-xs">Order</Badge>
+          <Badge className="bg-purple-100 text-purple-800 text-xs">
+            {t('dashboard.notifications.order')}
+          </Badge>
         );
       default:
         return (
-          <Badge className="bg-gray-100 text-gray-800 text-xs">Other</Badge>
+          <Badge className="bg-gray-100 text-gray-800 text-xs">
+            {t('dashboard.notifications.other')}
+          </Badge>
         );
     }
   };
@@ -265,19 +271,19 @@ const Page = () => {
     <div className="p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-4">
-        <h1 className="text-2xl font-semibold flex items-center">
-          <Bell className="mr-2 h-5 w-5" /> Notifications
-        </h1>
+          <h1 className="text-2xl font-semibold flex items-center">
+            <Bell className="mr-2 h-5 w-5" /> {t('dashboard.notifications.title')}
+          </h1>
           {unreadCount > 0 && (
             <Badge className="bg-amber-500 text-white">
-              {unreadCount} unread
+              {unreadCount} {t('dashboard.notifications.unread')}
             </Badge>
           )}
         </div>
         <div className="flex items-center space-x-2">
           <Input
             type="search"
-            placeholder="Search notifications..."
+            placeholder={t('dashboard.notifications.searchPlaceholder')}
             className="w-64"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -288,32 +294,32 @@ const Page = () => {
             onClick={handleMarkAllAsRead}
             disabled={unreadCount === 0}
           >
-            Mark All Read
+            {t('dashboard.notifications.markAllRead')}
           </GenericButton>
         </div>
       </div>
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-4">
         <TabsList>
           <TabsTrigger value="all">
-            All
+            {t('dashboard.notifications.all')}
             <Badge className="ml-2 bg-amber-500 text-white text-xs">
               {mappedNotifications.length}
             </Badge>
           </TabsTrigger>
           <TabsTrigger value="read">
-            Read
+            {t('dashboard.notifications.read')}
             <Badge className="ml-2 bg-amber-500 text-white text-xs">
               {readCount}
             </Badge>
           </TabsTrigger>
           <TabsTrigger value="unread">
-            Unread
+            {t('dashboard.notifications.unread')}
             <Badge className="ml-2 bg-amber-500 text-white text-xs">
               {unreadCount}
             </Badge>
           </TabsTrigger>
           <TabsTrigger value="orders">
-            Orders
+            {t('dashboard.notifications.orders')}
             <Badge className="ml-2 bg-amber-500 text-white text-xs">
               {orderCount}
             </Badge>
@@ -378,7 +384,7 @@ const Page = () => {
                               className="bg-green-600 hover:bg-green-700 text-white"
                             >
                               <CheckCircle className="w-3 h-3 mr-1" />
-                              Approve
+                              {t('dashboard.notifications.approve')}
                             </GenericButton>
                             <GenericButton
                               size="sm"
@@ -390,7 +396,7 @@ const Page = () => {
                               className="text-red-600 hover:text-red-700"
                             >
                               <XCircle className="w-3 h-3 mr-1" />
-                              Reject
+                              {t('dashboard.notifications.reject')}
                             </GenericButton>
                 </div>
                 )}
@@ -402,7 +408,7 @@ const Page = () => {
           {filteredNotifications.length === 0 && (
                 <div className="py-6 text-center text-sm text-gray-500">
                   <Bell className="w-12 h-12 mx-auto mb-2 text-gray-300" />
-                  <p>No notifications found.</p>
+                  <p>{t('dashboard.notifications.empty')}</p>
                 </div>
               )}
             </div>
@@ -416,7 +422,7 @@ const Page = () => {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold">
-                    Notification Details
+                    {t('dashboard.notifications.details')}
                   </h3>
                   <GenericButton
                     variant="outline"
@@ -458,7 +464,9 @@ const Page = () => {
                     <div className="space-y-3 pt-4 border-t">
                       {selectedNotification.data.userName && (
                         <div>
-                          <p className="text-sm font-medium">User Name</p>
+                          <p className="text-sm font-medium">
+                            {t('dashboard.notifications.userName')}
+                          </p>
                           <p className="text-sm text-gray-600">
                             {selectedNotification.data.userName}
                           </p>
@@ -466,7 +474,9 @@ const Page = () => {
                       )}
                       {selectedNotification.data.userEmail && (
                         <div>
-                          <p className="text-sm font-medium">User Email</p>
+                          <p className="text-sm font-medium">
+                            {t('dashboard.notifications.userEmail')}
+                          </p>
                           <p className="text-sm text-gray-600">
                             {selectedNotification.data.userEmail}
                           </p>
@@ -474,7 +484,9 @@ const Page = () => {
                       )}
                       {selectedNotification.data.shopName && (
                         <div>
-                          <p className="text-sm font-medium">Shop Name</p>
+                          <p className="text-sm font-medium">
+                            {t('dashboard.notifications.shopName')}
+                          </p>
                           <p className="text-sm text-gray-600">
                             {selectedNotification.data.shopName}
                           </p>
@@ -482,7 +494,9 @@ const Page = () => {
                       )}
                       {selectedNotification.data.requestDetails && (
                         <div>
-                          <p className="text-sm font-medium">Request Details</p>
+                          <p className="text-sm font-medium">
+                            {t('dashboard.notifications.requestDetails')}
+                          </p>
                           <p className="text-sm text-gray-600">
                             {selectedNotification.data.requestDetails}
                           </p>
@@ -494,7 +508,9 @@ const Page = () => {
                   {(selectedNotification.type === "seller_request" ||
                     selectedNotification.type === "shop_approval") && (
                     <div className="pt-4 border-t">
-                      <p className="text-sm font-medium mb-3">Actions</p>
+                      <p className="text-sm font-medium mb-3">
+                        {t('dashboard.notifications.actions')}
+                      </p>
                       <div className="flex space-x-2">
                         <GenericButton
                           onClick={() =>
@@ -503,7 +519,7 @@ const Page = () => {
                           className="bg-green-600 hover:bg-green-700 text-white"
                         >
                           <CheckCircle className="w-4 h-4 mr-2" />
-                          Approve
+                          {t('dashboard.notifications.approve')}
                         </GenericButton>
                         <GenericButton
                           variant="outline"
@@ -513,7 +529,7 @@ const Page = () => {
                           className="text-red-600 hover:text-red-700"
                         >
                           <XCircle className="w-4 h-4 mr-2" />
-                          Reject
+                          {t('dashboard.notifications.reject')}
                         </GenericButton>
                       </div>
                     </div>
@@ -526,7 +542,7 @@ const Page = () => {
               <CardContent className="p-6">
                 <div className="text-center text-gray-500">
                   <Bell className="w-12 h-12 mx-auto mb-2 text-gray-300" />
-                  <p>Select a notification to view details</p>
+                  <p>{t('dashboard.notifications.selectToView')}</p>
                 </div>
               </CardContent>
             </Card>

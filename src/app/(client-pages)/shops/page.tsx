@@ -9,8 +9,10 @@ import { mapShopToProfile } from '@/app/utils/mappers/shopMapper';
 import { ShopService } from '@/app/services/shopServices';
 import { Shop } from '@/types/shop';
 import { ShopSkeleton } from '@/app/utils/skeleton/Shop';
+import { useTranslations } from '@/app/hooks/useTranslations';
 
 const Page: NextPage = () => {
+  const { t } = useTranslations();
   const [shops, setShops] = useState<Shop[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -115,7 +117,7 @@ const Page: NextPage = () => {
   if (error) {
     return (
       <>
-        <DefaultPageBanner backgroundImage='/building.jpg' title='Available Shops'/>
+        <DefaultPageBanner backgroundImage='/building.jpg' title={t('shops.title')}/>
         <div className="container max-w-7xl mx-auto py-10 flex justify-center items-center min-h-[400px]">
           <div className="text-center">
             <h3 className="text-xl font-semibold text-red-600 mb-2">Error Loading Shops</h3>
@@ -135,7 +137,7 @@ const Page: NextPage = () => {
 
   return (
     <>
-      <DefaultPageBanner backgroundImage='/building.jpg' title='Available Shops'/>
+      <DefaultPageBanner backgroundImage='/building.jpg' title={t('shops.title')}/>
       <section className="container max-w-7xl mx-auto py-10 flex">
         <div className="w-full">
           <div className="mb-6 flex justify-center p-4 mb-6 bg-white rounded-xl shadow-sm">
