@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useTranslation } from 'react-i18next';
 import { locales, localeNames, type Locale } from '@/app/i18n/config';
@@ -64,7 +64,7 @@ export function LanguageSwitcher() {
           <DropdownMenuItem
             key={locale}
             onClick={() => handleLanguageChange(locale)}
-            className={i18n.language === locale ? 'bg-accent' : ''}
+            className={i18n.language === locale ? "bg-accent" : ""}
           >
             {localeNames[locale]}
           </DropdownMenuItem>
@@ -72,4 +72,4 @@ export function LanguageSwitcher() {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-} 
+}

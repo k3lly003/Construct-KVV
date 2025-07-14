@@ -48,27 +48,32 @@ export const Banner: React.FC = () => {
         <div className="max-w-6xl flex flex-col justify-start">
           {currentSlideData?.subtitleKey && (
             <span className="text-yellow-500 text-2xl font-semibold mb-2 block">
-              {getText(currentSlideData.subtitleKey, 'Subtitle')}
+              {getText(currentSlideData.subtitleKey, "")}
             </span>
           )}
           {currentSlideData?.titleKey && (
             <h2 className="text-green-500 text-5xl font-bold mb-4">
-              {getText(currentSlideData.titleKey, 'Your One-Stop Solution for Construction Needs')}
+              {getText(
+                "home.hero.title",
+                "Your One-Stop Solution for Construction Needs"
+              )}
             </h2>
           )}
           {currentSlideData?.descriptionKey && (
             <p className="text-gray-100 text-lg mb-6">
-              {getText(currentSlideData.descriptionKey, 'Find the best materials, services, and professionals for your construction projects')}
+              {getText(
+                "home.hero.subtitle",
+                "Find the best materials, services, and professionals for your construction projects"
+              )}
             </p>
           )}
           {currentSlideData?.buttonTextKey && (
             <>
               <button className="inline-flex items-center bg-yellow-500 text-gray-900 px-5 py-2 rounded-md font-semibold hover:bg-yellow-400 transition-colors w-fit">
-                {getText(currentSlideData.buttonTextKey, 'Get Started')}
+                {getText("home.hero.cta", "Get Started")}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </button>
             </>
-
           )}
         </div>
       </div>

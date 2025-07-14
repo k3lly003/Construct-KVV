@@ -1,5 +1,5 @@
-import React from 'react'
-import { useTranslation } from 'react-i18next';
+import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface ButtonProp{
     text: string;
@@ -30,7 +30,7 @@ const Button = ({text, texSize, hoverBg, borderCol, bgCol, textCol, border,paddi
         {translatedText}
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default Button
+export default Button;

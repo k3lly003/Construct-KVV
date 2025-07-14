@@ -26,7 +26,7 @@ const DealViewPage: React.FC = () => {
 
   return (
     <>
-      <DefaultPageBanner backgroundImage="/architect.jpg" title={"Deals"}/>
+      <DefaultPageBanner backgroundImage="/architect.jpg" title={"Deals"} />
       <div className="container max-w-6xl mx-auto py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <ProductGallery images={galleryImages} />

@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface ProductImage {
   id: string;
-  url: string;
+  url: string | StaticImageData;
   alt: string;
   isDefault: boolean;
 }
