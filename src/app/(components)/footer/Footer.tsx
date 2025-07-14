@@ -1,6 +1,7 @@
 import React from 'react';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 
 const constructionImages = [
   "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=300",
@@ -10,10 +11,11 @@ const constructionImages = [
 ];
 
 export const Footer: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <footer className="bg-black text-white w-full">
       <div className="w-full px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div className="max-w-6xl mx-auto flex justify-center items-center grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Logo and Company Info */}
           <div className="space-y-8">
             <div className="flex items-center space-x-3">
@@ -51,16 +53,16 @@ export const Footer: React.FC = () => {
 
             {/* Navigation Links */}
             <nav className="space-y-4">
-              <a href="#" className="block hover:text-yellow-400 transition-colors">About</a>
-              <a href="#" className="block hover:text-yellow-400 transition-colors">Shop</a>
-              <a href="#" className="block hover:text-yellow-400 transition-colors">Contact us</a>
-              <a href="#" className="block hover:text-yellow-400 transition-colors">Terms & condition</a>
+              <a href="#" className="block hover:text-yellow-400 transition-colors">{t('footer.about')}</a>
+              <a href="#" className="block hover:text-yellow-400 transition-colors">{t('footer.shop')}</a>
+              <a href="#" className="block hover:text-yellow-400 transition-colors">{t('footer.contact')}</a>
+              <a href="#" className="block hover:text-yellow-400 transition-colors">{t('footer.terms')}</a>
             </nav>
           </div>
 
           {/* Contact Information */}
           <div className="space-y-8">
-            <h3 className="text-xl font-semibold">Reach out</h3>
+            <h3 className="text-xl font-semibold">{t('footer.reachOut')}</h3>
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
                 <MapPin className="h-6 w-6 text-yellow-400" />
@@ -88,7 +90,7 @@ export const Footer: React.FC = () => {
 
           {/* Posts/Feeds */}
           <div>
-            <h3 className="text-xl font-semibold mb-6">Posts/Feeds</h3>
+            <h3 className="text-xl font-semibold mb-6">{t('footer.postsFeeds')}</h3>
             <div className="grid grid-cols-2 gap-4">
               {constructionImages.map((image, index) => (
                 <div key={index} className="aspect-square overflow-hidden rounded-lg">
@@ -96,7 +98,7 @@ export const Footer: React.FC = () => {
                     src={image}
                     width={100}
                     height={100}
-                    alt={`Construction project ${index + 1}`}
+                    alt={t('footer.constructionProject', { number: index + 1 })}
                     className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
                   />
                 </div>
@@ -106,11 +108,10 @@ export const Footer: React.FC = () => {
 
           {/* About Us */}
           <div className="space-y-6 w-[350px]">
-            <h3 className="text-xl font-semibold">About Us</h3>
+            <h3 className="text-xl font-semibold">{t('footer.aboutUs')}</h3>
             <div className="space-y-4">
               <p className="text-gray-400 text-md leading-relaxed">
-                At <strong className='text-amber-300'>KVV Construction</strong>, we understand that successful projects require more than just quality tools. We supply top-tier construction equipment while offering professional services that complement every purchase. <br /><br />
-                Our integrated approach means you get the right products backed by the expertise to use them effectively. From initial consultation to project completion, we&apos;re your trusted construction partner.
+                {t('footer.aboutParagraph', { strong: (chunks: any) => <strong className='text-amber-300'>{chunks}</strong> })}
               </p>
             </div>
           </div>
@@ -121,7 +122,7 @@ export const Footer: React.FC = () => {
       <div className="bg-yellow-400 py-4">
         <div className="w-full">
           <p className="text-black text-center">
-            Copyright ©2025 <a href="#" className="font-semibold hover:text-white transition-colors">KVVLtd</a>. All rights reserved.
+            {t('footer.copyright', { year: '2025', company: <a href="#" className="font-semibold hover:text-white transition-colors">KVVLtd</a> })}
           </p>
         </div>
       </div>

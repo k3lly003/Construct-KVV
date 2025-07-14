@@ -16,12 +16,20 @@ import DefaultPageBanner from "@/app/(components)/DefaultPageBanner";
 const DealViewPage: React.FC = () => {
   const product: SingleDealProduct = singleDealProduct;
 
+  // Map product.imageSrc to ProductGallery's expected format
+  const galleryImages = (product.imageSrc || []).map((img, idx) => ({
+    id: String(idx),
+    url: typeof img === 'string' ? img : (img.src || ''),
+    alt: product.altText || product.name || `Product image ${idx + 1}`,
+    isDefault: idx === 0,
+  }));
+
   return (
     <>
-      <DefaultPageBanner backgroundImage="/architect.jpg" title={"Deals"}/>
+      <DefaultPageBanner backgroundImage="/architect.jpg" title={"Deals"} />
       <div className="container max-w-6xl mx-auto py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <ProductGallery/>
+          <ProductGallery images={galleryImages} />
           <DetailedSection />
         </div>
         <div className="my-5">

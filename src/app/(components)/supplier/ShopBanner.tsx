@@ -2,6 +2,8 @@ import React from 'react';
 import { MapPin, Star, Shield, Truck } from 'lucide-react';
 import { Shop } from '@/types/shop';
 import { useSellerProfile } from '@/app/hooks/useSeller';
+import { useTranslations } from '@/app/hooks/useTranslations';
+import { dashboardFakes } from '@/app/utils/fakes/DashboardFakes';
 
 interface ShopBannerProps {
   shop?: Shop | { data?: Shop };
@@ -63,6 +65,8 @@ export const ShopBanner: React.FC<ShopBannerProps> = ({ shop }) => {
     payoutMethod: sellerProfile?.payoutMethod,
   };
 
+  const { t } = useTranslations();
+
   return (
     <>
       <div className="bg-gradient-to-r from-yellow-300 to-yellow-800 text-white">
@@ -79,7 +83,7 @@ export const ShopBanner: React.FC<ShopBannerProps> = ({ shop }) => {
                 <div className="flex items-center">
                   <Star className="h-5 w-5 text-yellow-400 fill-current" />
                   <span className="ml-1 font-semibold">{shopInfo.rating}</span>
-                  <span className="ml-1 text-yellow-200">({shopInfo.reviews} reviews)</span>
+                  <span className="ml-1 text-yellow-200">({shopInfo.reviews} {t(dashboardFakes.shopbanner.reviews)})</span>
                 </div>
                 <span className="text-yellow-200">•</span>
                 <div className="flex items-center">
@@ -88,25 +92,25 @@ export const ShopBanner: React.FC<ShopBannerProps> = ({ shop }) => {
                 </div>
               </div>
               <div className="flex gap-4 mb-2">
-                <div>Products: <span className="font-bold">{shopInfo.productCount}</span></div>
-                <div>Services: <span className="font-bold">{shopInfo.serviceCount}</span></div>
+                <div>{t(dashboardFakes.shopbanner.products)}: <span className="font-bold">{shopInfo.productCount}</span></div>
+                <div>{t(dashboardFakes.shopbanner.services)}: <span className="font-bold">{shopInfo.serviceCount}</span></div>
               </div>
               {/* Display extra seller info from API */}
               {sellerProfile && (
                 <div className="mb-2 text-yellow-100 text-sm">
-                  <div>Status: <span className="font-bold">{shopInfo.status}</span></div>
-                  <div>Tax ID: <span className="font-bold">{shopInfo.taxId}</span></div>
-                  <div>Commission Rate: <span className="font-bold">{shopInfo.commissionRate ?? 'N/A'}</span></div>
-                  <div>Payout Method: <span className="font-bold">{shopInfo.payoutMethod ?? 'N/A'}</span></div>
-                  <div>Contact Email: <span className="font-bold">{shopInfo.contact.email}</span></div>
+                  <div>{t(dashboardFakes.shopbanner.status)}: <span className="font-bold">{shopInfo.status}</span></div>
+                  <div>{t(dashboardFakes.shopbanner.taxId)}: <span className="font-bold">{shopInfo.taxId}</span></div>
+                  <div>{t(dashboardFakes.shopbanner.commissionRate)}: <span className="font-bold">{shopInfo.commissionRate ?? 'N/A'}</span></div>
+                  <div>{t(dashboardFakes.shopbanner.payoutMethod)}: <span className="font-bold">{shopInfo.payoutMethod ?? 'N/A'}</span></div>
+                  <div>{t(dashboardFakes.shopbanner.contactEmail)}: <span className="font-bold">{shopInfo.contact.email}</span></div>
                 </div>
               )}
               <div className="flex space-x-4 mt-6">
                 <button className="bg-white text-yellow-600 px-6 py-2 rounded-lg font-semibold hover:bg-yellow-50 transition-colors">
-                  Contact Supplier
+                  {t(dashboardFakes.shopbanner.contactSupplier)}
                 </button>
                 <a href="#catalogue" className="border border-white text-white px-6 py-2 rounded-lg font-semibold hover:bg-white/10 transition-colors">
-                  View Catalog
+                  {t(dashboardFakes.shopbanner.viewCatalog)}
                 </a>
               </div>
             </div>
@@ -115,14 +119,14 @@ export const ShopBanner: React.FC<ShopBannerProps> = ({ shop }) => {
                 <div className="bg-white/10 rounded-lg p-4">
                   <div className="flex items-center mb-2">
                     <Shield className="h-5 w-5 mr-2" />
-                    <span className="font-semibold">Verified Supplier</span>
+                    <span className="font-semibold">{t(dashboardFakes.shopbanner.verifiedSupplier)}</span>
                   </div>
-                  <p className="text-sm text-yellow-200">Since {shopInfo.yearEstablished}</p>
+                  <p className="text-sm text-yellow-200">{t(dashboardFakes.shopbanner.since, { year: shopInfo.yearEstablished })}</p>
                 </div>
                 <div className="bg-white/10 rounded-lg p-4">
                   <div className="flex items-center mb-2">
                     <Truck className="h-5 w-5 mr-2" />
-                    <span className="font-semibold">Fast Delivery</span>
+                    <span className="font-semibold">{t(dashboardFakes.shopbanner.fastDelivery)}</span>
                   </div>
                   <p className="text-sm text-yellow-200">{shopInfo.deliveryTime}</p>
                 </div>

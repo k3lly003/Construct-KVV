@@ -154,6 +154,4 @@ export const navItems: NavItem[] = [
       },
     ],
   },
-  // Optionally, you can keep the top-level "Products", "Services", "Bids & Deals"
-  // if you want them to appear outside the "Features" dropdown as well.
 ];

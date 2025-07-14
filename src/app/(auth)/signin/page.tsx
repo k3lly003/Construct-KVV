@@ -9,6 +9,7 @@ import ContactAddress from "@/app/(components)/sections/ContactAddress";
 import { useRouter } from "next/navigation";
 import { Toaster, toast } from "sonner";
 import { z } from "zod";
+import { useTranslation } from "react-i18next";
 
 // Zod validation
 const loginSchema = z.object({
@@ -25,6 +26,7 @@ const Page = () => {
     {}
   );
   const router = useRouter();
+  const { t } = useTranslation();
 
   const handleSignIn = async (e: React.FormEvent) => {
   e.preventDefault();
@@ -101,10 +103,10 @@ const Page = () => {
             </div>
             <div className="mb-6">
               <h2 className="text-lg font-semibold text-gray-800 my-2">
-                Sign-In
+                {t('auth.signin.title')}
               </h2>
               <p className="text-gray-600">
-                Create your account to get started.
+                {t('auth.signin.subtitle')}
               </p>
             </div>
             <form onSubmit={handleSignIn}>
@@ -113,7 +115,7 @@ const Page = () => {
                   htmlFor="email"
                   className="block text-gray-700 text-sm font-bold mb-2"
                 >
-                  Email
+                  {t('auth.signin.email')}
                 </label>
                 <div className="relative">
                   <input
@@ -140,7 +142,7 @@ const Page = () => {
                   htmlFor="password"
                   className="block text-gray-700 text-sm font-bold mb-2"
                 >
-                  Password
+                  {t('auth.signin.password')}
                 </label>
                 <div className="relative">
                   <input
@@ -179,7 +181,7 @@ const Page = () => {
                   href="#"
                   className="inline-block align-baseline font-semibold text-sm text-amber-300 hover:text-amber-500"
                 >
-                  Forgot Password?
+                  {t('auth.signin.forgotPassword')}
                 </a>
               </div>
               <button
@@ -187,7 +189,7 @@ const Page = () => {
                 type="submit"
                 disabled={loading}
               >
-                {loading ? "Signing In..." : "Sign In"}
+                {loading ? "Signing In..." : t('auth.signin.signInButton')}
               </button>
             </form>
             <div className="mt-6 border-t pt-6">

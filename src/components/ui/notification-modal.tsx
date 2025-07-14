@@ -10,7 +10,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { GenericButton } from "@/components/ui/generic-button";
 import { Bell, Clock } from "lucide-react";
-import { formatNotificationTime } from "@/utils/formatTime";
+import { formatNotificationTime } from "@/app/utils/middlewares/formatTime";
 
 export interface Notification {
   id: string;

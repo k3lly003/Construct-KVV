@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import CategorySelect from "../products/create/CategorySelect";
+import { useTranslations } from '@/app/hooks/useTranslations';
 
 // Temporary Pagination component implementation
 interface PaginationProps {
@@ -84,6 +85,7 @@ const Pagination = ({ total, current, onPageChange }: PaginationProps) => {
 // ];
 
 const Page = () => {
+  const { t } = useTranslations();
   const [activeTab, setActiveTab] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [resultsPerPage, setResultsPerPage] = useState(10);
@@ -224,28 +226,26 @@ const Page = () => {
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
         <div>
-          <h1 className="text-2xl font-semibold">Products Management</h1> 
+          <h1 className="text-2xl font-semibold">{t('dashboard.productsManagement')}</h1>
           <p className="text-sm text-muted-foreground">
-            View and check all products registered on your platform and edit them
-            if necessary. The changes will be notified to users through the user
-            dashboard and email.
+            {t('dashboard.productsManagementDesc')}
           </p>
         </div>
         <div className="space-x-2">
           <GenericButton variant="outline">
             <Upload className="h-4 w-4 mr-2" />
-            Export
+            {t('dashboard.export')}
           </GenericButton>
           <Link href="/dashboard/create-service">
             <GenericButton className="gap-2">
               <Plus className="h-4 w-4" />
-              Add Service
+              {t('dashboard.addService')}
             </GenericButton>
           </Link>
           <Link href="/dashboard/products/create">
             <GenericButton className="gap-2">
               <Plus className="h-4 w-4" />
-              Add Product
+              {t('dashboard.addProduct')}
             </GenericButton>
           </Link>
         </div>
@@ -281,13 +281,13 @@ const Page = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-amber-300">Photo</TableHead>
-              <TableHead className="text-amber-300">Product Name</TableHead>
-              <TableHead className="text-amber-300">Description</TableHead>
-              <TableHead className="text-amber-300">Date & Time</TableHead>
-              <TableHead className="text-amber-300">Type</TableHead>
-              <TableHead className="text-amber-300">Price</TableHead>
-              <TableHead className="text-amber-300">Actions</TableHead>
+              <TableHead className="text-amber-300">{t('dashboard.photo')}</TableHead>
+              <TableHead className="text-amber-300">{t('dashboard.productName')}</TableHead>
+              <TableHead className="text-amber-300">{t('dashboard.description')}</TableHead>
+              <TableHead className="text-amber-300">{t('dashboard.dateTime')}</TableHead>
+              <TableHead className="text-amber-300">{t('dashboard.type')}</TableHead>
+              <TableHead className="text-amber-300">{t('dashboard.price')}</TableHead>
+              <TableHead className="text-amber-300">{t('dashboard.actions')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -330,7 +330,7 @@ const Page = () => {
                   colSpan={7}
                   className="text-red-500 text-center py-4"
                 >
-                  No Products found.
+                  {t('dashboard.noProductsFound')}
                 </TableCell>
               </TableRow>
             )}
@@ -341,7 +341,7 @@ const Page = () => {
       {totalResults > 0 && (
         <div className="flex items-center justify-between mt-4">
           <p className="text-sm text-muted-foreground">
-            Showing {startIndex + 1} - {Math.min(endIndex, totalResults)} of {totalResults} Results
+            {t('dashboard.showingResults', { start: startIndex + 1, end: Math.min(endIndex, totalResults), total: totalResults })}
           </p>
           <div className="flex items-center space-x-4">
             <Pagination
@@ -350,7 +350,7 @@ const Page = () => {
               onPageChange={handlePageChange}
             />
             <div className="flex items-center space-x-2">
-              <p className="text-sm text-muted-foreground">Results Per Page:</p>
+              <p className="text-sm text-muted-foreground">{t('dashboard.resultsPerPage')}</p>
               <Select
                 value={resultsPerPage.toString()}
                 onValueChange={handleResultsPerPageChange}
@@ -374,18 +374,18 @@ const Page = () => {
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Product</DialogTitle>
+            <DialogTitle>{t('dashboard.deleteProduct')}</DialogTitle>
           </DialogHeader>
-          <p>Are you sure you want to delete <b>{selectedProduct?.name}</b>?</p>
+          <p>{t('dashboard.deleteProductConfirm', { name: selectedProduct?.name })}</p>
           <DialogFooter>
             <DialogClose asChild>
-              <GenericButton variant="outline">Cancel</GenericButton>
+              <GenericButton variant="outline">{t('dashboard.cancel')}</GenericButton>
             </DialogClose>
             <GenericButton
               onClick={handleDelete}
               disabled={isProductLoading}
             >
-              Confirm Delete
+              {t('dashboard.confirmDelete')}
             </GenericButton>
           </DialogFooter>
         </DialogContent>
@@ -395,7 +395,7 @@ const Page = () => {
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Product</DialogTitle>
+            <DialogTitle>{t('dashboard.editProduct')}</DialogTitle>
           </DialogHeader>
           {editForm && (
             <form onSubmit={handleEditSubmit} className="space-y-4">
@@ -408,7 +408,7 @@ const Page = () => {
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium">Name</label>
+                <label className="block text-sm font-medium">{t('dashboard.name')}</label>
                 <Input
                   value={editForm.name}
                   onChange={e => setEditForm({ ...editForm, name: e.target.value })}
@@ -416,7 +416,7 @@ const Page = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium">Description</label>
+                <label className="block text-sm font-medium">{t('dashboard.description')}</label>
                 <Input
                   value={editForm.description}
                   onChange={e => setEditForm({ ...editForm, description: e.target.value })}
@@ -424,7 +424,7 @@ const Page = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium">Price</label>
+                <label className="block text-sm font-medium">{t('dashboard.price')}</label>
                 <Input
                   type="number"
                   value={editForm.price}
@@ -433,7 +433,7 @@ const Page = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium">Discounted Price</label>
+                <label className="block text-sm font-medium">{t('dashboard.discountedPrice')}</label>
                 <Input
                   type="number"
                   value={editForm.discountedPrice}
@@ -442,7 +442,7 @@ const Page = () => {
               </div>
               {/* Category dropdown */}
               <div>
-                <label className="block text-sm font-medium">Category</label>
+                <label className="block text-sm font-medium">{t('dashboard.category')}</label>
                 <CategorySelect
                   value={editForm.categoryId || ''}
                   onChange={val => setEditForm({ ...editForm, categoryId: val })}
@@ -451,10 +451,10 @@ const Page = () => {
               {/* Add more fields as needed, similar to create page */}
               <DialogFooter>
                 <DialogClose asChild>
-                  <GenericButton variant="outline">Cancel</GenericButton>
+                  <GenericButton variant="outline">{t('dashboard.cancel')}</GenericButton>
                 </DialogClose>
                 <GenericButton type="submit" disabled={isProductLoading}>
-                  Save Changes
+                  {t('dashboard.saveChanges')}
                 </GenericButton>
               </DialogFooter>
             </form>

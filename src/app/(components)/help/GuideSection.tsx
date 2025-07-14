@@ -1,8 +1,15 @@
 import React, {useState} from 'react';
-import { HelpData, HelpProps } from '@/app/utils/fakes/HelpFakes';
 import { GuidesWrapper } from '@/styles/help';
 
-const GuidesSection: React.FC<HelpProps> = () => {
+interface GuideSectionProps {
+  guideData: Array<{
+    details: boolean; title: string; description: string; link: string 
+}>;
+  title: string;
+  backgroundImage: string;
+}
+
+const GuidesSection: React.FC<GuideSectionProps> = ({ guideData, title, backgroundImage }) => {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
   const toggleExpand = (index: number) => {
@@ -11,9 +18,9 @@ const GuidesSection: React.FC<HelpProps> = () => {
 
   return (
     <GuidesWrapper className="max-w-7xl mx-auto">
-      <h2>{HelpData.heading}</h2>
+      <h2>{title}</h2>
       <ul>
-        {HelpData.guideData.map((guide, index) => (
+        {guideData.map((guide, index) => (
           <li key={index} className={expandedIndex === index ? 'expanded' : ''}>
             <h3>{guide.title}</h3>
             <p className={`overflow ${expandedIndex === index ? '' : ''}`}>{guide.description}</p>

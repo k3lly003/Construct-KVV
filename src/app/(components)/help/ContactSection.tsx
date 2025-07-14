@@ -43,20 +43,26 @@ const ContactWrapper = styled.div`
   }
 `;
 
-const ContactSection: React.FC = () => {
+interface ContactSectionProps {
+  heading: string;
+  description: string;
+  email: string;
+  phone: string;
+}
+
+const ContactSection: React.FC<ContactSectionProps> = ({ heading, description, email, phone }) => {
   return (
     <ContactWrapper>
-      <h2>Need Further Assistance?</h2>
-      <p>Our dedicated support team is here to help with any questions or issues you may have regarding our construction materials and services.</p>
+      <h2>{heading}</h2>
+      <p>{description}</p>
       <div>
         <FiMail />
-        <a href="supportkvvstore@gmail.com">support@kvvstore.com</a>
+        <a href={`mailto:${email}`}>{email}</a>
       </div>
       <div>
         <FiPhone />
-        <a href="tel:+1234567890">+250 (888) 888-888</a>
+        <a href={`tel:${phone}`}>{phone}</a>
       </div>
-      {/* Potentially add a contact form here for more direct inquiries */}
     </ContactWrapper>
   );
 };

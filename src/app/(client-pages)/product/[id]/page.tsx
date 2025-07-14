@@ -1,21 +1,21 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { use } from 'react';
 import DefaultPageBanner from '@/app/(components)/DefaultPageBanner';
 import Reviews from '@/app/(components)/product/Reviews';
 import RelatedProducts from '@/app/(components)/product/RelatedProducts';
 import ProductView from '@/app/(components)/product/ProductView';
 import ReviewDialog from '@/app/(components)/product/ReviewDialog';
-import axios from '@/lib/axios';
 import { productService } from '@/app/services/productServices';
+import {  ProductViewSkeleton } from '@/app/utils/skeleton/ProductSkeletons'
 
-interface ProductPageProps {
-  params: { id: string };
+interface PageProps {
+  params: Promise<{ id: string }>
 }
 
-function ProductPage({ params }: ProductPageProps) {
-  const resolvedParams = use(params) as { id: string };
+const Page = ({ params }: PageProps) => {
+  const { id } = React.use(params);
+
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +33,7 @@ function ProductPage({ params }: ProductPageProps) {
       setLoading(true);
       setError(null);
       try {
-        const prod = await productService.getProductById(resolvedParams.id);
+        const prod = await productService.getProductById(id);
         if (isMounted) setProduct(prod);
       } catch {
         if (isMounted) setError('Product not found.');
@@ -43,21 +43,21 @@ function ProductPage({ params }: ProductPageProps) {
     }
     fetchProduct();
     return () => { isMounted = false; };
-  }, [resolvedParams.id]);
+  }, [id]);
 
   // Fetch reviews
   const fetchReviews = React.useCallback(async () => {
     setReviewsLoading(true);
     setReviewsError(null);
     try {
-      const reviews = await productService.getProductReviews(resolvedParams.id, 1, 10);
+      const reviews = await productService.getProductReviews(id, 1, 10);
       setReviews(reviews);
     } catch {
       setReviewsError('Failed to load reviews.');
     } finally {
       setReviewsLoading(false);
     }
-  }, [resolvedParams.id]);
+  }, [id]);
 
   useEffect(() => {
     fetchReviews();
@@ -83,37 +83,41 @@ function ProductPage({ params }: ProductPageProps) {
     return () => { isMounted = false; };
   }, [product]);
 
-  if (loading) return <div className="text-center py-10">Loading...</div>;
-  if (error || !product) return <div className="text-center py-10 text-red-500">{error || 'Product not found.'}</div>;
-
   return (
     <div className="w-[100%]">
       <DefaultPageBanner title="Product View" backgroundImage='/building.jpg' />
       <div className="max-w-7xl flex flex-col gap-[30px] p-3 sm:w-[60%] m-auto my-10">
-        <ProductView product={product} />
-        <RelatedProducts productId={product.id} category={product.category?.slug || ''} />
-        {reviewsLoading ? (
-          <div>Loading reviews...</div>
-        ) : reviewsError ? (
-          <div className="text-red-500">{reviewsError}</div>
+        {loading ? (
+          <ProductViewSkeleton />
+        ) : error || !product ? (
+          <div className="text-center py-10 text-red-500">{error || 'Product not found.'}</div>
         ) : (
-          <Reviews
-            reviews={reviews}
-            showReviewDialog={eligibleOrders.length > 0 ? () => setReviewDialogOpen(true) : undefined}
-          />
-        )}
-        {reviewDialogOpen && eligibleOrders.length > 0 && (
-          <ReviewDialog
-            open={reviewDialogOpen}
-            onClose={() => setReviewDialogOpen(false)}
-            productId={product.id}
-            eligibleOrders={eligibleOrders}
-            onReviewSubmitted={fetchReviews}
-          />
+          <>
+            <ProductView product={product} />
+            <RelatedProducts productId={product.id} category={product.category?.slug || ''} />
+            {reviewsLoading ? (
+              <div>Loading reviews...</div>
+            ) : reviewsError ? (
+              <div className="text-red-500">{reviewsError}</div>
+            ) : (
+              <Reviews
+                reviews={reviews}
+                showReviewDialog={eligibleOrders.length > 0 ? () => setReviewDialogOpen(true) : undefined}
+              />
+            )}
+            {reviewDialogOpen && eligibleOrders.length > 0 && (
+              <ReviewDialog
+                open={reviewDialogOpen}
+                onClose={() => setReviewDialogOpen(false)}
+                productId={product.id}
+                eligibleOrders={eligibleOrders}
+                onReviewSubmitted={fetchReviews}
+              />
+            )}
+          </>
         )}
       </div>
     </div>
   );
 }
-
-export default ProductPage;
+export default Page;

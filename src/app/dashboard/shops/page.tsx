@@ -39,6 +39,7 @@ import { useRouter } from 'next/navigation';
 import { ShopService, ShopResponse } from '@/app/services/shopServices';
 import { toast } from 'sonner';
 import { getUserDataFromLocalStorage } from '@/app/utils/middlewares/UserCredentions';
+import { useTranslations } from '@/app/hooks/useTranslations';
 
 // Temporary Pagination component implementation
 interface PaginationProps {
@@ -99,6 +100,7 @@ const Page = () => {
 
   const USER = getUserDataFromLocalStorage();
   const authToken = USER?.token;
+  const { t } = useTranslations();
 
   // Fetch shops data
   const fetchShops = async () => {
@@ -215,7 +217,7 @@ const Page = () => {
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading shops...</p>
+            <p className="mt-4 text-gray-600">{t('dashboard.loadingShops', 'Loading shops...')}</p>
           </div>
         </div>
       </div>
@@ -226,15 +228,15 @@ const Page = () => {
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
         <div>
-          <h1 className="text-2xl font-semibold">Shops Management</h1>
+          <h1 className="text-2xl font-semibold">{t('dashboard.shopsManagement', 'Shops Management')}</h1>
           <p className="text-sm text-muted-foreground">
-            View and manage all shops registered on your platform.
+            {t('dashboard.shopsManagementDesc', 'View and manage all shops registered on your platform.')}
           </p>
         </div>
         <div className="space-x-2">
           <GenericButton variant="outline">
             <Upload className="h-4 w-4 mr-2" />
-            Export
+            {t('dashboard.export', 'Export')}
           </GenericButton>
         </div>
       </div>
@@ -242,9 +244,9 @@ const Page = () => {
       <div className="mb-4 flex items-center justify-between">
         <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsList>
-            <TabsTrigger value="all">All Shops</TabsTrigger>
-            <TabsTrigger value="active">Active</TabsTrigger>
-            <TabsTrigger value="inactive">Inactive</TabsTrigger>
+            <TabsTrigger value="all">{t('dashboard.allShops', 'All Shops')}</TabsTrigger>
+            <TabsTrigger value="active">{t('dashboard.active', 'Active')}</TabsTrigger>
+            <TabsTrigger value="inactive">{t('dashboard.inactive', 'Inactive')}</TabsTrigger>
           </TabsList>
         </Tabs>
         <div className="flex items-center space-x-2">
@@ -252,18 +254,18 @@ const Page = () => {
             <DropdownMenuTrigger asChild>
               <GenericButton variant="outline" size="sm">
                 <Funnel className="h-4 w-4 mr-2" />
-                Filter <ChevronDown className="h-4 w-4 ml-2" />
+                {t('dashboard.filter', 'Filter')} <ChevronDown className="h-4 w-4 ml-2" />
               </GenericButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[200px]">
-              <DropdownMenuItem>Filter by Name</DropdownMenuItem>
-              <DropdownMenuItem>Filter by Seller</DropdownMenuItem>
-              <DropdownMenuItem>Filter by Date</DropdownMenuItem>
+              <DropdownMenuItem>{t('dashboard.filterByName', 'Filter by Name')}</DropdownMenuItem>
+              <DropdownMenuItem>{t('dashboard.filterBySeller', 'Filter by Seller')}</DropdownMenuItem>
+              <DropdownMenuItem>{t('dashboard.filterByDate', 'Filter by Date')}</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <Input
             type="search"
-            placeholder="Search shops..."
+            placeholder={t('dashboard.searchShops', 'Search shops...')}
             className="w-[300px] sm:w-[400px]"
             value={searchTerm}
             onChange={handleSearchChange}
@@ -275,12 +277,12 @@ const Page = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className='text-amber-300'>Shop</TableHead>
-              <TableHead className='text-amber-300'>Seller</TableHead>
-              <TableHead className='text-amber-300'>Products</TableHead>
-              <TableHead className='text-amber-300'>Status</TableHead>
-              <TableHead className='text-amber-300'>Created</TableHead>
-              <TableHead className='text-amber-300'>Actions</TableHead>
+              <TableHead className='text-amber-300'>{t('dashboard.shop', 'Shop')}</TableHead>
+              <TableHead className='text-amber-300'>{t('dashboard.seller', 'Seller')}</TableHead>
+              <TableHead className='text-amber-300'>{t('dashboard.products', 'Products')}</TableHead>
+              <TableHead className='text-amber-300'>{t('dashboard.status', 'Status')}</TableHead>
+              <TableHead className='text-amber-300'>{t('dashboard.created', 'Created')}</TableHead>
+              <TableHead className='text-amber-300'>{t('dashboard.actions', 'Actions')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -326,7 +328,7 @@ const Page = () => {
                 <TableCell colSpan={6} className="text-center py-8">
                   <div className="text-gray-500">
                     <Store className="w-12 h-12 mx-auto mb-2 text-gray-300" />
-                    <p>No shops found.</p>
+                    <p>{t('dashboard.noShopsFound', 'No shops found.')}</p>
                   </div>
                 </TableCell>
               </TableRow>
@@ -338,7 +340,7 @@ const Page = () => {
       {totalShops > 0 && (
         <div className="flex items-center justify-between mt-4">
           <p className="text-sm text-muted-foreground">
-            Showing {((currentPage - 1) * resultsPerPage) + 1} - {Math.min(currentPage * resultsPerPage, totalShops)} of {totalShops} Results
+            {t('dashboard.showingResults', 'Showing {start}-{end} of {total} Results', { start: ((currentPage - 1) * resultsPerPage) + 1, end: Math.min(currentPage * resultsPerPage, totalShops), total: totalShops })}
           </p>
           <div className="flex items-center space-x-4">
             <Pagination
@@ -347,16 +349,16 @@ const Page = () => {
               onPageChange={handlePageChange}
             />
             <div className="flex items-center space-x-2">
-              <p className="text-sm text-muted-foreground">Results Per Page:</p>
+              <p className="text-sm text-muted-foreground">{t('dashboard.resultsPerPage', 'Results Per Page:')}</p>
               <Select value={resultsPerPage.toString()} onValueChange={handleResultsPerPageChange}>
                 <SelectTrigger className="w-[80px]">
                   <SelectValue placeholder="10" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="10">10</SelectItem>
-                  <SelectItem value="20">20</SelectItem>
-                  <SelectItem value="50">50</SelectItem>
-                  <SelectItem value="100">100</SelectItem>
+                  <SelectItem value="10">{t('dashboard.resultsPerPage10', '10')}</SelectItem>
+                  <SelectItem value="20">{t('dashboard.resultsPerPage20', '20')}</SelectItem>
+                  <SelectItem value="50">{t('dashboard.resultsPerPage50', '50')}</SelectItem>
+                  <SelectItem value="100">{t('dashboard.resultsPerPage100', '100')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>

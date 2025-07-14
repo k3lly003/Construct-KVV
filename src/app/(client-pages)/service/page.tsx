@@ -23,7 +23,7 @@ import {
   Wrench,
   Home
 } from "lucide-react";
-import serviceData from "../../../utils/fakes/soso";
+import serviceData from "../../utils/fakes/soso";
 import { GenericButton } from "@/components/ui/generic-button";
 import Image from "next/image";
 

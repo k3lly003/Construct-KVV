@@ -14,6 +14,7 @@ import { useCategories } from "@/app/hooks/useCategories";
 import { NotificationIcon } from "@/components/ui/notification-icon";
 import { NotificationModal } from "@/components/ui/notification-modal";
 import { useNotificationStore } from "@/store/notificationStore";
+import { useTranslation } from "react-i18next";
 
 
 const Navbar: React.FC = () => {
@@ -23,6 +24,7 @@ const Navbar: React.FC = () => {
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileFeaturesOpen, setMobileFeaturesOpen] = useState(false);
+  const { t, ready } = useTranslation();
 
   // Get user data from Zustand store
   const { role: userRole, name: userName, email: userEmail } = useUserStore();
@@ -127,7 +129,7 @@ const Navbar: React.FC = () => {
                   className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
                   onClick={(e) => handleMenuClick("Features", e)}
                 >
-                  Features
+                  {t('navigation.features', 'Features')}
                   {activeMenu === "Features" ? (
                     <ChevronUp className="ml-1 h-4 w-4 transition-transform duration-200" />
                   ) : (
@@ -175,19 +177,19 @@ const Navbar: React.FC = () => {
                 href="/build-house"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
               >
-                Build your house
+                {t('navigation.buildHouse')}
               </Link>
               <Link
                 href="/projects"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
               >
-                Projects
+                {t('navigation.projects')}
               </Link>
               <Link
                 href="/shops"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
               >
-                Shops
+                {t('navigation.shops')}
               </Link>
             </div>
           </div>
@@ -200,7 +202,7 @@ const Navbar: React.FC = () => {
                 href="/help"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
               >
-                <p>Help</p>
+                {t('navigation.help')}
               </Link>
               {/* Notification Icon (client only) */}
               {isClient && (
@@ -215,6 +217,7 @@ const Navbar: React.FC = () => {
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
               >
                 <ShoppingCart />
+                <span className="sr-only">{t('navigation.cart')}</span>
               </Link>
               {/* Conditionally render based on isClient and localUserData */}
               {isClient && (
@@ -231,7 +234,7 @@ const Navbar: React.FC = () => {
                 ) : (
                   <Link href="/signin" className="border-l-1">
                     <p className="pl-5 px-4 py-2 hover:text-yellow-400 font-medium">
-                      Sign In
+                      {t('navigation.login')}
                     </p>
                   </Link>
                 )
@@ -289,7 +292,7 @@ const Navbar: React.FC = () => {
                       aria-expanded={mobileFeaturesOpen}
                       aria-controls="mobile-features-menu"
                     >
-                      <span>Features</span>
+                      <span>{t('navigation.features', 'Features')}</span>
                       {mobileFeaturesOpen ? (
                         <ChevronUp className="h-4 w-4 ml-2" />
                       ) : (
