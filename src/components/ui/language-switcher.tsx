@@ -1,12 +1,17 @@
-'use client';
+"use client";
 
-import { useTranslation } from 'react-i18next';
-import { locales, localeNames, type Locale } from '@/app/i18n/config';
-import { setUserLocale } from '@/app/libs/locale';
-import { Button } from './button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './dropdown-menu';
-import { Globe } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useTranslation } from "react-i18next";
+import { locales, localeNames, type Locale } from "@/app/i18n/config";
+import { setUserLocale } from "@/app/libs/locale";
+import Button from "./button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./dropdown-menu";
+import { Globe } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export function LanguageSwitcher() {
   const { i18n, t, ready } = useTranslation();
@@ -38,7 +43,7 @@ export function LanguageSwitcher() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="gap-2">
           <Globe className="h-4 w-4" />
-          <span className="hidden sm:inline">{t('common.language')}</span>
+          <span className="hidden sm:inline">{t("common.language")}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -46,7 +51,7 @@ export function LanguageSwitcher() {
           <DropdownMenuItem
             key={locale}
             onClick={() => handleLanguageChange(locale)}
-            className={i18n.language === locale ? 'bg-accent' : ''}
+            className={i18n.language === locale ? "bg-accent" : ""}
           >
             {localeNames[locale]}
           </DropdownMenuItem>
@@ -54,4 +59,4 @@ export function LanguageSwitcher() {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-} 
+}

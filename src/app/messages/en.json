@@ -715,5 +715,35 @@
   },
   "defaultBanner": {
     "defaultTitle": "Welcome"
+  },
+  "VisualizePage": {
+    "title": "Visualize your dream home",
+    "describeLabel": "Describe your dream home:",
+    "describePlaceholder": "e.g. 3 bedrooms, modern kitchen, large windows, garden...",
+    "uploadLabel": "📄 Upload PDF/image → Get description",
+    "extractingText": "Extracting text, please wait...",
+    "descriptionTooShort": "Description must be at least 250 characters.",
+    "descriptionLength": "Please enter at least 250 characters (currently {count}).",
+    "descriptionSufficient": "Description length is sufficient.",
+    "visualizeButton": "🎨 Visualize",
+    "processing": "Processing...",
+    "summaryTitle": "📝 Summary",
+    "generatedImageTitle": "🎨 Generated Image",
+    "failedExtractImage": "Failed to extract text from image.",
+    "failedExtractPDF": "Failed to extract text from PDF.",
+    "failedSummaryOrImage": "Failed to generate summary or image: {error}",
+    "noSummary": "No summary returned from Cohere.",
+    "pleaseUpload": "Please upload a PDF or image file."
+  },
+  "VisualizeSection": {
+    "title": "Want to visualize your dream home?",
+    "button": "Start Visualizing"
+  },
+  "RecommendationsSection": {
+    "title": "Recommended for you",
+    "loading": "Loading recommendations...",
+    "error": "Failed to load recommendations",
+    "noRecommendations": "No recommendations yet.",
+    "seeAllProducts": "See All Products"
   }
 }

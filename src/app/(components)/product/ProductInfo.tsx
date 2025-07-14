@@ -5,8 +5,10 @@ import { Minus, Plus, Heart, Share2, Star, ShoppingCart } from "lucide-react";
 import { GenericButton } from "@/components/ui/generic-button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { useTranslations } from '@/app/hooks/useTranslations';
-import { dashboardFakes } from '@/app/utils/fakes/DashboardFakes';
+import { useTranslations } from "@/app/hooks/useTranslations";
+import { dashboardFakes } from "@/app/utils/fakes/DashboardFakes";
+import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
+import { productService } from "@/app/services/productServices";
 
 interface Product {
   id: string;
@@ -137,7 +139,8 @@ const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
               ))}
             </div>
             <span className="text-sm text-muted-foreground">
-              {product.rating} ({product.reviewCount} {t(dashboardFakes.productInfo.reviews)})
+              {product.rating} ({product.reviewCount}{" "}
+              {t(dashboardFakes.productInfo.reviews)})
             </span>
           </div>
         )}
@@ -188,7 +191,11 @@ const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
           size="sm"
           className="h-10 w-10"
           onClick={toggleWishlist}
-          aria-label={isWishlisted ? t(dashboardFakes.productInfo.removeFromWishlist) : t(dashboardFakes.productInfo.addToWishlist)}
+          aria-label={
+            isWishlisted
+              ? t(dashboardFakes.productInfo.removeFromWishlist)
+              : t(dashboardFakes.productInfo.addToWishlist)
+          }
         >
           <Heart
             size={18}
@@ -208,17 +215,23 @@ const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
       {/* Product information tabs */}
       <Tabs defaultValue="description" className="mt-8">
         <TabsList className="w-full grid grid-cols-2">
-          <TabsTrigger value="description">{t(dashboardFakes.productInfo.description)}</TabsTrigger>
-          <TabsTrigger value="details">{t(dashboardFakes.productInfo.details)}</TabsTrigger>
+          <TabsTrigger value="description">
+            {t(dashboardFakes.productInfo.description)}
+          </TabsTrigger>
+          <TabsTrigger value="details">
+            {t(dashboardFakes.productInfo.details)}
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="description" className="mt-4">
           <p className="text-muted-foreground">{product.description}</p>
         </TabsContent>
         <TabsContent value="details" className="mt-4">
           <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
-            {details.length > 0 ? details.map((detail, index) => (
-              <li key={index}>{detail}</li>
-            )) : <li>{t(dashboardFakes.productInfo.noDetails)}</li>}
+            {details.length > 0 ? (
+              details.map((detail, index) => <li key={index}>{detail}</li>)
+            ) : (
+              <li>{t(dashboardFakes.productInfo.noDetails)}</li>
+            )}
           </ul>
         </TabsContent>
       </Tabs>

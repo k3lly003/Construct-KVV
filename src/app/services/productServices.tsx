@@ -203,6 +203,7 @@ export const productService = {
       return data.data?.reviews || [];
     } catch (error) {
       console.error("Error fetching reviews for product:", error);
+      return [];
     }
   },
   async getProductsByShopId(shopId: string): Promise<Product[]> {

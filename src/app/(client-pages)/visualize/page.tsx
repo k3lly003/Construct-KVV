@@ -4,10 +4,13 @@ import Image from "next/image";
 import Tesseract from "tesseract.js";
 import * as pdfjsLib from "pdfjs-dist";
 import "pdfjs-dist/build/pdf.worker";
+import { useTranslations } from "@/app/hooks/useTranslations";
+import { dashboardFakes } from "@/app/utils/fakes/DashboardFakes";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 export default function VisualizePage() {
+  const { t } = useTranslations();
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -190,7 +193,7 @@ export default function VisualizePage() {
         <div className="absolute inset-0 bg-gradient-to-b from-white/80 to-amber-100/80" />
       </div>
       <h1 className="text-4xl md:text-5xl font-bold text-amber-900 mb-8 mt-24 text-center drop-shadow-lg">
-        Visualize your dream home
+        {t(dashboardFakes.VisualizePage.title)}
       </h1>
       <form
         className="w-full max-w-lg mx-auto flex flex-col items-center gap-6 bg-white/80 rounded-xl shadow-lg p-8"
@@ -200,26 +203,26 @@ export default function VisualizePage() {
           htmlFor="description"
           className="text-lg font-semibold text-amber-800"
         >
-          Describe your dream home:
+          {t(dashboardFakes.VisualizePage.describeLabel)}
         </label>
         <textarea
           id="description"
           rows={4}
           className="w-full rounded-lg border border-amber-200 p-4 text-base focus:outline-none focus:ring-2 focus:ring-amber-400 resize-none"
-          placeholder="e.g. 3 bedrooms, modern kitchen, large windows, garden..."
+          placeholder={t(dashboardFakes.VisualizePage.describePlaceholder)}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
         <p className="text-sm mt-1 text-red-600">
           {description.trim().length < 250
-            ? `Please enter at least 250 characters (currently ${
-                description.trim().length
-              }).`
-            : "Description length is sufficient."}
+            ? t(dashboardFakes.VisualizePage.descriptionLength, {
+                count: description.trim().length,
+              })
+            : t(dashboardFakes.VisualizePage.descriptionSufficient)}
         </p>
         <div className="flex flex-col items-center gap-2 w-full">
           <label className="font-medium text-amber-700">
-            📄 Upload PDF/image → Get description
+            {t(dashboardFakes.VisualizePage.uploadLabel)}
           </label>
           <input
             ref={fileInputRef}
@@ -232,7 +235,7 @@ export default function VisualizePage() {
         </div>
         {loading && (
           <div className="text-amber-600 font-semibold">
-            Extracting text, please wait...
+            {t(dashboardFakes.VisualizePage.extractingText)}
           </div>
         )}
         {error && <div className="text-red-500 font-medium">{error}</div>}
@@ -265,16 +268,18 @@ export default function VisualizePage() {
                   d="M4 12a8 8 0 018-8v8z"
                 ></path>
               </svg>
-              Processing...
+              {t(dashboardFakes.VisualizePage.processing)}
             </span>
           ) : (
-            <>🎨 Visualize</>
+            <>{t(dashboardFakes.VisualizePage.visualizeButton)}</>
           )}
         </button>
       </form>
       {reply && (
         <div className="w-full max-w-lg mx-auto mt-8 bg-white/90 rounded-xl shadow-lg p-6 text-center">
-          <h2 className="text-xl font-bold text-amber-800 mb-2">📝 Summary</h2>
+          <h2 className="text-xl font-bold text-amber-800 mb-2">
+            {t(dashboardFakes.VisualizePage.summaryTitle)}
+          </h2>
           <div className="text-sm text-gray-800 whitespace-pre-wrap text-left bg-gray-50 p-4 rounded-lg">
             {reply}
           </div>
@@ -283,7 +288,7 @@ export default function VisualizePage() {
       {imageUrl && (
         <div className="w-full max-w-lg mx-auto mt-6">
           <h2 className="text-xl font-bold text-amber-800 text-center mb-2">
-            🎨 Generated Image
+            {t(dashboardFakes.VisualizePage.generatedImageTitle)}
           </h2>
           <div className="relative">
             <img

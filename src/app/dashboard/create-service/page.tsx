@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
-import { Loader2 } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { useForm, useFieldArray } from "react-hook-form";
+import { Loader2 } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -10,23 +10,23 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { GenericButton } from "@/components/ui/generic-button";
-import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
-import { Service } from '@/types/service';
-import { useServices } from '@/app/hooks/useService';
-import { useShop } from '@/app/hooks/useShop';
+import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
+import { Service } from "@/types/service";
+import { useServices } from "@/app/hooks/useService";
+import { useShop } from "@/app/hooks/useShop";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
-import Link from 'next/link';
-import { Badge } from '@/components/ui/badge';
-import Image from 'next/image';
-import ProductImageUpload from '../products/create/ProductImageUpload';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent } from '@/components/ui/card';
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
+import ProductImageUpload from "../products/create/ProductImageUpload";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Star,
   MapPin,
@@ -43,14 +43,12 @@ import {
   MessageCircle,
   Truck,
   Wrench,
-  Home
+  Home,
 } from "lucide-react";
-import { zodResolver } from '@hookform/resolvers/zod';
-import { createServiceSchema } from '@/utils/middlewares/Validation';
-import { ServiceCategorySelect } from '../products/create/CategorySelect';
+
 import { categoryService } from "@/app/services/categoryServices";
-import { serviceService } from '@/app/services/serviceServices';
-import { toast } from 'sonner';
+import { serviceService } from "@/app/services/serviceServices";
+import { toast } from "sonner";
 
 type CreateServiceFormInput = {
   title: string;
@@ -79,53 +77,64 @@ const defaultGallery = [
   "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=2",
 ];
 
-
 const Page = () => {
   const { createService, isLoading: isCreating } = useServices();
   const { myShop, isMyShopLoading } = useShop();
 
   const form = useForm<CreateServiceFormInput>({
     defaultValues: {
-      title: '',
-      category: '',
-      description: '',
-      availability: '',
-      features: [{ value: '' }],
-      specifications: [{ value: '' }],
-      providerName: '',
+      title: "",
+      category: "",
+      description: "",
+      availability: "",
+      features: [{ value: "" }],
+      specifications: [{ value: "" }],
+      providerName: "",
       providerAvatarFile: null,
-      providerRating: '',
-      providerReviews: '',
+      providerRating: "",
+      providerReviews: "",
       providerVerified: false,
-      providerYearsExperience: '',
-      basePrice: '',
-      unit: '',
-      estimatedTotal: '',
-      city: '',
-      serviceRadius: '',
-      warrantyDuration: '',
-      warrantyCoverage: [{ value: '' }],
+      providerYearsExperience: "",
+      basePrice: "",
+      unit: "",
+      estimatedTotal: "",
+      city: "",
+      serviceRadius: "",
+      warrantyDuration: "",
+      warrantyCoverage: [{ value: "" }],
       gallery: [],
     },
   });
 
   // Field arrays for features, specifications, gallery
-  const { fields: featureFields, append: appendFeature, remove: removeFeature } = useFieldArray({
+  const {
+    fields: featureFields,
+    append: appendFeature,
+    remove: removeFeature,
+  } = useFieldArray({
     control: form.control,
-    name: 'features',
+    name: "features",
   });
-  const { fields: specFields, append: appendSpec, remove: removeSpec } = useFieldArray({
+  const {
+    fields: specFields,
+    append: appendSpec,
+    remove: removeSpec,
+  } = useFieldArray({
     control: form.control,
-    name: 'specifications',
+    name: "specifications",
   });
   // Add field array for warrantyCoverage
-  const { fields: coverageFields, append: appendCoverage, remove: removeCoverage } = useFieldArray({
+  const {
+    fields: coverageFields,
+    append: appendCoverage,
+    remove: removeCoverage,
+  } = useFieldArray({
     control: form.control,
-    name: 'warrantyCoverage',
+    name: "warrantyCoverage",
   });
 
   // Gallery image preview logic
-  const galleryFiles = (form.watch('gallery') as File[]);
+  const galleryFiles = form.watch("gallery") as File[];
   const galleryImages = galleryFiles.map((file, idx) => ({
     url: URL.createObjectURL(file),
     alt: `Gallery image ${idx + 1}`,
@@ -133,17 +142,20 @@ const Page = () => {
   }));
 
   const handleAddGalleryImages = (files: FileList) => {
-    const currentImages = form.watch('gallery') as File[];
+    const currentImages = form.watch("gallery") as File[];
     if (currentImages.length >= 3) {
-      alert('You can only upload up to 3 images.');
+      alert("You can only upload up to 3 images.");
       return;
     }
     const filesToAdd = Array.from(files).slice(0, 3 - currentImages.length);
-    form.setValue('gallery', [...currentImages, ...filesToAdd]);
+    form.setValue("gallery", [...currentImages, ...filesToAdd]);
   };
   const handleRemoveGalleryImage = (idx: number) => {
-    const currentImages = form.watch('gallery') as File[];
-    form.setValue('gallery', currentImages.filter((_, i) => i !== idx));
+    const currentImages = form.watch("gallery") as File[];
+    form.setValue(
+      "gallery",
+      currentImages.filter((_, i) => i !== idx)
+    );
   };
 
   const onSubmit = async (data: CreateServiceFormInput) => {
@@ -153,76 +165,93 @@ const Page = () => {
         return;
       }
       if (!data.availability) {
-        toast.error('Availability is required.');
+        toast.error("Availability is required.");
         return;
       }
-      const authToken = typeof window !== 'undefined' ? localStorage.getItem('authToken') : undefined;
+      const authToken =
+        typeof window !== "undefined"
+          ? localStorage.getItem("authToken")
+          : undefined;
       const formData = new FormData();
-      formData.append('title', data.title);
-      formData.append('category', data.category);
-      formData.append('description', data.description);
-      formData.append('availability', data.availability);
+      formData.append("title", data.title);
+      formData.append("category", data.category);
+      formData.append("description", data.description);
+      formData.append("availability", data.availability);
       // Features as array (multiple fields)
-      const featuresArr = data.features.map(f => f.value).filter(Boolean);
+      const featuresArr = data.features.map((f) => f.value).filter(Boolean);
       if (featuresArr.length === 0) {
-        toast.error('At least one feature is required.');
+        toast.error("At least one feature is required.");
         return;
       }
-      featuresArr.forEach(feature => formData.append('features', feature));
+      featuresArr.forEach((feature) => formData.append("features", feature));
       // Specifications as object
       const specsObj: Record<string, string> = {};
       data.specifications.forEach((spec) => {
-        const [key, value] = spec.value.split(':').map(s => s.trim());
+        const [key, value] = spec.value.split(":").map((s) => s.trim());
         if (key && value) specsObj[key] = value;
       });
       if (Object.keys(specsObj).length === 0) {
-        toast.error('At least one valid specification (key: value) is required.');
+        toast.error(
+          "At least one valid specification (key: value) is required."
+        );
         return;
       }
-      formData.append('specifications', JSON.stringify(specsObj));
+      formData.append("specifications", JSON.stringify(specsObj));
       // Provider object (without avatar)
-      formData.append('provider', JSON.stringify({
-        name: data.providerName,
-        yearsExperience: Number(data.providerYearsExperience)
-      }));
+      formData.append(
+        "provider",
+        JSON.stringify({
+          name: data.providerName,
+          yearsExperience: Number(data.providerYearsExperience),
+        })
+      );
       // Pricing object
-      formData.append('pricing', JSON.stringify({
-        basePrice: Number(data.basePrice),
-        unit: data.unit,
-        estimatedTotal: data.estimatedTotal
-      }));
+      formData.append(
+        "pricing",
+        JSON.stringify({
+          basePrice: Number(data.basePrice),
+          unit: data.unit,
+          estimatedTotal: data.estimatedTotal,
+        })
+      );
       // Location object
-      formData.append('location', JSON.stringify({
-        city: data.city,
-        serviceRadius: data.serviceRadius
-      }));
+      formData.append(
+        "location",
+        JSON.stringify({
+          city: data.city,
+          serviceRadius: data.serviceRadius,
+        })
+      );
       // Warranty object
-      formData.append('warranty', JSON.stringify({
-        duration: data.warrantyDuration,
-        coverage: data.warrantyCoverage.map(c => c.value).filter(Boolean)
-      }));
+      formData.append(
+        "warranty",
+        JSON.stringify({
+          duration: data.warrantyDuration,
+          coverage: data.warrantyCoverage.map((c) => c.value).filter(Boolean),
+        })
+      );
       // Gallery images
       if (!data.gallery || data.gallery.length === 0) {
-        toast.error('At least one image is required.');
+        toast.error("At least one image is required.");
         return;
       }
       data.gallery.forEach((file) => {
-        formData.append('gallery', file);
+        formData.append("gallery", file);
       });
       // Provider avatar image
       if (data.providerAvatarFile) {
-        formData.append('avatar', data.providerAvatarFile);
+        formData.append("avatar", data.providerAvatarFile);
       }
-      formData.append('shopId', myShop.id);
+      formData.append("shopId", myShop.id);
       // Log all FormData entries
       for (let pair of formData.entries()) {
-        console.log('FormData:', pair[0], pair[1]);
+        console.log("FormData:", pair[0], pair[1]);
       }
       await serviceService.createService(myShop.id, formData, authToken!);
-      toast.success('Service created successfully!');
+      toast.success("Service created successfully!");
       form.reset();
     } catch (error: any) {
-      let message = 'Failed to create service. Please try again.';
+      let message = "Failed to create service. Please try again.";
       if (error?.response?.data?.message) {
         message = error.response.data.message;
       } else if (error?.message) {
@@ -246,7 +275,9 @@ const Page = () => {
         return;
       }
       try {
-        const cat = await categoryService.getCategoryById(watchAllFields.category);
+        const cat = await categoryService.getCategoryById(
+          watchAllFields.category
+        );
         setCategoryName(cat.name);
       } catch {
         setCategoryName("Unknown");
@@ -271,8 +302,8 @@ const Page = () => {
   }, []);
 
   useEffect(() => {
-    if (myShop?.name && !form.getValues('providerName')) {
-      form.setValue('providerName', myShop.name);
+    if (myShop?.name && !form.getValues("providerName")) {
+      form.setValue("providerName", myShop.name);
     }
   }, [myShop, form]);
 
@@ -293,7 +324,10 @@ const Page = () => {
           <AlertTitle>Shop Required!</AlertTitle>
           <AlertDescription>
             You need to create a shop before you can add a service.
-            <Link href="/dashboard/profile" className="font-bold text-amber-600 hover:underline ml-1">
+            <Link
+              href="/dashboard/profile"
+              className="font-bold text-amber-600 hover:underline ml-1"
+            >
               Go to your profile to create one.
             </Link>
           </AlertDescription>
@@ -316,7 +350,10 @@ const Page = () => {
                 <FormItem>
                   <FormLabel>Service Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Premium Laminate Flooring Installation" {...field} />
+                    <Input
+                      placeholder="e.g., Premium Laminate Flooring Installation"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -329,10 +366,15 @@ const Page = () => {
                 <FormItem>
                   <FormLabel>Category</FormLabel>
                   <FormControl>
-                    <select {...field} className="w-full border rounded px-3 py-2">
+                    <select
+                      {...field}
+                      className="w-full border rounded px-3 py-2"
+                    >
                       <option value="">Select a category</option>
                       {categories.map((cat: any) => (
-                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                        <option key={cat.id} value={cat.id}>
+                          {cat.name}
+                        </option>
                       ))}
                     </select>
                   </FormControl>
@@ -347,7 +389,10 @@ const Page = () => {
                 <FormItem>
                   <FormLabel>Provider Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Robin's Construction" {...field} />
+                    <Input
+                      placeholder="e.g., Robin's Construction"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -363,7 +408,11 @@ const Page = () => {
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={e => field.onChange(e.target.files ? e.target.files[0] : null)}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.files ? e.target.files[0] : null
+                        )
+                      }
                     />
                   </FormControl>
                   <FormMessage />
@@ -377,7 +426,12 @@ const Page = () => {
                 <FormItem>
                   <FormLabel>Provider Years Experience</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., 12" type="number" min="0" {...field} />
+                    <Input
+                      placeholder="e.g., 12"
+                      type="number"
+                      min="0"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -390,7 +444,13 @@ const Page = () => {
                 <FormItem>
                   <FormLabel>Base Price</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., 8.50" type="number" step="0.01" min="0" {...field} />
+                    <Input
+                      placeholder="e.g., 8.50"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -455,7 +515,10 @@ const Page = () => {
                 <FormItem>
                   <FormLabel>Warranty Duration</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Lifetime Residential" {...field} />
+                    <Input
+                      placeholder="e.g., Lifetime Residential"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -468,14 +531,29 @@ const Page = () => {
                 <div key={item.id} className="flex gap-2 mb-2">
                   <FormControl>
                     <Input
-                      {...form.register(`warrantyCoverage.${idx}.value` as const)}
+                      {...form.register(
+                        `warrantyCoverage.${idx}.value` as const
+                      )}
                       placeholder="e.g., Full coverage guarantee"
                     />
                   </FormControl>
-                  <GenericButton type="button" variant="outline" onClick={() => removeCoverage(idx)} disabled={coverageFields.length === 1}>Remove</GenericButton>
+                  <GenericButton
+                    type="button"
+                    variant="outline"
+                    onClick={() => removeCoverage(idx)}
+                    disabled={coverageFields.length === 1}
+                  >
+                    Remove
+                  </GenericButton>
                 </div>
               ))}
-              <GenericButton type="button" variant="secondary" onClick={() => appendCoverage({ value: '' })}>Add Coverage</GenericButton>
+              <GenericButton
+                type="button"
+                variant="secondary"
+                onClick={() => appendCoverage({ value: "" })}
+              >
+                Add Coverage
+              </GenericButton>
             </div>
             <FormField
               control={form.control}
@@ -484,7 +562,11 @@ const Page = () => {
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Describe the service..." className="min-h-[120px]" {...field} />
+                    <Textarea
+                      placeholder="Describe the service..."
+                      className="min-h-[120px]"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -501,10 +583,23 @@ const Page = () => {
                       placeholder="e.g., Waterproof & Scratch Resistant"
                     />
                   </FormControl>
-                  <GenericButton type="button" variant="outline" onClick={() => removeFeature(idx)} disabled={featureFields.length === 1}>Remove</GenericButton>
+                  <GenericButton
+                    type="button"
+                    variant="outline"
+                    onClick={() => removeFeature(idx)}
+                    disabled={featureFields.length === 1}
+                  >
+                    Remove
+                  </GenericButton>
                 </div>
               ))}
-              <GenericButton type="button" variant="secondary" onClick={() => appendFeature({ value: '' })}>Add Feature</GenericButton>
+              <GenericButton
+                type="button"
+                variant="secondary"
+                onClick={() => appendFeature({ value: "" })}
+              >
+                Add Feature
+              </GenericButton>
             </div>
             {/* Specifications dynamic list */}
             <div>
@@ -517,10 +612,23 @@ const Page = () => {
                       placeholder="e.g., 47.8 in"
                     />
                   </FormControl>
-                  <GenericButton type="button" variant="outline" onClick={() => removeSpec(idx)} disabled={specFields.length === 1}>Remove</GenericButton>
+                  <GenericButton
+                    type="button"
+                    variant="outline"
+                    onClick={() => removeSpec(idx)}
+                    disabled={specFields.length === 1}
+                  >
+                    Remove
+                  </GenericButton>
                 </div>
               ))}
-              <GenericButton type="button" variant="secondary" onClick={() => appendSpec({ value: '' })}>Add Specification</GenericButton>
+              <GenericButton
+                type="button"
+                variant="secondary"
+                onClick={() => appendSpec({ value: "" })}
+              >
+                Add Specification
+              </GenericButton>
             </div>
             {/* Gallery image upload */}
             <ProductImageUpload
@@ -587,7 +695,7 @@ const Page = () => {
                     className="w-full h-full object-cover"
                   />
                   <Badge className="absolute top-4 left-4 bg-green-600">
-                    {watchAllFields.availability || 'Availability'}
+                    {watchAllFields.availability || "Availability"}
                   </Badge>
                 </div>
                 <div className="p-4">
@@ -597,10 +705,18 @@ const Page = () => {
                         key={index}
                         onClick={() => setSelectedImage(index)}
                         className={`flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden border-2 transition-colors ${
-                          selectedImage === index ? 'border-blue-500' : 'border-gray-200'
+                          selectedImage === index
+                            ? "border-blue-500"
+                            : "border-gray-200"
                         }`}
                       >
-                        <Image src={img.url} width={80} height={64} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover" />
+                        <Image
+                          src={img.url}
+                          width={80}
+                          height={64}
+                          alt={`Gallery ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
                       </button>
                     ))}
                   </div>
@@ -615,7 +731,11 @@ const Page = () => {
                 onClick={() => setIsFavorited(!isFavorited)}
                 className="gap-2"
               >
-                <Heart className={`w-4 h-4 ${isFavorited ? 'fill-red-500 text-red-500' : ''}`} />
+                <Heart
+                  className={`w-4 h-4 ${
+                    isFavorited ? "fill-red-500 text-red-500" : ""
+                  }`}
+                />
                 Save
               </GenericButton>
               <GenericButton variant="ghost" size="sm" className="gap-2">
@@ -628,26 +748,33 @@ const Page = () => {
               <CardContent className="p-6">
                 <div className="space-y-4">
                   <div>
-                    <Badge variant="secondary" className="mb-2">{categoryName || 'Category'}</Badge>
-                    <h1 className="text-3xl font-bold text-gray-900">{watchAllFields.title || 'Service Title'}</h1>
-                    <p className="text-gray-600 mt-2">{watchAllFields.description || 'Service description goes here...'}</p>
+                    <Badge variant="secondary" className="mb-2">
+                      {categoryName || "Category"}
+                    </Badge>
+                    <h1 className="text-3xl font-bold text-gray-900">
+                      {watchAllFields.title || "Service Title"}
+                    </h1>
+                    <p className="text-gray-600 mt-2">
+                      {watchAllFields.description ||
+                        "Service description goes here..."}
+                    </p>
                   </div>
                   <div className="flex items-center gap-6 text-sm text-gray-600">
                     <div className="flex items-center gap-1">
                       <MapPin className="w-4 h-4" />
-                      {watchAllFields.city || 'Location'}
+                      {watchAllFields.city || "Location"}
                     </div>
                     <div className="flex items-center gap-1">
                       <Truck className="w-4 h-4" />
-                      {watchAllFields.serviceRadius || 'Radius'}
+                      {watchAllFields.serviceRadius || "Radius"}
                     </div>
                     <div className="flex items-center gap-1">
                       <Clock className="w-4 h-4" />
-                      {watchAllFields.availability || 'Availability'}
+                      {watchAllFields.availability || "Availability"}
                     </div>
                     <div className="flex items-center gap-1">
                       <Shield className="w-4 h-4" />
-                      {watchAllFields.warrantyDuration || 'Warranty'}
+                      {watchAllFields.warrantyDuration || "Warranty"}
                     </div>
                   </div>
                 </div>
@@ -659,25 +786,41 @@ const Page = () => {
                 <Tabs defaultValue="features" className="w-full">
                   <TabsList className="flex justify-between w-full">
                     <TabsTrigger value="features">Features</TabsTrigger>
-                    <TabsTrigger value="specifications">Specifications</TabsTrigger>
+                    <TabsTrigger value="specifications">
+                      Specifications
+                    </TabsTrigger>
                   </TabsList>
                   <TabsContent value="features" className="mt-6">
                     <div className="w-full border">
-                      {watchAllFields.features?.filter(f => f.value).map((feature, index) => (
-                        <div key={index} className="flex items-center py-2">
-                          <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-                          <span className="text-sm break-words">{feature.value}</span>
-                        </div>
-                      ))}
+                      {watchAllFields.features
+                        ?.filter((f) => f.value)
+                        .map((feature, index) => (
+                          <div key={index} className="flex items-center py-2">
+                            <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+                            <span className="text-sm break-words">
+                              {feature.value}
+                            </span>
+                          </div>
+                        ))}
                     </div>
                   </TabsContent>
                   <TabsContent value="specifications" className="mt-6">
                     <div className="w-full border">
-                      {watchAllFields.specifications?.filter(spec => typeof spec?.value === 'string' && spec.value.trim()).map((spec, idx) => (
-                        <div key={idx} className="py-2 border-b border-gray-100 w-full">
-                          <span className="text-sm text-gray-900 break-words">{spec.value}</span>
-                        </div>
-                      ))}
+                      {watchAllFields.specifications
+                        ?.filter(
+                          (spec) =>
+                            typeof spec?.value === "string" && spec.value.trim()
+                        )
+                        .map((spec, idx) => (
+                          <div
+                            key={idx}
+                            className="py-2 border-b border-gray-100 w-full"
+                          >
+                            <span className="text-sm text-gray-900 break-words">
+                              {spec.value}
+                            </span>
+                          </div>
+                        ))}
                     </div>
                   </TabsContent>
                 </Tabs>
@@ -692,11 +835,14 @@ const Page = () => {
                 <div className="space-y-4">
                   <div>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-3xl font-bold">{watchAllFields.basePrice || '$0.00'}</span>
+                      <span className="text-3xl font-bold">
+                        {watchAllFields.basePrice || "$0.00"}
+                      </span>
                       <span className="text-gray-600">per service</span>
                     </div>
                     <p className="text-sm text-gray-600">
-                      Estimated total: {watchAllFields.estimatedTotal || '$0.00'}
+                      Estimated total:{" "}
+                      {watchAllFields.estimatedTotal || "$0.00"}
                     </p>
                   </div>
                   <Separator />
@@ -720,12 +866,14 @@ const Page = () => {
                       src="https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=64&h=64&dpr=2"
                       width={48}
                       height={48}
-                      alt={watchAllFields.providerName || 'Provider'}
+                      alt={watchAllFields.providerName || "Provider"}
                       className="w-12 h-12 rounded-full object-cover"
                     />
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <h3 className="font-semibold">{watchAllFields.providerName || 'Provider Name'}</h3>
+                        <h3 className="font-semibold">
+                          {watchAllFields.providerName || "Provider Name"}
+                        </h3>
                         <Badge variant="secondary" className="text-xs">
                           <Shield className="w-3 h-3 mr-1" />
                           Verified
@@ -752,11 +900,19 @@ const Page = () => {
                   </div>
                   <Separator />
                   <div className="space-y-2">
-                    <GenericButton variant="outline" className="w-full justify-start" size="sm">
+                    <GenericButton
+                      variant="outline"
+                      className="w-full justify-start"
+                      size="sm"
+                    >
                       <Phone className="w-4 h-4 mr-2" />
                       Call Provider
                     </GenericButton>
-                    <GenericButton variant="outline" className="w-full justify-start" size="sm">
+                    <GenericButton
+                      variant="outline"
+                      className="w-full justify-start"
+                      size="sm"
+                    >
                       <Mail className="w-4 h-4 mr-2" />
                       Send Message
                     </GenericButton>
@@ -775,7 +931,9 @@ const Page = () => {
                     </div>
                     <div>
                       <p className="font-medium text-sm">Free Consultation</p>
-                      <p className="text-xs text-gray-600">On-site assessment included</p>
+                      <p className="text-xs text-gray-600">
+                        On-site assessment included
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -784,7 +942,9 @@ const Page = () => {
                     </div>
                     <div>
                       <p className="font-medium text-sm">Lifetime Warranty</p>
-                      <p className="text-xs text-gray-600">Full coverage guarantee</p>
+                      <p className="text-xs text-gray-600">
+                        Full coverage guarantee
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -793,7 +953,9 @@ const Page = () => {
                     </div>
                     <div>
                       <p className="font-medium text-sm">Professional Tools</p>
-                      <p className="text-xs text-gray-600">Commercial grade equipment</p>
+                      <p className="text-xs text-gray-600">
+                        Commercial grade equipment
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -804,5 +966,5 @@ const Page = () => {
       </div>
     </div>
   );
-}
-export default Page; 
+};
+export default Page;
