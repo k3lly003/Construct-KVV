@@ -713,5 +713,35 @@
   },
   "defaultBanner": {
     "defaultTitle": "Bienvenue"
+  },
+  "VisualizePage": {
+    "title": "Visualisez la maison de vos rêves",
+    "describeLabel": "Décrivez votre maison de rêve :",
+    "describePlaceholder": "ex : 3 chambres, cuisine moderne, grandes fenêtres, jardin...",
+    "uploadLabel": "📄 Téléchargez un PDF/image → Obtenez la description",
+    "extractingText": "Extraction du texte, veuillez patienter...",
+    "descriptionTooShort": "La description doit comporter au moins 250 caractères.",
+    "descriptionLength": "Veuillez saisir au moins 250 caractères (actuellement {count}).",
+    "descriptionSufficient": "La longueur de la description est suffisante.",
+    "visualizeButton": "🎨 Visualiser",
+    "processing": "Traitement...",
+    "summaryTitle": "📝 Résumé",
+    "generatedImageTitle": "🎨 Image générée",
+    "failedExtractImage": "Échec de l'extraction du texte de l'image.",
+    "failedExtractPDF": "Échec de l'extraction du texte du PDF.",
+    "failedSummaryOrImage": "Échec de la génération du résumé ou de l'image : {error}",
+    "noSummary": "Aucun résumé retourné par Cohere.",
+    "pleaseUpload": "Veuillez télécharger un fichier PDF ou une image."
+  },
+  "VisualizeSection": {
+    "title": "Envie de visualiser la maison de vos rêves ?",
+    "button": "Commencer la visualisation"
+  },
+  "RecommendationsSection": {
+    "title": "Recommandé pour vous",
+    "loading": "Chargement des recommandations...",
+    "error": "Échec du chargement des recommandations",
+    "noRecommendations": "Aucune recommandation pour le moment.",
+    "seeAllProducts": "Voir tous les produits"
   }
 }

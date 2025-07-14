@@ -33,7 +33,7 @@ export const Banner: React.FC = () => {
         <div className="absolute inset-0 ">
           <Image
             src={currentSlideData.image}
-            alt={currentSlideData.title}
+            alt={currentSlideData.titleKey}
             className="w-full h-full object-cover opacity-30"
             fill
             priority
@@ -46,29 +46,34 @@ export const Banner: React.FC = () => {
       {/* Content */}
       <div className="relative h-full flex items-center justify-center text-start">
         <div className="max-w-6xl flex flex-col justify-start">
-          {currentSlideData?.subtitle && (
+          {currentSlideData?.subtitleKey && (
             <span className="text-yellow-500 text-2xl font-semibold mb-2 block">
-              {currentSlideData.subtitle}
+              {getText(currentSlideData.subtitleKey, "")}
             </span>
           )}
-          {currentSlideData?.title && (
+          {currentSlideData?.titleKey && (
             <h2 className="text-green-500 text-5xl font-bold mb-4">
-              {getText('home.hero.title', 'Your One-Stop Solution for Construction Needs')}
+              {getText(
+                "home.hero.title",
+                "Your One-Stop Solution for Construction Needs"
+              )}
             </h2>
           )}
-          {currentSlideData?.description && (
+          {currentSlideData?.descriptionKey && (
             <p className="text-gray-100 text-lg mb-6">
-              {getText('home.hero.subtitle', 'Find the best materials, services, and professionals for your construction projects')}
+              {getText(
+                "home.hero.subtitle",
+                "Find the best materials, services, and professionals for your construction projects"
+              )}
             </p>
           )}
-          {currentSlideData?.buttonText && (
+          {currentSlideData?.buttonTextKey && (
             <>
               <button className="inline-flex items-center bg-yellow-500 text-gray-900 px-5 py-2 rounded-md font-semibold hover:bg-yellow-400 transition-colors w-fit">
-                {getText('home.hero.cta', 'Get Started')}
+                {getText("home.hero.cta", "Get Started")}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </button>
             </>
-
           )}
         </div>
       </div>
