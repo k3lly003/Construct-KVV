@@ -232,10 +232,6 @@ const Page = () => {
           </p>
         </div>
         <div className="space-x-2">
-          <GenericButton variant="outline">
-            <Upload className="h-4 w-4 mr-2" />
-            {t('dashboard.export')}
-          </GenericButton>
           <Link href="/dashboard/create-service">
             <GenericButton className="gap-2">
               <Plus className="h-4 w-4" />

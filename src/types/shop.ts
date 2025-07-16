@@ -1,6 +1,7 @@
 import type { Seller } from "./seller";
 
 export interface Shop {
+  image: string;
   createdAt: string | undefined;
   id: string;
   name: string;
