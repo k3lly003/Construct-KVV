@@ -103,7 +103,7 @@ const SideBar = () => {
     setIsSheetOpen(true);
   };
 
-  const sidebarClassName = `fixed flex flex-col bg-white dark:bg-gray-800 z-10 ${isSidebarCollapsed ? "w-0 md:w-16" : "w-72 md:w-64"
+  const sidebarClassName = `fixed flex flex-col bg-white dark:bg-gray-800 z-30 ${isSidebarCollapsed ? "w-0 md:w-16" : "w-72 md:w-64"
     }transition-all duration-500 overflow-hidden h-full shadow-md dark:shadow-2xl`;
 
   useEffect(() => {

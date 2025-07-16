@@ -8,6 +8,7 @@ import ProductView from '@/app/(components)/product/ProductView';
 import ReviewDialog from '@/app/(components)/product/ReviewDialog';
 import { productService } from '@/app/services/productServices';
 import {  ProductViewSkeleton } from '@/app/utils/skeleton/ProductSkeletons'
+import Head from 'next/head';
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -85,6 +86,41 @@ const Page = ({ params }: PageProps) => {
 
   return (
     <div className="w-[100%]">
+      {product && (
+        <Head>
+          <title>{product.name ? `${product.name} | Construct KVV` : 'Product | Construct KVV'}</title>
+          <meta name="description" content={product.description || 'View product details at KVV Construction.'} />
+          <meta property="og:title" content={product.name ? `${product.name} | Construct KVV` : 'Product | Construct KVV'} />
+          <meta property="og:description" content={product.description || 'View product details at KVV Construction.'} />
+          <meta property="og:type" content="product" />
+          <meta property="og:url" content={`https://www.constructkvv.com/product/${product.id}`} />
+          <meta property="og:image" content={product.images && product.images.length > 0 ? product.images[0].url : '/kvv-logo.png'} />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content={product.name ? `${product.name} | Construct KVV` : 'Product | Construct KVV'} />
+          <meta name="twitter:description" content={product.description || 'View product details at KVV Construction.'} />
+          <meta name="twitter:image" content={product.images && product.images.length > 0 ? product.images[0].url : '/kvv-logo.png'} />
+          <link rel="canonical" href={`https://www.constructkvv.com/product/${product.id}`} />
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            name: product.name,
+            image: product.images && product.images.length > 0 ? product.images[0].url : undefined,
+            description: product.description,
+            sku: product.sku,
+            brand: {
+              '@type': 'Brand',
+              name: 'KVV Construction'
+            },
+            offers: product.price ? {
+              '@type': 'Offer',
+              priceCurrency: 'RWF',
+              price: product.price,
+              availability: product.isActive ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+              url: `https://www.constructkvv.com/product/${product.id}`
+            } : undefined
+          }) }} />
+        </Head>
+      )}
       <DefaultPageBanner title="Product View" backgroundImage='/building.jpg' />
       <div className="max-w-7xl flex flex-col gap-[30px] p-3 sm:w-[60%] m-auto my-10">
         {loading ? (

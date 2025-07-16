@@ -2,6 +2,8 @@ import React from 'react';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
+import Head from 'next/head';
+import { dashboardFakes } from '@/app/utils/fakes/DashboardFakes';
 
 const constructionImages = [
   "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=300",
@@ -14,12 +16,33 @@ export const Footer: React.FC = () => {
   const { t } = useTranslation();
   return (
     <footer className="bg-black text-white w-full">
+      <Head>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
+          name: 'KVV Construction',
+          url: 'https://www.constructkvv.com/',
+          logo: 'https://www.constructkvv.com/kvv-logo.png',
+          contactPoint: [{
+            '@type': 'ContactPoint',
+            telephone: '+250 7888 507',
+            contactType: 'customer service',
+            areaServed: 'RW',
+            availableLanguage: ['en','fr','rw']
+          }],
+          sameAs: [
+            'https://www.facebook.com/kvvconstruction',
+            'https://www.linkedin.com/company/kvvconstruction',
+            'https://www.instagram.com/kvvconstruction/'
+          ]
+        }) }} />
+      </Head>
       <div className="w-full px-4 sm:px-6 lg:px-8 py-16">
         <div className="max-w-6xl mx-auto flex justify-center items-center grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Logo and Company Info */}
           <div className="space-y-8">
             <div className="flex items-center space-x-3">
-              <Image src='/kvv-logo.png' alt='kvv-logo' width={34} height={34} />
+              <Image src='/kvv-logo.png' alt='KVV Construction company logo' width={34} height={34} />
               <h2 className="text-2xl font-bold">kvv Ltd</h2>
             </div>
 
@@ -98,7 +121,7 @@ export const Footer: React.FC = () => {
                     src={image}
                     width={100}
                     height={100}
-                    alt={t('footer.constructionProject', { number: index + 1 })}
+                    alt={`Construction project photo ${index + 1} by KVV Construction`}
                     className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-300"
                   />
                 </div>
@@ -122,7 +145,7 @@ export const Footer: React.FC = () => {
       <div className="bg-yellow-400 py-4">
         <div className="w-full">
           <p className="text-black text-center">
-            {t('footer.copyright', { year: '2025', company: <a href="#" className="font-semibold hover:text-white transition-colors">KVVLtd</a> })}
+            {t(dashboardFakes.footer.copyright)}
           </p>
         </div>
       </div>

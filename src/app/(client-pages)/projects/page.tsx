@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select";
 import SpecialistLocator from "@/components/ui/SpecialistLocator";
 import { useTranslations } from '@/app/hooks/useTranslations';
+import Head from 'next/head';
 
 const ProjectsPage = () => {
   const { t } = useTranslations();
@@ -156,6 +157,27 @@ const ProjectsPage = () => {
 
   return (
     <>
+      <Head>
+        <title>Projects | Construct KVV</title>
+        <meta name="description" content="Explore construction projects, find inspiration, and connect with professionals at KVV Construction." />
+        <meta property="og:title" content="Projects | Construct KVV" />
+        <meta property="og:description" content="Explore construction projects, find inspiration, and connect with professionals at KVV Construction." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.constructkvv.com/projects" />
+        <meta property="og:image" content="/kvv-logo.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Projects | Construct KVV" />
+        <meta name="twitter:description" content="Explore construction projects, find inspiration, and connect with professionals at KVV Construction." />
+        <meta name="twitter:image" content="/kvv-logo.png" />
+        <link rel="canonical" href="https://www.constructkvv.com/projects" />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebPage',
+          name: 'Projects',
+          url: 'https://www.constructkvv.com/projects',
+          description: 'Explore construction projects, find inspiration, and connect with professionals at KVV Construction.'
+        }) }} />
+      </Head>
       <DefaultPageBanner
         title={t('projects.marketplaceTitle', 'House Construction Marketplace')}
         backgroundImage="/store-img.jpg"

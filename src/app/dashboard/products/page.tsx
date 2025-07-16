@@ -285,7 +285,6 @@ const Page = () => {
               <TableHead className="text-amber-300">{t('dashboard.productName')}</TableHead>
               <TableHead className="text-amber-300">{t('dashboard.description')}</TableHead>
               <TableHead className="text-amber-300">{t('dashboard.dateTime')}</TableHead>
-              <TableHead className="text-amber-300">{t('dashboard.type')}</TableHead>
               <TableHead className="text-amber-300">{t('dashboard.price')}</TableHead>
               <TableHead className="text-amber-300">{t('dashboard.actions')}</TableHead>
             </TableRow>
@@ -301,20 +300,19 @@ const Page = () => {
                   )}
                 </TableCell>
                 <TableCell className="py-4">{product.name}</TableCell>
-                <TableCell className="py-4">{product.description}</TableCell>
+                <TableCell className="py-4 md:py-5 max-auto overflo">{product.description}</TableCell>
                 <TableCell className="py-4">{product.createdAt ? new Date(product.createdAt).toLocaleString() : "-"}</TableCell>
-                <TableCell className="py-4">{product.type}</TableCell>
                 <TableCell className="">{product.price ? `$${product.price}` : "-"}</TableCell>
-                <TableCell className="flex gap-3">
+                <TableCell className="flex gap-3 my-10">
                   <Trash2
-                    className="cursor-pointer hover:text-red-500 w-[30px]"
+                    className="cursor-pointer hover:text-red-500 w-[20px]"
                     onClick={() => {
                       setSelectedProduct(product);
                       setDeleteDialogOpen(true);
                     }}
                   />
                   <Pencil
-                    className="cursor-pointer hover:text-green-400 w-[30px]"
+                    className="cursor-pointer hover:text-green-400 w-[20px]"
                     onClick={() => {
                       setSelectedProduct(product);
                       setEditForm({ ...product });

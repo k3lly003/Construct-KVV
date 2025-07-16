@@ -743,5 +743,10 @@
     "error": "Échec du chargement des recommandations",
     "noRecommendations": "Aucune recommandation pour le moment.",
     "seeAllProducts": "Voir tous les produits"
+  },
+  "dash": {
+    "footer": {
+      "copyright": "Copyright ©2026 constructkvv. Tous droits réservés."
+    }
   }
 }
