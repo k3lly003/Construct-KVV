@@ -47,6 +47,9 @@ export interface Bid {
 export type ProjectStatus = "DRAFT" | "OPEN" | "CLOSED" | "COMPLETED";
 
 export interface Project {
+  description: string;
+  image: string;
+  name: any;
   id: string;
   status: ProjectStatus;
   ownerId: string;

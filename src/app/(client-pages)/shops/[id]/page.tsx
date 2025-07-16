@@ -7,6 +7,7 @@ import React, { useEffect, useState, use } from 'react'
 import { ShopService } from '@/app/services/shopServices'
 import { Shop } from '@/types/shop'
 import { Skeleton } from '@/components/ui/skeleton'
+import Head from 'next/head';
 
 interface PageProps {
   params: Promise<{
@@ -89,6 +90,28 @@ const Page = ({ params }: PageProps) => {
     
   return (
     <>
+      <Head>
+        <title>{shop?.name ? `${shop.name} | Shop | Construct KVV` : 'Shop | Construct KVV'}</title>
+        <meta name="description" content={shop?.description || 'View shop details and products at Construct KVV.'} />
+        <meta property="og:title" content={shop?.name ? `${shop.name} | Shop | Construct KVV` : 'Shop | Construct KVV'} />
+        <meta property="og:description" content={shop?.description || 'View shop details and products at Construct KVV.'} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`https://www.constructkvv.com/shops/${shop?.id}`} />
+        <meta property="og:image" content={shop?.image || '/kvv-logo.png'} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={shop?.name ? `${shop.name} | Shop | Construct KVV` : 'Shop | Construct KVV'} />
+        <meta name="twitter:description" content={shop?.description || 'View shop details and products at Construct KVV.'} />
+        <meta name="twitter:image" content={shop?.image || '/kvv-logo.png'} />
+        <link rel="canonical" href={`https://www.constructkvv.com/shops/${shop?.id}`} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Store',
+          name: shop?.name,
+          description: shop?.description,
+          image: shop?.image || undefined,
+          url: `https://www.constructkvv.com/shops/${shop?.id}`
+        }) }} />
+      </Head>
       <ShopBanner shop={shop}/>
       <div className='flex flex-col max-w-7xl mx-auto px-4 sm:px-6 lg:px-2 py-12 md:flex-row'>
        {/* <ContactInfo shop={shop}/> */}

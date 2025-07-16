@@ -26,6 +26,7 @@ import {
 import { NegotiationChat } from "@/app/dashboard/(components)/negotiation/NegotiationChat";
 import { BidStatus } from "@/types/project";
 import ProgressTracker from "@/app/(components)/projects/ProgressTracker";
+import Head from 'next/head';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -281,6 +282,30 @@ function ProjectPage({ params }: ProjectPageProps) {
 
   return (
     <>
+      {project && (
+        <Head>
+          <title>{project.name ? `${project.name} | Project | Construct KVV` : 'Project | Construct KVV'}</title>
+          <meta name="description" content={project.description || 'View construction project details at KVV Construction.'} />
+          <meta property="og:title" content={project.name ? `${project.name} | Project | Construct KVV` : 'Project | Construct KVV'} />
+          <meta property="og:description" content={project.description || 'View construction project details at KVV Construction.'} />
+          <meta property="og:type" content="website" />
+          <meta property="og:url" content={`https://www.constructkvv.com/projects/${project.id}`} />
+          <meta property="og:image" content={project.image || '/kvv-logo.png'} />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content={project.name ? `${project.name} | Project | Construct KVV` : 'Project | Construct KVV'} />
+          <meta name="twitter:description" content={project.description || 'View construction project details at KVV Construction.'} />
+          <meta name="twitter:image" content={project.image || '/kvv-logo.png'} />
+          <link rel="canonical" href={`https://www.constructkvv.com/projects/${project.id}`} />
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            name: project.name,
+            description: project.description,
+            url: `https://www.constructkvv.com/projects/${project.id}`,
+            image: project.image || undefined
+          }) }} />
+        </Head>
+      )}
       <DefaultPageBanner
         title="Project Details & Bidding"
         backgroundImage="/building.jpg"

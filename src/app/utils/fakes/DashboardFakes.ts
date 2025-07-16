@@ -366,4 +366,7 @@ export const dashboardFakes = {
     seeAllProducts: "RecommendationsSection.seeAllProducts",
   },
   // Add more as needed for other dashboard sections
+  footer: {
+    copyright: "dash.footer.copyright"
+  }
 };

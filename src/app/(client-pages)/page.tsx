@@ -1,5 +1,6 @@
 "use client";
 
+import Head from 'next/head';
 // import { BrickLoader } from "../(components)/BrickLoader";
 import { Banner } from "@/app/(components)/home/Banner";
 import { ProductCarousel } from "@/app/(components)/home/bestDeals";
@@ -51,6 +52,39 @@ export default function Home() {
 
   return (
     <>
+      <Head>
+        <title>Construct KVV | Home</title>
+        <meta name="description" content="Your one-stop solution for construction needs in Rwanda. Shop products, view projects, and connect with KVV Construction." />
+        <meta property="og:title" content="Construct KVV | Home" />
+        <meta property="og:description" content="Your one-stop solution for construction needs in Rwanda. Shop products, view projects, and connect with KVV Construction." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.constructkvv.com/" />
+        <meta property="og:image" content="/kvv-logo.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Construct KVV | Home" />
+        <meta name="twitter:description" content="Your one-stop solution for construction needs in Rwanda." />
+        <meta name="twitter:image" content="/kvv-logo.png" />
+        <link rel="canonical" href="https://www.constructkvv.com/" />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
+          name: 'KVV Construction',
+          url: 'https://www.constructkvv.com/',
+          logo: 'https://www.constructkvv.com/kvv-logo.png',
+          contactPoint: [{
+            '@type': 'ContactPoint',
+            telephone: '+250 7888 507',
+            contactType: 'customer service',
+            areaServed: 'RW',
+            availableLanguage: ['en','fr','rw']
+          }],
+          sameAs: [
+            'https://www.facebook.com/kvvltd',
+            'https://www.linkedin.com/company/kvvltd',
+            'https://www.instagram.com/kvvltd/'
+          ]
+        }) }} />
+      </Head>
       <Banner />
       <ProjectShowcase />
       {/* Visualize Dream Home Section */}
