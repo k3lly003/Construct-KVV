@@ -25,7 +25,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { useNotificationStore } from "@/store/notificationStore";
 import { formatNotificationTime } from "@/app/utils/middlewares/formatTime";
-import { useTranslations } from '@/app/hooks/useTranslations';
+import { useTranslations } from "@/app/hooks/useTranslations";
 
 interface NotificationItem {
   id: string;
@@ -105,11 +105,11 @@ const Page = () => {
       if (activeTab === "read") return !notification.isUnread;
       if (activeTab === "unread") return notification.isUnread;
       if (activeTab === "orders") return notification.type === "order";
-    return true;
+      return true;
     })
     .filter(
       (notification) =>
-    notification.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        notification.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (notification.description &&
           notification.description
             .toLowerCase()
@@ -153,13 +153,13 @@ const Page = () => {
       if (notification.type === "seller_request") {
         // TODO: Implement API call to approve seller request
         console.log(
-          t('dashboard.notifications.logApprovingSellerRequest'),
+          t("dashboard.notifications.logApprovingSellerRequest"),
           notification.data?.userName
         );
       } else if (notification.type === "shop_approval") {
         // TODO: Implement API call to approve shop creation
         console.log(
-          t('dashboard.notifications.logApprovingShopCreation'),
+          t("dashboard.notifications.logApprovingShopCreation"),
           notification.data?.shopName
         );
       }
@@ -179,13 +179,13 @@ const Page = () => {
       if (notification.type === "seller_request") {
         // TODO: Implement API call to reject seller request
         console.log(
-          t('dashboard.notifications.logRejectingSellerRequest'),
+          t("dashboard.notifications.logRejectingSellerRequest"),
           notification.data?.userName
         );
       } else if (notification.type === "shop_approval") {
         // TODO: Implement API call to reject shop creation
         console.log(
-          t('dashboard.notifications.logRejectingShopCreation'),
+          t("dashboard.notifications.logRejectingShopCreation"),
           notification.data?.shopName
         );
       }
@@ -237,54 +237,56 @@ const Page = () => {
       case "seller_request":
         return (
           <Badge className="bg-blue-100 text-blue-800 text-xs">
-            {t('dashboard.notifications.sellerRequest')}
+            {t("dashboard.notifications.sellerRequest")}
           </Badge>
         );
       case "shop_approval":
         return (
           <Badge className="bg-green-100 text-green-800 text-xs">
-            {t('dashboard.notifications.shopApproval')}
+            {t("dashboard.notifications.shopApproval")}
           </Badge>
         );
       case "system":
         return (
           <Badge className="bg-yellow-100 text-yellow-800 text-xs">
-            {t('dashboard.notifications.system')}
+            {t("dashboard.notifications.system")}
           </Badge>
         );
       case "order":
         return (
           <Badge className="bg-purple-100 text-purple-800 text-xs">
-            {t('dashboard.notifications.order')}
+            {t("dashboard.notifications.order")}
           </Badge>
         );
       default:
         return (
           <Badge className="bg-gray-100 text-gray-800 text-xs">
-            {t('dashboard.notifications.other')}
+            {t("dashboard.notifications.other")}
           </Badge>
         );
     }
   };
 
   return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center space-x-4">
-          <h1 className="text-2xl font-semibold flex items-center">
-            <Bell className="mr-2 h-5 w-5" /> {t('dashboard.notifications.title')}
+    <div className="p-2 sm:p-4 md:p-6">
+      {/* Header and Search - Responsive Flex */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4">
+          <h1 className="text-xl sm:text-2xl font-semibold flex items-center mb-2 sm:mb-0">
+            <Bell className="mr-2 h-5 w-5" />{" "}
+            {t("dashboard.notifications.title")}
           </h1>
           {unreadCount > 0 && (
-            <Badge className="bg-amber-500 text-white">
-              {unreadCount} {t('dashboard.notifications.unread')}
+            <Badge className="bg-amber-500 text-white mt-1 sm:mt-0">
+              {unreadCount} {t("dashboard.notifications.unread")}
             </Badge>
           )}
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:space-x-2 w-full sm:w-auto">
           <Input
             type="search"
-            placeholder={t('dashboard.notifications.searchPlaceholder')}
-            className="w-64"
+            placeholder={t("dashboard.notifications.searchPlaceholder")}
+            className="w-full sm:w-64"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -293,33 +295,34 @@ const Page = () => {
             size="sm"
             onClick={handleMarkAllAsRead}
             disabled={unreadCount === 0}
+            className="w-full sm:w-auto"
           >
-            {t('dashboard.notifications.markAllRead')}
+            {t("dashboard.notifications.markAllRead")}
           </GenericButton>
         </div>
       </div>
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-4">
-        <TabsList>
+        <TabsList className="flex flex-wrap gap-2">
           <TabsTrigger value="all">
-            {t('dashboard.notifications.all')}
+            {t("dashboard.notifications.all")}
             <Badge className="ml-2 bg-amber-500 text-white text-xs">
               {mappedNotifications.length}
             </Badge>
           </TabsTrigger>
           <TabsTrigger value="read">
-            {t('dashboard.notifications.read')}
+            {t("dashboard.notifications.read")}
             <Badge className="ml-2 bg-amber-500 text-white text-xs">
               {readCount}
             </Badge>
           </TabsTrigger>
           <TabsTrigger value="unread">
-            {t('dashboard.notifications.unread')}
+            {t("dashboard.notifications.unread")}
             <Badge className="ml-2 bg-amber-500 text-white text-xs">
               {unreadCount}
             </Badge>
           </TabsTrigger>
           <TabsTrigger value="orders">
-            {t('dashboard.notifications.orders')}
+            {t("dashboard.notifications.orders")}
             <Badge className="ml-2 bg-amber-500 text-white text-xs">
               {orderCount}
             </Badge>
@@ -327,12 +330,16 @@ const Page = () => {
         </TabsList>
       </Tabs>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Add vertical space between tabs and notification data */}
+      <div className="mb-2" />
+
+      {/* Responsive grid: stack on mobile, side-by-side on lg+ */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 mt-10">
         {/* Notifications List */}
         <div className="lg:col-span-2">
-      <ScrollArea className="h-[700px] w-full rounded-md border">
-        <div className="p-4">
-          {filteredNotifications.map((notification) => (
+          <ScrollArea className="h-[60vh] sm:h-[70vh] w-full rounded-md border">
+            <div className="p-2 sm:p-4">
+              {filteredNotifications.map((notification) => (
                 <Card
                   key={notification.id}
                   className={`mb-3 cursor-pointer transition-all hover:shadow-md ${getNotificationColor(
@@ -340,24 +347,24 @@ const Page = () => {
                   )}`}
                   onClick={() => handleViewDetails(notification)}
                 >
-                  <CardContent className="p-4">
-              <div className="flex items-start space-x-4">
+                  <CardContent className="p-3 sm:p-4">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
                       <div className="flex-shrink-0">
                         <Avatar className="h-10 w-10">
                           <AvatarFallback className="bg-gray-100">
                             {getNotificationIcon(notification.type)}
                           </AvatarFallback>
-                </Avatar>
+                        </Avatar>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between mb-1">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-1 gap-1 sm:gap-0">
                           <div className="flex items-center space-x-2">
-                            <p className="text-sm font-medium truncate">
+                            <p className="text-sm font-medium truncate max-w-[140px] sm:max-w-xs">
                               {notification.title}
                             </p>
                             {getNotificationBadge(notification.type)}
                           </div>
-                          <div className="flex items-center space-x-1">
+                          <div className="flex items-center space-x-1 mt-1 sm:mt-0">
                             {notification.isUnread && (
                               <div className="w-2 h-2 rounded-full bg-amber-500" />
                             )}
@@ -367,24 +374,24 @@ const Page = () => {
                             </span>
                           </div>
                         </div>
-                  {notification.description && (
-                          <p className="text-sm text-gray-600 mb-2">
+                        {notification.description && (
+                          <p className="text-xs sm:text-sm text-gray-600 mb-2">
                             {notification.description}
                           </p>
                         )}
                         {(notification.type === "seller_request" ||
                           notification.type === "shop_approval") && (
-                          <div className="flex items-center space-x-2">
+                          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2">
                             <GenericButton
                               size="sm"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleApproveRequest(notification);
                               }}
-                              className="bg-green-600 hover:bg-green-700 text-white"
+                              className="bg-green-600 hover:bg-green-700 text-white w-full sm:w-auto"
                             >
                               <CheckCircle className="w-3 h-3 mr-1" />
-                              {t('dashboard.notifications.approve')}
+                              {t("dashboard.notifications.approve")}
                             </GenericButton>
                             <GenericButton
                               size="sm"
@@ -393,22 +400,22 @@ const Page = () => {
                                 e.stopPropagation();
                                 handleRejectRequest(notification);
                               }}
-                              className="text-red-600 hover:text-red-700"
+                              className="text-red-600 hover:text-red-700 w-full sm:w-auto"
                             >
                               <XCircle className="w-3 h-3 mr-1" />
-                              {t('dashboard.notifications.reject')}
+                              {t("dashboard.notifications.reject")}
                             </GenericButton>
-                </div>
-                )}
-              </div>
-            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
-          ))}
-          {filteredNotifications.length === 0 && (
+              ))}
+              {filteredNotifications.length === 0 && (
                 <div className="py-6 text-center text-sm text-gray-500">
                   <Bell className="w-12 h-12 mx-auto mb-2 text-gray-300" />
-                  <p>{t('dashboard.notifications.empty')}</p>
+                  <p>{t("dashboard.notifications.empty")}</p>
                 </div>
               )}
             </div>
@@ -416,13 +423,13 @@ const Page = () => {
         </div>
 
         {/* Notification Details */}
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 mt-6 lg:mt-0">
           {selectedNotification ? (
             <Card>
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold">
-                    {t('dashboard.notifications.details')}
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row items-center justify-between mb-4 gap-2">
+                  <h3 className="text-base sm:text-lg font-semibold">
+                    {t("dashboard.notifications.details")}
                   </h3>
                   <GenericButton
                     variant="outline"
@@ -437,14 +444,14 @@ const Page = () => {
                 </div>
 
                 <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
+                  <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
                     <Avatar className="h-12 w-12">
                       <AvatarFallback className="bg-gray-100">
                         {getNotificationIcon(selectedNotification.type)}
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <h4 className="font-medium">
+                      <h4 className="font-medium text-sm sm:text-base">
                         {selectedNotification.title}
                       </h4>
                       {getNotificationBadge(selectedNotification.type)}
@@ -452,7 +459,7 @@ const Page = () => {
                   </div>
 
                   <div>
-                    <p className="text-sm text-gray-600 mb-2">
+                    <p className="text-xs sm:text-sm text-gray-600 mb-2">
                       {selectedNotification.description}
                     </p>
                     <p className="text-xs text-gray-500">
@@ -464,40 +471,40 @@ const Page = () => {
                     <div className="space-y-3 pt-4 border-t">
                       {selectedNotification.data.userName && (
                         <div>
-                          <p className="text-sm font-medium">
-                            {t('dashboard.notifications.userName')}
+                          <p className="text-xs sm:text-sm font-medium">
+                            {t("dashboard.notifications.userName")}
                           </p>
-                          <p className="text-sm text-gray-600">
+                          <p className="text-xs sm:text-sm text-gray-600">
                             {selectedNotification.data.userName}
                           </p>
                         </div>
                       )}
                       {selectedNotification.data.userEmail && (
                         <div>
-                          <p className="text-sm font-medium">
-                            {t('dashboard.notifications.userEmail')}
+                          <p className="text-xs sm:text-sm font-medium">
+                            {t("dashboard.notifications.userEmail")}
                           </p>
-                          <p className="text-sm text-gray-600">
+                          <p className="text-xs sm:text-sm text-gray-600">
                             {selectedNotification.data.userEmail}
                           </p>
                         </div>
                       )}
                       {selectedNotification.data.shopName && (
                         <div>
-                          <p className="text-sm font-medium">
-                            {t('dashboard.notifications.shopName')}
+                          <p className="text-xs sm:text-sm font-medium">
+                            {t("dashboard.notifications.shopName")}
                           </p>
-                          <p className="text-sm text-gray-600">
+                          <p className="text-xs sm:text-sm text-gray-600">
                             {selectedNotification.data.shopName}
                           </p>
                         </div>
                       )}
                       {selectedNotification.data.requestDetails && (
                         <div>
-                          <p className="text-sm font-medium">
-                            {t('dashboard.notifications.requestDetails')}
+                          <p className="text-xs sm:text-sm font-medium">
+                            {t("dashboard.notifications.requestDetails")}
                           </p>
-                          <p className="text-sm text-gray-600">
+                          <p className="text-xs sm:text-sm text-gray-600">
                             {selectedNotification.data.requestDetails}
                           </p>
                         </div>
@@ -508,28 +515,28 @@ const Page = () => {
                   {(selectedNotification.type === "seller_request" ||
                     selectedNotification.type === "shop_approval") && (
                     <div className="pt-4 border-t">
-                      <p className="text-sm font-medium mb-3">
-                        {t('dashboard.notifications.actions')}
+                      <p className="text-xs sm:text-sm font-medium mb-3">
+                        {t("dashboard.notifications.actions")}
                       </p>
-                      <div className="flex space-x-2">
+                      <div className="flex flex-col sm:flex-row gap-2">
                         <GenericButton
                           onClick={() =>
                             handleApproveRequest(selectedNotification)
                           }
-                          className="bg-green-600 hover:bg-green-700 text-white"
+                          className="bg-green-600 hover:bg-green-700 text-white w-full sm:w-auto"
                         >
                           <CheckCircle className="w-4 h-4 mr-2" />
-                          {t('dashboard.notifications.approve')}
+                          {t("dashboard.notifications.approve")}
                         </GenericButton>
                         <GenericButton
                           variant="outline"
                           onClick={() =>
                             handleRejectRequest(selectedNotification)
                           }
-                          className="text-red-600 hover:text-red-700"
+                          className="text-red-600 hover:text-red-700 w-full sm:w-auto"
                         >
                           <XCircle className="w-4 h-4 mr-2" />
-                          {t('dashboard.notifications.reject')}
+                          {t("dashboard.notifications.reject")}
                         </GenericButton>
                       </div>
                     </div>
@@ -539,10 +546,10 @@ const Page = () => {
             </Card>
           ) : (
             <Card>
-              <CardContent className="p-6">
+              <CardContent className="p-4 sm:p-6">
                 <div className="text-center text-gray-500">
                   <Bell className="w-12 h-12 mx-auto mb-2 text-gray-300" />
-                  <p>{t('dashboard.notifications.selectToView')}</p>
+                  <p>{t("dashboard.notifications.selectToView")}</p>
                 </div>
               </CardContent>
             </Card>
