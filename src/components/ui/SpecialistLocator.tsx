@@ -20,7 +20,6 @@ const SPECIALIST_TYPES = [
 ];
 
 const opencageApi = process.env.NEXT_PUBLIC_OPENCAGE_API_KEY;
-console.log("OPENCAGE_API_KEY:", opencageApi);
 
 function getDistance(lat1: number, lng1: number, lat2: number, lng2: number) {
   // Haversine formula
