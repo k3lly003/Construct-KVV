@@ -186,7 +186,6 @@ const SideBar = () => {
           )}
 
           {userRole === "SELLER" && (
-
             <>
               <SidebarLink
                 href="/dashboard/overview"

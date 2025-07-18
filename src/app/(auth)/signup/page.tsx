@@ -154,7 +154,7 @@ const Page = () => {
                     <input
                       type="text"
                       id="first_name"
-                      className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                      className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-white ${
                         errors.first_name ? "border-red-500" : ""
                       }`}
                       placeholder="your first name"
@@ -183,7 +183,7 @@ const Page = () => {
                     <input
                       type="text"
                       id="second_name"
-                      className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline  ${
+                      className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-white ${
                         errors.second_name ? "border-red-500" : ""
                       }`}
                       placeholder="your second name"
@@ -213,7 +213,7 @@ const Page = () => {
                   <input
                     type="email"
                     id="email"
-                    className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                    className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-white ${
                       errors.email ? "border-red-500" : ""
                     }`}
                     placeholder="you@example.com"
@@ -240,7 +240,7 @@ const Page = () => {
                   <input
                     type={showPassword ? "text" : "password"}
                     id="password"
-                    className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline ${
+                    className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline text-white ${
                       errors.password ? "border-red-500" : ""
                     }`}
                     placeholder="********"
@@ -265,7 +265,7 @@ const Page = () => {
                 <label className="flex items-center text-gray-700 text-sm">
                   <input
                     type="checkbox"
-                    className="form-checkbox h-4 w-4 text-amber-300 rounded focus:ring-amber-600"
+                    className="form-checkbox h-4 w-4 text-amber-300 rounded focus:ring-amber-600 text-white"
                   />
                   <span className="ml-2">Remember me</span>
                 </label>

@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Star, ChevronLeft, ChevronRight, Heart } from "lucide-react";
+import { ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/app/(components)/Button";
 import { ProductFilters } from "@/app/(components)/product/ProductFilters";
+import { ServiceGrid } from "@/app/(components)/service/service-grid";
 import { productService } from "@/app/services/productServices";
 import { Product } from "@/types/product";
 import { useRouter } from "next/navigation";
-import ProductCard from "@/app/(components)/ProductCard";
 import { dashboardFakes } from '@/app/utils/fakes/DashboardFakes';
 import { useTranslations } from '@/app/hooks/useTranslations';
 
@@ -17,9 +17,9 @@ export const Products: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All Products");
+  const [selectedCategory, setSelectedCategory] = useState("Product");
   const [sortBy, setSortBy] = useState("featured");
-  const availableCategories: string[] = ["All Products"];
+  const availableCategories: string[] = ["Product", "Service"];
   const router = useRouter();
   const { t } = useTranslations();
 
@@ -65,80 +65,84 @@ export const Products: React.FC = () => {
             availableCategories={availableCategories}
           />
 
-          {/* Products */}
-          {loading ? (
-            <div className="flex flex-wrap px-4 gap-7 justify-center lg:flex lg:justify-start">
-              {[...Array(6)].map((_, i) => (
-                <div
-                  key={i}
-                  className="bg-gray-100 animate-pulse overflow-hidden w-64 m-2 rounded-xl"
-                >
-                  <div className="w-full h-56 bg-gray-200" />
-                  <div className="p-4">
-                    <div className="h-5 bg-gray-200 rounded w-3/4 mb-2" />
-                    <div className="h-4 bg-gray-200 rounded w-1/2 mb-2" />
-                    <div className="h-4 bg-gray-200 rounded w-1/3 mb-4" />
-                    <div className="h-10 bg-gray-200 rounded w-full" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-wrap px-4 gap-7 justify-center lg:flex lg:justify-start">
-              {filteredProducts.map((product, index) => (
+          {/* Conditional Content */}
+          {selectedCategory === "Product" ? (
+            loading ? (
+              <div className="flex flex-wrap px-4 gap-7 justify-center lg:flex lg:justify-start">
+                {[...Array(6)].map((_, i) => (
                   <div
-                    key={`${product.id}-${index}`}
-                    className="bg-white overflow-hidden w-64 m-2 hover:shadow-lg cursor-pointer hover:rounded-xl transition-shadow"
-                    onClick={() => router.push(`/product/${product.id}`)}
+                    key={i}
+                    className="bg-gray-100 animate-pulse overflow-hidden w-64 m-2 rounded-xl"
                   >
-                    <div className="relative">
-                      {product.thumbnailUrl ? (
-                        <Image
-                          src={product.thumbnailUrl}
-                          alt={product.name}
-                          width={100}
-                          height={100}
-                          className="w-full h-56 object-cover rounded-xl" 
-                        />
-                      ) : (
-                        <div className="w-full h-56 flex items-center justify-center bg-gray-100 rounded-xl text-gray-400">
-                          No Image
-                        </div>
-                      )}
-                      <div className="absolute top-2 right-2 border text-gray-100 rounded-full p-3 flex items-center justify-center cursor-pointer shadow-sm hover:bg-yellow-400 hover:border-yellow-400 transition-colors">
-                        <Heart className="text-gray-100" />
-                      </div>
-                    </div>
+                    <div className="w-full h-56 bg-gray-200" />
                     <div className="p-4">
-                      <div className="flex justify-between">
-                        <h3 className="text-md font-semibold text-gray-900 w-[60%] mb-1">
-                          {product.name}
-                        </h3>
-                      </div>
-                      <p className="text-sm text-gray-500 mb-2 overflow">
-                        {product.description}
-                      </p>
-                      <div className="flex items-center justify-between mb-3">
-                        <p className="font-semibold text-md text-yellow-400">
-                          {product.price}
-                          <span className="text-sm text-yellow-400"> Rwf</span>
-                        </p>
-                      </div>
-                      <Button
-                        text={t(dashboardFakes.common.addToCart)}
-                        texSize={"text-sm"}
-                        hoverBg={"hover:bg-yellow-400"}
-                        borderCol={"border-yellow-300"}
-                        bgCol={"white"}
-                        textCol={"text-gray-800"}
-                        border={"border-1"}
-                        handleButton={() => alert(`Add to Cart clicked for ${product.name}`)}
-                        padding={"p-3"}
-                        round={"rounded-full"} />
+                      <div className="h-5 bg-gray-200 rounded w-3/4 mb-2" />
+                      <div className="h-4 bg-gray-200 rounded w-1/2 mb-2" />
+                      <div className="h-4 bg-gray-200 rounded w-1/3 mb-4" />
+                      <div className="h-10 bg-gray-200 rounded w-full" />
                     </div>
                   </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-wrap px-4 gap-7 justify-center lg:flex lg:justify-start">
+                {filteredProducts.map((product, index) => (
+                    <div
+                      key={`${product.id}-${index}`}
+                      className="bg-white overflow-hidden w-64 m-2 hover:shadow-lg cursor-pointer hover:rounded-xl transition-shadow"
+                      onClick={() => router.push(`/product/${product.id}`)}
+                    >
+                      <div className="relative">
+                        {product.thumbnailUrl ? (
+                          <Image
+                            src={product.thumbnailUrl}
+                            alt={product.name}
+                            width={100}
+                            height={100}
+                            className="w-full h-56 object-cover rounded-xl" 
+                          />
+                        ) : (
+                          <div className="w-full h-56 flex items-center justify-center bg-gray-100 rounded-xl text-gray-400">
+                            No Image
+                          </div>
+                        )}
+                        <div className="absolute top-2 right-2 border text-gray-100 rounded-full p-3 flex items-center justify-center cursor-pointer shadow-sm hover:bg-yellow-400 hover:border-yellow-400 transition-colors">
+                          <Heart className="text-gray-100" />
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <div className="flex justify-between">
+                          <h3 className="text-md font-semibold text-gray-900 w-[60%] mb-1">
+                            {product.name}
+                          </h3>
+                        </div>
+                        <p className="text-sm text-gray-500 mb-2 overflow">
+                          {product.description}
+                        </p>
+                        <div className="flex items-center justify-between mb-3">
+                          <p className="font-semibold text-md text-yellow-400">
+                            {product.price}
+                            <span className="text-sm text-yellow-400"> Rwf</span>
+                          </p>
+                        </div>
+                        <Button
+                          text={t(dashboardFakes.common.addToCart)}
+                          texSize={"text-sm"}
+                          hoverBg={"hover:bg-yellow-400"}
+                          borderCol={"border-yellow-300"}
+                          bgCol={"white"}
+                          textCol={"text-gray-800"}
+                          border={"border-1"}
+                          handleButton={() => alert(`Add to Cart clicked for ${product.name}`)}
+                          padding={"p-3"}
+                          round={"rounded-full"} />
+                      </div>
+                    </div>
+                ))}
+              </div>
+            )
+          ) : (
+            <ServiceGrid loading={false} />
           )}
           {/* PAGINATION BUTTONS */}
           <div className="mt-6 flex justify-center space-x-2">

@@ -25,8 +25,9 @@ export const serviceService = {
 
   async getServices(): Promise<Service[]> {
     try {
-      const response = await axios.get(`${API_URL}/api/v1/services`);
-      return response.data as Service[];
+      const respo = await axios.get(`${API_URL}/api/v1/services`);
+      const response = respo.data as Service[];
+      return response;
     } catch (error: unknown) {
       console.error('Error fetching services:', error);
       throw error instanceof Error ? error : new Error(String(error));
