@@ -80,8 +80,10 @@ export const CartPage: React.FC = () => {
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-  const shipping = subtotal > 500 ? 0 : 49.99;
-  const total = subtotal + shipping;
+  // Always set supply to 49.99
+  const supply = 0;
+  // Total is 0 if subtotal is 0, otherwise subtotal + 49.99
+  const total = subtotal === 0 ? 0 : subtotal;
 
   const handleCheckout = async () => {
     if (cartItems.length === 0) return;
@@ -285,8 +287,10 @@ export const CartPage: React.FC = () => {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Shipping</span>
-                  <span className="font-semibold">Supply</span>
+                  <span className="text-gray-600">Supply</span>
+                  <span className="font-semibold">
+                    Able to supply on large quantity
+                  </span>
                 </div>
                 <div className="border-t pt-4">
                   <div className="flex justify-between">
