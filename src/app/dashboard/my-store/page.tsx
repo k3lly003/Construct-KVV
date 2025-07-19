@@ -37,8 +37,9 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import CategorySelect from "../products/create/CategorySelect";
+import CategorySelect from "@/app/dashboard/my-store/create/CategorySelect";
 import { useTranslations } from '@/app/hooks/useTranslations';
+import MyService from "../create-service/my-service";
 
 // Temporary Pagination component implementation
 interface PaginationProps {
@@ -86,7 +87,7 @@ const Pagination = ({ total, current, onPageChange }: PaginationProps) => {
 
 const Page = () => {
   const { t } = useTranslations();
-  const [activeTab, setActiveTab] = useState("all");
+  const [activeTab, setActiveTab] = useState("products"); // Default to products
   const [searchTerm, setSearchTerm] = useState("");
   const [resultsPerPage, setResultsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -120,18 +121,13 @@ const Page = () => {
 
   // Filter products based on the active tab
   useEffect(() => {
-    let filtered: any[] = [];
-    if (activeTab === "all") {
-      // Show both products and services
-      filtered = products;
-    } else if (activeTab === "products") {
-      // Show only products
-      filtered = products.filter((p) => p.type === "product");
-    } else if (activeTab === "services") {
-      // Show only services
-      filtered = products.filter((p) => p.type === "service");
+    if (activeTab === "products") {
+      // Show all products (since we're only fetching products)
+      setFilteredProducts(products);
+    } else {
+      // For services, we don't filter products since services are handled by MyService component
+      setFilteredProducts([]);
     }
-    setFilteredProducts(filtered);
     setCurrentPage(1); // Reset page on tab change
   }, [activeTab, products]);
 
@@ -218,8 +214,6 @@ const Page = () => {
       toast.error("Failed to update product");
     }
   };
-
-  let first = myShop?.seller;
   // if (isMyShopLoading) return <div>Loading...</div>;
   
   return (
@@ -253,19 +247,21 @@ const Page = () => {
             <DropdownMenuTrigger asChild>
               <GenericButton variant="outline" size="sm">
                 <Funnel className="h-4 w-4 mr-2" />
-                Filter <ChevronDown className="h-4 w-4 ml-2" />
+                {activeTab === "products" ? "Products" : "Services"} <ChevronDown className="h-4 w-4 ml-2" />
               </GenericButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[200px]">
-              <DropdownMenuItem>Filter by Name</DropdownMenuItem>
-              <DropdownMenuItem>Filter by Product</DropdownMenuItem>
-              <DropdownMenuItem>Filter by Date</DropdownMenuItem>
-              {/* Add more filter options */}
+              <DropdownMenuItem onClick={() => handleTabChange("products")}>
+                Products
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleTabChange("services")}>
+                Services
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <Input
             type="search"
-            placeholder="Search by any product details..."
+            placeholder={`Search by any ${activeTab} details...`}
             className="w-[300px] sm:w-[400px]"
             value={searchTerm}
             onChange={handleSearchChange}
@@ -273,66 +269,70 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="text-amber-300">{t('dashboard.photo')}</TableHead>
-              <TableHead className="text-amber-300">{t('dashboard.productName')}</TableHead>
-              <TableHead className="text-amber-300">{t('dashboard.description')}</TableHead>
-              <TableHead className="text-amber-300">{t('dashboard.dateTime')}</TableHead>
-              <TableHead className="text-amber-300">{t('dashboard.price')}</TableHead>
-              <TableHead className="text-amber-300">{t('dashboard.actions')}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {currentProducts.map((product) => (
-              <TableRow key={product.id}>
-                <TableCell className="font-medium py-4">
-                  {product.imageUrl ? (
-                    <img src={product.imageUrl} alt={product.name} className="w-12 h-12 object-cover rounded" />
-                  ) : (
-                    <span>No Image</span>
-                  )}
-                </TableCell>
-                <TableCell className="py-4">{product.name}</TableCell>
-                <TableCell className="py-4 md:py-5 max-auto overflo">{product.description}</TableCell>
-                <TableCell className="py-4">{product.createdAt ? new Date(product.createdAt).toLocaleString() : "-"}</TableCell>
-                <TableCell className="">{product.price ? `$${product.price}` : "-"}</TableCell>
-                <TableCell className="flex gap-3 my-10">
-                  <Trash2
-                    className="cursor-pointer hover:text-red-500 w-[20px]"
-                    onClick={() => {
-                      setSelectedProduct(product);
-                      setDeleteDialogOpen(true);
-                    }}
-                  />
-                  <Pencil
-                    className="cursor-pointer hover:text-green-400 w-[20px]"
-                    onClick={() => {
-                      setSelectedProduct(product);
-                      setEditForm({ ...product });
-                      setEditDialogOpen(true);
-                    }}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
-            {currentProducts.length === 0 && (
+      {activeTab === "products" ? (
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell
-                  colSpan={7}
-                  className="text-red-500 text-center py-4"
-                >
-                  {t('dashboard.noProductsFound')}
-                </TableCell>
+                <TableHead className="text-amber-300">{t('dashboard.photo')}</TableHead>
+                <TableHead className="text-amber-300">{t('dashboard.productName')}</TableHead>
+                <TableHead className="text-amber-300">{t('dashboard.category')}</TableHead>
+                <TableHead className="text-amber-300">{t('dashboard.dateTime')}</TableHead>
+                <TableHead className="text-amber-300">{t('dashboard.price')}</TableHead>
+                <TableHead className="text-amber-300">{t('dashboard.actions')}</TableHead>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+            <TableBody>
+              {currentProducts.map((product) => (
+                <TableRow key={product.id}>
+                  <TableCell className="font-medium py-4">
+                    {product.thumbnailUrl ? (
+                      <img src={product.thumbnailUrl} alt={product.name} className="w-12 h-12 object-cover rounded" />
+                    ) : (
+                      <span>No Image</span>
+                    )}
+                  </TableCell>
+                  <TableCell className="py-2">{product.name}</TableCell>
+                  <TableCell className="py-2 md:py-5 max-auto overflo">{product.category.name}</TableCell>
+                  <TableCell className="py-2">{product.createdAt ? new Date(product.createdAt).toLocaleDateString() : "-"}</TableCell>
+                  <TableCell className="">{product.price ? `${product.price} Rfw` : "-"}</TableCell>
+                  <TableCell className="flex gap-3 my-5">
+                    <Trash2
+                      className="cursor-pointer hover:text-red-500 w-[20px]"
+                      onClick={() => {
+                        setSelectedProduct(product);
+                        setDeleteDialogOpen(true);
+                      }}
+                    />
+                    <Pencil
+                      className="cursor-pointer hover:text-green-400 w-[20px]"
+                      onClick={() => {
+                        setSelectedProduct(product);
+                        setEditForm({ ...product });
+                        setEditDialogOpen(true);
+                      }}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+              {currentProducts.length === 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={6}
+                    className="text-red-500 text-center py-4"
+                  >
+                    {t('dashboard.noProductsFound')}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      ) : (
+        <MyService searchTerm={searchTerm} />
+      )}
 
-      {totalResults > 0 && (
+      {activeTab === "products" && totalResults > 0 && (
         <div className="flex items-center justify-between mt-4">
           <p className="text-sm text-muted-foreground">
             {t('dashboard.showingResults', { start: startIndex + 1, end: Math.min(endIndex, totalResults), total: totalResults })}

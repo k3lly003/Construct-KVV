@@ -110,8 +110,6 @@ export const ShopService = {
         }
       });
       const response = myshopdata.data.data[0];
-
-      console.log("MY-SHOP-DATA",response);
       return response as Shop;
     } catch (error: unknown) {
       console.error('Error fetching my shop:', error);

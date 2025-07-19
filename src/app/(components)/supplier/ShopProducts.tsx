@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Star, ChevronLeft, ChevronRight, Heart } from "lucide-react";
+import { ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/app/(components)/Button";
 import { ProductFilters } from "@/app/(components)/product/ProductFilters";
 import { productService } from '@/app/services/productServices';
-
+import { ShopService } from '@/app/services/shopServices';
+import { getShopIdFromShop } from '@/app/utils/helper/FilterServicesFromAll';
+import { MyShopServices } from './MyShopServices';
 import { Shop } from '@/types/shop';
 import router from "next/router";
 import { dashboardFakes } from "@/app/utils/fakes/DashboardFakes";
@@ -19,55 +21,97 @@ interface ShopProductsProps {
 }
 
 export const ShopProducts: React.FC<ShopProductsProps> = ({ shopId, shop }) => {
-  const seller = shop?.data?.seller ?? {};
-  const sellerId = (seller as { id?: string }).id;
-  // const sellerSellerId = (seller as { sellerId?: string }).sellerId;
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All Products");
+  const [selectedCategory, setSelectedCategory] = useState("Product");
   const [sortBy, setSortBy] = useState("featured");
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const authToken = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
-  // const { id: sellerId, sellerId: sellerSellerId } = seller;
+  const [myShop, setMyShop] = useState<Shop | null>(null);
+  const [shopError, setShopError] = useState<string | null>(null);
+  // const authToken = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+  const availableCategories: string[] = ["Product", "Service"];
+
+  // Fetch my shop and products for that shop
   useEffect(() => {
-    if (!sellerId || !authToken) return;
-    setLoading(true);
-    productService.getProductsBySellerId(sellerId, authToken)
-      .then((data) => {
-        console.log('Products fetched from getProductsBySellerId:', data);
-        setProducts(data);
-      })
-      .finally(() => setLoading(false));
-  }, [sellerId, authToken]);
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        
+        // Get auth token from localStorage
+        const authToken = localStorage.getItem('authToken') || '';
+        
+        // Fetch my shop data
+        const shopData = await ShopService.getMyShop(authToken);
+        setMyShop(shopData);
+        
+        // Extract shop ID and fetch products for that shop
+        const shopId = getShopIdFromShop(shopData);
+        if (shopId) {
+          // For now, we'll use getAllProducts and filter by shop
+          // You might want to create a getProductsByShopId method in productService
+          const allProducts = await productService.getAllProducts();
+          const shopProducts = allProducts.filter((product: any) => 
+            product.shopId === shopId || product.sellerId === shopId
+          );
+          setProducts(shopProducts);
+        } else {
+          setProducts([]);
+        }
+        
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setShopError('Failed to fetch shop data');
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
   const { t } = useTranslations();
 
-  return (
-    <div className="min-h-screen ">
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Products Grid */}
-          {/* Filters */}
-          <ProductFilters
-            // initialProducts={initialProducts}
-            searchTerm={searchTerm}
-            onSearchTermChange={setSearchTerm}
-            selectedCategory={selectedCategory}
-            onSelectedCategoryChange={setSelectedCategory}
-            sortBy={sortBy}
-            onSortByChange={setSortBy}
-            initialProducts={[]}
-            availableCategories={[]}
-            shop={shop}
-          />
+  // Filter products based on search term
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch = product.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    return matchesSearch;
+  });
 
-          {/* Products */}
-          <div className="flex flex-wrap gap-5 justify-center lg:flex lg:justify-start">
-            {loading ? (
-              <div>Loading products...</div>
-            ) : products.length === 0 ? (
-              <div>No products found for this shop.</div>
-            ) : (
-              products.map((product) => (
+  // Extract shop ID for services
+  const actualShopId = shopId || shop?.id || (myShop ? getShopIdFromShop(myShop) : null);
+
+  if (shopError) {
+    return <div className="p-6 text-red-500">Error loading shop data</div>;
+  }
+
+  return (
+    <div className="min-h-screen">
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-5 py-12">
+        {/* Filters */}
+        <ProductFilters
+          searchTerm={searchTerm}
+          onSearchTermChange={setSearchTerm}
+          selectedCategory={selectedCategory}
+          onSelectedCategoryChange={setSelectedCategory}
+          sortBy={sortBy}
+          onSortByChange={setSortBy}
+          initialProducts={[]}
+          availableCategories={availableCategories}
+          shop={shop}
+                  />
+
+          {/* Conditional Content */}
+          {selectedCategory === "Product" ? (
+            <div className="flex flex-wrap gap-5 justify-center lg:flex lg:justify-start">
+              {loading ? (
+                <div>Loading products...</div>
+              ) : filteredProducts.length === 0 ? (
+                <div>No products found for this shop.</div>
+              ) : (
+                filteredProducts.map((product) => (
                 <div
                     key={product.id}
                     className="bg-white overflow-hidden w-64 m-2 hover:shadow-lg cursor-pointer hover:rounded-xl transition-shadow"
@@ -122,6 +166,15 @@ export const ShopProducts: React.FC<ShopProductsProps> = ({ shopId, shop }) => {
               ))
             )}
           </div>
+          ) : (
+            actualShopId ? (
+              <MyShopServices shopId={actualShopId} searchTerm={searchTerm} />
+            ) : (
+              <div className="w-full text-center py-12 text-gray-500">
+                Shop ID not found.
+              </div>
+            )
+          )}
           {/* PAGINATION BUTTONS */}
           <div className="mt-6 flex justify-center space-x-2">
             <button className="border border-amber-300 hover:bg-amber-500 hover:text-white text-amber-300 font-semibold py-2 px-2 rounded focus:outline-none focus:shadow-outline">

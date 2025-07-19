@@ -24,7 +24,7 @@ import { Terminal } from "lucide-react";
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
-import ProductImageUpload from '../products/create/ProductImageUpload';
+import ProductImageUpload from '../my-store/create/ProductImageUpload';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -45,7 +45,7 @@ import {
   Wrench,
   Home
 } from "lucide-react";
-import { ServiceCategorySelect } from '../products/create/CategorySelect';
+import { ServiceCategorySelect } from '@/app/dashboard/my-store/create/CategorySelect';
 import { categoryService } from "@/app/services/categoryServices";
 import { serviceService } from '@/app/services/serviceServices';
 import { toast } from 'sonner';

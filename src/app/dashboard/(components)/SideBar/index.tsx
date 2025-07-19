@@ -195,9 +195,9 @@ const SideBar = () => {
               />
               <SidebarLink
 
-                href="/dashboard/products"
+                href="/dashboard/my-store"
                 icon={Package}
-                label={t('navigation.products')}
+                label={t('navigation.My-store')}
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink

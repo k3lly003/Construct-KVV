@@ -55,16 +55,6 @@ const page = () => {
         }) }} />
       </Head>
       <DefaultPageBanner title='store' backgroundImage='/store-img.jpg' />
-      <ProductFilters
-        searchTerm={searchTerm}
-        onSearchTermChange={setSearchTerm}
-        initialProducts={[]}
-        selectedCategory={selectedCategory}
-        onSelectedCategoryChange={setSelectedCategory}
-        sortBy={sortBy}
-        onSortByChange={setSortBy}
-        availableCategories={availableCategories}
-      />
       <ServiceGrid services={filteredServices} loading={loading} />
     </>
   )

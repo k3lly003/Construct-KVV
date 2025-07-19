@@ -19,14 +19,29 @@ export function ServiceGrid({ services = [], loading }: ServiceGridProps) {
   const router = useRouter();
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-7 py-12">
-      <div className="flex flex-wrap justify-center lg:justify-start">
-        {loading ? (
-          <div className="w-full flex justify-center items-center py-12 text-gray-500">Loading services...</div>
-        ) : (services || []).length === 0 ? (
-          <div className="w-full flex justify-center items-center py-12 text-gray-500">No services found.</div>
-        ) : (
-          (services || []).map((service) => (
+    <div className="flex flex-wrap justify-center lg:justify-start">
+      {loading ? (
+        // Loading skeleton
+        <div className="flex flex-wrap justify-center lg:justify-start">
+          {[...Array(6)].map((_, i) => (
+            <div
+              key={i}
+              className="bg-gray-100 animate-pulse overflow-hidden w-72 m-2 rounded-xl"
+            >
+              <div className="w-full h-48 bg-gray-200" />
+              <div className="p-4">
+                <div className="h-5 bg-gray-200 rounded w-3/4 mb-2" />
+                <div className="h-4 bg-gray-200 rounded w-1/2 mb-2" />
+                <div className="h-4 bg-gray-200 rounded w-1/3 mb-4" />
+                <div className="h-10 bg-gray-200 rounded w-full" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (services || []).length === 0 ? (
+        <div className="w-full flex justify-center items-center py-12 text-gray-500">No services found.</div>
+      ) : (
+        (services || []).map((service) => (
             <div
               key={service.id}
               className="bg-white overflow-hidden w-72 m-2 hover:shadow-lg cursor-pointer hover:rounded-xl transition-shadow"
@@ -99,6 +114,5 @@ export function ServiceGrid({ services = [], loading }: ServiceGridProps) {
           ))
         )}
       </div>
-    </div>
   );
 }
