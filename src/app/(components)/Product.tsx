@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import Image from "next/image";
@@ -13,6 +14,7 @@ import { Service } from "@/types/service";
 import { useRouter } from "next/navigation";
 import { dashboardFakes } from "@/app/utils/fakes/DashboardFakes";
 import { useTranslations } from "@/app/hooks/useTranslations";
+
 export const Products: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [services, setServices] = useState<Service[]>([]);
@@ -24,6 +26,7 @@ export const Products: React.FC = () => {
   const availableCategories: string[] = ["Product", "Service"];
   const router = useRouter();
   const { t } = useTranslations();
+
   // Fetch all products on mount
   useEffect(() => {
     const fetchProducts = async () => {
@@ -39,6 +42,29 @@ export const Products: React.FC = () => {
     };
     fetchProducts();
   }, []);
+
+  // Fetch services when category changes to "Service"
+  useEffect(() => {
+    if (selectedCategory === "Service" && services.length === 0) {
+      const fetchServices = async () => {
+        setServicesLoading(true);
+        try {
+          const data = await serviceService.getServices();
+          console.log("Fetched services data:", data);
+          console.log("Services data type:", typeof data);
+          console.log("Is array:", Array.isArray(data));
+          setServices(Array.isArray(data) ? data : []);
+        } catch (err) {
+          console.error("Error fetching services:", err);
+          setServices([]);
+        } finally {
+          setServicesLoading(false);
+        }
+      };
+      fetchServices();
+    }
+  }, [selectedCategory, services.length]);
+
   // Filter products
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.name
@@ -46,6 +72,17 @@ export const Products: React.FC = () => {
       .includes(searchTerm.toLowerCase());
     return matchesSearch;
   });
+
+  // Filter services
+  const filteredServices = Array.isArray(services)
+    ? services.filter((service) => {
+        const matchesSearch = service.title
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        return matchesSearch;
+      })
+    : [];
+
   return (
     <div className="min-h-screen">
       {/* Main Content */}
@@ -63,6 +100,7 @@ export const Products: React.FC = () => {
             onSortByChange={setSortBy}
             availableCategories={availableCategories}
           />
+
           {/* Conditional Content */}
           {selectedCategory === "Product" ? (
             loading ? (
@@ -143,7 +181,10 @@ export const Products: React.FC = () => {
               </div>
             )
           ) : (
-            <ServiceGrid loading={servicesLoading} services={filteredServices} />
+            <ServiceGrid
+              loading={servicesLoading}
+              services={filteredServices}
+            />
           )}
           {/* PAGINATION BUTTONS */}
           <div className="mt-6 flex justify-center space-x-2">

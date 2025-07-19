@@ -21,6 +21,12 @@ interface Product {
   details?: string[];
   rating?: number;
   reviewCount?: number;
+  thumbnailUrl?: string;
+  imageUrl?: string;
+  image?: string | string[];
+  weight?: number;
+  dimensions?: string;
+  categoryId?: string;
 }
 
 interface ProductInfoProps {
@@ -52,11 +58,13 @@ const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
       price: product.price,
       quantity: quantity,
       image:
-        product.image ||
         product.thumbnailUrl ||
-        (product.images && product.images[0]?.url) ||
+        product.imageUrl ||
+        (Array.isArray(product.image) && product.image.length > 0
+          ? product.image[0]
+          : undefined) ||
         "/products/placeholder.jpg",
-      category: product.category || "",
+      category: product.categoryId || "",
       weight: product.weight || 0,
       dimensions: product.dimensions || "",
     });

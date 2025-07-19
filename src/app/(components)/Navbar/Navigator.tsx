@@ -16,6 +16,7 @@ import { NotificationModal } from "@/components/ui/notification-modal";
 import { useNotificationStore } from "@/store/notificationStore";
 import { useTranslation } from "react-i18next";
 import { useCartStore } from "@/store/cartStore";
+import { useRouter } from "next/navigation";
 
 function useIsClient() {
   const [isClient, setIsClient] = useState(false);
@@ -32,6 +33,7 @@ const Navbar: React.FC = () => {
   const { t, ready } = useTranslation();
   const { getCartCount } = useCartStore();
   const isClient = useIsClient();
+  const router = useRouter();
 
   // Get user data from Zustand store
   const { role: userRole, name: userName, email: userEmail } = useUserStore();
@@ -195,18 +197,44 @@ const Navbar: React.FC = () => {
                   )}
                 </AnimatePresence>
               </div>
-              <Link
-                href="/build-house"
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
+              {/* Build House link (desktop) */}
+              <button
+                type="button"
+                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300 bg-transparent"
+                onClick={() => {
+                  if (!localUserData) {
+                    router.push("/signin");
+                  } else {
+                    router.push("/build-house");
+                  }
+                }}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                }}
               >
                 {t("navigation.buildHouse")}
-              </Link>
-              <Link
-                href="/projects"
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
+              </button>
+              {/* Projects link (desktop) */}
+              <button
+                type="button"
+                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300 bg-transparent"
+                onClick={() => {
+                  if (!localUserData) {
+                    router.push("/signin");
+                  } else {
+                    router.push("/projects");
+                  }
+                }}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                }}
               >
                 {t("navigation.projects")}
-              </Link>
+              </button>
               <Link
                 href="/shops"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
@@ -372,20 +400,36 @@ const Navbar: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  <Link
-                    href="/build-house"
-                    className="py-2 text-gray-900 hover:text-amber-500 border-b"
-                    onClick={() => setMobileMenuOpen(false)}
+                  {/* Build House link (mobile) */}
+                  <button
+                    type="button"
+                    className="py-2 text-gray-900 hover:text-amber-500 border-b bg-transparent w-full text-left"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      if (!localUserData) {
+                        router.push("/signin");
+                      } else {
+                        router.push("/build-house");
+                      }
+                    }}
                   >
                     Build your house
-                  </Link>
-                  <Link
-                    href="/projects"
-                    className="py-2 text-gray-900 hover:text-amber-500 border-b"
-                    onClick={() => setMobileMenuOpen(false)}
+                  </button>
+                  {/* Projects link (mobile) */}
+                  <button
+                    type="button"
+                    className="py-2 text-gray-900 hover:text-amber-500 border-b bg-transparent w-full text-left"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      if (!localUserData) {
+                        router.push("/signin");
+                      } else {
+                        router.push("/projects");
+                      }
+                    }}
                   >
                     Projects
-                  </Link>
+                  </button>
                   <Link
                     href="/shops"
                     className="py-2 text-gray-900 hover:text-amber-500 border-b"
@@ -402,10 +446,16 @@ const Navbar: React.FC = () => {
                   </Link>
                   <Link
                     href="/cart"
-                    className="py-2 text-gray-900 hover:text-amber-500 border-b flex items-center gap-2"
+                    className="py-2 text-gray-900 hover:text-amber-500 border-b flex items-center gap-2 relative"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <ShoppingCart className="h-5 w-5" /> Cart
+                    <ShoppingCart className="h-5 w-5" />
+                    {isClient && getCartCount() > 0 && (
+                      <span className="absolute -top-2 left-5 bg-amber-500 text-white text-xs rounded-full px-2 py-0.5 font-bold">
+                        {getCartCount()}
+                      </span>
+                    )}
+                    Cart
                   </Link>
                   {/* Notification Icon (client only) */}
                   {isClient && (

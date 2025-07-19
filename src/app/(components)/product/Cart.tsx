@@ -14,6 +14,7 @@ import Image from "next/image";
 import { initiateSplitPayment } from "@/app/services/paymentService";
 import { toast } from "sonner";
 import { useCartStore } from "@/store/cartStore";
+import { useRouter } from "next/navigation";
 
 export interface CartItem {
   id: string;
@@ -33,6 +34,7 @@ export const CartPage: React.FC = () => {
   const [paymentMethod, setPaymentMethod] = useState<
     "mobilemoney" | "card" | "bank"
   >("mobilemoney");
+  const router = useRouter();
 
   // Card/Bank input states
   const [cardDetails, setCardDetails] = useState({
@@ -93,6 +95,9 @@ export const CartPage: React.FC = () => {
     if (!token) {
       toast.error("You must be logged in to pay.");
       setLoading(false);
+      setTimeout(() => {
+        router.push("/signin");
+      }, 1200);
       return;
     }
     // Hardcoded sellerId for now
