@@ -5,6 +5,8 @@ import { Heart } from "lucide-react";
 import { Button } from "./Button";
 import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
 import { productService } from "@/app/services/productServices";
+import { useCartStore } from "@/store/cartStore";
+import { toast } from "sonner";
 
 interface ProductCardProps {
   product: any;
@@ -28,6 +30,7 @@ const ProductCard = ({
   const productId = product.id;
 
   const startTimeRef = useRef<number | null>(null);
+  const addToCart = useCartStore((state) => state.addToCart);
 
   useEffect(() => {
     startTimeRef.current = Date.now();
@@ -160,9 +163,23 @@ const ProductCard = ({
               bgCol={"white"}
               textCol={"text-gray-800"}
               border={"border-1"}
-              handleButton={() =>
-                alert(`Add to Cart clicked for ${product.name}`)
-              }
+              handleButton={() => {
+                addToCart({
+                  id: product.id,
+                  name: product.name,
+                  price: price,
+                  quantity: 1,
+                  image: thumbnail,
+                  category: product.category || "",
+                  weight: product.weight || 0,
+                  dimensions: product.dimensions || "",
+                });
+                toast.success(`Added ${product.name} to cart`);
+                console.log(
+                  "[ProductCard] Cart after add:",
+                  JSON.parse(localStorage.getItem("kvv_cart_items") || "[]")
+                );
+              }}
               padding={"p-3"}
               round={"rounded-full"}
             />

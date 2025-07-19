@@ -15,16 +15,25 @@ import { NotificationIcon } from "@/components/ui/notification-icon";
 import { NotificationModal } from "@/components/ui/notification-modal";
 import { useNotificationStore } from "@/store/notificationStore";
 import { useTranslation } from "react-i18next";
+import { useCartStore } from "@/store/cartStore";
+import { useRouter } from "next/navigation";
 
+function useIsClient() {
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => setIsClient(true), []);
+  return isClient;
+}
 
 const Navbar: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
-  const [isClient, setIsClient] = useState(false); // New state to track if on client
   const [localUserData, setLocalUserData] = useState<unknown>(null);
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileFeaturesOpen, setMobileFeaturesOpen] = useState(false);
   const { t, ready } = useTranslation();
+  const { getCartCount } = useCartStore();
+  const isClient = useIsClient();
+  const router = useRouter();
 
   // Get user data from Zustand store
   const { role: userRole, name: userName, email: userEmail } = useUserStore();
@@ -41,47 +50,47 @@ const Navbar: React.FC = () => {
   const { categories: rawCategories } = useCategories();
   const categories = Array.isArray(rawCategories) ? rawCategories : [];
 
-    // Fetch notifications only when client and user data are set
-    useEffect(() => {
-      if (isClient && localUserData) {
-        fetchNotifications();
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isClient, localUserData]);
+  // Fetch notifications only when client and user data are set
+  useEffect(() => {
+    if (isClient && localUserData) {
+      fetchNotifications();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isClient, localUserData]);
 
-    const handleNotificationClick = async () => {
-      // Refresh notifications when opening the modal
-      await fetchNotifications();
-      setIsNotificationModalOpen(true);
-    };
-  
-    const handleNotificationClose = () => {
-      setIsNotificationModalOpen(false);
-    };
+  const handleNotificationClick = async () => {
+    // Refresh notifications when opening the modal
+    await fetchNotifications();
+    setIsNotificationModalOpen(true);
+  };
 
-    const handleMarkAsRead = (id: string) => {
-      markAsRead(id);
-    };
-  
-    const handleMarkAllAsRead = () => {
-      markAllAsRead();
-    };
-  const parentCategories = categories.filter(cat => !cat.parentId);
+  const handleNotificationClose = () => {
+    setIsNotificationModalOpen(false);
+  };
+
+  const handleMarkAsRead = (id: string) => {
+    markAsRead(id);
+  };
+
+  const handleMarkAllAsRead = () => {
+    markAllAsRead();
+  };
+  const parentCategories = categories.filter((cat) => !cat.parentId);
   const subCategoriesMap = categories
-    .filter(cat => typeof cat.parentId === "string" && cat.parentId)
+    .filter((cat) => typeof cat.parentId === "string" && cat.parentId)
     .reduce((acc, sub) => {
       if (!acc[sub.parentId!]) acc[sub.parentId!] = [];
       acc[sub.parentId!].push(sub);
       return acc;
     }, {} as Record<string, typeof categories>);
 
-  const featuresSections = parentCategories.map(parent => ({
+  const featuresSections = parentCategories.map((parent) => ({
     title: parent.name,
     items: [
       {
         name: parent.name,
         href: `/category/${parent.slug || parent.id}`,
-        subItems: (subCategoriesMap[parent.id] || []).map(sub => ({
+        subItems: (subCategoriesMap[parent.id] || []).map((sub) => ({
           name: sub.name,
           href: `/category/${parent.slug || parent.id}/${sub.slug || sub.id}`,
         })),
@@ -91,7 +100,6 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     // This code only runs on the client after hydration
-    setIsClient(true);
     setLocalUserData(getUserDataFromLocalStorage());
 
     const handleClickOutside = (event: MouseEvent) => {
@@ -118,8 +126,15 @@ const Navbar: React.FC = () => {
             {/* Logo */}
             <Link href="/">
               <div className="flex-shrink-0 flex items-center mr-5">
-                <Image src="/kvv-logo.png" alt="KVV Pro" width={42} height={42} />
-                <span className="ml-2 text-xl text-amber-500 font-semibold">kvv</span>
+                <Image
+                  src="/kvv-logo.png"
+                  alt="KVV Pro"
+                  width={42}
+                  height={42}
+                />
+                <span className="ml-2 text-xl text-amber-500 font-semibold">
+                  kvv
+                </span>
               </div>
             </Link>
             {/* Main navigation (desktop only) */}
@@ -129,7 +144,7 @@ const Navbar: React.FC = () => {
                   className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
                   onClick={(e) => handleMenuClick("Features", e)}
                 >
-                  {t('navigation.features', 'Features')}
+                  {t("navigation.features", "Features")}
                   {activeMenu === "Features" ? (
                     <ChevronUp className="ml-1 h-4 w-4 transition-transform duration-200" />
                   ) : (
@@ -146,23 +161,32 @@ const Navbar: React.FC = () => {
                       className="absolute left-0 z-10 mt-2 w-screen max-w-[700px] bg-white shadow-2xl"
                     >
                       <div className="grid grid-cols-3 gap-8 p-8">
-                        {featuresSections.map(section => (
+                        {featuresSections.map((section) => (
                           <div key={section.title}>
-                            <Link className="text-sm font-semibold text-gray-900 w-full py-2 hover:text-amber-500" href={`/${section.title}`}>{section.title}</Link>
+                            <Link
+                              className="text-sm font-semibold text-gray-900 w-full py-2 hover:text-amber-500"
+                              href={`/${section.title}`}
+                            >
+                              {section.title}
+                            </Link>
                             <ul className="mt-2 space-y-1">
-                              {section.items.map(item => (
+                              {section.items.map((item) => (
                                 <li key={item.name}>
-                                  {item.subItems && item.subItems.length > 0 && (
-                                    <ul className="mt-1 space-y-1">
-                                      {item.subItems.map(sub => (
-                                        <li key={sub.name}>
-                                          <Link href={sub.href || '#'} className="block p-2 text-sm text-gray-600 hover:bg-gray-100">
-                                            {sub.name}
-                                          </Link>
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  )}
+                                  {item.subItems &&
+                                    item.subItems.length > 0 && (
+                                      <ul className="mt-1 space-y-1">
+                                        {item.subItems.map((sub) => (
+                                          <li key={sub.name}>
+                                            <Link
+                                              href={sub.href || "#"}
+                                              className="block p-2 text-sm text-gray-600 hover:bg-gray-100"
+                                            >
+                                              {sub.name}
+                                            </Link>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    )}
                                 </li>
                               ))}
                             </ul>
@@ -173,23 +197,49 @@ const Navbar: React.FC = () => {
                   )}
                 </AnimatePresence>
               </div>
-              <Link
-                href="/build-house"
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
+              {/* Build House link (desktop) */}
+              <button
+                type="button"
+                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300 bg-transparent"
+                onClick={() => {
+                  if (!localUserData) {
+                    router.push("/signin");
+                  } else {
+                    router.push("/build-house");
+                  }
+                }}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                }}
               >
-                {t('navigation.buildHouse')}
-              </Link>
-              <Link
-                href="/projects"
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
+                {t("navigation.buildHouse")}
+              </button>
+              {/* Projects link (desktop) */}
+              <button
+                type="button"
+                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300 bg-transparent"
+                onClick={() => {
+                  if (!localUserData) {
+                    router.push("/signin");
+                  } else {
+                    router.push("/projects");
+                  }
+                }}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                }}
               >
-                {t('navigation.projects')}
-              </Link>
+                {t("navigation.projects")}
+              </button>
               <Link
                 href="/shops"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
               >
-                {t('navigation.shops')}
+                {t("navigation.shops")}
               </Link>
             </div>
           </div>
@@ -202,7 +252,7 @@ const Navbar: React.FC = () => {
                 href="/help"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
               >
-                {t('navigation.help')}
+                {t("navigation.help")}
               </Link>
               {/* Notification Icon (client only) */}
               {isClient && (
@@ -214,14 +264,19 @@ const Navbar: React.FC = () => {
               )}
               <Link
                 href="/cart"
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
+                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300 relative"
               >
                 <ShoppingCart />
-                <span className="sr-only">{t('navigation.cart')}</span>
+                {isClient && getCartCount() > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-amber-500 text-white text-xs rounded-full px-2 py-0.5 font-bold">
+                    {getCartCount()}
+                  </span>
+                )}
+                <span className="sr-only">Cart</span>
               </Link>
               {/* Conditionally render based on isClient and localUserData */}
-              {isClient && (
-                localUserData ? (
+              {isClient &&
+                (localUserData ? (
                   userRole === "ADMIN" || userRole === "SELLER" ? (
                     <Profile
                       NK={""}
@@ -229,16 +284,15 @@ const Navbar: React.FC = () => {
                       userEmail={userEmail || ""}
                     />
                   ) : (
-                    <CustomerProfile/>
+                    <CustomerProfile />
                   )
                 ) : (
                   <Link href="/signin" className="border-l-1">
                     <p className="pl-5 px-4 py-2 hover:text-yellow-400 font-medium">
-                      {t('navigation.login')}
+                      {t("navigation.login")}
                     </p>
                   </Link>
-                )
-              )}
+                ))}
               <FlagToggle />
             </div>
             {/* Hamburger for mobile */}
@@ -268,7 +322,7 @@ const Navbar: React.FC = () => {
                   exit={{ x: "100%" }}
                   transition={{ duration: 0.25 }}
                   className="w-72 h-full bg-white shadow-xl p-6 flex flex-col gap-6 relative"
-                  onClick={e => e.stopPropagation()}
+                  onClick={(e) => e.stopPropagation()}
                 >
                   <button
                     className="absolute top-4 right-4 p-2 rounded focus:outline-none focus:ring-2 focus:ring-amber-500"
@@ -280,8 +334,15 @@ const Navbar: React.FC = () => {
                   {/* Logo */}
                   <Link href="/" onClick={() => setMobileMenuOpen(false)}>
                     <div className="flex items-center mb-4">
-                      <Image src="/kvv-logo.png" alt="KVV Pro" width={36} height={36} />
-                      <span className="ml-2 text-lg text-amber-500 font-semibold">kvv</span>
+                      <Image
+                        src="/kvv-logo.png"
+                        alt="KVV Pro"
+                        width={36}
+                        height={36}
+                      />
+                      <span className="ml-2 text-lg text-amber-500 font-semibold">
+                        kvv
+                      </span>
                     </div>
                   </Link>
                   {/* Features collapsible for mobile */}
@@ -292,7 +353,7 @@ const Navbar: React.FC = () => {
                       aria-expanded={mobileFeaturesOpen}
                       aria-controls="mobile-features-menu"
                     >
-                      <span>{t('navigation.features', 'Features')}</span>
+                      <span>{t("navigation.features", "Features")}</span>
                       {mobileFeaturesOpen ? (
                         <ChevronUp className="h-4 w-4 ml-2" />
                       ) : (
@@ -300,17 +361,32 @@ const Navbar: React.FC = () => {
                       )}
                     </button>
                     {mobileFeaturesOpen && (
-                      <div id="mobile-features-menu" className="pl-4 py-2 space-y-2">
-                        {featuresSections.map(section => (
+                      <div
+                        id="mobile-features-menu"
+                        className="pl-4 py-2 space-y-2"
+                      >
+                        {featuresSections.map((section) => (
                           <div key={section.title}>
-                            <Link href={`/${section.title}`} className="block text-sm font-semibold text-gray-900 py-1 hover:text-amber-500" onClick={() => setMobileMenuOpen(false)}>{section.title}</Link>
-                            {section.items.map(item => (
+                            <Link
+                              href={`/${section.title}`}
+                              className="block text-sm font-semibold text-gray-900 py-1 hover:text-amber-500"
+                              onClick={() => setMobileMenuOpen(false)}
+                            >
+                              {section.title}
+                            </Link>
+                            {section.items.map((item) => (
                               <div key={item.name}>
                                 {item.subItems && item.subItems.length > 0 && (
                                   <ul className="ml-3 border-l border-gray-200 pl-2 mt-1 space-y-1">
-                                    {item.subItems.map(sub => (
+                                    {item.subItems.map((sub) => (
                                       <li key={sub.name}>
-                                        <Link href={sub.href || '#'} className="block text-sm text-gray-600 hover:text-amber-500 py-1" onClick={() => setMobileMenuOpen(false)}>
+                                        <Link
+                                          href={sub.href || "#"}
+                                          className="block text-sm text-gray-600 hover:text-amber-500 py-1"
+                                          onClick={() =>
+                                            setMobileMenuOpen(false)
+                                          }
+                                        >
                                           {sub.name}
                                         </Link>
                                       </li>
@@ -324,20 +400,62 @@ const Navbar: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  <Link href="/build-house" className="py-2 text-gray-900 hover:text-amber-500 border-b" onClick={() => setMobileMenuOpen(false)}>
+                  {/* Build House link (mobile) */}
+                  <button
+                    type="button"
+                    className="py-2 text-gray-900 hover:text-amber-500 border-b bg-transparent w-full text-left"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      if (!localUserData) {
+                        router.push("/signin");
+                      } else {
+                        router.push("/build-house");
+                      }
+                    }}
+                  >
                     Build your house
-                  </Link>
-                  <Link href="/projects" className="py-2 text-gray-900 hover:text-amber-500 border-b" onClick={() => setMobileMenuOpen(false)}>
+                  </button>
+                  {/* Projects link (mobile) */}
+                  <button
+                    type="button"
+                    className="py-2 text-gray-900 hover:text-amber-500 border-b bg-transparent w-full text-left"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      if (!localUserData) {
+                        router.push("/signin");
+                      } else {
+                        router.push("/projects");
+                      }
+                    }}
+                  >
                     Projects
-                  </Link>
-                  <Link href="/shops" className="py-2 text-gray-900 hover:text-amber-500 border-b" onClick={() => setMobileMenuOpen(false)}>
+                  </button>
+                  <Link
+                    href="/shops"
+                    className="py-2 text-gray-900 hover:text-amber-500 border-b"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Shops
                   </Link>
-                  <Link href="/help" className="py-2 text-gray-900 hover:text-amber-500 border-b" onClick={() => setMobileMenuOpen(false)}>
+                  <Link
+                    href="/help"
+                    className="py-2 text-gray-900 hover:text-amber-500 border-b"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
                     Help
                   </Link>
-                  <Link href="/cart" className="py-2 text-gray-900 hover:text-amber-500 border-b flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
-                    <ShoppingCart className="h-5 w-5" /> Cart
+                  <Link
+                    href="/cart"
+                    className="py-2 text-gray-900 hover:text-amber-500 border-b flex items-center gap-2 relative"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <ShoppingCart className="h-5 w-5" />
+                    {isClient && getCartCount() > 0 && (
+                      <span className="absolute -top-2 left-5 bg-amber-500 text-white text-xs rounded-full px-2 py-0.5 font-bold">
+                        {getCartCount()}
+                      </span>
+                    )}
+                    Cart
                   </Link>
                   {/* Notification Icon (client only) */}
                   {isClient && (
@@ -353,8 +471,8 @@ const Navbar: React.FC = () => {
                     </div>
                   )}
                   {/* Auth/Profile */}
-                  {isClient && (
-                    localUserData ? (
+                  {isClient &&
+                    (localUserData ? (
                       userRole === "ADMIN" || userRole === "SELLER" ? (
                         <Profile
                           NK={""}
@@ -362,14 +480,17 @@ const Navbar: React.FC = () => {
                           userEmail={userEmail || ""}
                         />
                       ) : (
-                        <CustomerProfile/>
+                        <CustomerProfile />
                       )
                     ) : (
-                      <Link href="/signin" className="py-2 text-gray-900 hover:text-amber-500 border-b" onClick={() => setMobileMenuOpen(false)}>
+                      <Link
+                        href="/signin"
+                        className="py-2 text-gray-900 hover:text-amber-500 border-b"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
                         Sign In
                       </Link>
-                    )
-                  )}
+                    ))}
                   <div className="py-2">
                     <FlagToggle />
                   </div>

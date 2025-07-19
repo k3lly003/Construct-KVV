@@ -18,8 +18,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import SpecialistLocator from "@/components/ui/SpecialistLocator";
-import { useTranslations } from '@/app/hooks/useTranslations';
-import Head from 'next/head';
+import { useTranslations } from "@/app/hooks/useTranslations";
+import Head from "next/head";
 
 const ProjectsPage = () => {
   const { t } = useTranslations();
@@ -119,14 +119,16 @@ const ProjectsPage = () => {
     return (
       <>
         <DefaultPageBanner
-          title={t('projects.title')}
+          title={t("projects.title")}
           backgroundImage="/store-img.jpg"
         />
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="flex items-center space-x-2">
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-amber-500"></div>
-              <span className="text-amber-800">{t('common.loading')} {t('projects.title').toLowerCase()}...</span>
+              <span className="text-amber-800">
+                {t("common.loading")} {t("projects.title").toLowerCase()}...
+              </span>
             </div>
           </div>
         </div>
@@ -138,17 +140,15 @@ const ProjectsPage = () => {
     return (
       <>
         <DefaultPageBanner
-          title={t('projects.title')}
+          title={t("projects.title")}
           backgroundImage="/store-img.jpg"
         />
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="text-center">
             <h3 className="text-lg font-semibold text-red-600 mb-2">
-              {t('common.error')} {t('projects.title')}
+              {t("common.error")} {t("projects.title")}
             </h3>
-            <p className="text-amber-800">
-              {t('projects.errorTryAgain')}
-            </p>
+            <p className="text-amber-800">{t("projects.errorTryAgain")}</p>
           </div>
         </div>
       </>
@@ -159,36 +159,54 @@ const ProjectsPage = () => {
     <>
       <Head>
         <title>Projects | Construct KVV</title>
-        <meta name="description" content="Explore construction projects, find inspiration, and connect with professionals at KVV Construction." />
+        <meta
+          name="description"
+          content="Explore construction projects, find inspiration, and connect with professionals at KVV Construction."
+        />
         <meta property="og:title" content="Projects | Construct KVV" />
-        <meta property="og:description" content="Explore construction projects, find inspiration, and connect with professionals at KVV Construction." />
+        <meta
+          property="og:description"
+          content="Explore construction projects, find inspiration, and connect with professionals at KVV Construction."
+        />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.constructkvv.com/projects" />
+        <meta
+          property="og:url"
+          content="https://www.constructkvv.com/projects"
+        />
         <meta property="og:image" content="/kvv-logo.png" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Projects | Construct KVV" />
-        <meta name="twitter:description" content="Explore construction projects, find inspiration, and connect with professionals at KVV Construction." />
+        <meta
+          name="twitter:description"
+          content="Explore construction projects, find inspiration, and connect with professionals at KVV Construction."
+        />
         <meta name="twitter:image" content="/kvv-logo.png" />
         <link rel="canonical" href="https://www.constructkvv.com/projects" />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'WebPage',
-          name: 'Projects',
-          url: 'https://www.constructkvv.com/projects',
-          description: 'Explore construction projects, find inspiration, and connect with professionals at KVV Construction.'
-        }) }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebPage",
+              name: "Projects",
+              url: "https://www.constructkvv.com/projects",
+              description:
+                "Explore construction projects, find inspiration, and connect with professionals at KVV Construction.",
+            }),
+          }}
+        />
       </Head>
       <DefaultPageBanner
-        title={t('projects.marketplaceTitle', 'House Construction Marketplace')}
+        title={t("projects.marketplaceTitle", "House Construction Marketplace")}
         backgroundImage="/store-img.jpg"
       />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-amber-900 mb-2">
-            {t('projects.availableTitle')}
+            {t("projects.availableTitle")}
           </h2>
           <p className="text-amber-800 mb-4">
-            {t('projects.availableDescription')}
+            {t("projects.availableDescription")}
           </p>
 
           {/* Professional Categories */}
@@ -246,10 +264,13 @@ const ProjectsPage = () => {
           {/* Get Your Specialist Section */}
           <div className="mt-8 mb-8 p-6 bg-white border border-amber-200 rounded-lg shadow-md">
             <h3 className="text-xl font-bold text-amber-900 mb-2">
-              {t('projects.getProfessionals', 'Get Your professionals')}
+              {t("projects.getProfessionals", "Get Your professionals")}
             </h3>
             <p className="text-amber-800 mb-4">
-              {t('projects.findProfessionals', 'Find certified professionals near your location.')}
+              {t(
+                "projects.findProfessionals",
+                "Find certified professionals near your location."
+              )}
             </p>
             <SpecialistLocator />
           </div>
@@ -259,10 +280,13 @@ const ProjectsPage = () => {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="flex-1">
                 <h3 className="text-lg font-semibold text-white mb-2">
-                  {t('projects.readyToCreate', 'Ready to create project')}
+                  {t("projects.readyToCreate", "Ready to create project")}
                 </h3>
                 <p className="text-white/90 text-sm mb-2">
-                  {t('projects.readyToCreateDesc', 'Start your next house construction journey by creating a new project. Share your requirements and connect with top professionals.')}
+                  {t(
+                    "projects.readyToCreateDesc",
+                    "Start your next house construction journey by creating a new project. Share your requirements and connect with top professionals."
+                  )}
                 </p>
               </div>
               <div className="flex justify-start sm:justify-end w-full sm:w-auto">
@@ -272,7 +296,7 @@ const ProjectsPage = () => {
                       🏠
                     </span>
                     <span className="whitespace-nowrap">
-                      {t('projects.createProject')}
+                      {t("projects.createProject")}
                     </span>
                   </GenericButton>
                 </Link>
@@ -285,15 +309,18 @@ const ProjectsPage = () => {
           <div className="text-center py-12">
             <div className="h-16 w-16 text-amber-500 mx-auto mb-4">🏠</div>
             <h3 className="text-lg font-semibold text-amber-900 mb-2">
-              {t('projects.noProjects', 'No Projects Available')}
+              {t("projects.noProjects", "No Projects Available")}
             </h3>
             <p className="text-amber-800 mb-6">
-              {t('projects.noProjectsDesc', 'There are currently no house construction projects available for bidding. Check back later or create your own project to get started!')}
+              {t(
+                "projects.noProjectsDesc",
+                "There are currently no house construction projects available for bidding. Check back later or create your own project to get started!"
+              )}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/build-house">
                 <GenericButton className="bg-amber-500 hover:bg-amber-600 text-white shadow-md">
-                  🏠 {t('projects.createProject')}
+                  🏠 {t("projects.createProject")}
                 </GenericButton>
               </Link>
               <GenericButton
@@ -301,174 +328,195 @@ const ProjectsPage = () => {
                 onClick={() => window.location.reload()}
                 className="border-amber-500 text-amber-700 hover:bg-amber-50 bg-white"
               >
-                🔄 {t('common.reload', 'Refresh Page')}
+                🔄 {t("common.reload", "Refresh Page")}
               </GenericButton>
             </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project, index) => (
-              <motion.div
-                key={project.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
-              >
-                <Card className="p-6 hover:shadow-xl transition-all duration-300 border-amber-200 hover:border-amber-500 bg-white">
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="text-lg font-semibold text-amber-900 mb-1">
-                        {project.choosenEstimation.description.substring(0, 50)}
-                        ...
-                      </h3>
-                      <Badge
-                        variant="outline"
-                        className={`text-xs ${getStatusColor(project.status)}`}
-                      >
-                        {getStatusIcon(project.status)} {project.status}
-                      </Badge>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3 mb-4">
-                    <div className="flex items-center text-sm text-amber-800">
-                      <span className="font-medium mr-2">💰</span>
-                      <span className="font-medium text-amber-700">
-                        {formatCurrency(
-                          project.choosenEstimation.estimatedCost
+            {[...projects]
+              .sort(
+                (a, b) =>
+                  new Date(b.createdAt).getTime() -
+                  new Date(a.createdAt).getTime()
+              )
+              .map((project, index) => (
+                <motion.div
+                  key={project.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                >
+                  <Card className="p-6 hover:shadow-xl transition-all duration-300 border-amber-200 hover:border-amber-500 bg-white">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h3 className="text-lg font-semibold text-amber-900 mb-1">
+                          {project.choosenEstimation.description.substring(
+                            0,
+                            50
+                          )}
+                          ...
+                        </h3>
+                        <Badge
+                          variant="outline"
+                          className={`text-xs ${getStatusColor(
+                            project.status
+                          )}`}
+                        >
+                          {getStatusIcon(project.status)} {project.status}
+                        </Badge>
+                        {project.choosenEstimation.description && (
+                          <p className="text-sm text-amber-800 mt-1">
+                            {project.choosenEstimation.description.length > 100
+                              ? project.choosenEstimation.description.substring(
+                                  0,
+                                  100
+                                ) + "..."
+                              : project.choosenEstimation.description}
+                          </p>
                         )}
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2 text-sm">
-                      <div className="flex items-center text-amber-800">
-                        <span className="mr-2">🛏️</span>
-                        <span>
-                          {project.choosenEstimation.roomsCount} Bedrooms
-                        </span>
-                      </div>
-                      <div className="flex items-center text-amber-800">
-                        <span className="mr-2">🚿</span>
-                        <span>
-                          {project.choosenEstimation.bathroomsCount} Bathrooms
-                        </span>
-                      </div>
-                      <div className="flex items-center text-amber-800">
-                        <span className="mr-2">🍳</span>
-                        <span>
-                          {project.choosenEstimation.kitchensCount} Kitchens
-                        </span>
-                      </div>
-                      <div className="flex items-center text-amber-800">
-                        <span className="mr-2">👥</span>
-                        <span>
-                          {project.choosenEstimation.conversationRoomsCount}{" "}
-                          Living Rooms
-                        </span>
                       </div>
                     </div>
 
-                    {project.choosenEstimation.extras.length > 0 && (
-                      <div className="text-sm">
-                        <span className="text-amber-800 font-medium">
-                          Extras:
+                    <div className="space-y-3 mb-4">
+                      <div className="flex items-center text-sm text-amber-800">
+                        <span className="font-medium mr-2">💰</span>
+                        <span className="font-medium text-amber-700">
+                          {formatCurrency(
+                            project.choosenEstimation.estimatedCost
+                          )}
                         </span>
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          {project.choosenEstimation.extras
-                            .slice(0, 3)
-                            .map((extra, idx) => (
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        <div className="flex items-center text-amber-800">
+                          <span className="mr-2">🛏️</span>
+                          <span>
+                            {project.choosenEstimation.roomsCount} Bedrooms
+                          </span>
+                        </div>
+                        <div className="flex items-center text-amber-800">
+                          <span className="mr-2">🚿</span>
+                          <span>
+                            {project.choosenEstimation.bathroomsCount} Bathrooms
+                          </span>
+                        </div>
+                        <div className="flex items-center text-amber-800">
+                          <span className="mr-2">🍳</span>
+                          <span>
+                            {project.choosenEstimation.kitchensCount} Kitchens
+                          </span>
+                        </div>
+                        <div className="flex items-center text-amber-800">
+                          <span className="mr-2">👥</span>
+                          <span>
+                            {project.choosenEstimation.conversationRoomsCount}{" "}
+                            Living Rooms
+                          </span>
+                        </div>
+                      </div>
+
+                      {project.choosenEstimation.extras.length > 0 && (
+                        <div className="text-sm">
+                          <span className="text-amber-800 font-medium">
+                            Extras:
+                          </span>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {project.choosenEstimation.extras
+                              .slice(0, 3)
+                              .map((extra, idx) => (
+                                <Badge
+                                  key={idx}
+                                  variant="outline"
+                                  className="text-xs border-amber-500 text-amber-700 bg-white"
+                                >
+                                  {extra.name} ({extra.detail.count})
+                                </Badge>
+                              ))}
+                            {project.choosenEstimation.extras.length > 3 && (
                               <Badge
-                                key={idx}
                                 variant="outline"
                                 className="text-xs border-amber-500 text-amber-700 bg-white"
                               >
-                                {extra.name} ({extra.detail.count})
+                                +{project.choosenEstimation.extras.length - 3}{" "}
+                                more
                               </Badge>
-                            ))}
-                          {project.choosenEstimation.extras.length > 3 && (
-                            <Badge
-                              variant="outline"
-                              className="text-xs border-amber-500 text-amber-700 bg-white"
-                            >
-                              +{project.choosenEstimation.extras.length - 3}{" "}
-                              more
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="flex items-center text-sm text-amber-700">
-                      <span className="mr-2">📅</span>
-                      <span>Created {formatDate(project.createdAt)}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex space-x-2">
-                    <Link href={`/projects/${project.id}`} className="flex-1">
-                      <GenericButton
-                        variant="outline"
-                        fullWidth
-                        className="border-amber-500 text-amber-700 hover:bg-amber-50 bg-white"
-                      >
-                        👁️ {t('projects.viewDetails', 'View Details & Bid')}
-                      </GenericButton>
-                    </Link>
-                    <div className="flex flex-col space-y-1">
-                      <Select
-                        value={project.status}
-                        onValueChange={(value: ProjectStatus) =>
-                          handleStatusUpdate(project.id, value)
-                        }
-                        disabled={updatingStatuses[project.id]}
-                      >
-                        <SelectTrigger className="w-24 h-8 text-xs border-amber-300">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="DRAFT">📝 Draft</SelectItem>
-                          <SelectItem value="OPEN">🔓 Open</SelectItem>
-                          <SelectItem value="CLOSED">🔒 Closed</SelectItem>
-                          <SelectItem value="COMPLETED">✅ Done</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      {updatingStatuses[project.id] && (
-                        <div className="flex justify-center">
-                          <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-amber-500"></div>
+                            )}
+                          </div>
                         </div>
                       )}
+
+                      <div className="flex items-center text-sm text-amber-700">
+                        <span className="mr-2">📅</span>
+                        <span>Created {formatDate(project.createdAt)}</span>
+                      </div>
                     </div>
-                    <div className="flex flex-col space-y-1">
-                      <GenericButton
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleUpdateProject(project.id)}
-                        className="text-amber-600 hover:text-amber-700 hover:bg-amber-50 border-amber-300 bg-white"
-                        title="Edit Project"
-                      >
-                        ✏️
-                      </GenericButton>
-                      <GenericButton
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>
-                          handleDeleteProject(
-                            project.id,
-                            project.choosenEstimation.description.substring(
-                              0,
-                              30
+
+                    <div className="flex space-x-2">
+                      <Link href={`/projects/${project.id}`} className="flex-1">
+                        <GenericButton
+                          variant="outline"
+                          fullWidth
+                          className="border-amber-500 text-amber-700 hover:bg-amber-50 bg-white"
+                        >
+                          👁️ {t("projects.viewDetails", "View Details & Bid")}
+                        </GenericButton>
+                      </Link>
+                      <div className="flex flex-col space-y-1">
+                        <Select
+                          value={project.status}
+                          onValueChange={(value: ProjectStatus) =>
+                            handleStatusUpdate(project.id, value)
+                          }
+                          disabled={updatingStatuses[project.id]}
+                        >
+                          <SelectTrigger className="w-24 h-8 text-xs border-amber-300">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="DRAFT">📝 Draft</SelectItem>
+                            <SelectItem value="OPEN">🔓 Open</SelectItem>
+                            <SelectItem value="CLOSED">🔒 Closed</SelectItem>
+                            <SelectItem value="COMPLETED">✅ Done</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        {updatingStatuses[project.id] && (
+                          <div className="flex justify-center">
+                            <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-amber-500"></div>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex flex-col space-y-1">
+                        <GenericButton
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleUpdateProject(project.id)}
+                          className="text-amber-600 hover:text-amber-700 hover:bg-amber-50 border-amber-300 bg-white"
+                          title="Edit Project"
+                        >
+                          ✏️
+                        </GenericButton>
+                        <GenericButton
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            handleDeleteProject(
+                              project.id,
+                              project.choosenEstimation.description.substring(
+                                0,
+                                30
+                              )
                             )
-                          )
-                        }
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-300 bg-white"
-                      >
-                        🗑️
-                      </GenericButton>
+                          }
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-300 bg-white"
+                        >
+                          🗑️
+                        </GenericButton>
+                      </div>
                     </div>
-                  </div>
-                </Card>
-              </motion.div>
-            ))}
+                  </Card>
+                </motion.div>
+              ))}
           </div>
         )}
       </div>

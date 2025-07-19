@@ -12,8 +12,8 @@ import { serviceService } from "@/app/services/serviceServices";
 import { Product } from "@/types/product";
 import { Service } from "@/types/service";
 import { useRouter } from "next/navigation";
-import { dashboardFakes } from '@/app/utils/fakes/DashboardFakes';
-import { useTranslations } from '@/app/hooks/useTranslations';
+import { dashboardFakes } from "@/app/utils/fakes/DashboardFakes";
+import { useTranslations } from "@/app/hooks/useTranslations";
 
 export const Products: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -74,12 +74,14 @@ export const Products: React.FC = () => {
   });
 
   // Filter services
-  const filteredServices = Array.isArray(services) ? services.filter((service) => {
-    const matchesSearch = service.title
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    return matchesSearch;
-  }) : [];
+  const filteredServices = Array.isArray(services)
+    ? services.filter((service) => {
+        const matchesSearch = service.title
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        return matchesSearch;
+      })
+    : [];
 
   return (
     <div className="min-h-screen">
@@ -121,62 +123,68 @@ export const Products: React.FC = () => {
             ) : (
               <div className="flex flex-wrap px-4 gap-7 justify-center lg:flex lg:justify-start">
                 {filteredProducts.map((product, index) => (
-                    <div
-                      key={`${product.id}-${index}`}
-                      className="bg-white overflow-hidden w-64 m-2 hover:shadow-lg cursor-pointer hover:rounded-xl transition-shadow"
-                      onClick={() => router.push(`/product/${product.id}`)}
-                    >
-                      <div className="relative">
-                        {product.thumbnailUrl ? (
-                          <Image
-                            src={product.thumbnailUrl}
-                            alt={product.name}
-                            width={100}
-                            height={100}
-                            className="w-full h-56 object-cover rounded-xl" 
-                          />
-                        ) : (
-                          <div className="w-full h-56 flex items-center justify-center bg-gray-100 rounded-xl text-gray-400">
-                            No Image
-                          </div>
-                        )}
-                        <div className="absolute top-2 right-2 border text-gray-100 rounded-full p-3 flex items-center justify-center cursor-pointer shadow-sm hover:bg-yellow-400 hover:border-yellow-400 transition-colors">
-                          <Heart className="text-gray-100" />
+                  <div
+                    key={`${product.id}-${index}`}
+                    className="bg-white overflow-hidden w-64 m-2 hover:shadow-lg cursor-pointer hover:rounded-xl transition-shadow"
+                    onClick={() => router.push(`/product/${product.id}`)}
+                  >
+                    <div className="relative">
+                      {product.thumbnailUrl ? (
+                        <Image
+                          src={product.thumbnailUrl}
+                          alt={product.name}
+                          width={100}
+                          height={100}
+                          className="w-full h-56 object-cover rounded-xl"
+                        />
+                      ) : (
+                        <div className="w-full h-56 flex items-center justify-center bg-gray-100 rounded-xl text-gray-400">
+                          No Image
                         </div>
-                      </div>
-                      <div className="p-4">
-                        <div className="flex justify-between">
-                          <h3 className="text-md font-semibold text-gray-900 w-[60%] mb-1">
-                            {product.name}
-                          </h3>
-                        </div>
-                        <p className="text-sm text-gray-500 mb-2 overflow">
-                          {product.description}
-                        </p>
-                        <div className="flex items-center justify-between mb-3">
-                          <p className="font-semibold text-md text-yellow-400">
-                            {product.price}
-                            <span className="text-sm text-yellow-400"> Rwf</span>
-                          </p>
-                        </div>
-                        <Button
-                          text={t(dashboardFakes.common.addToCart)}
-                          texSize={"text-sm"}
-                          hoverBg={"hover:bg-yellow-400"}
-                          borderCol={"border-yellow-300"}
-                          bgCol={"white"}
-                          textCol={"text-gray-800"}
-                          border={"border-1"}
-                          handleButton={() => alert(`Add to Cart clicked for ${product.name}`)}
-                          padding={"p-3"}
-                          round={"rounded-full"} />
+                      )}
+                      <div className="absolute top-2 right-2 border text-gray-100 rounded-full p-3 flex items-center justify-center cursor-pointer shadow-sm hover:bg-yellow-400 hover:border-yellow-400 transition-colors">
+                        <Heart className="text-gray-100" />
                       </div>
                     </div>
+                    <div className="p-4">
+                      <div className="flex justify-between">
+                        <h3 className="text-md font-semibold text-gray-900 w-[60%] mb-1">
+                          {product.name}
+                        </h3>
+                      </div>
+                      <p className="text-sm text-gray-500 mb-2 overflow">
+                        {product.description}
+                      </p>
+                      <div className="flex items-center justify-between mb-3">
+                        <p className="font-semibold text-md text-yellow-400">
+                          {product.price}
+                          <span className="text-sm text-yellow-400"> Rwf</span>
+                        </p>
+                      </div>
+                      <Button
+                        text={t(dashboardFakes.common.addToCart)}
+                        texSize={"text-sm"}
+                        hoverBg={"hover:bg-yellow-400"}
+                        borderCol={"border-yellow-300"}
+                        bgCol={"white"}
+                        textCol={"text-gray-800"}
+                        border={"border-1"}
+                        handleButton={() =>
+                          alert(`Add to Cart clicked for ${product.name}`)
+                        }
+                        padding={"p-3"}
+                        round={"rounded-full"}
+                      />
+                    </div>
+                  </div>
                 ))}
               </div>
             )
           ) : (
-            <ServiceGrid loading={servicesLoading} services={filteredServices} />
+            <ServiceGrid
+              loading={servicesLoading}
+              services={filteredServices}
+            />
           )}
           {/* PAGINATION BUTTONS */}
           <div className="mt-6 flex justify-center space-x-2">
