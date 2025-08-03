@@ -2,21 +2,35 @@
 
 import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Star, Eye, ShoppingCart, Store } from "lucide-react";
+import { Eye, ShoppingCart, Store } from "lucide-react";
 import Image from "next/image";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { GenericButton } from "@/components/ui/generic-button";
 import { serviceService } from "@/app/services/serviceServices";
 import { useRouter } from "next/navigation";
 
-
-interface ServiceGridProps {
-  services?: any[];
-  loading: boolean;
-}
-
-export function ServiceGrid({ services = [], loading }: ServiceGridProps) {
+export function ServiceGrid({ searchQuery = "" }: { searchQuery?: string }) {
+  const [services, setServices] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  useEffect(() => {
+    setLoading(true);
+    serviceService.getServices()
+      .then((data) => {
+        setServices(data);
+      })
+      .catch((err) => {
+        setServices([]);
+        // Optionally handle error
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  // Filter services by title (case-insensitive)
+  const filteredServices = services.filter(service =>
+    service.title?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="flex flex-wrap justify-center lg:justify-start">
@@ -38,18 +52,18 @@ export function ServiceGrid({ services = [], loading }: ServiceGridProps) {
             </div>
           ))}
         </div>
-      ) : (services || []).length === 0 ? (
+      ) : (filteredServices || []).length === 0 ? (
         <div className="w-full flex justify-center items-center py-12 text-gray-500">No services found.</div>
       ) : (
-        (services || []).map((service) => (
+        (filteredServices || []).map((service) => (
             <div
               key={service.id}
-              className="bg-white overflow-hidden w-72 m-2 hover:shadow-lg cursor-pointer hover:rounded-xl transition-shadow"
+              className="overflow-hidden w-92 m-5 hover:shadow-lg cursor-pointer hover:rounded-xl"
             >
               <section className="p-0">
                 {/* Service Image */}
-                <div className="px-4 pb-4">
-                  <div className="aspect-[4/3] rounded-lg overflow-hidden bg-gray-100 border">
+                <div className="pb-4">
+                  <div className="aspect-[4/3] rounded-lg overflow-hidden bg-gray-100">
                     <Image
                       src={service.gallery && service.gallery.length > 0 ? service.gallery[0] : '/empty-cart.png'}
                       width={100}
@@ -75,7 +89,7 @@ export function ServiceGrid({ services = [], loading }: ServiceGridProps) {
                   {/* Pricing and Location Info */}
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
-                      <p className="text-xs text-gray-500 mb-1">Price</p>
+                      <p className="text-xs text-gray-500 mb-1">Starting at</p>
                       <p className="font-semibold text-gray-900">{service.pricing?.basePrice ? `${service.pricing.basePrice} Rwf` : "-"}</p>
                     </div>
                     <div>
@@ -101,7 +115,7 @@ export function ServiceGrid({ services = [], loading }: ServiceGridProps) {
 
               <section className="p-4 pt-0">
                 <div className="flex items-center gap-2 w-full">
-                  <GenericButton className="border rounded bg-gray-100 hover:bg-gray-800" onClick={() => router.push(`/service/${service.id}`)}>
+                  <GenericButton className="border rounded bg-gray-100 hover:bg-gray-800" onClick={() => router.push(`/services/${service.id}`)}>
                     <Eye className="w-4 h-4 mr-1 text-amber-500" />
                   </GenericButton>
                   <GenericButton className="flex-1 bg-gray-900 text-white rounded hover:bg-amber-700 hover:text-gray-100">

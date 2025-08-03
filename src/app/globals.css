@@ -131,7 +131,6 @@ body {
   }
 }
 
-
 /* In globals.css or a dedicated CSS file */
 .custom-scrollbar::-webkit-scrollbar {
   width: 8px;

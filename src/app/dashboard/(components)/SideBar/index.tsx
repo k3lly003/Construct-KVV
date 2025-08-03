@@ -1,7 +1,6 @@
 "use client";
 
-import { useAppDispatch, useAppSelector } from "../../../redux";
-import { setIsSidebarCollapsed } from "../../../../state";
+import { useGlobalStore } from "../../../../store";
 import {
   LucideIcon,
   Menu,
@@ -81,20 +80,17 @@ const SidebarLink = ({
 
 
 const SideBar = () => {
-  const dispatch = useAppDispatch();
   const router = useRouter();
   const { t } = useTranslations();
 
-  const isSidebarCollapsed = useAppSelector(
-    (state) => state.global.isSidebarCollapsed
-  );
+  const { isSidebarCollapsed, toggleSidebar } = useGlobalStore();
 
   const USER = getUserDataFromLocalStorage();
   const userRole = USER ? USER.role : null;
   const isLoggedIn = !!USER;
 
   const toogleSidebar = () => {
-    dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
+    toggleSidebar();
   };
 
   const [isSheetOpen, setIsSheetOpen] = useState(false);

@@ -211,6 +211,7 @@ export const productService = {
       const response = await axios.get<{ data: Product[] }>(
         `${API_URL}/api/v1/products?shopId=${shopId}`
       );
+      console.log('Response from getProductsByShopId:', response.data);
       return Array.isArray(response.data.data) ? response.data.data : [];
     } catch (error: unknown) {
       console.error("Error fetching products by shop ID:", error);

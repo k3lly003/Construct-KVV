@@ -74,14 +74,14 @@ export const Products: React.FC = () => {
   });
 
   // Filter services
-  const filteredServices = Array.isArray(services)
-    ? services.filter((service) => {
-        const matchesSearch = service.title
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
-        return matchesSearch;
-      })
-    : [];
+  // const filteredServices = Array.isArray(services)
+  //   ? services.filter((service) => {
+  //       const matchesSearch = service.title
+  //         .toLowerCase()
+  //         .includes(searchTerm.toLowerCase());
+  //       return matchesSearch;
+  //     })
+  //   : [];
 
   return (
     <div className="min-h-screen">
@@ -182,8 +182,9 @@ export const Products: React.FC = () => {
             )
           ) : (
             <ServiceGrid
-              loading={servicesLoading}
-              services={filteredServices}
+              // loading={servicesLoading}
+              // services={filteredServices}
+              searchQuery={searchTerm}
             />
           )}
           {/* PAGINATION BUTTONS */}

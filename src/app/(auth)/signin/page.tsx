@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { Toaster, toast } from "sonner";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
+import { GenericButton } from "@/components/ui/generic-button";
 
 // Zod validation
 const loginSchema = z.object({
@@ -95,12 +96,16 @@ const Page = () => {
         <div className="z-20 bg-black shadow-2xl rounded-sx overflow-hidden flex w-full max-w-5xl">
           {/* Left Side: Sign Up Form */}
           <div className="p-8 mx-10  w-full md:mx-0 md:w-1/2 ">
-            <div className="text-amber-800 flex gap-5 items-center mb-8">
-              <ArrowLeft />
-              <Link href="/" className="text-2xl font-semibold">
-                Construction Kvv
-              </Link>
-            </div>
+            <Link href="/" className="block mb-4">
+          <GenericButton
+            variant="ghost"
+            size="sm"
+            className="mb-8 text-gray-600 hover:text-gray-900 hover:bg-amber-200"
+          >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back
+        </GenericButton>
+        </Link>
             <div className="mb-6">
               <h2 className="text-lg font-semibold text-gray-800 my-2">
                 {t('auth.signin.title')}

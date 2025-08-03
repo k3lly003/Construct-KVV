@@ -1,12 +1,17 @@
 "use client";
 
-import { useTranslation } from 'react-i18next';
-import { locales, localeNames, type Locale } from '@/app/i18n/config';
-import { setUserLocale } from '@/app/libs/locale';
-import Button from './button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './dropdown-menu';
-import { Globe } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useTranslation } from "react-i18next";
+import { locales, localeNames, type Locale } from "@/app/i18n/config";
+import { setUserLocale } from "@/app/libs/locale";
+import { Button } from "./button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./dropdown-menu";
+import { Globe } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export function LanguageSwitcher() {
   const { i18n, t, ready } = useTranslation();
@@ -27,17 +32,15 @@ export function LanguageSwitcher() {
   if (!isClient || !ready) {
     return (
       <Button
-        text="Language"
-        texSize="text-sm"
-        hoverBg="hover:bg-gray-200"
-        borderCol="border-gray-300"
-        bgCol="bg-white"
-        textCol="text-black"
-        border="border"
-        padding="px-4 py-2"
-        round="rounded"
-        handleButton={() => {/* your handler */}}
-      />
+        variant="outline"
+        size="default"
+        onClick={() => {
+          /* your handler */
+        }}
+        className="text-sm hover:bg-gray-200 bg-white text-black"
+      >
+        Language
+      </Button>
     );
   }
 
@@ -45,19 +48,13 @@ export function LanguageSwitcher() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          text={t('common.language')}
-          texSize="text-sm"
-          hoverBg="hover:bg-gray-200"
-          borderCol="border-gray-300"
-          bgCol="bg-white"
-          textCol="text-black"
-          border="border"
-          padding="px-4 py-2"
-          round="rounded"
-          handleButton={() => {}}
-          icon={<Globe className="h-4 w-4" />}
-          className="gap-2"
-        />
+          variant="outline"
+          size="default"
+          className="gap-2 text-sm hover:bg-gray-200 bg-white text-black"
+        >
+          {t("common.language")}
+          <Globe className="h-4 w-4" />
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {locales.map((locale) => (

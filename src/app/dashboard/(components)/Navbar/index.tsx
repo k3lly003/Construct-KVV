@@ -1,11 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Menu, Bell } from "lucide-react";
-import { useAppDispatch, useAppSelector } from "../../../redux";
-import { setIsSidebarCollapsed } from "../../../../state";
+import { useGlobalStore, useUserStore, useNotificationStore } from "../../../../store";
 import CustomSheet from "../shad_/CustomSheet";
 import ModeToggle from "../../../../components/mode-toggle";
-import { useUserStore } from "../../../../store/userStore";
 import { getInitials } from "../../../../lib/utils";
 import { Avatar, AvatarFallback } from "../../../../components/ui/avatar";
 import FlagToggle from "@/app/(components)/Navbar/ToggleFlag";
@@ -17,21 +15,14 @@ import {
 } from "../../../../components/ui/dropdown-menu";
 import Link from "next/link";
 import { NotificationModal } from "@/components/ui/notification-modal";
-import { useNotificationStore } from "../../../../store/notificationStore";
 import { useSocket } from "@/app/hooks/useSocket";
 import { dashboardFakes } from '@/app/utils/fakes/DashboardFakes';
 import { useTranslation } from 'react-i18next';
 
 const Navbar: React.FC = () => {
-  const dispatch = useAppDispatch();
   // INITIATE STATE HERE :arrow_down:
-  const isSidebarCollapsed = useAppSelector(
-    (state) => state.global.isSidebarCollapsed
-  );
+  const { isSidebarCollapsed, toggleSidebar } = useGlobalStore();
   // MANIPULATE STATE HERE :arrow_down:
-  const toggleSidebar = () => {
-    dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
-  };
   // DISPLAY THE CUSTOMSHEET
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const handleOpenSheet = () => {
