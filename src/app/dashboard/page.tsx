@@ -1,10 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react";
-import { getUserDataFromLocalStorage } from "../utils/middlewares/UserCredentions";
 import { StatCard } from "./(components)/overview/stat-card";
-import { TopCountries } from "./(components)/overview/top-countries";
-import { TopCustomers } from "./(components)/overview/top-customers";
+import Comments from "./(components)/overview/comments";
 import {
   Table,
   TableHeader,
@@ -16,8 +13,7 @@ import {
 import { useProducts } from "@/app/hooks/useProduct";
 import { Input } from "@/components/ui/input";
 import { useCategories } from "@/app/hooks/useCategories";
-import axios from 'axios';
-import { analyticsService } from '../services/analyticsService';
+import { useDashboard } from "../../hooks/useDashboard";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend
 } from 'recharts';
@@ -25,14 +21,26 @@ import {
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 export default function Home() {
-  // All hooks at the top!
-  const [userCredentials, setUserCredentials] = useState<{ firstName?: string; lastName?: string } | null>(null);
-  const [analytics, setAnalytics] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const { products, isLoading } = useProducts();
+  // Custom dashboard hook
+  const {
+    userInfo,
+    stats,
+    recentOrders,
+    topCustomers,
+    revenueData,
+    projectsData,
+    searchTerm,
+    isLoading,
+    hasError,
+    error,
+    handleSearch,
+    handleRefresh,
+    handleClearError,
+  } = useDashboard();
+
+  // Other hooks
+  const { products, isLoading: productsLoading } = useProducts();
   const { categories, isLoading: categoriesLoading } = useCategories();
-  const [searchTerm, setSearchTerm] = useState("");
 
   const searchedProducts = products.filter((product) =>
     Object.values(product).some((value) =>
@@ -45,27 +53,25 @@ export default function Home() {
     return category ? category.name : "Unknown";
   };
 
-  useEffect(() => {
-    const user = getUserDataFromLocalStorage();
-    setUserCredentials(user);
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-      setError('Not authenticated');
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    analyticsService.getAdminAnalytics(token)
-      .then(res => setAnalytics(res))
-      .catch(err => setError(err.response?.data?.message || 'Failed to fetch analytics'))
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return <div className="p-8 text-lg">Loading analytics...</div>;
   }
-  if (error) {
-    return <div className="p-8 text-red-500">{error}</div>;
+  
+  if (hasError) {
+    return (
+      <div className="p-8">
+        <div className="text-red-500 mb-4">{error}</div>
+        <button 
+          onClick={() => {
+            handleClearError();
+            handleRefresh();
+          }}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Retry
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -74,7 +80,7 @@ export default function Home() {
         {/* Header */}
         <div className="mb-10">
           <h1 className="text-2xl font-semibold">
-            Welcome Back, {userCredentials?.firstName || ""} {userCredentials?.lastName || ""}!
+            Welcome Back, {userInfo.fullName || "User"}!
           </h1>
           <p className="text-gray-500">
             Here is what happening with your store today
@@ -86,7 +92,7 @@ export default function Home() {
           <div className="bg-white rounded shadow p-4">
             <h2 className="text-lg font-semibold mb-2">Revenue Over Time</h2>
             <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={analytics?.ecommerce?.revenueByMonth || []}>
+              <LineChart data={revenueData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" tickFormatter={m => m?.slice(0,7)} />
                 <YAxis />
@@ -101,7 +107,7 @@ export default function Home() {
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
-                  data={analytics?.bidding?.projectsByStatus || []}
+                  data={projectsData}
                   dataKey="_count._all"
                   nameKey="status"
                   cx="50%"
@@ -110,7 +116,7 @@ export default function Home() {
                   fill="#82ca9d"
                   label
                 >
-                  {(analytics?.bidding?.projectsByStatus || []).map((entry: any, index: number) => (
+                  {projectsData.map((entry: any, index: number) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
@@ -124,19 +130,19 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <StatCard
             title="Total Customers"
-            value={analytics?.users?.totalCustomers?.toLocaleString() ?? '--'}
+            value={stats?.totalCustomers?.toLocaleString() ?? '--'}
             change={0}
             trend="up"
           />
           <StatCard
             title="Total Revenue"
-            value={analytics?.ecommerce?.totalSales ? `$${analytics.ecommerce.totalSales.toLocaleString()}` : '--'}
+            value={stats?.totalRevenue ? `$${stats.totalRevenue.toLocaleString()}` : '--'}
             change={0}
             trend="up"
           />
           <StatCard
             title="Total Orders"
-            value={analytics?.ecommerce?.totalOrders?.toLocaleString() ?? '--'}
+            value={stats?.totalOrders?.toLocaleString() ?? '--'}
             change={0}
             trend="up"
           />
@@ -159,7 +165,7 @@ export default function Home() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {analytics?.recentOrders?.length > 0 ? analytics.recentOrders.map((order: any) => (
+                  {recentOrders?.length > 0 ? recentOrders.map((order: any) => (
                     <TableRow key={order.id}>
                       <TableCell className="py-4 text-bold">{order.id}</TableCell>
                       <TableCell className="py-5">{order.customerName || '-'}</TableCell>
@@ -185,7 +191,7 @@ export default function Home() {
                   placeholder="Search by any product details..."
                   className="w-[300px] sm:w-[400px]"
                   value={searchTerm}
-                  onChange={e => setSearchTerm(e.target.value)}
+                  onChange={e => handleSearch(e.target.value)}
                 />
               </div>
               <Table>
@@ -226,7 +232,7 @@ export default function Home() {
                 <h2 className="text-lg font-semibold">Top Customers</h2>
               </div>
               <div className="space-y-4">
-                {analytics?.topCustomers?.length > 0 ? analytics.topCustomers.map((customer: any) => (
+                {topCustomers?.length > 0 ? topCustomers.map((customer: any) => (
                   <div key={customer.id} className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <img src={customer.avatar || 'https://i.pravatar.cc/150?u=' + customer.id} alt={customer.name} className="w-10 h-10 rounded-full object-cover" />
@@ -242,7 +248,7 @@ export default function Home() {
                 )}
               </div>
             </div>
-            <TopCountries />
+            <Comments />
           </div>
         </div>
       </div>

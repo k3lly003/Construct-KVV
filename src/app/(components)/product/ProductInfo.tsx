@@ -9,6 +9,7 @@ import { useTranslations } from "@/app/hooks/useTranslations";
 import { dashboardFakes } from "@/app/utils/fakes/DashboardFakes";
 import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
 import { productService } from "@/app/services/productServices";
+import { useCartStore } from "@/store/cartStore";
 
 interface Product {
   id: string;
@@ -20,6 +21,12 @@ interface Product {
   details?: string[];
   rating?: number;
   reviewCount?: number;
+  thumbnailUrl?: string;
+  imageUrl?: string;
+  image?: string | string[];
+  weight?: number;
+  dimensions?: string;
+  categoryId?: string;
 }
 
 interface ProductInfoProps {
@@ -42,26 +49,30 @@ const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
     }
   };
 
-  const addToCart = async () => {
+  const addToCart = useCartStore((state) => state.addToCart);
+
+  const handleAddToCart = () => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: quantity,
+      image:
+        product.thumbnailUrl ||
+        product.imageUrl ||
+        (Array.isArray(product.image) && product.image.length > 0
+          ? product.image[0]
+          : undefined) ||
+        "/products/placeholder.jpg",
+      category: product.categoryId || "",
+      weight: product.weight || 0,
+      dimensions: product.dimensions || "",
+    });
     toast.success(`Added ${quantity} ${product.name} to your cart`);
-    // Product interaction: clicked
-    const user = getUserDataFromLocalStorage();
-    if (user && user.id && user.token) {
-      productService
-        .postProductInteraction({
-          userId: user.id,
-          productId: product.id,
-          type: "clicked",
-          timeSpent: 0,
-          token: user.token,
-        })
-        .then((res) => {
-          console.log("[ProductInfo] Clicked interaction sent:", res);
-        })
-        .catch((err) => {
-          console.log("[ProductInfo] Clicked interaction error:", err);
-        });
-    }
+    console.log(
+      "[ProductInfo] Cart after add:",
+      JSON.parse(localStorage.getItem("kvv_cart_items") || "[]")
+    );
   };
 
   const toggleWishlist = async () => {
@@ -182,9 +193,9 @@ const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
             <Plus size={16} />
           </GenericButton>
         </div>
-        <GenericButton className="flex-1 h-10 gap-2" onClick={addToCart}>
+        <GenericButton className="flex-1 h-10 gap-2" onClick={handleAddToCart}>
           <ShoppingCart size={16} />
-          {t(dashboardFakes.productInfo.addToCart)}
+          Add to Cart
         </GenericButton>
         <GenericButton
           variant="outline"

@@ -11,7 +11,7 @@ export const ProjectShowcase: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="py-20 bg-gradient-to-br from-gray-100 to-gray-300 w-full">
+    <div className="py-20 bg-gradient-to-b from-slate-50 to-white w-full">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-4xl font-bold text-black mb-4 text-center">
           {t("ProjectShowcase.title")}

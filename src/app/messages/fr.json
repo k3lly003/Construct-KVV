@@ -36,6 +36,7 @@
     "deals": "Offres",
     "projects": "Projets",
     "shops": "Boutiques",
+    "pricing": "Tarification",
     "help": "Aide",
     "cart": "Panier",
     "profile": "Profil",
@@ -44,7 +45,8 @@
     "login": "Connexion",
     "signup": "S'inscrire",
     "buildHouse": "Construire une maison",
-    "features": "Fonctionnalités"
+    "features": "Fonctionnalités",
+    "join-as-a-pro": "Rejoindre en tant que pro"
   },
   "banner": {
       "slide1": {
@@ -743,5 +745,37 @@
     "error": "Échec du chargement des recommandations",
     "noRecommendations": "Aucune recommandation pour le moment.",
     "seeAllProducts": "Voir tous les produits"
+  },
+  "dash": {
+    "footer": {
+      "copyright": "Copyright ©2026 constructkvv. Tous droits réservés."
+    }
+  },
+  "serviceBanner": {
+    "brand": "ConstructPro",
+    "heroTitle": "Trouvez des services de conception de construction experts",
+    "heroSubtitle": "Connectez-vous avec des architectes, ingénieurs et designers de premier plan pour votre prochain projet",
+    "locationPlaceholder": "Entrez votre localisation",
+    "findServices": "Trouver des services",
+    "customRequest": "Vous ne trouvez pas ce dont vous avez besoin ? Ajoutez votre localisation et nous trouverons les meilleurs services pour vous",
+    "howItWorksTitle": "Comment fonctionne ConstructPro",
+    "step1Title": "1. Partagez les détails de votre projet",
+    "step1Desc": "Parlez-nous de vos besoins en conception de construction et des exigences de votre projet.",
+    "step2Title": "2. Recevez des mises en relation avec des pros",
+    "step2Desc": "Nous vous mettons en contact avec jusqu'à 3 professionnels qualifiés dans votre région.",
+    "step3Title": "3. Choisissez le meilleur",
+    "step3Desc": "Comparez les propositions et sélectionnez le professionnel idéal pour votre projet."
+  },
+  "serviceTrustSecurity": {
+    "whyChoose": "Pourquoi choisir ConstructPro",
+    "whyChooseSubtitle": "Vos projets de construction méritent les meilleurs professionnels",
+    "verifiedProfessionalsTitle": "Professionnels vérifiés",
+    "verifiedProfessionalsDesc": "Tous les prestataires sont agréés et vérifiés",
+    "qualityGuaranteedTitle": "Qualité garantie",
+    "qualityGuaranteedDesc": "Services les mieux notés avec avis clients vérifiés",
+    "fastMatchingTitle": "Mise en relation rapide",
+    "fastMatchingDesc": "Soyez mis en contact avec des pros en moins de 24h",
+    "awardWinnersTitle": "Lauréats de prix",
+    "awardWinnersDesc": "Professionnels et entreprises reconnus par le secteur"
   }
 }

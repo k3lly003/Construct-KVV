@@ -1,7 +1,6 @@
 "use client";
 
-import { useAppDispatch, useAppSelector } from "../../../redux";
-import { setIsSidebarCollapsed } from "../../../../state";
+import { useGlobalStore } from "../../../../store";
 import {
   LucideIcon,
   Menu,
@@ -81,20 +80,17 @@ const SidebarLink = ({
 
 
 const SideBar = () => {
-  const dispatch = useAppDispatch();
   const router = useRouter();
   const { t } = useTranslations();
 
-  const isSidebarCollapsed = useAppSelector(
-    (state) => state.global.isSidebarCollapsed
-  );
+  const { isSidebarCollapsed, toggleSidebar } = useGlobalStore();
 
   const USER = getUserDataFromLocalStorage();
   const userRole = USER ? USER.role : null;
   const isLoggedIn = !!USER;
 
   const toogleSidebar = () => {
-    dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
+    toggleSidebar();
   };
 
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -103,7 +99,7 @@ const SideBar = () => {
     setIsSheetOpen(true);
   };
 
-  const sidebarClassName = `fixed flex flex-col bg-white dark:bg-gray-800 z-10 ${isSidebarCollapsed ? "w-0 md:w-16" : "w-72 md:w-64"
+  const sidebarClassName = `fixed flex flex-col bg-white dark:bg-gray-800 z-30 ${isSidebarCollapsed ? "w-0 md:w-16" : "w-72 md:w-64"
     }transition-all duration-500 overflow-hidden h-full shadow-md dark:shadow-2xl`;
 
   useEffect(() => {
@@ -186,7 +182,6 @@ const SideBar = () => {
           )}
 
           {userRole === "SELLER" && (
-
             <>
               <SidebarLink
                 href="/dashboard/overview"
@@ -196,9 +191,9 @@ const SideBar = () => {
               />
               <SidebarLink
 
-                href="/dashboard/products"
+                href="/dashboard/my-store"
                 icon={Package}
-                label={t('navigation.products')}
+                label={t('navigation.My-store')}
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink

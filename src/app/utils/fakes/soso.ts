@@ -1,3 +1,5 @@
+import { Service } from "@/types/service";
+
 interface ServiceData {
     id: string;
     title: string;
@@ -133,3 +135,117 @@ interface ServiceData {
   };
 
   export default serviceData;
+
+  export const mockServices: Service[] = [
+    {
+      id: "1",
+      title: "Home Renovation",
+      category: "Renovation",
+      description: "Complete home renovation including kitchen and bathroom.",
+      availability: "Available",
+      features: ["Full interior", "Modern design", "Energy efficient"],
+      specifications: [
+        { key: "Duration", value: "3 months" },
+        { key: "Team", value: "5 specialists" }
+      ],
+      provider: "RenovatePro",
+      pricing: "2500",
+      location: "Kigali",
+      warranty: "2 years",
+      gallery: ["https://images.pexels.com/photos/18105/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"],
+      createdAt: "2024-05-01"
+    },
+    {
+      id: "2",
+      title: "Plumbing Services",
+      category: "Plumbing",
+      description: "Professional plumbing installation and repair.",
+      availability: "Available",
+      features: ["Leak repair", "Pipe installation"],
+      specifications: [
+        { key: "Emergency", value: "Yes" },
+        { key: "Coverage", value: "Citywide" }
+      ],
+      provider: "PlumbRight",
+      pricing: "150",
+      location: "Kigali",
+      warranty: "6 months",
+      gallery: ["https://images.pexels.com/photos/777001/pexels-photo-777001.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"],
+      createdAt: "2024-05-02"
+    },
+    {
+      id: "3",
+      title: "Electrical Wiring",
+      category: "Electrical",
+      description: "Safe and certified electrical wiring for homes and offices.",
+      availability: "Available",
+      features: ["Certified electricians", "Safety guaranteed"],
+      specifications: [
+        { key: "Voltage", value: "220V" },
+        { key: "Warranty", value: "1 year" }
+      ],
+      provider: "ElectroSafe",
+      pricing: "500",
+      location: "Kigali",
+      warranty: "1 year",
+      gallery: ["https://images.pexels.com/photos/18105/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"],
+      createdAt: "2024-05-03"
+    },
+    // New fake 1
+    {
+      id: "4",
+      title: "Landscaping & Gardening",
+      category: "Landscaping",
+      description: "Transform your outdoor space with our expert landscaping and gardening services.",
+      availability: "Available",
+      features: ["Lawn care", "Tree planting", "Garden design"],
+      specifications: [
+        { key: "Area covered", value: "Up to 500 sqm" },
+        { key: "Maintenance", value: "Monthly" }
+      ],
+      provider: "GreenThumbs",
+      pricing: "800",
+      location: "Huye",
+      warranty: "1 year",
+      gallery: ["https://images.pexels.com/photos/461382/pexels-photo-461382.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"],
+      createdAt: "2024-05-04"
+    },
+    // New fake 2
+    {
+      id: "5",
+      title: "Painting & Decorating",
+      category: "Painting",
+      description: "Professional painting and decorating for homes and offices.",
+      availability: "Available",
+      features: ["Interior painting", "Exterior painting", "Wallpaper installation"],
+      specifications: [
+        { key: "Paint type", value: "Eco-friendly" },
+        { key: "Finish", value: "Matte/Glossy" }
+      ],
+      provider: "ColorPros",
+      pricing: "1200",
+      location: "Musanze",
+      warranty: "2 years",
+      gallery: ["https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"],
+      createdAt: "2024-05-05"
+    },
+    // New fake 3
+    {
+      id: "6",
+      title: "Roofing Solutions",
+      category: "Roofing",
+      description: "Durable and weather-resistant roofing installation and repair.",
+      availability: "Available",
+      features: ["Metal roofing", "Leak repair", "Insulation"],
+      specifications: [
+        { key: "Material", value: "Steel/Aluminum" },
+        { key: "Warranty", value: "10 years" }
+      ],
+      provider: "RoofMasters",
+      pricing: "3500",
+      location: "Rubavu",
+      warranty: "10 years",
+      gallery: ["https://images.pexels.com/photos/209251/pexels-photo-209251.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"],
+      createdAt: "2024-05-06"
+    }
+  ];

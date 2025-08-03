@@ -15,7 +15,6 @@ export const serviceService = {
           'Authorization': `Bearer ${authToken}`
         },
       });
-      console.log("CREATED-SERVICE-DATA",response.data);
       return response.data as Service;
     } catch (error) {
       console.error('Error creating service:', error);
@@ -25,10 +24,36 @@ export const serviceService = {
 
   async getServices(): Promise<Service[]> {
     try {
-      const response = await axios.get(`${API_URL}/api/v1/services`);
-      return response.data as Service[];
+      const response = await axios.get(`${API_URL}/api/v1/services?page=1&limit=10&active=true`);
+      const data: unknown = response.data;
+      if (Array.isArray(data)) {
+        return data as Service[];
+      } else if (data && typeof data === 'object' && 'data' in data && Array.isArray((data as any).data)) {
+        return (data as { data: Service[] }).data;
+      } else {
+        console.warn('Unexpected response format when fetching services:', data);
+        return [];
+      }
     } catch (error: unknown) {
       console.error('Error fetching services:', error);
+      throw error instanceof Error ? error : new Error(String(error));
+    }
+  },
+
+  async getServicesByShopId(shopId: string): Promise<Service[]> {
+    try {
+      const response = await axios.get(`${API_URL}/api/v1/services?shopId=${shopId}&page=1&limit=100&active=true`);
+      // Handle both direct array response and nested data response
+      const data: unknown = response.data;
+      if (Array.isArray(data)) {
+        return data as Service[];
+      } else if (data && typeof data === 'object' && 'data' in data && Array.isArray((data as any).data)) {
+        return (data as { data: Service[] }).data;
+      } else {
+        throw new Error('Unexpected response format when fetching services by shop ID');
+      }
+    } catch (error: unknown) {
+      console.error('Error fetching services by shop ID:', error);
       throw error instanceof Error ? error : new Error(String(error));
     }
   },

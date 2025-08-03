@@ -28,6 +28,8 @@ export interface SpecificationsProps {
 }
 
 export interface DealProductDto {
+  isActive: any;
+  sku: any;
   id: string;
   name: string;
   category?: string;

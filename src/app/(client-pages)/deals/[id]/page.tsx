@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Head from 'next/head';
 // import Image, { StaticImageData } from "next/image";
 import {
   // DealProduct,
@@ -26,6 +27,39 @@ const DealViewPage: React.FC = () => {
 
   return (
     <>
+      <Head>
+        <title>{product.name ? `${product.name} | Deal | Construct KVV` : 'Deal | Construct KVV'}</title>
+        <meta name="description" content={product.description || 'View deal details at Construct KVV.'} />
+        <meta property="og:title" content={product.name ? `${product.name} | Deal | Construct KVV` : 'Deal | Construct KVV'} />
+        <meta property="og:description" content={product.description || 'View deal details at Construct KVV.'} />
+        <meta property="og:type" content="product" />
+        <meta property="og:url" content={`https://www.constructkvv.com/deals/${product.id || '1'}`} />
+        <meta property="og:image" content={product.imageSrc && product.imageSrc.length > 0 ? (typeof product.imageSrc[0] === 'string' ? product.imageSrc[0] : product.imageSrc[0].src) : '/kvv-logo.png'} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={product.name ? `${product.name} | Deal | Construct KVV` : 'Deal | Construct KVV'} />
+        <meta name="twitter:description" content={product.description || 'View deal details at Construct KVV.'} />
+        <meta name="twitter:image" content={product.imageSrc && product.imageSrc.length > 0 ? (typeof product.imageSrc[0] === 'string' ? product.imageSrc[0] : product.imageSrc[0].src) : '/kvv-logo.png'} />
+        <link rel="canonical" href={`https://www.constructkvv.com/deals/${product.id || '1'}`} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'Product',
+          name: product.name,
+          image: product.imageSrc && product.imageSrc.length > 0 ? (typeof product.imageSrc[0] === 'string' ? product.imageSrc[0] : product.imageSrc[0].src) : undefined,
+          description: product.description,
+          sku: product.sku,
+          brand: {
+            '@type': 'Brand',
+            name: 'Construct KVV'
+          },
+          offers: product.price ? {
+            '@type': 'Offer',
+            priceCurrency: 'RWF',
+            price: product.price,
+            availability: product.isActive ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+            url: `https://www.constructkvv.com/deals/${product.id || '1'}`
+          } : undefined
+        }) }} />
+      </Head>
       <DefaultPageBanner backgroundImage="/architect.jpg" title={"Deals"} />
       <div className="container max-w-6xl mx-auto py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

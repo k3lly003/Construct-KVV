@@ -65,7 +65,11 @@ const getInitialsFromUserData = () => {
               <p className="text-xs text-gray-500">{userEmail}</p>
             </div>
           </DropdownMenuLabel>
-          <Link href="/dashboard">
+          {/* Role-based dashboard link */}
+          <Link href={
+            userData?.role === 'SELLER' ? '/dashboard/overview' :
+            userData?.role === 'ADMIN' ? '/dashboard' : '/dashboard'
+          }>
             <DropdownMenuItem className="my-2">
               <LayoutDashboard />
               Dashboard

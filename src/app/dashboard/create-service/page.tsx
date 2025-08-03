@@ -24,7 +24,7 @@ import { Terminal } from "lucide-react";
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
-import ProductImageUpload from '../products/create/ProductImageUpload';
+import ProductImageUpload from '../my-store/create/ProductImageUpload';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -45,9 +45,7 @@ import {
   Wrench,
   Home
 } from "lucide-react";
-import { zodResolver } from '@hookform/resolvers/zod';
-// import { createServiceSchema } from '@/utils/middlewares/Validation';
-import { ServiceCategorySelect } from '../products/create/CategorySelect';
+import { ServiceCategorySelect } from '@/app/dashboard/my-store/create/CategorySelect';
 import { categoryService } from "@/app/services/categoryServices";
 import { serviceService } from '@/app/services/serviceServices';
 import { toast } from 'sonner';
@@ -73,6 +71,14 @@ type CreateServiceFormInput = {
   warrantyDuration: string;
   warrantyCoverage: { value: string }[];
   gallery: File[];
+  reviews?: {
+    id: string;
+    author: string;
+    rating: number;
+    comment: string;
+    date: string;
+    verified: boolean;
+  }[];
 };
 
 const defaultGallery = [
@@ -106,6 +112,7 @@ const Page = () => {
       warrantyDuration: '',
       warrantyCoverage: [{ value: '' }],
       gallery: [],
+      reviews: [],
     },
   });
 
@@ -176,7 +183,7 @@ const Page = () => {
         if (key && value) specsObj[key] = value;
       });
       if (Object.keys(specsObj).length === 0) {
-        toast.error('At least one valid specification (key: value) is required.');
+        toast.error('At least one valid specification is required. Use the format: Color: Brown or Material: Wood, etc.');
         return;
       }
       formData.append('specifications', JSON.stringify(specsObj));
@@ -463,7 +470,7 @@ const Page = () => {
             />
             {/* Warranty Coverage dynamic list */}
             <div>
-              <FormLabel>Warranty Coverage</FormLabel>
+              <FormLabel className='mb-3'>Warranty Coverage <span className='text-xs italic'>(services that comes with warranty)</span></FormLabel>
               {coverageFields.map((item, idx) => (
                 <div key={item.id} className="flex gap-2 mb-2">
                   <FormControl>
@@ -596,9 +603,8 @@ const Page = () => {
                       <button
                         key={index}
                         onClick={() => setSelectedImage(index)}
-                        className={`flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden border-2 transition-colors ${
-                          selectedImage === index ? 'border-blue-500' : 'border-gray-200'
-                        }`}
+                        className={`flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden border-2 transition-colors ${selectedImage === index ? 'border-amber-500' : 'border-gray-200'
+                          }`}
                       >
                         <Image src={img.url} width={80} height={64} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover" />
                       </button>
@@ -660,6 +666,7 @@ const Page = () => {
                   <TabsList className="flex justify-between w-full">
                     <TabsTrigger value="features">Features</TabsTrigger>
                     <TabsTrigger value="specifications">Specifications</TabsTrigger>
+                    <TabsTrigger value="warranty">Warranty</TabsTrigger>
                   </TabsList>
                   <TabsContent value="features" className="mt-6">
                     <div className="w-full border">
@@ -678,6 +685,36 @@ const Page = () => {
                           <span className="text-sm text-gray-900 break-words">{spec.value}</span>
                         </div>
                       ))}
+                    </div>
+                  </TabsContent>
+                  <TabsContent value="warranty" className="mt-6">
+                    <div className="rounded-xl bg-amber-50 p-6 shadow-sm border border-amber-100">
+                      <div className="flex items-center gap-3 mb-4">
+                        <Shield className="w-7 h-7 text-amber-600" />
+                        <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">Warranty</span>
+                      </div>
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="text-3xl font-bold text-amber-900">{watchAllFields.warrantyDuration || 'N/A'}</span>
+                        <span className="text-sm text-amber-600">duration</span>
+                      </div>
+                      <div className="mt-4">
+                        <h4 className="font-semibold text-amber-800 mb-2">Coverage includes:</h4>
+                        <div className="space-y-2">
+                          {watchAllFields.warrantyCoverage?.filter(c => c.value).length > 0 ? (
+                            watchAllFields.warrantyCoverage.filter(c => c.value).map((c, idx) => (
+                              <div key={idx} className="flex items-center gap-3 py-2 border-b last:border-b-0 border-amber-100">
+                                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+                                <span className="text-base text-gray-900">{c.value}</span>
+                              </div>
+                            ))
+                          ) : (
+                            <span className="text-gray-400 text-sm">No coverage details provided.</span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="mt-6 text-xs text-amber-500 italic">
+                        * Warranty terms and conditions may apply. Please contact the provider for full details.
+                      </div>
                     </div>
                   </TabsContent>
                 </Tabs>
@@ -742,7 +779,7 @@ const Page = () => {
                   </div>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div className="flex items-center gap-2">
-                      <Award className="w-4 h-4 text-blue-600" />
+                      <Award className="w-4 h-4 text-amber-600" />
                       <span>12 years exp.</span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -770,8 +807,8 @@ const Page = () => {
                 <h3 className="font-semibold mb-4">Service Highlights</h3>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                      <Home className="w-4 h-4 text-blue-600" />
+                    <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
+                      <Home className="w-4 h-4 text-amber-600" />
                     </div>
                     <div>
                       <p className="font-medium text-sm">Free Consultation</p>
@@ -796,6 +833,38 @@ const Page = () => {
                       <p className="text-xs text-gray-600">Commercial grade equipment</p>
                     </div>
                   </div>
+                </div>
+              </CardContent>
+            </Card>
+            {/* Service Reviews */}
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="font-semibold mb-4">Service Reviews</h3>
+                <div className="space-y-3">
+                  {(watchAllFields.reviews && watchAllFields.reviews.length > 0) ? (
+                    watchAllFields.reviews.map((review: any, idx: number) => (
+                      <div key={review.id || idx} className="border-b border-gray-100 pb-4 last:border-b-0">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="flex items-center">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`w-4 h-4 ${i < review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`}
+                              />
+                            ))}
+                          </div>
+                          <span className="font-medium">{review.author}</span>
+                          {review.verified && (
+                            <Badge variant="outline" className="text-xs">Verified</Badge>
+                          )}
+                          <span className="text-sm text-gray-500 ml-auto">{review.date}</span>
+                        </div>
+                        <p className="text-sm text-gray-600">{review.comment}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-gray-500 text-sm">No reviews yet</div>
+                  )}
                 </div>
               </CardContent>
             </Card>

@@ -31,12 +31,14 @@
   },
   "navigation": {
     "home": "Home",
-    "products": "Products",
+    "My-store": "My-store",
     "services": "Services",
     "deals": "Deals",
     "projects": "Projects",
     "shops": "Shops",
+    "pricing": "Pricings",
     "help": "Help",
+    "join-as-a-pro": "Join as a pro",
     "cart": "Cart",
     "profile": "Profile",
     "dashboard": "Dashboard",
@@ -44,7 +46,7 @@
     "login": "Login",
     "signup": "Sign Up",
     "buildHouse": "Build House",
-    "features": "Features"
+    "explore-services": "Explore Services"
   },
   "banner": {
     "slide1": {
@@ -745,5 +747,37 @@
     "error": "Failed to load recommendations",
     "noRecommendations": "No recommendations yet.",
     "seeAllProducts": "See All Products"
+  },
+  "dash": {
+    "footer": {
+      "copyright": "Copyright ©2026 constructkvv. All rights reserved."
+    }
+  },
+  "serviceBanner": {
+    "brand": "ConstructPro",
+    "heroTitle": "Find Expert Construction Design Services",
+    "heroSubtitle": "Connect with top-rated architects, engineers, and designers for your next project",
+    "locationPlaceholder": "Enter your location",
+    "findServices": "Find Services",
+    "customRequest": "Don't see what you need? Add your location and we will find the best services for you",
+    "howItWorksTitle": "How ConstructPro Works",
+    "step1Title": "1. Share Your Project Details",
+    "step1Desc": "Tell us about your construction design needs and project requirements.",
+    "step2Title": "2. Get Matched with Pros",
+    "step2Desc": "We connect you with up to 3 qualified professionals in your area.",
+    "step3Title": "3. Choose the Best Fit",
+    "step3Desc": "Compare proposals and select the perfect professional for your project."
+  },
+  "serviceTrustSecurity": {
+    "whyChoose": "Why Choose ConstructPro",
+    "whyChooseSubtitle": "Your construction projects deserve the best professionals",
+    "verifiedProfessionalsTitle": "Verified Professionals",
+    "verifiedProfessionalsDesc": "All providers are licensed and background checked",
+    "qualityGuaranteedTitle": "Quality Guaranteed",
+    "qualityGuaranteedDesc": "Top-rated services with verified customer reviews",
+    "fastMatchingTitle": "Fast Matching",
+    "fastMatchingDesc": "Get connected with pros within 24 hours",
+    "awardWinnersTitle": "Award Winners",
+    "awardWinnersDesc": "Industry-recognized professionals and firms"
   }
 }

@@ -20,7 +20,7 @@ export const Banner: React.FC = () => {
   const currentSlideData = HomeBannerSlides[currentSlide];
 
   return (
-    <div className="relative h-[600px] w-[100vw] overflow-hidden bg-black shadow-md">
+    <div className="relative h-[700px] w-[100vw] overflow-hidden bg-gradient-to-b from-gray-900 to-gray-900">
       {currentSlideData?.image && (
         <div className="absolute inset-0 ">
           <Image
@@ -39,22 +39,22 @@ export const Banner: React.FC = () => {
       <div className="relative h-full flex items-center justify-center text-start">
         <div className="max-w-7xl flex flex-col justify-start">
           {currentSlideData?.subtitleKey && (
-            <span className="text-yellow-500 text-2xl font-semibold mb-2 block">
+            <span className="text-yellow-500 text-xl font-semibold mb-2 block">
               {t(currentSlideData.subtitleKey)}
             </span>
           )}
           {currentSlideData?.titleKey && (
-            <h2 className="text-green-500 text-5xl font-bold mb-4">
+            <h2 className="text-green-500 text-7xl font-bold mb-4">
               {t(currentSlideData.titleKey)}
             </h2>
           )}
           {currentSlideData?.descriptionKey && (
-            <p className="text-gray-100 text-lg mb-6">
+            <p className="text-gray-100 text-2xl mb-6">
               {t(currentSlideData.descriptionKey)}
             </p>
           )}
           {currentSlideData?.buttonTextKey && (
-            <button className="inline-flex items-center bg-yellow-500 text-gray-900 px-5 py-2 rounded-md font-semibold hover:bg-yellow-400 transition-colors w-fit">
+            <button className="inline-flex items-center bg-yellow-500 text-gray-900 text-lg px-5 py-2 rounded-md font-semibold hover:bg-yellow-400 transition-colors w-fit">
               {t(currentSlideData.buttonTextKey)}
               <ArrowRight className="ml-2 h-5 w-5" />
             </button>

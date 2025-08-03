@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { workers, Worker } from "@/app/utils/fakes/workersFakes";
 import { Badge } from "./badge";
-import Button from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
 import SpecialistModal from "./SpecialistModal";
 
@@ -20,7 +20,6 @@ const SPECIALIST_TYPES = [
 ];
 
 const opencageApi = process.env.NEXT_PUBLIC_OPENCAGE_API_KEY;
-console.log("OPENCAGE_API_KEY:", opencageApi);
 
 function getDistance(lat1: number, lng1: number, lat2: number, lng2: number) {
   // Haversine formula
@@ -129,17 +128,13 @@ const SpecialistLocator: React.FC = () => {
     <div className="bg-white p-4 rounded-lg">
       <div className="flex flex-col sm:flex-row gap-3 mb-4 items-center">
         <Button
-          text="📍 Locate Me"
-          texSize="text-base"
-          hoverBg="hover:bg-amber-600"
-          borderCol="border-amber-500"
-          bgCol="bg-amber-500"
-          textCol="text-white"
-          border="border"
-          padding="px-4 py-2"
-          round="rounded"
-          handleButton={handleLocate}
-        />
+        variant="outline"
+        size="default"
+        onClick={() => handleLocate()}
+        className="text-sm hover:bg-gray-200 bg-white text-black"
+      > 
+        Locate Me
+      </Button>
         <select
           className="border border-amber-300 bg-white text-amber-900 rounded px-3 py-2 text-sm focus:border-amber-500"
           value={selectedType}

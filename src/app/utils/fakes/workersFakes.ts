@@ -35,7 +35,7 @@ export const workers: Worker[] = [
       lng: 30.0619,
       city: "Kigali",
       country: "Rwanda",
-      area: "Kicukiro District",
+      area: "Kicukiro",
     },
   },
   {

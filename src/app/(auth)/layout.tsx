@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="bg-black">
+    <main className="">
       <div className="flex flex-col justify-start">{children}</div>
     </main>
   );
