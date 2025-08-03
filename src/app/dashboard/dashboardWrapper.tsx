@@ -2,13 +2,11 @@
 
 import Navbar from "../dashboard/(components)/Navbar";
 import SideBar from "../dashboard/(components)/SideBar";
-import StoreProvider, { useAppSelector } from "../redux";
+import { useGlobalStore } from "../../store";
 import { ThemeProvider } from "../../components/ui/theme-provider";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
-  const isSidebarCollapsed = useAppSelector(
-    (state) => state.global.isSidebarCollapsed
-  );
+  const isSidebarCollapsed = useGlobalStore((state) => state.isSidebarCollapsed);
 
   return (
       <div className="flex w-full min-h-screen bg-background text-foreground">
@@ -28,9 +26,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-     <StoreProvider>
         <DashboardLayout>{children}</DashboardLayout>
-     </StoreProvider>
     </ThemeProvider>
   );
 };

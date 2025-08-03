@@ -368,5 +368,32 @@ export const dashboardFakes = {
   // Add more as needed for other dashboard sections
   footer: {
     copyright: "dash.footer.copyright"
-  }
+  },
+  serviceBanner: {
+    brand: "serviceBanner.brand",
+    heroTitle: "serviceBanner.heroTitle",
+    heroSubtitle: "serviceBanner.heroSubtitle",
+    locationPlaceholder: "serviceBanner.locationPlaceholder",
+    findServices: "serviceBanner.findServices",
+    customRequest: "serviceBanner.customRequest",
+    howItWorksTitle: "serviceBanner.howItWorksTitle",
+    step1Title: "serviceBanner.step1Title",
+    step1Desc: "serviceBanner.step1Desc",
+    step2Title: "serviceBanner.step2Title",
+    step2Desc: "serviceBanner.step2Desc",
+    step3Title: "serviceBanner.step3Title",
+    step3Desc: "serviceBanner.step3Desc",
+  },
+  serviceTrustSecurity: {
+    whyChoose: "serviceTrustSecurity.whyChoose",
+    whyChooseSubtitle: "serviceTrustSecurity.whyChooseSubtitle",
+    verifiedProfessionalsTitle: "serviceTrustSecurity.verifiedProfessionalsTitle",
+    verifiedProfessionalsDesc: "serviceTrustSecurity.verifiedProfessionalsDesc",
+    qualityGuaranteedTitle: "serviceTrustSecurity.qualityGuaranteedTitle",
+    qualityGuaranteedDesc: "serviceTrustSecurity.qualityGuaranteedDesc",
+    fastMatchingTitle: "serviceTrustSecurity.fastMatchingTitle",
+    fastMatchingDesc: "serviceTrustSecurity.fastMatchingDesc",
+    awardWinnersTitle: "serviceTrustSecurity.awardWinnersTitle",
+    awardWinnersDesc: "serviceTrustSecurity.awardWinnersDesc",
+  },
 };

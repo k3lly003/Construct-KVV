@@ -1,11 +1,27 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ChevronDown, ChevronUp, ShoppingCart, Menu, X } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  ShoppingCart,
+  Menu,
+  X,
+  BriefcaseBusiness,
+} from "lucide-react";
 import Link from "next/link";
 import FlagToggle from "@/app/(components)/Navbar/ToggleFlag";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetClose,
+} from "@/components/ui/sheet";
 import Profile from "@/app/(components)/Navbar/Profile";
 import { useUserStore } from "@/store/userStore";
 import CustomerProfile from "@/app/(components)/Navbar/CustomerProfile";
@@ -24,15 +40,38 @@ function useIsClient() {
   return isClient;
 }
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkIsMobile();
+    window.addEventListener("resize", checkIsMobile);
+
+    return () => window.removeEventListener("resize", checkIsMobile);
+  }, []);
+
+  return isMobile;
+}
+
 const Navbar: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [activeSubSheet, setActiveSubSheet] = useState<{
+    name: string;
+    subItems: { name: string; href: string }[];
+  } | null>(null);
   const [localUserData, setLocalUserData] = useState<unknown>(null);
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mobileFeaturesOpen, setMobileFeaturesOpen] = useState(false);
-  const { t, ready } = useTranslation();
+  const [mobileExploreServicesOpen, setMobileExploreServicesOpen] =
+    useState(false);
+  const { t } = useTranslation();
   const { getCartCount } = useCartStore();
   const isClient = useIsClient();
+  const isMobile = useIsMobile();
   const router = useRouter();
 
   // Get user data from Zustand store
@@ -84,7 +123,7 @@ const Navbar: React.FC = () => {
       return acc;
     }, {} as Record<string, typeof categories>);
 
-  const featuresSections = parentCategories.map((parent) => ({
+  const ExploreServicesSections = parentCategories.map((parent) => ({
     title: parent.name,
     items: [
       {
@@ -119,9 +158,9 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-white border-b border-gray-200 px-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
-        <div className="flex justify-between h-16 items-center">
+    <nav className=" border-b px-10">
+      <div className="max-w-7xl mx-auto flex-flex-col gap-3 px-4 sm:px-6 lg:px-10">
+        <div className="flex justify-between py-2 items-center">
           <div className="flex items-center">
             {/* Logo */}
             <Link href="/">
@@ -137,111 +176,6 @@ const Navbar: React.FC = () => {
                 </span>
               </div>
             </Link>
-            {/* Main navigation (desktop only) */}
-            <div className="hidden md:ml-6 md:flex md:space-x-8">
-              <div className="relative nav-menu">
-                <button
-                  className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
-                  onClick={(e) => handleMenuClick("Features", e)}
-                >
-                  {t("navigation.features", "Features")}
-                  {activeMenu === "Features" ? (
-                    <ChevronUp className="ml-1 h-4 w-4 transition-transform duration-200" />
-                  ) : (
-                    <ChevronDown className="ml-1 h-4 w-4 transition-transform duration-200" />
-                  )}
-                </button>
-                <AnimatePresence>
-                  {activeMenu === "Features" && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2, ease: "easeInOut" }}
-                      className="absolute left-0 z-10 mt-2 w-screen max-w-[700px] bg-white shadow-2xl"
-                    >
-                      <div className="grid grid-cols-3 gap-8 p-8">
-                        {featuresSections.map((section) => (
-                          <div key={section.title}>
-                            <Link
-                              className="text-sm font-semibold text-gray-900 w-full py-2 hover:text-amber-500"
-                              href={`/${section.title}`}
-                            >
-                              {section.title}
-                            </Link>
-                            <ul className="mt-2 space-y-1">
-                              {section.items.map((item) => (
-                                <li key={item.name}>
-                                  {item.subItems &&
-                                    item.subItems.length > 0 && (
-                                      <ul className="mt-1 space-y-1">
-                                        {item.subItems.map((sub) => (
-                                          <li key={sub.name}>
-                                            <Link
-                                              href={sub.href || "#"}
-                                              className="block p-2 text-sm text-gray-600 hover:bg-gray-100"
-                                            >
-                                              {sub.name}
-                                            </Link>
-                                          </li>
-                                        ))}
-                                      </ul>
-                                    )}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-              {/* Build House link (desktop) */}
-              <button
-                type="button"
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300 bg-transparent"
-                onClick={() => {
-                  if (!localUserData) {
-                    router.push("/signin");
-                  } else {
-                    router.push("/build-house");
-                  }
-                }}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                {t("navigation.buildHouse")}
-              </button>
-              {/* Projects link (desktop) */}
-              <button
-                type="button"
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300 bg-transparent"
-                onClick={() => {
-                  if (!localUserData) {
-                    router.push("/signin");
-                  } else {
-                    router.push("/projects");
-                  }
-                }}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                {t("navigation.projects")}
-              </button>
-              <Link
-                href="/shops"
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
-              >
-                {t("navigation.shops")}
-              </Link>
-            </div>
           </div>
 
           {/* Right side buttons (desktop only) and hamburger (mobile only) */}
@@ -249,10 +183,11 @@ const Navbar: React.FC = () => {
             {/* Desktop actions */}
             <div className="hidden md:flex items-center space-x-5">
               <Link
-                href="/help"
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300"
+                href="/signup"
+                className="inline-flex items-center px-1 pt-1 text-md font-medium text-gray-900 hover:text-amber-500"
               >
-                {t("navigation.help")}
+                {t("navigation.join-as-a-pro")}
+                <BriefcaseBusiness className="mx-2 w-5 h-5" />
               </Link>
               {/* Notification Icon (client only) */}
               {isClient && (
@@ -264,7 +199,7 @@ const Navbar: React.FC = () => {
               )}
               <Link
                 href="/cart"
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-transparent hover:border-gray-300 relative"
+                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:border-gray-300 relative"
               >
                 <ShoppingCart />
                 {isClient && getCartCount() > 0 && (
@@ -321,7 +256,7 @@ const Navbar: React.FC = () => {
                   animate={{ x: 0 }}
                   exit={{ x: "100%" }}
                   transition={{ duration: 0.25 }}
-                  className="w-72 h-full bg-white shadow-xl p-6 flex flex-col gap-6 relative"
+                  className="w-72 h-full  shadow-xl p-6 flex flex-col gap-6 relative"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <button
@@ -337,35 +272,40 @@ const Navbar: React.FC = () => {
                       <Image
                         src="/kvv-logo.png"
                         alt="KVV Pro"
-                        width={36}
-                        height={36}
+                        width={100}
+                        height={100}
+                        className="text-xl"
                       />
-                      <span className="ml-2 text-lg text-amber-500 font-semibold">
+                      <span className="ml-2 text-xl text-amber-500 font-semibold">
                         kvv
                       </span>
                     </div>
                   </Link>
-                  {/* Features collapsible for mobile */}
+                  {/* Explore Service collapsible for mobile */}
                   <div className="border-b">
                     <button
                       className="w-full flex items-center justify-between py-2 text-gray-900 hover:text-amber-500 focus:outline-none"
-                      onClick={() => setMobileFeaturesOpen((prev) => !prev)}
-                      aria-expanded={mobileFeaturesOpen}
-                      aria-controls="mobile-features-menu"
+                      onClick={() =>
+                        setMobileExploreServicesOpen((prev) => !prev)
+                      }
+                      aria-expanded={mobileExploreServicesOpen}
+                      aria-controls="mobile-explore-service-menu"
                     >
-                      <span>{t("navigation.features", "Features")}</span>
-                      {mobileFeaturesOpen ? (
+                      <span>
+                        {t("navigation.Explore-Services", "Explore Services")}
+                      </span>
+                      {mobileExploreServicesOpen ? (
                         <ChevronUp className="h-4 w-4 ml-2" />
                       ) : (
                         <ChevronDown className="h-4 w-4 ml-2" />
                       )}
                     </button>
-                    {mobileFeaturesOpen && (
+                    {mobileExploreServicesOpen && (
                       <div
-                        id="mobile-features-menu"
+                        id="mobile-explore-service-menu"
                         className="pl-4 py-2 space-y-2"
                       >
-                        {featuresSections.map((section) => (
+                        {ExploreServicesSections.map((section) => (
                           <div key={section.title}>
                             <Link
                               href={`/${section.title}`}
@@ -438,6 +378,13 @@ const Navbar: React.FC = () => {
                     Shops
                   </Link>
                   <Link
+                    href="/pricing"
+                    className="py-2 text-gray-900 hover:text-amber-500 border-b"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Pricings
+                  </Link>
+                  <Link
                     href="/help"
                     className="py-2 text-gray-900 hover:text-amber-500 border-b"
                     onClick={() => setMobileMenuOpen(false)}
@@ -498,6 +445,208 @@ const Navbar: React.FC = () => {
               </motion.div>
             )}
           </AnimatePresence>
+        </div>
+        <div>
+          {/* Main navigation (desktop only) */}
+          <div className="hidden md:ml-6 md:flex md:space-x-8">
+            <div className="relative nav-menu">
+              <button
+                className="inline-flex items-center cursor-pointer py-3 text-sm font-medium text-gray-900 hover:text-amber-500"
+                onClick={(e) => handleMenuClick("Explore Services", e)}
+              >
+                {t("navigation.explore-services", "Explore Services")}
+                {activeMenu === "Explore Services" ? (
+                  <ChevronUp className="ml-1 h-4 w-4 transition-transform duration-200" />
+                ) : (
+                  <ChevronDown className="ml-1 h-4 w-4 transition-transform duration-200" />
+                )}
+              </button>
+              <AnimatePresence>
+                {activeMenu === "Explore Services" && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2, ease: "easeInOut" }}
+                    className="absolute left-0 z-10 mt-2 w-screen max-w-[800px] bg-white border border-gray-200 rounded-lg shadow-lg"
+                  >
+                    <div className="p-6">
+                      <div className="grid grid-cols-3 gap-6">
+                        {ExploreServicesSections.map((section, index) => (
+                          <div
+                            key={section.title}
+                            className={`${
+                              index !== ExploreServicesSections.length - 1
+                                ? "border-r border-gray-100 pr-6"
+                                : ""
+                            }`}
+                          >
+                            <div className="mb-4">
+                              <Link
+                                className="text-sm font-semibold text-gray-900 hover:text-amber-500 transition-colors duration-200"
+                                href={`/${section.title}`}
+                                onClick={() => setActiveMenu(null)}
+                              >
+                                {section.title}
+                              </Link>
+                            </div>
+                            <ul className="mt-2 space-y-1">
+                              {section.items.map((item) => (
+                                <li key={item.name}>
+                                  {item.subItems && item.subItems.length > 0 ? (
+                                    <>
+                                      {/* Mobile: Show button with sheet */}
+                                      {isMobile ? (
+                                        <>
+                                          <button
+                                            className="block p-2 text-sm text-gray-600 hover:bg-gray-100 w-full text-left"
+                                            onClick={() =>
+                                              setActiveSubSheet(item)
+                                            }
+                                          >
+                                            {item.name}{" "}
+                                            <span className="ml-2 text-xs text-gray-400">
+                                              (see more)
+                                            </span>
+                                          </button>
+                                          <Sheet
+                                            open={Boolean(
+                                              activeSubSheet &&
+                                                activeSubSheet.name ===
+                                                  item.name
+                                            )}
+                                            onOpenChange={(open) => {
+                                              if (!open)
+                                                setActiveSubSheet(null);
+                                            }}
+                                          >
+                                            <SheetContent
+                                              side="right"
+                                              className="w-[360px]"
+                                            >
+                                              <SheetHeader>
+                                                <SheetTitle>
+                                                  {item.name}
+                                                </SheetTitle>
+                                                <SheetDescription>
+                                                  Select an option
+                                                </SheetDescription>
+                                              </SheetHeader>
+                                              <ul className="my-4 space-y-2">
+                                                {item.subItems.map((sub) => (
+                                                  <li key={sub.name}>
+                                                    <Link
+                                                      href={sub.href || "#"}
+                                                      className="block py-2 px-3 rounded text-gray-700 hover:bg-amber-100"
+                                                      onClick={() => {
+                                                        setActiveSubSheet(null);
+                                                        setActiveMenu(null);
+                                                      }}
+                                                    >
+                                                      {sub.name}
+                                                    </Link>
+                                                  </li>
+                                                ))}
+                                              </ul>
+                                              <SheetFooter>
+                                                <SheetClose asChild>
+                                                  <button className="text-amber-600 hover:underline">
+                                                    Close
+                                                  </button>
+                                                </SheetClose>
+                                              </SheetFooter>
+                                            </SheetContent>
+                                          </Sheet>
+                                        </>
+                                      ) : (
+                                        /* Desktop: Show subItems directly */
+                                        <div className="space-y-1">
+                                          {item.subItems.map((sub) => (
+                                            <Link
+                                              key={sub.name}
+                                              href={sub.href || "#"}
+                                              className="block px-3 py-2 text-sm text-gray-600 hover:text-amber-500 hover:bg-amber-50 rounded-md transition-all duration-200"
+                                              onClick={() =>
+                                                setActiveMenu(null)
+                                              }
+                                            >
+                                              {sub.name}
+                                            </Link>
+                                          ))}
+                                        </div>
+                                      )}
+                                    </>
+                                  ) : (
+                                    <Link
+                                      href={item.href || "#"}
+                                      className="block p-2 text-sm text-gray-600 hover:bg-gray-100"
+                                      onClick={() => setActiveMenu(null)}
+                                    >
+                                      {item.name}
+                                    </Link>
+                                  )}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            {/* Build House link (desktop) */}
+            <button
+              type="button"
+              className="inline-flex items-center px-1 pt-1 mb-2 hover:text-amber-500 text-sm font-medium text-gray-900"
+              onClick={() => {
+                if (!localUserData) {
+                  router.push("/signin");
+                } else {
+                  router.push("/build-house");
+                }
+              }}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              {t("navigation.buildHouse")}
+            </button>
+            {/* Projects link (desktop) */}
+            <button
+              type="button"
+              className="inline-flex items-center px-1 pt-1 mb-2 hover:text-amber-500 text-sm font-medium text-gray-900"
+              onClick={() => {
+                if (!localUserData) {
+                  router.push("/signin");
+                } else {
+                  router.push("/projects");
+                }
+              }}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              {t("navigation.projects")}
+            </button>
+            <Link
+              href="/shops"
+              className="inline-flex items-center px-1 pt-1 mb-2 text-sm font-medium text-gray-900 hover:text-amber-500"
+            >
+              {t("navigation.shops")}
+            </Link>
+            <Link
+              href="/pricing"
+              className="inline-flex items-center px-1 pt-1 mb-2 text-sm font-medium text-gray-900 hover:text-amber-500"
+            >
+              {t("navigation.pricing")}
+            </Link>
+          </div>
         </div>
       </div>
       {/* Notification Modal (client only) */}

@@ -15,7 +15,6 @@ export const serviceService = {
           'Authorization': `Bearer ${authToken}`
         },
       });
-      console.log("CREATED-SERVICE-DATA",response.data);
       return response.data as Service;
     } catch (error) {
       console.error('Error creating service:', error);
@@ -25,8 +24,7 @@ export const serviceService = {
 
   async getServices(): Promise<Service[]> {
     try {
-      const response = await axios.get(`${API_URL}/api/v1/services`);
-      // Handle both direct array response and nested data response
+      const response = await axios.get(`${API_URL}/api/v1/services?page=1&limit=10&active=true`);
       const data: unknown = response.data;
       if (Array.isArray(data)) {
         return data as Service[];

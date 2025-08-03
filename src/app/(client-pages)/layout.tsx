@@ -20,7 +20,7 @@ export default function ClientLayout({
       <UserStoreInitializer />
       <Suspense>
         <ProgressBarProvider>
-          <div className="flex flex-col min-h-screen">
+          <div className="flex flex-col min-h-screen bg-gradient-to-b from-slate-50">
             <Navbar />
             <main className="flex-grow">{children}</main>
             <Footer />
