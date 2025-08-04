@@ -33,6 +33,7 @@ import { useNotificationStore } from "@/store/notificationStore";
 import { useTranslation } from "react-i18next";
 import { useCartStore } from "@/store/cartStore";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 function useIsClient() {
   const [isClient, setIsClient] = useState(false);
@@ -183,7 +184,7 @@ const Navbar: React.FC = () => {
             {/* Desktop actions */}
             <div className="hidden md:flex items-center space-x-5">
               <Link
-                href="/signup"
+                href="/join-as-pro"
                 className="inline-flex items-center px-1 pt-1 text-md font-medium text-gray-900 hover:text-amber-500"
               >
                 {t("navigation.join-as-a-pro")}
@@ -347,6 +348,7 @@ const Navbar: React.FC = () => {
                     onClick={() => {
                       setMobileMenuOpen(false);
                       if (!localUserData) {
+                        toast.error("Please sign in first to access build house");
                         router.push("/signin");
                       } else {
                         router.push("/build-house");
@@ -362,7 +364,10 @@ const Navbar: React.FC = () => {
                     onClick={() => {
                       setMobileMenuOpen(false);
                       if (!localUserData) {
-                        router.push("/signin");
+                        toast.error(
+                          "Please sign in first to access projects"
+                        );
+                        // router.push("/signin");
                       } else {
                         router.push("/projects");
                       }
@@ -602,6 +607,7 @@ const Navbar: React.FC = () => {
               className="inline-flex items-center px-1 pt-1 mb-2 hover:text-amber-500 text-sm font-medium text-gray-900"
               onClick={() => {
                 if (!localUserData) {
+                  toast.error("Please sign in first to access build house");
                   router.push("/signin");
                 } else {
                   router.push("/build-house");
@@ -621,6 +627,7 @@ const Navbar: React.FC = () => {
               className="inline-flex items-center px-1 pt-1 mb-2 hover:text-amber-500 text-sm font-medium text-gray-900"
               onClick={() => {
                 if (!localUserData) {
+                  toast.error("Please sign in first to access projects");
                   router.push("/signin");
                 } else {
                   router.push("/projects");

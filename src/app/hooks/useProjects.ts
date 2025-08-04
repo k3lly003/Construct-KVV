@@ -44,11 +44,11 @@ export const useProjects = () => {
   console.log("🏠 useProjects hook initialized");
 
   const {
-    data: projects = [],
+    data: project = [],
     isLoading,
     error,
   } = useQuery<Project[]>({
-    queryKey: ["projects"],
+    queryKey: ["project"],
     queryFn: projectService.getAllProjects,
     retry: 2,
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -59,7 +59,7 @@ export const useProjects = () => {
       return projectService.deleteProject(id);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
+      queryClient.invalidateQueries({ queryKey: ["project"] });
       toast.success("Project deleted successfully");
     },
     onError: (error: Error) => {
@@ -101,11 +101,11 @@ export const useProjects = () => {
     [updateProjectMutation]
   );
 
-  console.log("📊 Projects data:", projects);
+  console.log("📊 Projects data:", project);
   console.log("🔄 Loading state:", isLoading);
 
   return {
-    projects,
+    project,
     isLoading:
       isLoading ||
       deleteProjectMutation.isPending ||

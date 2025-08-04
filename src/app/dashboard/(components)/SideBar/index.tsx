@@ -15,7 +15,10 @@ import {
   Package,
   User, // New icon for Profile
   Layers,
-  DollarSign, // New icon for Sales Report
+  DollarSign,
+  CalendarDays,
+  MailPlus,
+  HandHelping, // New icon for Sales Report
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -176,6 +179,78 @@ const SideBar = () => {
                 href="/dashboard/seller-requests"
                 icon={Layers}
                 label={t('dashboard.sellerRequests')}
+                isCollapsed={isSidebarCollapsed}
+              />
+            </>
+          )}
+
+          {userRole === "TECHNICIAN" && (
+            <>
+              <SidebarLink
+                href="/dashboard/overview"
+                icon={LayoutDashboard}
+                label={t('dashboard.overviews')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+
+                href="/dashboard/service-requests"
+                icon={HandHelping}
+                label={t('navigation.serviceRequests')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/work-schedule"
+                icon={CalendarDays}
+                label={t('navigation.projects')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/profile"
+                icon={User}
+                label={t('navigation.profile')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/work-reviews"
+                icon={MailPlus}
+                label={t('dashboard.workReviews', 'Work Reviews')}
+                isCollapsed={isSidebarCollapsed}
+              />
+            </>
+          )}
+
+          {userRole === "ARCHITECT" && (
+            <>
+              <SidebarLink
+                href="/dashboard/overview"
+                icon={LayoutDashboard}
+                label={t('dashboard.overviews')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+
+                href="/dashboard/design-requests"
+                icon={HandHelping}
+                label={t('navigation.serviceRequests')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/my-work"
+                icon={CalendarDays}
+                label={t('navigation.projects')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/profile"
+                icon={User}
+                label={t('navigation.profile')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/design-reviews"
+                icon={MailPlus}
+                label={t('dashboard.workReviews', 'Work Reviews')}
                 isCollapsed={isSidebarCollapsed}
               />
             </>

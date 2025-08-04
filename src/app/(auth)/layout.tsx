@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <main className="">
-      <div className="flex flex-col justify-start">{children}</div>
+      <div className="flex flex-col justify-start bg-gradient-to-br from-slate-50 to-slate-100">{children}</div>
     </main>
   );
 }

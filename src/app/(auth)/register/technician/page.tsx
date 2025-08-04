@@ -3,8 +3,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  supplierRegistrationSchema,
-  type SupplierRegistration,
+  constructorRegistrationSchema,
+  type ConstructorRegistration,
 } from "@/app/libs/validations";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,10 +20,10 @@ import { FileUpload } from "@/components/file-upload";
 import { useState } from "react";
 import { CheckCircle, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import SupplierHero from "@/components/features/auth/SupplierHero";
+import SpecialistHero from "@/components/features/auth/SpecialistHero"; // Ensure this import is correct
 import Link from "next/link";
 
-export default function SupplierRegistration() {
+export default function ConstructorRegistration() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const router = useRouter();
 
@@ -32,14 +32,14 @@ export default function SupplierRegistration() {
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<SupplierRegistration>({
-    resolver: zodResolver(supplierRegistrationSchema),
+  } = useForm<ConstructorRegistration>({
+    resolver: zodResolver(constructorRegistrationSchema),
   });
 
-  const onSubmit = async (data: SupplierRegistration) => {
+  const onSubmit = async (data: ConstructorRegistration) => {
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log("Supplier registration data:", data);
+    console.log("Constructor registration data:", data);
     setIsSubmitted(true);
   };
 
@@ -53,7 +53,7 @@ export default function SupplierRegistration() {
               Registration Complete!
             </h2>
             <p className="text-slate-600 mb-6">
-              Thank you for registering as a Supplier. We&apos;ll review your
+              Thank you for registering as a Constructor. We&apos;ll review your
               application and get back to you soon.
             </p>
             <Button onClick={() => router.push("/")} className="w-full">
@@ -74,29 +74,29 @@ export default function SupplierRegistration() {
             Back
           </Link>
           <h1 className="text-3xl font-bold text-slate-900">
-            Supplier Registration
+            Join as Specialist
           </h1>
           <p className="text-slate-600 mt-2">
-            Join our network of construction suppliers
+            Share your expertise and provide specialized consulting services
           </p>
         </div>
 
         <Card className="shadow-xl">
           <CardHeader>
-            <CardTitle>Business Information</CardTitle>
+            <CardTitle>Personal & Business Information</CardTitle>
             <CardDescription>
-              Please provide your business details and service offerings
+              Please provide your details to complete the registration
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Contact Name *</Label>
+                  <Label htmlFor="name">Full Name *</Label>
                   <Input
                     id="name"
                     {...register("name")}
-                    placeholder="Michael Johnson"
+                    placeholder="John Doe"
                   />
                   {errors.name && (
                     <p className="text-sm text-destructive">
@@ -110,7 +110,7 @@ export default function SupplierRegistration() {
                   <Input
                     id="company"
                     {...register("company")}
-                    placeholder="Johnson Building Supplies"
+                    placeholder="ABC Construction Co."
                   />
                   {errors.company && (
                     <p className="text-sm text-destructive">
@@ -127,7 +127,7 @@ export default function SupplierRegistration() {
                     id="email"
                     type="email"
                     {...register("email")}
-                    placeholder="michael@example.com"
+                    placeholder="john@example.com"
                   />
                   {errors.email && (
                     <p className="text-sm text-destructive">
@@ -141,7 +141,7 @@ export default function SupplierRegistration() {
                   <Input
                     id="phone"
                     {...register("phone")}
-                    placeholder="+1 (555) 456-7890"
+                    placeholder="+1 (555) 123-4567"
                   />
                   {errors.phone && (
                     <p className="text-sm text-destructive">
@@ -151,49 +151,104 @@ export default function SupplierRegistration() {
                 </div>
               </div>
 
+              <CardTitle>Location Information</CardTitle>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="location">Province *</Label>
+                  <Input
+                    id="location"
+                    {...register("location")}
+                    placeholder="City, State"
+                  />
+                  {errors.location && (
+                    <p className="text-sm text-destructive">
+                      {errors.location.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="district">District *</Label>
+                  <Input
+                    id="district"
+                    {...register("district")}
+                    placeholder="District"
+                  />
+                  {errors.district && (
+                    <p className="text-sm text-destructive">
+                      {errors.district.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="cell">Cell *</Label>
+                  <Input id="cell" {...register("cell")} placeholder="Cell" />
+                  {errors.cell && (
+                    <p className="text-sm text-destructive">
+                      {errors.cell.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
               <div className="space-y-2">
-                <Label htmlFor="deliveryRadius">
-                  Delivery Radius (miles) *
-                </Label>
+                <Label htmlFor="yearsOfExperience">Years of Experience *</Label>
                 <Input
-                  id="deliveryRadius"
+                  id="yearsOfExperience"
                   type="number"
-                  {...register("deliveryRadius", { valueAsNumber: true })}
-                  placeholder="50"
+                  {...register("yearsOfExperience", { valueAsNumber: true })}
+                  placeholder="10"
                 />
-                {errors.deliveryRadius && (
+                {errors.yearsOfExperience && (
                   <p className="text-sm text-destructive">
-                    {errors.deliveryRadius.message}
+                    {errors.yearsOfExperience.message}
                   </p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="location">Location *</Label>
-                <Input
-                  id="location"
-                  {...register("location")}
-                  placeholder="Describe your location ..."
-                />
-                {errors.location && (
+                <Label htmlFor="specializations">Specializations *</Label>
+                <select
+                  id="specializations"
+                  {...register("specializations")}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <option value="">Select your specialization</option>
+                  <option value="electrical">Electrical Systems</option>
+                  <option value="plumbing">Plumbing & HVAC</option>
+                  <option value="structural">Structural Engineering</option>
+                  <option value="mechanical">Mechanical Systems</option>
+                  <option value="fire_safety">Fire Safety & Security</option>
+                  <option value="environmental">
+                    Environmental Consulting
+                  </option>
+                  <option value="acoustics">Acoustics & Sound</option>
+                  <option value="lighting">Lighting Design</option>
+                  <option value="sustainability">
+                    Sustainability & Green Building
+                  </option>
+                  <option value="other">Other Specialization</option>
+                </select>
+                {errors.specializations && (
                   <p className="text-sm text-destructive">
-                    {errors.location.message}
+                    {errors.specializations.message}
                   </p>
                 )}
               </div>
-
-              <FileUpload
-                label="Business License"
-                description="Upload your business license and registration documents"
-                onFilesChange={(files) => setValue("businessLicense", files)}
-                error={errors.businessLicense?.message}
-              />
 
               <FileUpload
                 label="Certifications"
-                description="Upload quality certifications and supplier credentials"
+                description="Upload your professional certifications (PDF, JPG, PNG)"
                 onFilesChange={(files) => setValue("certifications", files)}
                 error={errors.certifications?.message}
+              />
+
+              <FileUpload
+                label="Licenses"
+                description="Upload your construction licenses and permits"
+                onFilesChange={(files) => setValue("licenses", files)}
+                error={errors.licenses?.message}
               />
 
               <Button type="submit" className="w-full" disabled={isSubmitting}>
@@ -203,8 +258,8 @@ export default function SupplierRegistration() {
           </CardContent>
         </Card>
       </div>
-      <div className="w-[45%]">
-        <SupplierHero />
+      <div className="w-[45%] border">
+        <SpecialistHero />
       </div>
     </div>
   );

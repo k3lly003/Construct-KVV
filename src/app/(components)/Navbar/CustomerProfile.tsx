@@ -20,7 +20,7 @@ const CustomerProfile = () => {
   const { profile, isLoading, error } = useCustomerProfile();
 
   if (isLoading) {
-    return <div className="p-4 text-center">Loading profile...</div>;
+    return <div className="p-4 text-center">...</div>;
   }
   if (error || !profile) {
     return <div className="p-4 text-center text-red-500">Unable to load profile.</div>;

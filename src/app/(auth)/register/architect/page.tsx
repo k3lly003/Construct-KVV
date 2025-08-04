@@ -3,8 +3,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  supplierRegistrationSchema,
-  type SupplierRegistration,
+  constructorRegistrationSchema,
+  type ConstructorRegistration,
 } from "@/app/libs/validations";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,27 +19,25 @@ import { Label } from "@/components/ui/label";
 import { FileUpload } from "@/components/file-upload";
 import { useState } from "react";
 import { CheckCircle, ArrowLeft } from "lucide-react";
-import { useRouter } from "next/navigation";
-import SupplierHero from "@/components/features/auth/SupplierHero";
 import Link from "next/link";
+import ArchitectHero from "@/components/features/auth/architectHero";
 
-export default function SupplierRegistration() {
+export default function ConstructorRegistration() {
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const router = useRouter();
 
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<SupplierRegistration>({
-    resolver: zodResolver(supplierRegistrationSchema),
+  } = useForm<ConstructorRegistration>({
+    resolver: zodResolver(constructorRegistrationSchema),
   });
 
-  const onSubmit = async (data: SupplierRegistration) => {
+  const onSubmit = async (data: ConstructorRegistration) => {
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log("Supplier registration data:", data);
+    console.log("Constructor registration data:", data);
     setIsSubmitted(true);
   };
 
@@ -53,12 +51,13 @@ export default function SupplierRegistration() {
               Registration Complete!
             </h2>
             <p className="text-slate-600 mb-6">
-              Thank you for registering as a Supplier. We&apos;ll review your
+              Thank you for registering as a Constructor. We&apos;ll review your
               application and get back to you soon.
             </p>
-            <Button onClick={() => router.push("/")} className="w-full">
-              Return Home
-            </Button>
+            <Link href="/join-as-pro" className="mb-4 flex items-center w-15">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back
+            </Link>
           </CardContent>
         </Card>
       </div>
@@ -74,29 +73,30 @@ export default function SupplierRegistration() {
             Back
           </Link>
           <h1 className="text-3xl font-bold text-slate-900">
-            Supplier Registration
+            Join as Architect
           </h1>
           <p className="text-slate-600 mt-2">
-            Join our network of construction suppliers
+            Create your professional profile and start connecting with
+            construction projects
           </p>
         </div>
 
         <Card className="shadow-xl">
           <CardHeader>
-            <CardTitle>Business Information</CardTitle>
+            <CardTitle>Personal & Business Information</CardTitle>
             <CardDescription>
-              Please provide your business details and service offerings
+              Please provide your details to complete the registration
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Contact Name *</Label>
+                  <Label htmlFor="name">Full Name *</Label>
                   <Input
                     id="name"
                     {...register("name")}
-                    placeholder="Michael Johnson"
+                    placeholder="John Doe"
                   />
                   {errors.name && (
                     <p className="text-sm text-destructive">
@@ -110,7 +110,7 @@ export default function SupplierRegistration() {
                   <Input
                     id="company"
                     {...register("company")}
-                    placeholder="Johnson Building Supplies"
+                    placeholder="ABC Construction Co."
                   />
                   {errors.company && (
                     <p className="text-sm text-destructive">
@@ -127,7 +127,7 @@ export default function SupplierRegistration() {
                     id="email"
                     type="email"
                     {...register("email")}
-                    placeholder="michael@example.com"
+                    placeholder="john@example.com"
                   />
                   {errors.email && (
                     <p className="text-sm text-destructive">
@@ -141,7 +141,7 @@ export default function SupplierRegistration() {
                   <Input
                     id="phone"
                     {...register("phone")}
-                    placeholder="+1 (555) 456-7890"
+                    placeholder="+1 (555) 123-4567"
                   />
                   {errors.phone && (
                     <p className="text-sm text-destructive">
@@ -152,28 +152,11 @@ export default function SupplierRegistration() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="deliveryRadius">
-                  Delivery Radius (miles) *
-                </Label>
-                <Input
-                  id="deliveryRadius"
-                  type="number"
-                  {...register("deliveryRadius", { valueAsNumber: true })}
-                  placeholder="50"
-                />
-                {errors.deliveryRadius && (
-                  <p className="text-sm text-destructive">
-                    {errors.deliveryRadius.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-2">
                 <Label htmlFor="location">Location *</Label>
                 <Input
                   id="location"
                   {...register("location")}
-                  placeholder="Describe your location ..."
+                  placeholder="City, State"
                 />
                 {errors.location && (
                   <p className="text-sm text-destructive">
@@ -182,18 +165,64 @@ export default function SupplierRegistration() {
                 )}
               </div>
 
-              <FileUpload
-                label="Business License"
-                description="Upload your business license and registration documents"
-                onFilesChange={(files) => setValue("businessLicense", files)}
-                error={errors.businessLicense?.message}
-              />
+              <div className="space-y-2">
+                <Label htmlFor="yearsOfExperience">Years of Experience *</Label>
+                <Input
+                  id="yearsOfExperience"
+                  type="number"
+                  {...register("yearsOfExperience", { valueAsNumber: true })}
+                  placeholder="10"
+                />
+                {errors.yearsOfExperience && (
+                  <p className="text-sm text-destructive">
+                    {errors.yearsOfExperience.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="specializations">Specializations *</Label>
+                <select
+                  id="specializations"
+                  {...register("specializations")}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <option value="">Select your specialization</option>
+                  <option value="residential">Residential Architecture</option>
+                  <option value="commercial">Commercial Architecture</option>
+                  <option value="industrial">Industrial Architecture</option>
+                  <option value="interior">Interior Architecture</option>
+                  <option value="landscape">Landscape Architecture</option>
+                  <option value="urban">Urban Design & Planning</option>
+                  <option value="sustainable">
+                    Sustainable/Green Architecture
+                  </option>
+                  <option value="heritage">Heritage & Conservation</option>
+                  <option value="hospitality">Hospitality Architecture</option>
+                  <option value="healthcare">Healthcare Architecture</option>
+                  <option value="educational">Educational Facilities</option>
+                  <option value="mixed_use">Mixed-Use Development</option>
+                  <option value="other">Other Specialization</option>
+                </select>
+                {errors.specializations && (
+                  <p className="text-sm text-destructive">
+                    {errors.specializations.message}
+                  </p>
+                )}
+              </div>
 
               <FileUpload
                 label="Certifications"
-                description="Upload quality certifications and supplier credentials"
+                description="Upload your professional certifications (PDF, JPG, PNG)"
                 onFilesChange={(files) => setValue("certifications", files)}
                 error={errors.certifications?.message}
+              />
+
+              <FileUpload
+                label="Licenses"
+                description="Upload your construction licenses and permits"
+                onFilesChange={(files) => setValue("licenses", files)}
+                error={errors.licenses?.message}
               />
 
               <Button type="submit" className="w-full" disabled={isSubmitting}>
@@ -204,7 +233,7 @@ export default function SupplierRegistration() {
         </Card>
       </div>
       <div className="w-[45%]">
-        <SupplierHero />
+        <ArchitectHero />
       </div>
     </div>
   );
