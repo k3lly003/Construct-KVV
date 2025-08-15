@@ -11,7 +11,8 @@ import {
 } from 'lucide-react';
 import EditProfileDialog from "./EditProfileDialog";
 import Image from 'next/image';
-import { useCustomerRequest } from '@/app/hooks/useCustomerRequest';
+import Link from 'next/link';
+// import { useCustomerRequest } from '@/app/hooks/useCustomerRequest';
 
 interface CustomerProfileSheetProps {
   firstName: string;
@@ -27,7 +28,6 @@ export function CustomerProfileSheet({ firstName, lastName, email, phone, profil
   const [openEdit, setOpenEdit] = useState(false);
   const [openChangePassword, setOpenChangePassword] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [form, setForm] = useState({
     email: email || "",
     businessName: '',
@@ -35,7 +35,6 @@ export function CustomerProfileSheet({ firstName, lastName, email, phone, profil
     businessPhone: '',
     taxId: '',
   });
-  const { createSellerRequest, isLoading, error } = useCustomerRequest();
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
@@ -53,18 +52,6 @@ export function CustomerProfileSheet({ firstName, lastName, email, phone, profil
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setSuccess(false);
-    try {
-      await createSellerRequest(form);
-      setSuccess(true);
-      setForm({ email: '', businessName: '', businessAddress: '', businessPhone: '', taxId: '' });
-      setTimeout(() => setDialogOpen(false), 1500);
-    } catch (err) {
-      setSuccess(false);
-    }
-  };
 
   return (
     <>
@@ -147,101 +134,28 @@ export function CustomerProfileSheet({ firstName, lastName, email, phone, profil
           </div>
         </div>
 
-        {/* Become a Seller Card */}
+        {/* Become a Pro Card */}
         <div className="bg-gradient-to-r from-amber-700 to-amber-200 rounded-2xl p-6 text-white shadow-xl">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
               <Store className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="font-bold text-lg">Become a Seller</h3>
+              <h3 className="font-bold text-lg">Become a Proffessional</h3>
               <p className="text-white/80 text-sm">Start your business journey</p>
             </div>
           </div>
           <p className="text-white/90 text-sm mb-4">
-            Join thousands of successful sellers and start earning by selling your products on our platform.
+            Join thousands of successful Proffessional and start earning by selling your products and services on our platform.
           </p>
-          <button
-            onClick={() => setDialogOpen(true)}
+          <Link
             className="w-full bg-white text-orange-600 py-3 px-4 rounded-lg font-semibold hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+            href="/join-as-pro"
           >
-            request to become a seller
+            become a Proffessional
             <ArrowRight className="w-4 h-4" />
-          </button>
+          </Link>
         </div>
-        {dialogOpen && (
-          <>
-            {/* Overlay */}
-            {/* Sheet */}
-            <div className="fixed right-3 bottom-10 z-50 h-[50%] w-full max-w-md bg-gray-100 shadow-xl flex flex-col transition-transform duration-300 rounded-md">
-              <button
-                className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
-                onClick={() => setDialogOpen(false)}
-                disabled={isLoading}
-              >
-                ×
-              </button>
-              <h2 className="text-lg font-bold mb-4 p-6 pb-0">Request to Become a Seller</h2>
-              <form onSubmit={handleSubmit} className="flex-1 p-6 pt-2 space-y-4 overflow-y-auto">
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  value={form.email}
-                  onChange={handleChange}
-                  className="w-full border rounded px-3 py-2"
-                  required
-                  readOnly
-                />
-                <input
-                  type="text"
-                  name="businessName"
-                  placeholder="Business Name"
-                  value={form.businessName}
-                  onChange={handleChange}
-                  className="w-full border rounded px-3 py-2"
-                  required
-                />
-                <input
-                  type="text"
-                  name="businessAddress"
-                  placeholder="Business Address"
-                  value={form.businessAddress}
-                  onChange={handleChange}
-                  className="w-full border rounded px-3 py-2"
-                  required
-                />
-                <input
-                  type="text"
-                  name="businessPhone"
-                  placeholder="Business Phone"
-                  value={form.businessPhone}
-                  onChange={handleChange}
-                  className="w-full border rounded px-3 py-2"
-                  required
-                />
-                <input
-                  type="text"
-                  name="taxId"
-                  placeholder="Tax ID"
-                  value={form.taxId}
-                  onChange={handleChange}
-                  className="w-full border rounded px-3 py-2"
-                  required
-                />
-                <button
-                  type="submit"
-                  className="w-full bg-amber-400 text-white py-2 rounded font-semibold hover:bg-amber-600 transition-colors disabled:opacity-60"
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Submitting...' : 'Submit Request'}
-                </button>
-                {success && <div className="text-green-600 text-center">Request submitted!</div>}
-                {error && <div className="text-red-600 text-center">{error.message || 'Submission failed'}</div>}
-              </form>
-            </div>
-          </>
-        )}
         <div className="p-6 flex justify-center items-center">
           <button className="w-[50%] bg-white text-orange-600 py-3 px-4 rounded-lg font-semibold hover:bg-red-500 hover:text-white transition-colors flex items-center justify-center gap-2 cursor-pointer" onClick={() => {
             localStorage.clear();

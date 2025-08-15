@@ -4,6 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack -p 3001",
+    "test": "jest --no-cache --detectOpenHandles --coverage",
+    "test:watch": "jest --watch",
+    "test:ci": "jest --ci --coverage --watchAll=false",
+    "coverage": "nyc --reporter=lcov --reporter=text jest --require ts-node/register src/__test__/**/*.test.ts",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -84,8 +88,13 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@jest/globals": "^30.0.5",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/axios": "^0.9.36",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/pdfjs-dist": "^2.10.377",
     "@types/react": "^19.1.2",
@@ -96,7 +105,12 @@
     "@types/uuid": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.0",
+    "jest": "^30.0.5",
+    "jest-environment-jsdom": "^30.0.5",
+    "nyc": "^17.1.0",
     "tailwindcss": "^4",
+    "ts-jest": "^29.4.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5",
     "worker-loader": "^3.0.8"
   }

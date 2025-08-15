@@ -20,7 +20,14 @@ const CustomerProfile = () => {
   const { profile, isLoading, error } = useCustomerProfile();
 
   if (isLoading) {
-    return <div className="p-4 text-center">...</div>;
+    return (
+      <div className="flex items-center space-x-1">
+        <span className="sr-only">Loading...</span>
+        <div className="h-1.5 w-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+        <div className="h-1.5 w-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+        <div className="h-1.5 w-1.5 bg-gray-400 rounded-full animate-bounce"></div>
+      </div>
+    );
   }
   if (error || !profile) {
     return <div className="p-4 text-center text-red-500">Unable to load profile.</div>;

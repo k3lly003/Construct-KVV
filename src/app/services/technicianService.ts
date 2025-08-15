@@ -1,0 +1,86 @@
+import axiosInstance from '@/lib/axios'
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork.onrender.com'
+
+// Technician Registration Data Interface
+export interface TechnicianRegistrationData {
+  email: string
+  password: string
+  firstName: string
+  lastName: string
+  phone: string
+  categories: string[]
+  location: string[]
+  documents: string[]
+  experience: number
+  specializations: string[]
+}
+
+// Technician Profile Update Data Interface
+export interface TechnicianProfileData {
+  categories: string[]
+  location: string[]
+  documents: string[]
+  experience: number
+  specializations: string[]
+  payoutMethod?: {
+    type: string
+    accountNumber: string
+  }
+}
+
+// Technician Status Update Interface (Admin)
+export interface TechnicianStatusUpdate {
+  status: 'APPROVED' | 'REJECTED' | 'PENDING'
+}
+
+// Technician Interface
+export interface Technician {
+  id: string
+  email: string
+  firstName: string
+  lastName: string
+  phone: string
+  categories: string[]
+  location: string[]
+  documents: string[]
+  experience: number
+  specializations: string[]
+  status: string
+  payoutMethod?: {
+    type: string
+    accountNumber: string
+  }
+  createdAt: string
+  updatedAt: string
+}
+
+// Technician Service
+export const technicianService = {
+  // Register a new technician
+  async register(data: TechnicianRegistrationData): Promise<{ message: string; technician: Technician }> {
+    const response = await axiosInstance.post<{ message: string; technician: Technician }>(`${API_BASE_URL}/api/v1/technicians/register`, data)
+    return response.data
+  },
+
+  // Get current technician profile
+  async getCurrentProfile(): Promise<Technician> {
+    const response = await axiosInstance.get<Technician>(`${API_BASE_URL}/api/v1/technicians/profile/me`)
+    return response.data
+  },
+
+  // Update current technician profile
+  async updateProfile(data: TechnicianProfileData): Promise<{ message: string; technician: Technician }> {
+    const response = await axiosInstance.put<{ message: string; technician: Technician }>(`${API_BASE_URL}/api/v1/technicians/profile/me`, data)
+    return response.data
+  },
+
+  // Admin: Update technician status
+  async updateTechnicianStatus(id: string, status: TechnicianStatusUpdate): Promise<{ message: string; technician: Technician }> {
+    const response = await axiosInstance.put<{ message: string; technician: Technician }>(`${API_BASE_URL}/api/v1/technicians/admin/${id}/status`, status)
+    return response.data
+  }
+}
+
+
+

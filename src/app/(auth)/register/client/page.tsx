@@ -89,15 +89,19 @@ const Page = () => {
       );
 
       const data = response.data as { data?: { token?: string; user?: User } };
+      console.log("Registration response:", data);
+      
       // Store the authentication token if present
       if (data.data?.token) {
         localStorage.setItem("authToken", data.data.token);
+        console.log("Auth token stored");
       }
       if (data.data?.user) {
         localStorage.setItem("user", JSON.stringify(data.data.user));
+        console.log("User data stored:", data.data.user);
       }
-      toast.success("Signup successful!");
-      router.push("/signin");
+      toast.success("Signup successful! Please verify your email.");
+      router.push("/otp");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (isAxiosError(err)) {

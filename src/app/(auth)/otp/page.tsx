@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Mail, ArrowLeft, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Mail, ArrowLeft, Loader2, CheckCircle } from "lucide-react";
 import {
   InputOTP,
   InputOTPGroup,
@@ -9,47 +9,181 @@ import {
 } from "@/components/ui/input-otp";
 import { GenericButton } from "@/components/ui/generic-button";
 import Link from "next/link";
+import { useOtp } from "@/app/hooks/useOtp";
+import { useRouter } from "next/navigation";
+import { getUserDataFromLocalStorage, updateUserDataInLocalStorage } from "@/app/utils/middlewares/UserCredentions";
 
 export default function OTPVerification() {
   const [otp, setOtp] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isResending, setIsResending] = useState(false);
-  const [email] = useState("user@example.com"); // In real app, this would come from props/context
-  const [error, setError] = useState("");
+  // Email is resolved in the background from stored user data
+  const [email, setEmail] = useState("");
+  const [userData, setUserData] = useState<any>(null);
+  const [mounted, setMounted] = useState(false);
+  const [hasRequestedCode, setHasRequestedCode] = useState(false);
+  const [expiryTimestamp, setExpiryTimestamp] = useState<number | null>(null);
+  const [timeLeftSeconds, setTimeLeftSeconds] = useState<number>(0);
+  const router = useRouter();
+  
+  // Initialize user data after component mounts to avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+    const data = getUserDataFromLocalStorage();
+    setUserData(data);
+    if (data?.email) {
+      setEmail(data.email);
+    }
+  }, []);
+  
+  // Initialize or restore countdown on page load
+  useEffect(() => {
+    if (!mounted) return;
+    try {
+      const saved = localStorage.getItem("otpExpiryAtMs");
+      if (saved) {
+        const ts = Number(saved);
+        if (!Number.isNaN(ts) && ts > Date.now()) {
+          setExpiryTimestamp(ts);
+          return;
+        }
+        // saved value is stale
+        localStorage.removeItem("otpExpiryAtMs");
+      }
+      // Start a fresh 10-minute window immediately on page load
+      const ts = Date.now() + 10 * 60 * 1000;
+      setExpiryTimestamp(ts);
+      localStorage.setItem("otpExpiryAtMs", String(ts));
+    } catch {
+      // Even if localStorage fails, still start an in-memory countdown
+      const ts = Date.now() + 10 * 60 * 1000;
+      setExpiryTimestamp(ts);
+    }
+  }, [mounted]);
+  
+  // Validate email format
+  const isValidEmail = email && email.includes("@") && email.includes(".");
+  
+  const {
+    isLoading,
+    isResending,
+    error,
+    isVerified,
+    verifyOtp,
+    resendOtp,
+    clearError,
+  } = useOtp();
 
-  const handleVerify = async () => {
-    if (otp.length !== 6) {
-      setError("Please enter the complete 6-digit code");
+  // Redirect to signin if no user data is found (only after mounting)
+  useEffect(() => {
+    if (mounted && !userData) {
+      router.push("/signin");
+    }
+  }, [mounted, userData, router]);
+
+  // Auto-verify when 6 digits are entered and a valid email is available
+  useEffect(() => {
+    if (otp.length === 6 && isValidEmail) {
+      handleVerify();
+    }
+  }, [otp, isValidEmail]);
+
+  // Automatically request/sent OTP in the background once we have a valid email
+  useEffect(() => {
+    if (mounted && isValidEmail && !hasRequestedCode) {
+      resendOtp(email)
+        .then((ok) => {
+          if (ok) {
+            const ts = Date.now() + 10 * 60 * 1000; // 10 minutes
+            setExpiryTimestamp(ts);
+            try { localStorage.setItem("otpExpiryAtMs", String(ts)); } catch {}
+          }
+        })
+        .catch(() => {})
+        .finally(() => setHasRequestedCode(true));
+    }
+  }, [mounted, isValidEmail, email, hasRequestedCode, resendOtp]);
+
+  // Countdown ticker
+  useEffect(() => {
+    if (!expiryTimestamp) {
+      setTimeLeftSeconds(0);
       return;
     }
+    const update = () => {
+      const deltaMs = expiryTimestamp - Date.now();
+      setTimeLeftSeconds(Math.max(0, Math.floor(deltaMs / 1000)));
+    };
+    update();
+    const id = setInterval(update, 1000);
+    return () => clearInterval(id);
+  }, [expiryTimestamp]);
 
-    setIsLoading(true);
-    setError("");
+  const formatTime = (totalSeconds: number) => {
+    const m = Math.floor(totalSeconds / 60)
+      .toString()
+      .padStart(2, "0");
+    const s = Math.floor(totalSeconds % 60)
+      .toString()
+      .padStart(2, "0");
+    return `${m}:${s}`;
+  };
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    // In a real app, you'd verify the OTP with your backend
-    console.log("Verifying OTP:", otp);
-
-    setIsLoading(false);
-    // Handle success/error based on API response
+  const handleVerify = async () => {
+    const success = await verifyOtp(email, otp);
+    if (success) {
+      console.log("Email verified successfully!");
+      
+      // Update user data in localStorage to set emailVerified to true
+      if (userData && typeof userData === 'object') {
+        const updatedUserData = {
+          ...userData,
+          emailVerified: true
+        };
+        const success = updateUserDataInLocalStorage(updatedUserData);
+        if (success) {
+          console.log("Updated user data with emailVerified: true");
+        } else {
+          console.error("Failed to update user data in localStorage");
+        }
+      }
+      
+      // Redirect immediately on success
+      router.push("/signin");
+    }
   };
 
   const handleResend = async () => {
-    setIsResending(true);
-    setError("");
+    if (!isValidEmail) {
+      // Prevent sending with an invalid or missing email
+      return;
+    }
+    const success = await resendOtp(email);
+    if (success) {
+      console.log("OTP resent successfully!");
+      const ts = Date.now() + 10 * 60 * 1000; // 10 minutes
+      setExpiryTimestamp(ts);
+      try { localStorage.setItem("otpExpiryAtMs", String(ts)); } catch {}
+    }
+  };
 
-    // Simulate resend API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    console.log("Resending OTP to:", email);
-    setIsResending(false);
+  // Test function to manually update emailVerified (for testing purposes)
+  const testUpdateEmailVerified = () => {
+    if (userData && typeof userData === 'object') {
+      const updatedUserData = {
+        ...userData,
+        emailVerified: true
+      };
+      const success = updateUserDataInLocalStorage(updatedUserData);
+      if (success) {
+        console.log("Test: Updated emailVerified to true");
+        // Force re-render to show updated data
+        window.location.reload();
+      }
+    }
   };
 
   const handleOtpChange = (value: string) => {
     setOtp(value);
-    setError(""); // Clear error when user starts typing
+    clearError(); // Clear error when user starts typing
   };
 
   return (
@@ -84,7 +218,14 @@ export default function OTPVerification() {
             <p className="text-gray-600 leading-relaxed">
               Enter the 6-digit verification code sent to
             </p>
-            <p className="font-semibold text-gray-900 mt-1">{email}</p>
+            <p className="font-semibold text-gray-900 mt-1">
+              {mounted ? email : "Loading..."}
+            </p>
+            {mounted && !isValidEmail && (
+              <p className="text-amber-600 text-sm mt-2">
+                ⚠️ Please ensure you have a valid email address
+              </p>
+            )}
           </div>
 
           {/* OTP Input */}
@@ -124,6 +265,16 @@ export default function OTPVerification() {
             {error && (
               <p className="text-red-500 text-sm text-center mb-4">{error}</p>
             )}
+
+            {/* Success Message */}
+            {isVerified && (
+              <div className="flex items-center justify-center mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
+                <p className="text-green-700 text-sm font-medium">
+                  Email verified successfully! emailVerified set to TRUE. Redirecting...
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Resend Link */}
@@ -131,17 +282,24 @@ export default function OTPVerification() {
             <span className="text-gray-600">Didn&apos;t get a code? </span>
             <button
               onClick={handleResend}
-              disabled={isResending}
+              disabled={isResending || isVerified}
               className="text-amber-600 hover:text-amber-700 font-medium underline underline-offset-4 decoration-amber-300 hover:decoration-amber-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isResending ? "Sending..." : "Resend"}
+              {isResending ? "Sending..." : isVerified ? "Verified" : "Resend"}
             </button>
+            <div className="mt-2 text-sm text-gray-500">
+              {timeLeftSeconds > 0 ? (
+                <span className="text-red-500">Code expires in {formatTime(timeLeftSeconds)}</span>
+              ) : (
+                <span className="text-red-500">Code expired. Please resend.</span>
+              )}
+            </div>
           </div>
 
           {/* Verify Button */}
           <GenericButton
             onClick={handleVerify}
-            disabled={otp.length !== 6 || isLoading}
+            disabled={otp.length !== 6 || isLoading || isVerified}
             className="w-full h-12 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
@@ -149,16 +307,22 @@ export default function OTPVerification() {
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 Verifying...
               </>
+            ) : isVerified ? (
+              <>
+                <CheckCircle className="w-4 h-4 mr-2" />
+                Verified!
+              </>
             ) : (
               "Verify Email"
             )}
           </GenericButton>
 
           {/* Security Note */}
-          <p className="text-xs text-gray-500 text-center mt-6 leading-relaxed">
-            This code will expire in 10 minutes. Keep this window open while you
-            check your email.
-          </p>
+          <div className="text-center mt-6">
+            <p className="text-xs text-gray-500 leading-relaxed">
+              Enter the 6-digit code sent to your email. You'll be redirected automatically once verified.
+            </p>
+          </div>
         </div>
 
         {/* Footer */}
