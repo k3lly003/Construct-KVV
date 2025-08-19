@@ -213,14 +213,14 @@ const Navbar: React.FC = () => {
               {/* Conditionally render based on isClient and localUserData */}
               {isClient &&
                 (localUserData ? (
-                  userRole === "ADMIN" || userRole === "SELLER" ? (
+                  userRole === "CUSTOMER" ? (
+                    <CustomerProfile />
+                  ) : (
                     <Profile
                       NK={""}
                       userName={userName || ""}
                       userEmail={userEmail || ""}
                     />
-                  ) : (
-                    <CustomerProfile />
                   )
                 ) : (
                   <Link href="/signin" className="border-l-1">
@@ -257,7 +257,7 @@ const Navbar: React.FC = () => {
                   animate={{ x: 0 }}
                   exit={{ x: "100%" }}
                   transition={{ duration: 0.25 }}
-                  className="w-72 h-full  shadow-xl p-6 flex flex-col gap-6 relative"
+                  className="w-72 h-full  shadow-xl bg-white p-6 flex flex-col gap-6 relative"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <button
@@ -425,14 +425,14 @@ const Navbar: React.FC = () => {
                   {/* Auth/Profile */}
                   {isClient &&
                     (localUserData ? (
-                      userRole === "ADMIN" || userRole === "SELLER" ? (
+                      userRole === "CUSTOMER" ? (
+                        <CustomerProfile />
+                      ) : (
                         <Profile
                           NK={""}
                           userName={userName || ""}
                           userEmail={userEmail || ""}
                         />
-                      ) : (
-                        <CustomerProfile />
                       )
                     ) : (
                       <Link

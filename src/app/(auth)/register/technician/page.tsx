@@ -20,19 +20,24 @@ import { TechnicianRegistrationData } from "@/app/services/technicianService";
 import { toast, Toaster } from "sonner";
 
 const CATEGORY_OPTIONS = [
-  "Cleaner",
-  "Appliances",
-  "Building Supplies",
-  "Door Sales & Installation",
-  "Driveways & Paving",
-  "Electricians",
-  "Furniture Repair",
-  "windows & Door Repair",
-  "General Contractors",
-  "Handyman & Technician",
-  "Heating & Cooling Sales & Repair",
-  "Painters",
-  "Plumbers",
+  "MASON_BRICKLAYER",
+  "CARPENTER",
+  "CONCRETE_SPECIALIST",
+  "ROOFING_TECHNICIAN",
+  "PAINTER_DECORATOR",
+  "PLASTERER_DRYWALL",
+  "TILE_FLOORING_SPECIALIST",
+  "WALLPAPER_INSTALLER",
+  "WELDER_METAL_FABRICATOR",
+  "GLASS_ALUMINUM_TECHNICIAN",
+  "LOCKSMITH",
+  "INSULATION_INSTALLER",
+  "LANDSCAPER_GARDENING",
+  "PAVING_ROADWORK",
+  "FENCING_INSTALLER",
+  "HANDYMAN",
+  "PEST_CONTROL",
+  "WATER_PUMP_BOREHOLE"
 ];
 
 interface DocumentInput {

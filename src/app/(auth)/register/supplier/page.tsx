@@ -15,17 +15,21 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { FileUpload } from "@/components/file-upload";
-import { useState } from "react";
-import { CheckCircle, ArrowLeft } from "lucide-react";
+import { useRef, useState } from "react";
+import { CheckCircle, ArrowLeft, Camera, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import SupplierHero from "@/components/features/auth/SupplierHero";
 import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function SupplierRegistration() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const router = useRouter();
+  const [shopImagePreview, setShopImagePreview] = useState<string | null>(null);
+  const shopImageInputRef = useRef<HTMLInputElement | null>(null);
 
   const {
     register,
@@ -92,7 +96,7 @@ export default function SupplierRegistration() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Contact Name *</Label>
+                  <Label htmlFor="name">Owner's Name *</Label>
                   <Input
                     id="name"
                     {...register("name")}
@@ -182,12 +186,67 @@ export default function SupplierRegistration() {
                 )}
               </div>
 
-              <FileUpload
-                label="Business License"
-                description="Upload your business license and registration documents"
-                onFilesChange={(files) => setValue("businessLicense", files)}
-                error={errors.businessLicense?.message}
-              />
+              <div className="space-y-2">
+                <Label>Shop Image</Label>
+                <div className="flex items-center gap-4">
+                  <button
+                    type="button"
+                    onClick={() => shopImageInputRef.current?.click()}
+                    className="relative group"
+                    aria-label="Upload shop image"
+                  >
+                    <div className="relative">
+                      <Avatar className="size-24">
+                        {shopImagePreview ? (
+                          <AvatarImage src={shopImagePreview} alt="Shop image" />
+                        ) : (
+                          <AvatarFallback className="bg-blue-50 text-blue-400">
+                            <User className="h-8 w-8" />
+                          </AvatarFallback>
+                        )}
+                      </Avatar>
+                      <div className="absolute -bottom-1 -right-1 bg-blue-500 rounded-full p-1.5 text-white shadow-md">
+                        <Camera className="h-4 w-4" />
+                      </div>
+                    </div>
+                  </button>
+                  <div className="text-sm text-muted-foreground">
+                    Click the avatar to upload a logo or shop image.
+                  </div>
+                </div>
+                <input
+                  ref={shopImageInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const previewUrl = URL.createObjectURL(file);
+                      setShopImagePreview(previewUrl);
+                      setValue("shopImage", [file]);
+                    }
+                  }}
+                />
+                {errors.shopImage?.message && (
+                  <p className="text-sm text-destructive">{errors.shopImage.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="productsServices">Shop Description *</Label>
+                <Textarea
+                  id="productsServices"
+                  {...register("productsServices")}
+                  placeholder="Describe what your shop offers (products, brands, services)..."
+                  rows={4}
+                />
+                {errors.productsServices && (
+                  <p className="text-sm text-destructive">
+                    {errors.productsServices.message}
+                  </p>
+                )}
+              </div>
 
               <FileUpload
                 label="Certifications"

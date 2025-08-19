@@ -200,7 +200,7 @@ const SideBar = () => {
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
-                href="/dashboard/work-schedule"
+                href="/dashboard/projects"
                 icon={CalendarDays}
                 label={t('navigation.projects')}
                 isCollapsed={isSidebarCollapsed}
@@ -232,13 +232,13 @@ const SideBar = () => {
 
                 href="/dashboard/design-requests"
                 icon={HandHelping}
-                label={t('navigation.serviceRequests')}
+                label={t('navigation.designRequests')}
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
-                href="/dashboard/my-work"
+                href="/dashboard/projects"
                 icon={CalendarDays}
-                label={t('navigation.projects')}
+                label={t('navigation.myWork')}
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
@@ -250,7 +250,36 @@ const SideBar = () => {
               <SidebarLink
                 href="/dashboard/design-reviews"
                 icon={MailPlus}
-                label={t('dashboard.workReviews', 'Work Reviews')}
+                label={t('navigation.designReviews')}
+                isCollapsed={isSidebarCollapsed}
+              />
+            </>
+          )}
+
+          {userRole === "CONSTRUCTOR" && (
+            <>
+              <SidebarLink
+                href="/dashboard/overview"
+                icon={LayoutDashboard}
+                label={t('dashboard.overviews')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/bids"
+                icon={TableProperties}
+                label={t('navigation.bids')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/profile" // Assuming profile path for sellers
+                icon={User}
+                label={t('navigation.profile')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/sales-report" // Assuming sales report path for sellers
+                icon={DollarSign}
+                label={t('dashboard.salesReport', 'Sales Report')}
                 isCollapsed={isSidebarCollapsed}
               />
             </>
@@ -295,7 +324,7 @@ const SideBar = () => {
           <SidebarLink
             href="/dashboard/notifications"
             icon={Bell}
-            label={t('dashboard.notification','notifications')}
+            label={t('dashboard.notification', 'notifications')}
             isCollapsed={isSidebarCollapsed}
           />
         </div>

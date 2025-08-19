@@ -52,6 +52,8 @@ export const supplierRegistrationSchema = baseRegistrationSchema.extend({
     location: z.string().min(2, "Province is required"),
   district: z.string().min(2, "District is required"),
   cell: z.string().min(2, "Cell is required"),
+  // Optional image for shop profile/avatar
+  shopImage: fileListSchema,
 });
 
 export type ConstructorRegistration = z.infer<typeof constructorRegistrationSchema>;

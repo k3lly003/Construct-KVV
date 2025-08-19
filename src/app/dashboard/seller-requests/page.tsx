@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SellerRequestService, SellerRequest } from "@/app/services/sellerRequestService";
-import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
+import { constructorService, Constructor } from "@/app/services/constructorService";
+import { architectService, Architect } from "@/app/services/architectService";
+import { technicianService, Technician } from "@/app/services/technicianService";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useTranslations } from '@/app/hooks/useTranslations';
@@ -10,7 +11,19 @@ import { dashboardFakes } from '@/app/utils/fakes/DashboardFakes';
 
 export default function SellerRequestsPage() {
   const { t } = useTranslations();
-  const [requests, setRequests] = useState<SellerRequest[]>([]);
+  type Role = "CONTRACTOR" | "ARCHITECT" | "TECHNICIAN";
+  type PendingUser = {
+    id: string;
+    role: Role;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    status: "APPROVED" | "REJECTED" | "PENDING" | string;
+    createdAt: string;
+  };
+
+  const [requests, setRequests] = useState<PendingUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
@@ -21,10 +34,49 @@ export default function SellerRequestsPage() {
       setLoading(true);
       setError(null);
       try {
-        const userData = getUserDataFromLocalStorage();
-        const token = userData?.token;
-        const data = await SellerRequestService.getAllRequests(token);
-        setRequests(Array.isArray(data) ? data : []);
+        const [pendingConstructors, pendingArchitects, pendingTechnicians] = await Promise.all([
+          constructorService.getPendingContractors(),
+          architectService.getPendingArchitects(),
+          technicianService.getPendingTechnicians(),
+        ]);
+
+        const mappedConstructors: PendingUser[] = (pendingConstructors || []).map((c: Constructor) => ({
+          id: c.id,
+          role: "CONTRACTOR",
+          firstName: c.firstName,
+          lastName: c.lastName,
+          email: c.email,
+          phone: c.phone,
+          status: c.status,
+          createdAt: c.createdAt,
+        }));
+
+        const mappedArchitects: PendingUser[] = (pendingArchitects || []).map((a: Architect) => ({
+          id: a.id,
+          role: "ARCHITECT",
+          firstName: a.firstName,
+          lastName: a.lastName,
+          email: a.email,
+          phone: a.phone,
+          status: a.status,
+          createdAt: a.createdAt,
+        }));
+
+        const mappedTechnicians: PendingUser[] = (pendingTechnicians || []).map((tch: Technician) => ({
+          id: tch.id,
+          role: "TECHNICIAN",
+          firstName: tch.firstName,
+          lastName: tch.lastName,
+          email: tch.email,
+          phone: tch.phone,
+          status: tch.status,
+          createdAt: tch.createdAt,
+        }));
+
+        const combined = [...mappedConstructors, ...mappedArchitects, ...mappedTechnicians]
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+        setRequests(combined);
       } catch (err: any) {
         setError(t(dashboardFakes.sellerRequest.fetchError));
       } finally {
@@ -33,21 +85,6 @@ export default function SellerRequestsPage() {
     };
     fetchRequests();
   }, [t]);
-
-  const handleAction = async (id: string, status: "APPROVED" | "REJECTED") => {
-    setActionLoading(id + status);
-    setActionError(null);
-    try {
-      const userData = getUserDataFromLocalStorage();
-      const token = userData?.token;
-      await SellerRequestService.updateRequestStatus(id, status, token);
-      setRequests((prev) => prev.filter((req) => req.id !== id));
-    } catch (err: any) {
-      setActionError(status === "APPROVED" ? t(dashboardFakes.sellerRequest.approveError) : t(dashboardFakes.sellerRequest.rejectError));
-    } finally {
-      setActionLoading(null);
-    }
-  };
 
   return (
     <div className="p-6 min-h-screen bg-gradient-to-br from-gray-50 to-white">
@@ -66,25 +103,18 @@ export default function SellerRequestsPage() {
                 <TableHead>{t(dashboardFakes.sellerRequest.tableName)}</TableHead>
                 <TableHead>{t(dashboardFakes.sellerRequest.tableEmail)}</TableHead>
                 <TableHead>{t(dashboardFakes.sellerRequest.tablePhone)}</TableHead>
-                <TableHead>{t(dashboardFakes.sellerRequest.tableBusinessName)}</TableHead>
-                <TableHead>{t(dashboardFakes.sellerRequest.tableBusinessAddress)}</TableHead>
-                <TableHead>{t(dashboardFakes.sellerRequest.tableBusinessPhone)}</TableHead>
-                <TableHead>{t(dashboardFakes.sellerRequest.tableTaxId)}</TableHead>
+                <TableHead>Role</TableHead>
                 <TableHead>{t(dashboardFakes.sellerRequest.tableStatus)}</TableHead>
                 <TableHead>{t(dashboardFakes.sellerRequest.tableSubmitted)}</TableHead>
-                <TableHead className="text-center">{t(dashboardFakes.sellerRequest.tableActions)}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {requests.map((req) => (
-                <TableRow key={req.id} className="hover:bg-blue-50 transition rounded-xl">
-                  <TableCell>{req.user.firstName} {req.user.lastName}</TableCell>
-                  <TableCell>{req.user.email}</TableCell>
-                  <TableCell>{req.user.phone}</TableCell>
-                  <TableCell>{req.businessName}</TableCell>
-                  <TableCell>{req.businessAddress}</TableCell>
-                  <TableCell>{req.businessPhone}</TableCell>
-                  <TableCell>{req.taxId}</TableCell>
+                <TableRow key={`${req.role}-${req.id}`} className="hover:bg-blue-50 transition rounded-xl">
+                  <TableCell>{req.firstName} {req.lastName}</TableCell>
+                  <TableCell>{req.email}</TableCell>
+                  <TableCell>{req.phone}</TableCell>
+                  <TableCell>{req.role}</TableCell>
                   <TableCell>
                     <Badge variant={req.status === "PENDING" ? "secondary" : req.status === "APPROVED" ? "default" : "destructive"}>
                       {req.status === "PENDING" ? t(dashboardFakes.sellerRequest.statusPending) : 
@@ -93,27 +123,6 @@ export default function SellerRequestsPage() {
                     </Badge>
                   </TableCell>
                   <TableCell>{req.createdAt ? new Date(req.createdAt).toLocaleDateString() : ""}</TableCell>
-                  <TableCell className="text-center">
-                    <div className="flex gap-2 justify-center">
-                      <button
-                        className="px-3 py-1 rounded-lg bg-green-600 text-white hover:bg-green-700 transition text-xs font-semibold shadow-sm disabled:opacity-50"
-                        disabled={actionLoading === req.id + "APPROVED"}
-                        onClick={() => handleAction(req.id, "APPROVED")}
-                      >
-                        {actionLoading === req.id + "APPROVED" ? t(dashboardFakes.sellerRequest.approving) : t(dashboardFakes.sellerRequest.approve)}
-                      </button>
-                      <button
-                        className="px-3 py-1 rounded-lg bg-red-600 text-white hover:bg-red-700 transition text-xs font-semibold shadow-sm disabled:opacity-50"
-                        disabled={actionLoading === req.id + "REJECTED"}
-                        onClick={() => handleAction(req.id, "REJECTED")}
-                      >
-                        {actionLoading === req.id + "REJECTED" ? t(dashboardFakes.sellerRequest.rejecting) : t(dashboardFakes.sellerRequest.reject)}
-                      </button>
-                    </div>
-                    {actionError && (
-                      <div className="text-xs text-red-500 mt-1">{actionError}</div>
-                    )}
-                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

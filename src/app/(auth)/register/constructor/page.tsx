@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Plus, X, CheckCircle, ArrowLeft } from "lucide-react";
+import { X, CheckCircle, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import ConstructorHero from "@/components/features/auth/ConstructorHero";
 import Link from "next/link";

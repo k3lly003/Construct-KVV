@@ -63,6 +63,12 @@ export const technicianService = {
     return response.data
   },
 
+  // Admin: Get pending technician requests
+  async getPendingTechnicians(): Promise<Technician[]> {
+    const response = await axiosInstance.get<Technician[]>(`${API_BASE_URL}/api/v1/technicians/admin/pending`)
+    return response.data
+  },
+
   // Get current technician profile
   async getCurrentProfile(): Promise<Technician> {
     const response = await axiosInstance.get<Technician>(`${API_BASE_URL}/api/v1/technicians/profile/me`)

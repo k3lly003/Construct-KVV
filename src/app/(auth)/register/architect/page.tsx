@@ -11,9 +11,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Plus, X, CheckCircle, ArrowLeft, Check } from "lucide-react";
+import { X, CheckCircle, ArrowLeft, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import ArchitectHero from "@/components/features/auth/architectHero";
 import Link from "next/link";
