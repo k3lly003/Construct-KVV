@@ -90,23 +90,23 @@ export const Footer: React.FC = () => {
               <div className="flex items-start space-x-3">
                 <MapPin className="h-6 w-6 text-yellow-400" />
                 <div>
-                  <p>KG 400 St</p>
-                  <p>Kigali, Rwanda</p>
+                  {/* <p>KG 400 St</p> */}
+                  <p>Rebero, Kicukiro, Kigali, Rwanda</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
                 <Phone className="h-6 w-6 text-yellow-400" />
                 <div>
-                  <p>+250 7888 507</p>
-                  <p>+250 7888 600</p>
+                  <p>+250 785 648 616</p>
+                  {/* <p>+250 7888 600</p> */}
                 </div>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="h-6 w-6 text-yellow-400" />
-                <a href="mailto:kvvltd@gmail.com" className="hover:text-yellow-400 transition-colors">kvvltd@gmail.com</a>
+                <a href="mailto:constructkvv@gmail.com" className="hover:text-yellow-400 transition-colors">constructkvv@gmail.com</a>
               </div>
-              <a href="http://www.kvvltd.com/contact" className="text-yellow-400 hover:text-yellow-300 transition-colors">
-                www.kvvltd.com/contact
+              <a href="https://www.constructkvv.com/contact" className="text-yellow-400 hover:text-yellow-300 transition-colors">
+                www.constructkvv.com/contact
               </a>
             </div>
           </div>

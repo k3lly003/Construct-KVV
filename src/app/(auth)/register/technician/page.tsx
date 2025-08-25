@@ -160,7 +160,8 @@ export default function TechnicianRegistration() {
               Registration Complete!
             </h2>
             <p className="text-slate-600 mb-6">
-              Thank you for registering as a Technician! We&apos;ll review your application and get back to you soon.
+             Thank you for registering as a Technician! Your application has been submitted successfully. 
+             We&apos;ll review your information and get back to you soon. Please wait for a moment to be approved and log in later.
             </p>
             <Button onClick={() => router.push("/")} className="w-full">
               Return Home

@@ -1,14 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { UsersService } from "@/app/services/usersServices";
+import { useEffect, useState, useCallback } from "react";
+import { UsersService } from "@/app/services/usersService";
 import { User } from "@/types/user";
-import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogHeader, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogHeader, DialogClose } from "@/components/ui/dialog";
 import { useTranslations } from '@/app/hooks/useTranslations';
 
 const PAGE_SIZE = 10;
@@ -19,112 +17,126 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showUserDialog, setShowUserDialog] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalUsers, setTotalUsers] = useState(0);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   const fetchUsers = async () => {
     setLoading(true);
     setError(null);
     try {
-      const userData = getUserDataFromLocalStorage();
-      const token = userData?.token;
-      // Only use API for pagination
-      const { users, meta } = await UsersService.getAllUsers(token, page, PAGE_SIZE);
-      setUsers(users || []);
-      setTotalPages(meta?.totalPages || 1);
-      setTotalUsers(meta?.total || 0);
+      // Get auth token from localStorage
+      const authToken = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+      
+      if (!authToken) {
+        setError("Authentication token not found. Please log in again.");
+        return;
+      }
+
+             // Fetch users with search and role filters
+       const result = await UsersService.getAllUsers(
+         authToken, // Pass the auth token
+         page,
+         PAGE_SIZE,
+         debouncedSearch, // Use debounced search instead of immediate search
+         roleFilter,
+         undefined // isActive - no status filter
+       );
+      console.log("API Response:", result);
+      
+      setUsers(result.users || []);
+      if (result.meta) {
+        setTotalPages(result.meta.totalPages || 1);
+        setTotalUsers(result.meta.total || 0);
+      }
     } catch (err: any) {
       setError(t('dashboard.users.fetchError'));
+      console.error('Error fetching users:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  // Client-side search, role, and status filter
-  const filteredUsers = users.filter((user) => {
-    const term = search.toLowerCase();
-    const matchesSearch =
-      (user.firstName?.toLowerCase().includes(term) || false) ||
-      (user.lastName?.toLowerCase().includes(term) || false) ||
-      (user.email?.toLowerCase().includes(term) || false) ||
-      (user.phone?.toLowerCase().includes(term) || false);
-    const matchesRole = roleFilter ? user.role === roleFilter : true;
-    const matchesStatus = statusFilter
-      ? statusFilter === "active"
-        ? user.isActive
-        : !user.isActive
-      : true;
-    return matchesSearch && matchesRole && matchesStatus;
-  });
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+      setPage(1); // Reset to first page when search changes
+    }, 500); // Wait 500ms after user stops typing
 
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  // Fetch users when debounced search, role filter, or page changes
   useEffect(() => {
     fetchUsers();
-    // eslint-disable-next-line
-  }, [page]);
-
-  const handleStatusChange = async (user: User, newStatus: boolean) => {
-    setActionLoading(user.id);
-    try {
-      const userData = getUserDataFromLocalStorage();
-      const token = userData?.token;
-      if (!token) throw new Error("No auth token");
-      await UsersService.updateUserStatus(user.id, newStatus, token);
-      setUsers((prev) => prev.map((u) => u.id === user.id ? { ...u, isActive: newStatus } : u));
-    } catch (err) {
-      // Optionally show error toast
-    } finally {
-      setActionLoading(null);
-    }
-  };
+  }, [page, debouncedSearch, roleFilter]);
 
   const handleViewDetails = (user: User) => {
     setSelectedUser(user);
     setShowUserDialog(true);
   };
 
+  const handleSetStatus = async (user: User, isActive: boolean) => {
+    setActionLoading(user.id);
+    try {
+      // Note: You'll need to implement updateUserStatus in usersService
+      // await UsersService.updateUserStatus(user.id, isActive, authToken);
+      // For now, just update the local state
+      setUsers((prev) => prev.map((u) => (u.id === user.id ? { ...u, isActive } : u)));
+    } catch (error) {
+      console.error('Error updating user status:', error);
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    // Don't reset page here, let the debounced effect handle it
+  };
+
+  const handleRoleFilterChange = (value: string) => {
+    setRoleFilter(value);
+    setPage(1); // Reset to first page when filtering
+  };
+
   return (
-    <div className="p-6 min-h-screen bg-gradient-to-br from-gray-50 to-white">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">{t('dashboard.users.title')}</h1>
+    <div className="p-6 min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
+      <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">{t('dashboard.users.title')}</h1>
       <div className="mb-6 flex flex-col md:flex-row gap-2 md:gap-4 items-start md:items-center">
         <input
           placeholder={t('dashboard.users.searchPlaceholder')}
-          className="border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-200 transition w-full md:w-64"
+          className="border border-gray-300 dark:border-gray-600 px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-200 transition w-full md:w-64 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           value={search}
-          onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+          onChange={(e) => handleSearchChange(e.target.value)}
         />
         <select
-          className="border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-200 transition"
+          className="border border-gray-300 dark:border-gray-600 px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-200 transition bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           value={roleFilter}
-          onChange={(e) => { setRoleFilter(e.target.value); setPage(1); }}
+          onChange={(e) => handleRoleFilterChange(e.target.value)}
         >
           <option value="">{t('dashboard.users.allRoles')}</option>
-          <option value="CUSTOMER">{t('dashboard.users.roleCustomer')}</option>
-          <option value="SELLER">{t('dashboard.users.roleSeller')}</option>
-          <option value="ADMIN">{t('dashboard.users.roleAdmin')}</option>
-        </select>
-        <select
-          className="border border-gray-300 px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-200 transition"
-          value={statusFilter}
-          onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-        >
-          <option value="">{t('dashboard.users.allStatus')}</option>
-          <option value="active">{t('dashboard.users.statusActive')}</option>
-          <option value="suspended">{t('dashboard.users.statusSuspended')}</option>
+          <option value="ARCHITECT">ARCHITECT</option>
+          <option value="TECHNICIAN">TECHNICIAN</option>
+          <option value="CONTRACTOR">CONTRACTOR</option>
+          <option value="CLIENT">CLIENT</option>
+          <option value="SUPPLIER">SUPPLIER</option>
         </select>
       </div>
-      <div className="bg-white rounded-2xl shadow-lg p-4 md:p-8 overflow-x-auto">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 md:p-8 overflow-x-auto">
         {loading ? (
-          <div className="text-center py-8 text-gray-500">{t('dashboard.users.loading')}</div>
+          <div className="text-center py-8 text-gray-500 dark:text-gray-400">{t('dashboard.users.loading')}</div>
         ) : error ? (
           <div className="text-center text-red-500 py-8">{error}</div>
-        ) : filteredUsers.length === 0 ? (
-          <div className="text-center text-gray-400 py-8">{t('dashboard.users.noUsersFound')}</div>
+        ) : users.length === 0 ? (
+          <div className="text-center text-gray-400 dark:text-gray-500 py-8">{t('dashboard.users.noUsersFound')}</div>
         ) : (
           <>
             <Table className="min-w-[700px]">
@@ -140,55 +152,47 @@ export default function AdminUsersPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredUsers.map((user) => (
-                  <TableRow key={user.id} className="hover:bg-blue-50 transition rounded-xl">
+                {users.map((user) => (
+                  <TableRow key={user.id} className="hover:bg-blue-50 dark:hover:bg-gray-700 transition rounded-xl">
                     <TableCell className="flex items-center gap-3 py-3 pl-2">
                       <Avatar>
-                        {user.profilePic ? (
-                          <AvatarImage src={user.profilePic} alt={user.firstName || user.email} />
-                        ) : (
-                          <AvatarFallback>{getInitials(`${user.firstName || ""} ${user.lastName || ""}`)}</AvatarFallback>
-                        )}
+                        <AvatarFallback>{getInitials(`${user.firstName || ""} ${user.lastName || ""}`)}</AvatarFallback>
                       </Avatar>
-                      <span className="font-medium text-gray-800">{user.firstName} {user.lastName}</span>
+                      <span className="font-medium text-gray-800 dark:text-white">{user.firstName} {user.lastName}</span>
                     </TableCell>
-                    <TableCell className="text-gray-700">{user.email}</TableCell>
-                    <TableCell className="text-gray-700">{user.phone}</TableCell>
+                    <TableCell className="text-gray-700 dark:text-gray-300">{user.email}</TableCell>
+                    <TableCell className="text-gray-700 dark:text-gray-300">{user.phone}</TableCell>
                     <TableCell>
-                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${user.role === "ADMIN" ? "bg-blue-100 text-blue-700" : user.role === "SELLER" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700"}`}>
-                        {t(`dashboard.users.role${user.role ? user.role.charAt(0) + user.role.slice(1).toLowerCase() : ''}`)}
+                      <span className={`px-2 py-1 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300`}>
+                        {user.role}
                       </span>
                     </TableCell>
                     <TableCell>
-                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${user.isActive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${user.isActive ? "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300" : "bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300"}`}>
                         {user.isActive ? t('dashboard.users.statusActive') : t('dashboard.users.statusSuspended')}
                       </span>
                     </TableCell>
-                    <TableCell className="text-gray-500">{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : ""}</TableCell>
+                    <TableCell className="text-gray-500 dark:text-gray-400">{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : ""}</TableCell>
                     <TableCell className="text-center">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <button className="px-3 py-1 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition text-xs font-semibold shadow-sm flex items-center gap-1">
-                            {t('dashboard.users.actions')}
-                            {actionLoading === user.id && <span className="ml-2 animate-spin">⏳</span>}
-                          </button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => handleViewDetails(user)}>
-                            {t('dashboard.users.viewDetails')}
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          {user.isActive ? (
-                            <DropdownMenuItem onClick={() => handleStatusChange(user, false)} disabled={actionLoading === user.id}>
-                              {t('dashboard.users.deactivate')}
-                            </DropdownMenuItem>
-                          ) : (
-                            <DropdownMenuItem onClick={() => handleStatusChange(user, true)} disabled={actionLoading === user.id}>
-                              {t('dashboard.users.activate')}
-                            </DropdownMenuItem>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <div className="flex gap-2 justify-center">
+                        <button onClick={() => handleViewDetails(user)} className="px-3 py-1 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition text-xs font-semibold shadow-sm">
+                          {t('dashboard.users.viewDetails')}
+                        </button>
+                        <button 
+                          disabled={actionLoading === user.id} 
+                          onClick={() => handleSetStatus(user, true)} 
+                          className="px-3 py-1 rounded-lg bg-green-600 text-white hover:bg-green-700 transition text-xs font-semibold shadow-sm disabled:opacity-50"
+                        >
+                          Activate
+                        </button>
+                        <button 
+                          disabled={actionLoading === user.id} 
+                          onClick={() => handleSetStatus(user, false)} 
+                          className="px-3 py-1 rounded-lg bg-red-600 text-white hover:bg-red-700 transition text-xs font-semibold shadow-sm disabled:opacity-50"
+                        >
+                          Deactivate
+                        </button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -196,19 +200,19 @@ export default function AdminUsersPage() {
             </Table>
             {/* Pagination Controls */}
             <div className="flex flex-col md:flex-row items-center justify-between gap-4 mt-6">
-              <div className="text-gray-500 text-sm">
-                {t('dashboard.users.showingPage', { page, totalPages, count: filteredUsers.length })}
+              <div className="text-gray-500 dark:text-gray-400 text-sm">
+                {t('dashboard.users.showingPage', { page, totalPages, count: users.length })}
               </div>
               <div className="flex gap-2">
                 <button
-                  className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                  className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 disabled:opacity-50 text-gray-800 dark:text-white"
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
                 >
                   {t('dashboard.users.previous')}
                 </button>
                 <button
-                  className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                  className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 disabled:opacity-50 text-gray-800 dark:text-white"
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
                 >
@@ -229,25 +233,21 @@ export default function AdminUsersPage() {
             <div className="space-y-2">
               <div className="flex items-center gap-3">
                 <Avatar>
-                  {selectedUser.profilePic ? (
-                    <AvatarImage src={selectedUser.profilePic} alt={selectedUser.firstName || selectedUser.email} />
-                  ) : (
-                    <AvatarFallback>{getInitials(`${selectedUser.firstName || ""} ${selectedUser.lastName || ""}`)}</AvatarFallback>
-                  )}
+                  <AvatarFallback>{getInitials(`${selectedUser.firstName || ""} ${selectedUser.lastName || ""}`)}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="font-semibold text-lg">{selectedUser.firstName} {selectedUser.lastName}</div>
-                  <div className="text-gray-500 text-sm">{selectedUser.email}</div>
+                  <div className="font-semibold text-lg text-gray-900 dark:text-white">{selectedUser.firstName} {selectedUser.lastName}</div>
+                  <div className="text-gray-500 dark:text-gray-400 text-sm">{selectedUser.email}</div>
                 </div>
               </div>
-              <div><span className="font-medium">{t('dashboard.users.phone')}:</span> {selectedUser.phone}</div>
-              <div><span className="font-medium">{t('dashboard.users.role')}:</span> {t(`dashboard.users.role${selectedUser.role ? selectedUser.role.charAt(0) + selectedUser.role.slice(1).toLowerCase() : ''}`)}</div>
-              <div><span className="font-medium">{t('dashboard.users.status')}:</span> {selectedUser.isActive ? t('dashboard.users.statusActive') : t('dashboard.users.statusSuspended')}</div>
-              <div><span className="font-medium">{t('dashboard.users.created')}:</span> {selectedUser.createdAt ? new Date(selectedUser.createdAt).toLocaleDateString() : ""}</div>
+              <div className="text-gray-700 dark:text-gray-300"><span className="font-medium">{t('dashboard.users.phone')}:</span> {selectedUser.phone}</div>
+              <div className="text-gray-700 dark:text-gray-300"><span className="font-medium">{t('dashboard.users.role')}:</span> {selectedUser.role}</div>
+              <div className="text-gray-700 dark:text-gray-300"><span className="font-medium">{t('dashboard.users.status')}:</span> {selectedUser.isActive ? t('dashboard.users.statusActive') : t('dashboard.users.statusSuspended')}</div>
+              <div className="text-gray-700 dark:text-gray-300"><span className="font-medium">{t('dashboard.users.created')}:</span> {selectedUser.createdAt ? new Date(selectedUser.createdAt).toLocaleDateString() : ""}</div>
             </div>
           ) : null}
           <DialogClose asChild>
-            <button className="mt-4 px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 transition">{t('dashboard.users.close')}</button>
+            <button className="mt-4 px-4 py-2 rounded bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 transition text-gray-800 dark:text-white">{t('dashboard.users.close')}</button>
           </DialogClose>
         </DialogContent>
       </Dialog>

@@ -176,7 +176,7 @@ const SideBar = () => {
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
-                href="/dashboard/seller-requests"
+                href="/dashboard/requests"
                 icon={Layers}
                 label={t('dashboard.sellerRequests')}
                 isCollapsed={isSidebarCollapsed}

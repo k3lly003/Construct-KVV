@@ -441,7 +441,7 @@
       "logRejectingShopCreation": "Rejet de la création de boutique pour :"
     },
     "profile": "Profil",
-    "sellerRequests": "Demandes de vendeur",
+    "sellerRequests": "Demandes",
     "guide": {
       "welcome": "Salut 👋, Bienvenue spéciale au Centre d'Aide !",
       "description": "Ce guide vous aidera à naviguer et utiliser toutes les fonctionnalités efficacement.",
