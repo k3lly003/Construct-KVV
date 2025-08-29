@@ -8,6 +8,14 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
 import { Dialog, DialogContent, DialogTitle, DialogHeader, DialogClose } from "@/components/ui/dialog";
 import { useTranslations } from '@/app/hooks/useTranslations';
+import { EllipsisVertical, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const PAGE_SIZE = 10;
 
@@ -22,6 +30,8 @@ export default function AdminUsersPage() {
   const [statusFilter, setStatusFilter] = useState("");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showUserDialog, setShowUserDialog] = useState(false);
+  const [showActionDialog, setShowActionDialog] = useState(false);
+  const [actionUser, setActionUser] = useState<User | null>(null);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalUsers, setTotalUsers] = useState(0);
@@ -90,11 +100,32 @@ export default function AdminUsersPage() {
       // await UsersService.updateUserStatus(user.id, isActive, authToken);
       // For now, just update the local state
       setUsers((prev) => prev.map((u) => (u.id === user.id ? { ...u, isActive } : u)));
+      setShowActionDialog(false);
+      setActionUser(null);
     } catch (error) {
       console.error('Error updating user status:', error);
     } finally {
       setActionLoading(null);
     }
+  };
+
+  const handleDeleteUser = async (user: User) => {
+    setActionLoading(user.id);
+    try {
+      // Note: You'll need to implement deleteUser in usersService
+      // await UsersService.deleteUser(user.id, authToken);
+      // For now, just remove from local state
+      setUsers((prev) => prev.filter((u) => u.id !== user.id));
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const openActionDialog = (user: User) => {
+    setActionUser(user);
+    setShowActionDialog(true);
   };
 
   const handleSearchChange = (value: string) => {
@@ -112,8 +143,9 @@ export default function AdminUsersPage() {
       <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">{t('dashboard.users.title')}</h1>
       <div className="mb-6 flex flex-col md:flex-row gap-2 md:gap-4 items-start md:items-center">
         <input
-          placeholder={t('dashboard.users.searchPlaceholder')}
-          className="border border-gray-300 dark:border-gray-600 px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-200 transition w-full md:w-64 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+          type="text"
+          placeholder="Search for users"
+          className="w-full md:w-1/2 p-2 rounded-md border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
           value={search}
           onChange={(e) => handleSearchChange(e.target.value)}
         />
@@ -179,19 +211,24 @@ export default function AdminUsersPage() {
                           {t('dashboard.users.viewDetails')}
                         </button>
                         <button 
-                          disabled={actionLoading === user.id} 
-                          onClick={() => handleSetStatus(user, true)} 
-                          className="px-3 py-1 rounded-lg bg-green-600 text-white hover:bg-green-700 transition text-xs font-semibold shadow-sm disabled:opacity-50"
-                        >
-                          Activate
-                        </button>
-                        <button 
-                          disabled={actionLoading === user.id} 
-                          onClick={() => handleSetStatus(user, false)} 
+                          disabled={actionLoading === user.id}
+                          onClick={() => handleDeleteUser(user)}
                           className="px-3 py-1 rounded-lg bg-red-600 text-white hover:bg-red-700 transition text-xs font-semibold shadow-sm disabled:opacity-50"
                         >
-                          Deactivate
+                          <Trash2 className="w-4 h-4" />
                         </button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                              <EllipsisVertical className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => openActionDialog(user)}>
+                              {user.isActive ? 'Deactivate' : 'Activate'} User
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -249,6 +286,53 @@ export default function AdminUsersPage() {
           <DialogClose asChild>
             <button className="mt-4 px-4 py-2 rounded bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 transition text-gray-800 dark:text-white">{t('dashboard.users.close')}</button>
           </DialogClose>
+        </DialogContent>
+      </Dialog>
+
+      {/* Action Dialog for Activate/Deactivate */}
+      <Dialog open={showActionDialog} onOpenChange={setShowActionDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-gray-900 dark:text-white">
+              {actionUser?.isActive ? 'Deactivate' : 'Activate'} User
+            </DialogTitle>
+          </DialogHeader>
+          {actionUser && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <Avatar>
+                  <AvatarFallback>{getInitials(`${actionUser.firstName || ""} ${actionUser.lastName || ""}`)}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <div className="font-semibold text-lg text-gray-900 dark:text-white">{actionUser.firstName} {actionUser.lastName}</div>
+                  <div className="text-gray-500 dark:text-gray-400 text-sm">{actionUser.email}</div>
+                </div>
+              </div>
+              <p className="text-gray-700 dark:text-gray-300">
+                Are you sure you want to {actionUser.isActive ? 'deactivate' : 'activate'} this user? 
+                {actionUser.isActive ? ' They will no longer be able to access the system.' : ' They will be able to access the system.'}
+              </p>
+              <div className="flex gap-2 justify-end">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setShowActionDialog(false);
+                    setActionUser(null);
+                  }}
+                  className="text-gray-700 dark:text-gray-300"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => handleSetStatus(actionUser, !actionUser.isActive)}
+                  disabled={actionLoading === actionUser.id}
+                  className={actionUser.isActive ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"}
+                >
+                  {actionLoading === actionUser.id ? 'Processing...' : (actionUser.isActive ? 'Deactivate' : 'Activate')}
+                </Button>
+              </div>
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>

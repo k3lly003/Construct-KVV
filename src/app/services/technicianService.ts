@@ -37,22 +37,28 @@ export interface TechnicianStatusUpdate {
 // Technician Interface
 export interface Technician {
   id: string
-  email: string
-  firstName: string
-  lastName: string
-  phone: string
-  categories: string[]
-  location: string[]
+  userId: string
+  status: 'PENDING' | 'APPROVED' | 'REJECTED'
+  commissionRate: number
+  payoutMethod: any
   documents: string[]
   experience: number
-  specializations: string[]
-  status: string
-  payoutMethod?: {
-    type: string
-    accountNumber: string
-  }
   createdAt: string
   updatedAt: string
+  categories: string[]
+  location: string[]
+  user: {
+    id: string
+    email: string
+    firstName: string
+    lastName: string
+    profilePic: string | null
+    phone: string
+    role: string
+    isActive: boolean
+    emailVerified: boolean
+    createdAt: string
+  }
 }
 
 // Technician Service
@@ -76,8 +82,8 @@ export const technicianService = {
   },
 
   // Get current technician profile
-  async getCurrentProfile(): Promise<Technician> {
-    const response = await axiosInstance.get<Technician>(`${API_BASE_URL}/api/v1/technicians/profile/me`)
+  async getCurrentProfile(): Promise<{ success: boolean; data: Technician }> {
+    const response = await axiosInstance.get<{ success: boolean; data: Technician }>(`${API_BASE_URL}/api/v1/technicians/profile/me`)
     return response.data
   },
 

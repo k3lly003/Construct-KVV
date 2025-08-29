@@ -62,5 +62,30 @@
         "description": "Abantu b'umwuga bose bavuguruwe, bafite uruhushya, kandi bafite amatangazo y'umwuga mwiza."
       }
     }
+  },
+  "categories": {
+    "title": "Ibikoresho by'ibintu",
+    "addCategory": "Ongeramo Ibikoresho",
+    "addNewCategory": "Ongeramo Ibikoresho Gishya",
+    "categoryName": "Izina ry'Ibikoresho",
+    "description": "Ibisobanura",
+    "descriptionPlaceholder": "Andika ibisobanura by'ibikoresho...",
+    "subCategories": "Ibikoresho byo munsi (bihitamo)",
+    "subCategoryPlaceholder": "Izina ry'ibikoresho co munsi",
+    "addSubCategory": "Ongeramo Ibikoresho co Munsi",
+    "deleteSuccess": "Ibikoresho byasibwe neza",
+    "deleteError": "Kusiba ibikoresho byanze",
+    "createSuccess": "Ibikoresho byakozwe neza",
+    "createError": "Gukora ibikoresho byanze",
+    "editCategory": "Hindura Ibikoresho",
+    "updateCategory": "Hindura Ibikoresho",
+    "updateSuccess": "Ibikoresho byahinduwe neza",
+    "updateError": "Guhindura ibikoresho byanze",
+    "searchPlaceholder": "Shakisha ibikoresho...",
+    "filterCategory": "Shungura Ibikoresho",
+    "dateCreated": "Itariki yo Gukora",
+    "subCategoriesFor": "Ibikoresho byo munsi bya {{name}}",
+    "noSubCategories": "Nta bikoresho byo munsi",
+    "noCategoriesFound": "Nta bikoresho byabonetse."
   }
 }

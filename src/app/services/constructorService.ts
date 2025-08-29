@@ -42,6 +42,39 @@ export interface ConstructorProfileData {
   }
 }
 
+// New interface for technician data structure
+export interface TechnicianData {
+  id: string;
+  userId: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  commissionRate: number;
+  payoutMethod: any;
+  documents: string[];
+  experience: number;
+  createdAt: string;
+  updatedAt: string;
+  categories: string[];
+  location: string[];
+  user: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    profilePic: string | null;
+    phone: string;
+    role: string;
+    isActive: boolean;
+    emailVerified: boolean;
+    createdAt: string;
+  };
+}
+
+export interface TechnicianProfileData {
+  experience: number;
+  categories: string[];
+  location: string[];
+}
+
 export interface ConstructorStatusUpdate {
   status: 'APPROVED' | 'REJECTED' | 'PENDING'
 }
@@ -91,14 +124,20 @@ export const constructorService = {
        },
 
   // Get current contractor profile
-  async getCurrentProfile(): Promise<Constructor> {
-    const response = await axiosInstance.get<Constructor>(`${API_BASE_URL}/api/v1/contractors/profile/me`)
+  async getCurrentProfile(): Promise<{ success: boolean; data: TechnicianData }> {
+    const response = await axiosInstance.get<{ success: boolean; data: TechnicianData }>(`${API_BASE_URL}/api/v1/contractors/profile/me`)
     return response.data
   },
 
   // Update current contractor profile
   async updateProfile(data: ConstructorProfileData): Promise<{ message: string; constructor: Constructor }> {
     const response = await axiosInstance.put<{ message: string; constructor: Constructor }>(`${API_BASE_URL}/api/v1/contractors/profile/me`, data)
+    return response.data
+  },
+
+  // Update current technician profile
+  async updateTechnicianProfile(data: TechnicianProfileData): Promise<{ success: boolean; data: TechnicianData }> {
+    const response = await axiosInstance.put<{ success: boolean; data: TechnicianData }>(`${API_BASE_URL}/api/v1/contractors/profile/me`, data)
     return response.data
   },
 

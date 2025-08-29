@@ -20,10 +20,10 @@ export interface Professional {
 function mapArchitects(architects: Architect[]): Professional[] {
   return architects.map((a) => ({
     id: a.id,
-    email: a.email,
-    firstName: a.firstName,
-    lastName: a.lastName,
-    phone: a.phone,
+    email: a.user.email,
+    firstName: a.user.firstName,
+    lastName: a.user.lastName,
+    phone: a.user.phone,
     role: 'ARCHITECT',
     status: a.status,
     createdAt: a.createdAt,
@@ -34,10 +34,10 @@ function mapArchitects(architects: Architect[]): Professional[] {
 function mapTechnicians(technicians: Technician[]): Professional[] {
   return technicians.map((t) => ({
     id: t.id,
-    email: t.email,
-    firstName: t.firstName,
-    lastName: t.lastName,
-    phone: t.phone,
+    email: t.user.email,
+    firstName: t.user.firstName,
+    lastName: t.user.lastName,
+    phone: t.user.phone,
     role: 'TECHNICIAN',
     status: t.status,
     createdAt: t.createdAt,

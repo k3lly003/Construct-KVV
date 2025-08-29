@@ -25,9 +25,9 @@ import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import CustomSheet from "../shad_/CustomSheet";
 import Image from "next/image";
-import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
 import { useRouter } from 'next/navigation';
 import { useTranslations } from '@/app/hooks/useTranslations';
+import { useUserStore } from "../../../../store/userStore";
 
 
 interface SidebarLinkProps {
@@ -87,10 +87,10 @@ const SideBar = () => {
   const { t } = useTranslations();
 
   const { isSidebarCollapsed, toggleSidebar } = useGlobalStore();
-
-  const USER = getUserDataFromLocalStorage();
-  const userRole = USER ? USER.role : null;
-  const isLoggedIn = !!USER;
+  
+  // Use Zustand store for user data to avoid hydration issues
+  const { role: userRole, isHydrated } = useUserStore();
+  const isLoggedIn = !!userRole;
 
   const toogleSidebar = () => {
     toggleSidebar();
@@ -105,11 +105,27 @@ const SideBar = () => {
   const sidebarClassName = `fixed flex flex-col bg-white dark:bg-gray-800 z-30 ${isSidebarCollapsed ? "w-0 md:w-16" : "w-72 md:w-64"
     }transition-all duration-500 overflow-hidden h-full shadow-md dark:shadow-2xl`;
 
+  // Load user data on client side
   useEffect(() => {
-    if (!isLoggedIn) {
+    useUserStore.getState().loadUserData();
+  }, []);
+
+  useEffect(() => {
+    if (isHydrated && !isLoggedIn) {
       router.push('/signin');
     }
-  }, [isLoggedIn, router]);
+  }, [isHydrated, isLoggedIn, router]);
+
+  // Don't render sidebar content until user data is hydrated
+  if (!isHydrated) {
+    return (
+      <div className={sidebarClassName}>
+        <div className="flex items-center justify-center h-full">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={sidebarClassName}>
@@ -256,7 +272,7 @@ const SideBar = () => {
             </>
           )}
 
-          {userRole === "CONSTRUCTOR" && (
+          {userRole === "CONTRACTOR" && (
             <>
               <SidebarLink
                 href="/dashboard/overview"

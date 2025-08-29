@@ -75,7 +75,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
       <div className="px-2">
         {/* Header */}
         <div className="mb-10">
@@ -89,21 +89,35 @@ export default function Home() {
         {/* Charts Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           {/* Revenue Over Time Line Chart */}
-          <div className="bg-white rounded shadow p-4">
-            <h2 className="text-lg font-semibold mb-2">Revenue Over Time</h2>
+          <div className="bg-white dark:bg-gray-800 rounded shadow p-4">
+            <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Revenue Over Time</h2>
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={revenueData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" tickFormatter={m => m?.slice(0,7)} />
-                <YAxis />
-                <Tooltip />
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis 
+                  dataKey="month" 
+                  tickFormatter={m => m?.slice(0,7)} 
+                  tick={{ fill: '#9CA3AF' }}
+                  axisLine={{ stroke: '#374151' }}
+                />
+                <YAxis 
+                  tick={{ fill: '#9CA3AF' }}
+                  axisLine={{ stroke: '#374151' }}
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: '#1F2937', 
+                    border: '1px solid #374151',
+                    color: '#F9FAFB'
+                  }}
+                />
                 <Line type="monotone" dataKey="revenue" stroke="#8884d8" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
           </div>
           {/* Projects by Status Pie Chart */}
-          <div className="bg-white rounded shadow p-4">
-            <h2 className="text-lg font-semibold mb-2">Projects by Status</h2>
+          <div className="bg-white dark:bg-gray-800 rounded shadow p-4">
+            <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Projects by Status</h2>
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
@@ -120,8 +134,16 @@ export default function Home() {
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Legend />
-                <Tooltip />
+                <Legend 
+                  wrapperStyle={{ color: '#9CA3AF' }}
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: '#1F2937', 
+                    border: '1px solid #374151',
+                    color: '#F9FAFB'
+                  }}
+                />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -150,7 +172,7 @@ export default function Home() {
         {/* Main Content Section: Product Table */}
         <div className="flex flex-col lg:flex-row gap-8 w-full">
           {/* Left Column: Recent Orders and Product Table */}
-          <div className="rounded-md w-full lg:w-[70%]">
+          <div className="rounded-md w-full">
             {/* Recent Orders Table */}
             <div className="mb-8">
               <h2 className="text-lg font-semibold mb-2">Recent Orders</h2>
@@ -226,7 +248,7 @@ export default function Home() {
             </div>
           </div>
           {/* Right Column: Top Customers */}
-          <div className="space-y-8 w-full lg:w-[30%]">
+          {/* <div className="space-y-8 w-full lg:w-[30%]">
             <div className="p-6 bg-white rounded shadow">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold">Top Customers</h2>
@@ -249,7 +271,7 @@ export default function Home() {
               </div>
             </div>
             <Comments />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

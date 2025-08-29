@@ -89,7 +89,36 @@ export const useConstructor = (): UseConstructorReturn => {
       setLoading(true)
       setError(null)
       const result = await constructorService.getCurrentProfile()
-      setCurrentContractor(result)
+      // Extract the data from the response and convert TechnicianData to Constructor
+      if (result.success && result.data) {
+        // Convert TechnicianData to Constructor format
+        const constructorData: Constructor = {
+          id: result.data.id,
+          email: result.data.user.email,
+          firstName: result.data.user.firstName,
+          lastName: result.data.user.lastName,
+          phone: result.data.user.phone,
+          businessName: '', // Not available in TechnicianData
+          businessAddress: '', // Not available in TechnicianData
+          businessPhone: '', // Not available in TechnicianData
+          taxId: '', // Not available in TechnicianData
+          location: result.data.location,
+          yearsExperience: result.data.experience,
+          licenseNumber: '', // Not available in TechnicianData
+          insuranceInfo: {
+            provider: '', // Not available in TechnicianData
+            policyNumber: '' // Not available in TechnicianData
+          },
+          documents: result.data.documents,
+          status: result.data.status,
+          createdAt: result.data.createdAt,
+          updatedAt: result.data.updatedAt,
+          payoutMethod: result.data.payoutMethod
+        }
+        setCurrentContractor(constructorData)
+      } else {
+        setCurrentContractor(null)
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch profile')
       throw err

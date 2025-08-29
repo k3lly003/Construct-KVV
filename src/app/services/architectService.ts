@@ -39,23 +39,32 @@ export interface ArchitectStatusUpdate {
 // Architect Interface
 export interface Architect {
   id: string
-  email: string
-  firstName: string
-  lastName: string
-  phone: string
   businessName: string
   licenseNumber: string
   location: string[]
   yearsExperience: number
   documents: string[]
   specializations: string[]
-  status: string
+  status: 'PENDING' | 'APPROVED' | 'REJECTED'
+  commissionRate: number
   payoutMethod?: {
     type: string
     accountNumber: string
   }
   createdAt: string
   updatedAt: string
+  user: {
+    id: string
+    email: string
+    firstName: string
+    lastName: string
+    profilePic: string | null
+    phone: string
+    role: string
+    isActive: boolean
+    emailVerified: boolean
+    createdAt: string
+  }
 }
 
 // Architect Service
@@ -79,8 +88,8 @@ export const architectService = {
   },
 
   // Get current architect profile
-  async getCurrentProfile(): Promise<Architect> {
-    const response = await axiosInstance.get<Architect>(`${API_BASE_URL}/api/v1/architects/profile/me`)
+  async getCurrentProfile(): Promise<{ success: boolean; data: Architect }> {
+    const response = await axiosInstance.get<{ success: boolean; data: Architect }>(`${API_BASE_URL}/api/v1/architects/profile/me`)
     return response.data
   },
 
