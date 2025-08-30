@@ -31,10 +31,12 @@ import { toast } from 'sonner';
 import { useTranslations } from '@/app/hooks/useTranslations';
 
 const CategoriesTablePage = () => {
-  const { categories, createCategory, deleteCategory } = useCategories();
+  const { categories, createCategory, deleteCategory, updateCategory } = useCategories();
   const { t } = useTranslations();
   const [searchQuery, setSearchQuery] = useState('');
   const [openAddDialog, setOpenAddDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<{ id: string; name: string; description: string } | null>(null);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [newCategoryDescription, setNewCategoryDescription] = useState('');
   const [newSubCategories, setNewSubCategories] = useState<string[]>(['']);
@@ -90,6 +92,28 @@ const CategoriesTablePage = () => {
         toast.error(t('categories.createError'));
       }
     }
+  };
+
+  const handleEditCategory = async () => {
+    if (editingCategory && editingCategory.name.trim()) {
+      try {
+        await updateCategory(editingCategory.id, {
+          name: editingCategory.name.trim(),
+          description: editingCategory.description.trim(),
+          slug: editingCategory.name.trim().toLowerCase().replace(/\s+/g, '-'),
+        });
+        setOpenEditDialog(false);
+        setEditingCategory(null);
+        toast.success(t('categories.updateSuccess'));
+      } catch {
+        toast.error(t('categories.updateError'));
+      }
+    }
+  };
+
+  const openEditDialogForCategory = (category: { id: string; name: string; description: string }) => {
+    setEditingCategory(category);
+    setOpenEditDialog(true);
   };
 
   const parentCategories = categories.filter(cat => !cat.parentId);
@@ -174,6 +198,48 @@ const CategoriesTablePage = () => {
         </Dialog>
       </div>
 
+      {/* Edit Category Dialog */}
+      <Dialog open={openEditDialog} onOpenChange={setOpenEditDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('categories.editCategory')}</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="edit-category-name" className="text-right">
+                {t('categories.categoryName')}
+              </Label>
+              <Input
+                id="edit-category-name"
+                className="col-span-3"
+                value={editingCategory?.name || ''}
+                onChange={(e) => setEditingCategory(prev => prev ? { ...prev, name: e.target.value } : null)}
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="edit-category-description" className="text-right">
+                {t('categories.description')}
+              </Label>
+              <Textarea
+                id="edit-category-description"
+                className="col-span-3"
+                value={editingCategory?.description || ''}
+                onChange={(e) => setEditingCategory(prev => prev ? { ...prev, description: e.target.value } : null)}
+                placeholder={t('categories.descriptionPlaceholder')}
+              />
+            </div>
+          </div>
+          <div className="flex justify-end">
+            <GenericButton variant="secondary" onClick={() => setOpenEditDialog(false)}>
+              {t('common.cancel')}
+            </GenericButton>
+            <GenericButton className="ml-2" onClick={handleEditCategory}>
+              {t('categories.updateCategory')}
+            </GenericButton>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <div className="mb-4 flex items-center md:justify-between space-x-2">
         <div className="relative w-full md:w-1/3">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -249,7 +315,12 @@ const CategoriesTablePage = () => {
                 </TableCell>
                 <TableCell className='py-4'>{parent.dateCreated}</TableCell>
                 <TableCell className='py-4 text-right'>
-                  <GenericButton size="sm" variant="ghost" className="mr-2">
+                  <GenericButton 
+                    size="sm" 
+                    variant="ghost" 
+                    className="mr-2"
+                    onClick={() => openEditDialogForCategory(parent)}
+                  >
                     <Pencil className="h-4 w-4" />
                   </GenericButton>
                   <GenericButton size="sm" className='bg-red-500 hover:bg-red-600 text-white' onClick={() => handleDeleteCategory(parent.id)}>

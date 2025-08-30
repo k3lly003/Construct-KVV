@@ -33,8 +33,14 @@
     "home": "Home",
     "My-store": "My-store",
     "services": "Services",
+    "serviceRequests": "Service Requests",
+    "designRequests": "Design Requests",
+    "myWork": "My Work",
+    "workReviews": "Work Reviews",
+    "designReviews": "Design Reviews",
     "deals": "Deals",
     "projects": "Projects",
+    "bids": "Bids",
     "shops": "Shops",
     "pricing": "Pricings",
     "help": "Help",
@@ -81,6 +87,70 @@
       "commissionRate": "Commission Rate",
       "payoutMethod": "Payout Method",
       "contactEmail": "Contact Email"
+    }
+  },
+  "home": {
+    "maintenanceLabel": "Home Maintenance",
+    "projects": "Projects",
+    "bidsBulk": "Bids & Bulk",
+    "hireProfessional": "Hire a Professional",
+    "viewMore": "View More",
+    "seeProsNearYou": "See pros near you",
+    "maintenance": {
+      "hero": {
+        "title": "These annoying chores used to eat up your entire weekend. Not anymore.",
+        "subtitle": "See all home maintenance"
+      },
+      "services": {
+        "houseCleaning": "House Cleaning",
+        "interiorPainting": "Interior Painting",
+        "handyman": "Handyman"
+      }
+    },
+    "project-contents": {
+      "hero": {
+        "title": "Turn your vision into reality with our comprehensive project management.",
+        "subtitle": "Explore all projects"
+      },
+      "services": {
+        "kitchenRemodel": "Kitchen Remodeling",
+        "bathroomRenovation": "Bathroom Renovation",
+        "homeAddition": "Home Addition"
+      },
+      "features": {
+        "title": "Project Management Features",
+        "description": "Track progress, manage timelines, and coordinate with multiple contractors all in one place."
+      }
+    },
+    "bidsBulk-contents": {
+      "hero": {
+        "title": "Get competitive bids and bulk pricing for your large-scale projects.",
+        "subtitle": "Start bidding process"
+      },
+      "services": {
+        "bulkMaterials": "Bulk Materials",
+        "contractorBids": "Contractor Bids",
+        "wholesalePricing": "Wholesale Pricing"
+      },
+      "process": {
+        "title": "Competitive Bidding Process",
+        "description": "Submit your project details and receive competitive bids from qualified contractors in your area."
+      }
+    },
+    "hireProfessional-contents": {
+      "hero": {
+        "title": "Connect with vetted professionals who deliver exceptional results.",
+        "subtitle": "Browse professionals"
+      },
+      "services": {
+        "certifiedContractors": "Certified Contractors",
+        "designSpecialists": "Design Specialists",
+        "projectManagers": "Project Managers"
+      },
+      "network": {
+        "title": "Vetted Professional Network",
+        "description": "All professionals are background-checked, licensed, and have proven track records of quality work."
+      }
     }
   },
   "auth": {
@@ -303,7 +373,7 @@
       "logRejectingShopCreation": "Rejecting shop creation for:"
     },
     "profile": "Profile",
-    "sellerRequests": "Seller Requests",
+    "sellerRequests": "Requests",
     "guide": {
       "welcome": "Hey 👋, Special welcome to the Help Center!",
       "description": "This guide will help you navigate and use all the features effectively.",
@@ -692,6 +762,10 @@
     "deleteError": "Failed to delete category",
     "createSuccess": "Category created successfully",
     "createError": "Failed to create category",
+    "editCategory": "Edit Category",
+    "updateCategory": "Update Category",
+    "updateSuccess": "Category updated successfully",
+    "updateError": "Failed to update category",
     "searchPlaceholder": "Search categories...",
     "filterCategory": "Filter Category",
     "dateCreated": "Date Created",

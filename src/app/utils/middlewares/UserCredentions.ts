@@ -12,3 +12,13 @@ export function getUserDataFromLocalStorage() {
     return error;
   }
 }
+
+export function updateUserDataInLocalStorage(updatedData: any) {
+  try {
+    localStorage.setItem("user", JSON.stringify(updatedData));
+    return true;
+  } catch (error) {
+    console.error("Error updating user data in localStorage:", error);
+    return false;
+  }
+}

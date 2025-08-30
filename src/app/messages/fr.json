@@ -83,6 +83,70 @@
       "contactEmail": "Email de contact"
       }
   },
+  "home": {
+    "maintenance": "Entretien de la Maison",
+    "projects": "Projets",
+    "bidsBulk": "Devis et Vrac",
+    "hireProfessional": "Engager un Professionnel",
+    "viewMore": "Voir Plus",
+    "seeProsNearYou": "Voir les pros près de chez vous",
+    "maintenance": {
+      "hero": {
+        "title": "Ces tâches ennuyeuses prenaient tout votre week-end. Plus maintenant.",
+        "subtitle": "Voir tout l'entretien de la maison"
+      },
+      "services": {
+        "houseCleaning": "Nettoyage de Maison",
+        "interiorPainting": "Peinture Intérieure",
+        "handyman": "Bricolage"
+      }
+    },
+    "project-contents": {
+      "hero": {
+        "title": "Transformez votre vision en réalité avec notre gestion de projet complète.",
+        "subtitle": "Explorer tous les projets"
+      },
+      "services": {
+        "kitchenRemodel": "Rénovation de Cuisine",
+        "bathroomRenovation": "Rénovation de Salle de Bain",
+        "homeAddition": "Extension de Maison"
+      },
+      "features": {
+        "title": "Fonctionnalités de Gestion de Projet",
+        "description": "Suivez les progrès, gérez les délais et coordonnez avec plusieurs entrepreneurs en un seul endroit."
+      }
+    },
+    "bidsBulk-contents": {
+      "hero": {
+        "title": "Obtenez des devis compétitifs et des prix en gros pour vos projets à grande échelle.",
+        "subtitle": "Démarrer le processus de devis"
+      },
+      "services": {
+        "bulkMaterials": "Matériaux en Vrac",
+        "contractorBids": "Devis d'Entrepreneurs",
+        "wholesalePricing": "Prix de Gros"
+      },
+      "process": {
+        "title": "Processus de Devis Compétitifs",
+        "description": "Soumettez les détails de votre projet et recevez des devis compétitifs d'entrepreneurs qualifiés dans votre région."
+      }
+    },
+    "hireProfessional-contents": {
+      "hero": {
+        "title": "Connectez-vous avec des professionnels vérifiés qui livrent des résultats exceptionnels.",
+        "subtitle": "Parcourir les professionnels"
+      },
+      "services": {
+        "certifiedContractors": "Entrepreneurs Certifiés",
+        "designSpecialists": "Spécialistes en Design",
+        "projectManagers": "Chefs de Projet"
+      },
+      "network": {
+        "title": "Réseau de Professionnels Vérifiés",
+        "description": "Tous les professionnels sont vérifiés, licenciés et ont des antécédents prouvés de travail de qualité."
+      }
+    }
+  },
   "auth": {
     "signin": {
       "title": "Se connecter",
@@ -340,6 +404,14 @@
     "customers": "Clients",
     "analytics": "Analytique",
     "settings": "Paramètres",
+    "activeJobs": "Travaux Actifs",
+    "completedJobs": "Travaux Terminés",
+    "estimates": "Devis",
+    "clients": "Clients",
+    "schedule": "Planning",
+    "materials": "Matériaux",
+    "team": "Équipe",
+    "financials": "Finances",
     "notifications": {
       "title": "Notifications",
       "unread": "non lu",
@@ -369,7 +441,7 @@
       "logRejectingShopCreation": "Rejet de la création de boutique pour :"
     },
     "profile": "Profil",
-    "sellerRequests": "Demandes de vendeur",
+    "sellerRequests": "Demandes",
     "guide": {
       "welcome": "Salut 👋, Bienvenue spéciale au Centre d'Aide !",
       "description": "Ce guide vous aidera à naviguer et utiliser toutes les fonctionnalités efficacement.",
@@ -690,6 +762,10 @@
     "deleteError": "Échec de la suppression de la catégorie",
     "createSuccess": "Catégorie créée avec succès",
     "createError": "Échec de la création de la catégorie",
+    "editCategory": "Modifier la catégorie",
+    "updateCategory": "Mettre à jour la catégorie",
+    "updateSuccess": "Catégorie mise à jour avec succès",
+    "updateError": "Échec de la mise à jour de la catégorie",
     "searchPlaceholder": "Rechercher des catégories...",
     "filterCategory": "Filtrer la catégorie",
     "dateCreated": "Date de création",

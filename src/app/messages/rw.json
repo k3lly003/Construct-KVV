@@ -1,0 +1,91 @@
+{
+  "home": {
+    "maintenanceLabel": "Kurwanya Inzu",
+    "projects": "Ibikorwa",
+    "bidsBulk": "Gutanga & Ibintu Birenga",
+    "hireProfessional": "Gusaba Umwuga",
+    "viewMore": "Reba Ibindi",
+    "seeProsNearYou": "Reba abantu b'umwuga hafi yawe",
+    "maintenance": {
+      "hero": {
+        "title": "Ibi bikorwa by'ubugoyi byakugiraho weekend yose. Ohere rero.",
+        "subtitle": "Reba kurwanya inzu yose"
+      },
+      "services": {
+        "houseCleaning": "Gusukura Inzu",
+        "interiorPainting": "Gupaka Imbere y'Inzu",
+        "handyman": "Umwuga"
+      }
+    },
+    "project-contents": {
+      "hero": {
+        "title": "Guhindura igitekerezo cyawe kuri ukuri hamwe n'ubuyobozi bw'ibikorwa bwuzuye.",
+        "subtitle": "Shakisha ibikorwa byose"
+      },
+      "services": {
+        "kitchenRemodel": "Guhindura Ikibikamo",
+        "bathroomRenovation": "Guhindura Icyumba cy'amasugi",
+        "homeAddition": "Kongeramo Inzu"
+      },
+      "features": {
+        "title": "Ibikorwa by'Ubuyobozi bw'Ibikorwa",
+        "description": "Kurikirana iterambere, gufata ibihe, no guhuza abakozi benshi kuri aho kumwe."
+      }
+    },
+    "bidsBulk-contents": {
+      "hero": {
+        "title": "Bona gutanga kuri urushanwa no gutanga ibintu birenga kuri ibikorwa byawe binini.",
+        "subtitle": "Tangira uburyo bwo gutanga"
+      },
+      "services": {
+        "bulkMaterials": "Ibintu Birenga",
+        "contractorBids": "Gutanga kwa Bakozi",
+        "wholesalePricing": "Igiciro cyo Gutanga Birenga"
+      },
+      "process": {
+        "title": "Uburyo bwo Gutanga kuri Urushanwa",
+        "description": "Ohere ibisobanura by'ikiborwa cyawe kandi ubone gutanga kuri urushanwa kuri bakozi bafite ubumenyi mu karere kawe."
+      }
+    },
+    "hireProfessional-contents": {
+      "hero": {
+        "title": "Uhuza n'abantu b'umwuga bavuguruwe bakora ibizabaho neza.",
+        "subtitle": "Shakisha abantu b'umwuga"
+      },
+      "services": {
+        "certifiedContractors": "Bakozi Bavuguruwe",
+        "designSpecialists": "Abahanga mu Gushushanya",
+        "projectManagers": "Abayobozi b'Ibikorwa"
+      },
+      "network": {
+        "title": "Urukurikirane rw'Abantu b'Umwuga Bavuguruwe",
+        "description": "Abantu b'umwuga bose bavuguruwe, bafite uruhushya, kandi bafite amatangazo y'umwuga mwiza."
+      }
+    }
+  },
+  "categories": {
+    "title": "Ibikoresho by'ibintu",
+    "addCategory": "Ongeramo Ibikoresho",
+    "addNewCategory": "Ongeramo Ibikoresho Gishya",
+    "categoryName": "Izina ry'Ibikoresho",
+    "description": "Ibisobanura",
+    "descriptionPlaceholder": "Andika ibisobanura by'ibikoresho...",
+    "subCategories": "Ibikoresho byo munsi (bihitamo)",
+    "subCategoryPlaceholder": "Izina ry'ibikoresho co munsi",
+    "addSubCategory": "Ongeramo Ibikoresho co Munsi",
+    "deleteSuccess": "Ibikoresho byasibwe neza",
+    "deleteError": "Kusiba ibikoresho byanze",
+    "createSuccess": "Ibikoresho byakozwe neza",
+    "createError": "Gukora ibikoresho byanze",
+    "editCategory": "Hindura Ibikoresho",
+    "updateCategory": "Hindura Ibikoresho",
+    "updateSuccess": "Ibikoresho byahinduwe neza",
+    "updateError": "Guhindura ibikoresho byanze",
+    "searchPlaceholder": "Shakisha ibikoresho...",
+    "filterCategory": "Shungura Ibikoresho",
+    "dateCreated": "Itariki yo Gukora",
+    "subCategoriesFor": "Ibikoresho byo munsi bya {{name}}",
+    "noSubCategories": "Nta bikoresho byo munsi",
+    "noCategoriesFound": "Nta bikoresho byabonetse."
+  }
+}

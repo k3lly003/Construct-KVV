@@ -2,8 +2,6 @@ import "../globals.css";
 import DashboardWrapper from "./dashboardWrapper";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { UserStoreInitializer, DashboardStoreInitializer } from "../../store";
-import { QueryProviders } from "../provider";
-
 
 export default function RootLayout({
   children,
@@ -12,12 +10,10 @@ export default function RootLayout({
 }>) {
   return (
     <>
-        <QueryProviders>
-          <UserStoreInitializer />
-          <DashboardStoreInitializer />
-          <DashboardWrapper>{children}</DashboardWrapper>
-          <SpeedInsights />
-        </QueryProviders>
+      <UserStoreInitializer />
+      <DashboardStoreInitializer />
+      <DashboardWrapper>{children}</DashboardWrapper>
+      <SpeedInsights />
     </>
   );
 }

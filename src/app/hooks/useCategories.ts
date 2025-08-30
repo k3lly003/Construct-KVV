@@ -79,6 +79,22 @@ export const useCategories = () => {
     },
   });
 
+  const updateCategoryMutation = useMutation({
+    mutationFn: async ({ 
+      id, 
+      updates 
+    }: { 
+      id: string; 
+      updates: { name?: string; description?: string; slug?: string; parentId?: string; }
+    }) => {
+      if (!authToken) throw new Error("Not authenticated");
+      return categoryService.updateCategory(id, updates, authToken);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['categories'] });
+    },
+  });
+
   const createCategory = useCallback(async (name: string, description: string, subCategories: string[]) => {
     return createCategoryMutation.mutateAsync({ name, description, subCategories });
   }, [createCategoryMutation]);
@@ -91,12 +107,17 @@ export const useCategories = () => {
     return getCategoryByIdMutation.mutateAsync(id);
   }, [getCategoryByIdMutation]);
 
+  const updateCategory = useCallback(async (id: string, updates: { name?: string; description?: string; slug?: string; parentId?: string; }) => {
+    return updateCategoryMutation.mutateAsync({ id, updates });
+  }, [updateCategoryMutation]);
+
   return {
     categories,
-    isLoading: isLoading || createCategoryMutation.isPending || deleteCategoryMutation.isPending || getCategoryByIdMutation.isPending,
-    error: error || createCategoryMutation.error || deleteCategoryMutation.error || getCategoryByIdMutation.error,
+    isLoading: isLoading || createCategoryMutation.isPending || deleteCategoryMutation.isPending || getCategoryByIdMutation.isPending || updateCategoryMutation.isPending,
+    error: error || createCategoryMutation.error || deleteCategoryMutation.error || getCategoryByIdMutation.error || updateCategoryMutation.error,
     createCategory,
     deleteCategory,
-    getCategoryById
+    getCategoryById,
+    updateCategory
   };
 }; 

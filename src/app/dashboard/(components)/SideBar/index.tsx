@@ -15,16 +15,19 @@ import {
   Package,
   User, // New icon for Profile
   Layers,
-  DollarSign, // New icon for Sales Report
+  DollarSign,
+  CalendarDays,
+  MailPlus,
+  HandHelping, // New icon for Sales Report
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import CustomSheet from "../shad_/CustomSheet";
 import Image from "next/image";
-import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
 import { useRouter } from 'next/navigation';
 import { useTranslations } from '@/app/hooks/useTranslations';
+import { useUserStore } from "../../../../store/userStore";
 
 
 interface SidebarLinkProps {
@@ -84,10 +87,10 @@ const SideBar = () => {
   const { t } = useTranslations();
 
   const { isSidebarCollapsed, toggleSidebar } = useGlobalStore();
-
-  const USER = getUserDataFromLocalStorage();
-  const userRole = USER ? USER.role : null;
-  const isLoggedIn = !!USER;
+  
+  // Use Zustand store for user data to avoid hydration issues
+  const { role: userRole, isHydrated } = useUserStore();
+  const isLoggedIn = !!userRole;
 
   const toogleSidebar = () => {
     toggleSidebar();
@@ -102,11 +105,27 @@ const SideBar = () => {
   const sidebarClassName = `fixed flex flex-col bg-white dark:bg-gray-800 z-30 ${isSidebarCollapsed ? "w-0 md:w-16" : "w-72 md:w-64"
     }transition-all duration-500 overflow-hidden h-full shadow-md dark:shadow-2xl`;
 
+  // Load user data on client side
   useEffect(() => {
-    if (!isLoggedIn) {
+    useUserStore.getState().loadUserData();
+  }, []);
+
+  useEffect(() => {
+    if (isHydrated && !isLoggedIn) {
       router.push('/signin');
     }
-  }, [isLoggedIn, router]);
+  }, [isHydrated, isLoggedIn, router]);
+
+  // Don't render sidebar content until user data is hydrated
+  if (!isHydrated) {
+    return (
+      <div className={sidebarClassName}>
+        <div className="flex items-center justify-center h-full">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={sidebarClassName}>
@@ -173,9 +192,110 @@ const SideBar = () => {
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
-                href="/dashboard/seller-requests"
+                href="/dashboard/requests"
                 icon={Layers}
                 label={t('dashboard.sellerRequests')}
+                isCollapsed={isSidebarCollapsed}
+              />
+            </>
+          )}
+
+          {userRole === "TECHNICIAN" && (
+            <>
+              <SidebarLink
+                href="/dashboard/overview"
+                icon={LayoutDashboard}
+                label={t('dashboard.overviews')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+
+                href="/dashboard/service-requests"
+                icon={HandHelping}
+                label={t('navigation.serviceRequests')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/projects"
+                icon={CalendarDays}
+                label={t('navigation.projects')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/profile"
+                icon={User}
+                label={t('navigation.profile')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/work-reviews"
+                icon={MailPlus}
+                label={t('dashboard.workReviews', 'Work Reviews')}
+                isCollapsed={isSidebarCollapsed}
+              />
+            </>
+          )}
+
+          {userRole === "ARCHITECT" && (
+            <>
+              <SidebarLink
+                href="/dashboard/overview"
+                icon={LayoutDashboard}
+                label={t('dashboard.overviews')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+
+                href="/dashboard/design-requests"
+                icon={HandHelping}
+                label={t('navigation.designRequests')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/projects"
+                icon={CalendarDays}
+                label={t('navigation.myWork')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/profile"
+                icon={User}
+                label={t('navigation.profile')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/design-reviews"
+                icon={MailPlus}
+                label={t('navigation.designReviews')}
+                isCollapsed={isSidebarCollapsed}
+              />
+            </>
+          )}
+
+          {userRole === "CONTRACTOR" && (
+            <>
+              <SidebarLink
+                href="/dashboard/overview"
+                icon={LayoutDashboard}
+                label={t('dashboard.overviews')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/bids"
+                icon={TableProperties}
+                label={t('navigation.bids')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/profile" // Assuming profile path for sellers
+                icon={User}
+                label={t('navigation.profile')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/sales-report" // Assuming sales report path for sellers
+                icon={DollarSign}
+                label={t('dashboard.salesReport', 'Sales Report')}
                 isCollapsed={isSidebarCollapsed}
               />
             </>
@@ -220,7 +340,7 @@ const SideBar = () => {
           <SidebarLink
             href="/dashboard/notifications"
             icon={Bell}
-            label={t('dashboard.notification','notifications')}
+            label={t('dashboard.notification', 'notifications')}
             isCollapsed={isSidebarCollapsed}
           />
         </div>

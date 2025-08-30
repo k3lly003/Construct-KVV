@@ -87,6 +87,48 @@ export const categoryService = {
     }
   },
 
+  async updateCategory(
+    id: string,
+    updates: Partial<Omit<Category, "id">>,
+    authToken: string
+  ): Promise<Category> {
+    try {
+      const response = await axios.put(
+        `${API_URL}/api/v1/categories/${id}`,
+        updates,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      // Handle both possible shapes: { id, ... } or { data: { ... } }
+      if (
+        response.data &&
+        typeof response.data === "object" &&
+        "data" in response.data &&
+        response.data.data
+      ) {
+        return response.data.data as Category;
+      }
+
+      if (
+        response.data &&
+        typeof response.data === "object" &&
+        "id" in response.data
+      ) {
+        return response.data as Category;
+      }
+
+      throw new Error("Invalid response data when updating category");
+    } catch (error) {
+      console.error("Error updating category:", error);
+      throw error instanceof Error ? error : new Error(String(error));
+    }
+  },
+
   async getCategoryById(id: string, authToken?: string): Promise<Category> {
     try {
       const response = await axios.get(`${API_URL}/api/v1/categories/${id}`, {

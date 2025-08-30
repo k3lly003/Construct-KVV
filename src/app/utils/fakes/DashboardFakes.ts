@@ -47,6 +47,16 @@ export const dashboardFakes = {
       "dashboard.shopActions",
     ],
   },
+  constructor: {
+    activeJobs: "dashboard.activeJobs",
+    completedJobs: "dashboard.completedJobs",
+    estimates: "dashboard.estimates",
+    clients: "dashboard.clients",
+    schedule: "dashboard.schedule",
+    materials: "dashboard.materials",
+    team: "dashboard.team",
+    financials: "dashboard.financials",
+  },
   notifications: {
     title: "dashboard.notifications.title",
     unread: "dashboard.notifications.unread",

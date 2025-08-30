@@ -20,7 +20,7 @@ export const UsersService = {
   async getAllUsers(authToken?: string, page = 1, limit = 10, search = '', role = '', isActive?: boolean): Promise<{ users: User[]; meta?: any }> {
     try {
       const headers = authToken ? { Authorization: `Bearer ${authToken}` } : undefined;
-      let url = `${API_URL}/api/v1/user/all?page=${page}&limit=${limit}`;
+      let url = `${API_URL}/api/v1/user/all?page=1&limit=10`;
       if (search) url += `&search=${encodeURIComponent(search)}`;
       if (role) url += `&role=${encodeURIComponent(role)}`;
       if (isActive !== undefined) url += `&isActive=${isActive}`;

@@ -1,23 +1,46 @@
 'use client';
 
-import { ProfileHeader } from '@/app/dashboard/(components)/profile/profile-header';
-import { ProfileSidebar } from '@/app/dashboard/(components)/profile/profile-sidebar';
-import { ProfileContent } from '@/app/dashboard/(components)/profile/profile-content';
+import { useUserStore } from '@/store/userStore';
+import AdminProfile from '@/app/dashboard/(components)/profile/AdminProfile';
+import ConstractorProfile from '@/app/dashboard/(components)/profile/ConstractorProfile';
+import TechnicianProfile from '../(components)/profile/TechnicianProfile';
+import ArchitectureProfile from '../(components)/profile/ArchitectureProfile';
 
 export default function ProfilePage() {
-  return (
-    <>
-      <ProfileHeader />
-      <div className="relative max-w-9xl mx-auto mt-[-100px] z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-4 mx-5 gap-6">
-          <div className="lg:col-span-1">
-            <ProfileSidebar />
-          </div>
-          <div className="lg:col-span-3">
-            <ProfileContent />
-          </div>
+  const { role, isHydrated } = useUserStore();
+
+  // Show loading state while user data is being hydrated
+  if (!isHydrated) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading profile...</p>
         </div>
       </div>
+    );
+  }
+
+  return (
+    <>
+      {role === "ADMIN" && <AdminProfile />}
+      
+      {role === "CONTRACTOR" && <ConstractorProfile />}
+
+      {role === "TECHNICIAN" && <TechnicianProfile />}
+      
+      {role === "ARCHITECT" && <ArchitectureProfile />}
+      
+      {role === "SELLER" && <AdminProfile />}
+      
+      {!role && (
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">Profile Not Available</h1>
+            <p className="text-gray-600">Dear anonymous friend, you don't have a profile yet.</p>
+          </div>
+        </div>
+      )}
     </>
   );
 }

@@ -4,7 +4,7 @@ import { create } from "zustand";
 
 // Define the shape of your user state
 interface UserState {
-  role: "ADMIN" | "SELLER" | "CUSTOMER" | null;
+  role: "ADMIN" | "SELLER" | "CUSTOMER" | "CONTRACTOR" | "ARCHITECT" | "TECHNICIAN" | null;
   firstName: string | null;
   lastName: string | null;
   name: string | null;
@@ -33,7 +33,7 @@ export const useUserStore = create<UserState>((set) => ({
       const user = getUserDataFromLocalStorage();
       if (user) {
         set({
-          role: user.role as "ADMIN" | "SELLER" | "CUSTOMER", // Now supports CUSTOMER
+          role: user.role as "ADMIN" | "SELLER" | "CUSTOMER" | "CONTRACTOR" | "ARCHITECT" | "TECHNICIAN", // Now supports all professional roles
           firstName: user.firstName,
           lastName: user.lastName,
           name: `${user.firstName} ${user.lastName}`,
