@@ -17,21 +17,28 @@ import {
   TrendingUp,
   FileText,
   Loader2,
-  Tag
+  Tag,
+  X
 } from 'lucide-react';
 import { architectService, Architect, ArchitectProfileData } from '@/app/services/architectService';
 
 const ArchitectureProfile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
   const [profile, setProfile] = useState<Architect | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     yearsExperience: '',
     businessName: '',
     licenseNumber: '',
     location: [] as string[],
-    specializations: [] as string[]
+    documents: [] as string[],
+    payoutMethod: {
+      type: '',
+      accountNumber: ''
+    }
   });
 
   // Fetch current profile data
@@ -41,7 +48,7 @@ const ArchitectureProfile: React.FC = () => {
         setLoading(true);
         console.log('🔍 Fetching architect profile...');
         const response = await architectService.getCurrentProfile();
-        const profileData = response.data;
+        const profileData: any = (response as any)?.data || (response as any)?.architect || response;
         console.log('✅ Profile data received:', profileData);
         console.log('📊 Profile data structure:', {
           id: profileData.id,
@@ -55,15 +62,23 @@ const ArchitectureProfile: React.FC = () => {
           documents: profileData.documents,
           user: profileData.user
         });
-        setProfile(profileData);
+        if (profileData) {
+          setProfile(profileData as Architect);
+        } else {
+          setError('No profile data returned from server');
+        }
 
         // Initialize form data with profile data
         const initialFormData = {
-          yearsExperience: profileData.yearsExperience?.toString() || '',
-          businessName: profileData.businessName || '',
-          licenseNumber: profileData.licenseNumber || '',
-          location: profileData.location || [],
-          specializations: profileData.specializations || []
+          yearsExperience: (profileData as any)?.yearsExperience?.toString() || '',
+          businessName: (profileData as any)?.businessName || '',
+          licenseNumber: (profileData as any)?.licenseNumber || '',
+          location: (profileData as any)?.location || [],
+          documents: (profileData as any)?.documents || [],
+          payoutMethod: {
+            type: (profileData as any)?.payoutMethod?.type || '',
+            accountNumber: (profileData as any)?.payoutMethod?.accountNumber || ''
+          }
         };
         console.log('📝 Initial form data:', initialFormData);
         setFormData(initialFormData);
@@ -82,35 +97,85 @@ const ArchitectureProfile: React.FC = () => {
     fetchProfile();
   }, []);
 
-  const handleInputChange = (field: string, value: string | string[]) => {
+  const handleInputChange = (field: string, value: string | string[] | any) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
   };
 
+  const handleEditClick = () => {
+    setShowEditDialog(true);
+    setError(null);
+    setSuccessMessage(null);
+    if (profile) {
+      setFormData({
+        yearsExperience: (profile as any)?.yearsExperience?.toString() || '',
+        businessName: (profile as any)?.businessName || '',
+        licenseNumber: (profile as any)?.licenseNumber || '',
+        location: (profile as any)?.location || [],
+        documents: (profile as any)?.documents || [],
+        payoutMethod: {
+          type: (profile as any)?.payoutMethod?.type || '',
+          accountNumber: (profile as any)?.payoutMethod?.accountNumber || ''
+        }
+      });
+    }
+  };
+
   const handleSave = async () => {
     try {
       setLoading(true);
+      setError(null);
 
       const updateData: ArchitectProfileData = {
         businessName: formData.businessName,
         licenseNumber: formData.licenseNumber,
         yearsExperience: parseInt(formData.yearsExperience) || 0,
         location: formData.location,
-        specializations: formData.specializations,
-        documents: profile?.documents || []
+        documents: formData.documents || [],
+        payoutMethod: formData.payoutMethod?.type || formData.payoutMethod?.accountNumber
+          ? {
+              type: formData.payoutMethod.type,
+              accountNumber: formData.payoutMethod.accountNumber
+            }
+          : undefined
       };
 
       const result = await architectService.updateProfile(updateData);
       console.log('✅ Profile updated successfully:', result);
       setProfile(result.architect);
+      setSuccessMessage('Profile updated successfully!');
+      setShowEditDialog(false);
       setIsEditing(false);
+      if (typeof window !== 'undefined') {
+        window.location.reload();
+      }
     } catch (err) {
       console.error('❌ Error updating profile:', err);
       setError('Failed to update profile');
     } finally {
       setLoading(false)
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setShowEditDialog(false);
+    setIsEditing(false);
+    setError(null);
+    setSuccessMessage(null);
+    if (profile) {
+      setFormData({
+        yearsExperience: (profile as any)?.yearsExperience?.toString() || '',
+        businessName: (profile as any)?.businessName || '',
+        licenseNumber: (profile as any)?.licenseNumber || '',
+        location: (profile as any)?.location || [],
+        documents: (profile as any)?.documents || [],
+        payoutMethod: {
+          type: (profile as any)?.payoutMethod?.type || '',
+          accountNumber: (profile as any)?.payoutMethod?.accountNumber || ''
+        }
+      });
     }
   };
 
@@ -154,12 +219,11 @@ const ArchitectureProfile: React.FC = () => {
   const stats = [
     { label: 'Years Experience', value: profile.yearsExperience?.toString() || '0', icon: Calendar },
     { label: 'License Number', value: profile.licenseNumber || 'N/A', icon: Award },
-    { label: 'Specializations', value: profile.specializations?.length?.toString() || '0', icon: Tag },
     { label: 'Status', value: profile.status, icon: Star }
   ];
 
   return (
-    <div className="max-w-6xl bg-gray-50 min-h-screen p-6">
+    <div className="w-fullbg-gray-50 min-h-screen p-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Architect Profile</h1>
         <p className="text-gray-600">Manage your professional information and credentials</p>
@@ -169,7 +233,7 @@ const ArchitectureProfile: React.FC = () => {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-8">
         <div className="relative">
           {/* Cover Image */}
-          <div className="h-32 bg-gradient-to-r from-blue-500 to-blue-700 rounded-t-xl"></div>
+          <div className="h-32 bg-gradient-to-r from-amber-500 to-amber-700 rounded-t-xl"></div>
 
           {/* Profile Image */}
           <div className="absolute -bottom-16 left-8">
@@ -179,7 +243,7 @@ const ArchitectureProfile: React.FC = () => {
                 alt="Profile"
                 className="w-32 h-32 rounded-full border-4 border-white object-cover"
               />
-              <button className="absolute bottom-2 right-2 w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
+              <button className="absolute bottom-2 right-2 w-10 h-10 bg-amber-600 text-white rounded-full flex items-center justify-center hover:bg-amber-700 transition-colors">
                 <Camera className="w-5 h-5" />
               </button>
             </div>
@@ -188,23 +252,12 @@ const ArchitectureProfile: React.FC = () => {
           {/* Edit Button */}
           <div className="absolute top-4 right-4">
             <button
-              onClick={() => isEditing ? handleSave() : setIsEditing(true)}
+              onClick={handleEditClick}
               disabled={loading}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 ${isEditing
-                  ? 'bg-green-600 text-white hover:bg-green-700'
-                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className="px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 bg-white text-gray-700 hover:bg-gray-50 border border-gray-300"
             >
-              {loading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : isEditing ? (
-                <Save className="w-4 h-4" />
-              ) : (
-                <Edit className="w-4 h-4" />
-              )}
-              <span>
-                {loading ? 'Saving...' : isEditing ? 'Save' : 'Edit'}
-              </span>
+              <Edit className="w-4 h-4" />
+              <span>Edit Profile</span>
             </button>
           </div>
         </div>
@@ -240,8 +293,8 @@ const ArchitectureProfile: React.FC = () => {
                 const Icon = stat.icon;
                 return (
                   <div key={index} className="text-center">
-                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-2">
-                      <Icon className="w-6 h-6 text-blue-600" />
+                    <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mx-auto mb-2">
+                      <Icon className="w-6 h-6 text-amber-600" />
                     </div>
                     <p className="text-xl font-bold text-gray-900">{stat.value}</p>
                     <p className="text-xs text-gray-600">{stat.label}</p>
@@ -255,78 +308,71 @@ const ArchitectureProfile: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Professional Information */}
-        <div className="space-y-6">
-          {/* Business Information */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-              <Building className="w-5 h-5 mr-2" />
-              Business Information
-            </h3>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Business Name</label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={formData.businessName}
-                    onChange={(e) => handleInputChange('businessName', e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                    placeholder="Business Name"
-                  />
-                ) : (
-                  <p className="text-gray-700">{profile.businessName || 'Not specified'}</p>
-                )}
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">License Number</label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={formData.licenseNumber}
-                    onChange={(e) => handleInputChange('licenseNumber', e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                    placeholder="License Number"
-                  />
-                ) : (
-                  <p className="text-gray-700">{profile.licenseNumber || 'Not specified'}</p>
-                )}
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Years of Experience</label>
-                {isEditing ? (
-                  <input
-                    type="number"
-                    value={formData.yearsExperience}
-                    onChange={(e) => handleInputChange('yearsExperience', e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                    placeholder="Years of Experience"
-                  />
-                ) : (
-                  <p className="text-gray-700">{profile.yearsExperience || 'Not specified'} years</p>
-                )}
-              </div>
+        <div className="space-y-6 bord">
+          {/* Professional Info */}
+          <div className="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between px-6 py-4">
+              <h1 className="text-xl font-semibold text-gray-900">Professional Info</h1>
+              <button 
+                onClick={handleEditClick}
+                className="text-amber-600 font-medium p-0 h-auto bg-transparent border-none cursor-pointer hover:text-amber-700"
+              >
+                Edit
+              </button>
             </div>
-          </div>
-
-          {/* Specializations */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-              <Award className="w-5 h-5 mr-2" />
-              Specializations
-            </h3>
-            <div className="space-y-2">
-              {profile.specializations && profile.specializations.length > 0 ? (
-                profile.specializations.map((spec, index) => (
-                  <span
-                    key={index}
-                    className="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium mr-2 mb-2"
-                  >
-                    {spec}
-                  </span>
-                ))
-              ) : (
-                <p className="text-gray-500">No specializations specified</p>
-              )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {[
+                {
+                  icon: Calendar,
+                  label: 'Years of Experience',
+                  value: `${profile.yearsExperience || 'Not specified'} years`
+                },
+                {
+                  icon: Building,
+                  label: 'Business Name',
+                  value: profile.businessName || 'Not specified'
+                },
+                {
+                  icon: FileText,
+                  label: 'License Number',
+                  value: profile.licenseNumber || 'Not specified'
+                },
+                {
+                  icon: MapPin,
+                  label: 'Locations',
+                  value: profile.location?.length ? profile.location.join(', ') : 'Not specified'
+                },
+                {
+                  icon: FileText,
+                  label: 'Documents',
+                  value: `${profile.documents?.length || 0} documents`
+                },
+                {
+                  icon: TrendingUp,
+                  label: 'Payout Method',
+                  value: (profile as any).payoutMethod?.type || 'Not specified'
+                },
+                {
+                  icon: FileText,
+                  label: 'Account Number',
+                  value: (profile as any).payoutMethod?.accountNumber || 'Not specified'
+                }
+              ].map((item, index) => {
+                const IconComponent = item.icon
+                return (
+                  <div key={index} className="w-full px-6 py-4 bg-white active:bg-gray-100 transition-colors">
+                    <div className="flex items-center gap-4">
+                      <div className="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center">
+                        <IconComponent className="h-4 w-4 text-white" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-gray-900 font-medium text-base">{item.label}</p>
+                        <p className="text-gray-500 text-sm mt-1 break-words">{item.value}</p>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
             </div>
           </div>
         </div>
@@ -380,7 +426,7 @@ const ArchitectureProfile: React.FC = () => {
                       href={doc} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                      className="text-amber-600 hover:text-amber-700 text-sm font-medium"
                     >
                       View
                     </a>
@@ -392,27 +438,248 @@ const ArchitectureProfile: React.FC = () => {
             </div>
           </div>
 
-          {/* Payout Information */}
-          {profile.payoutMethod && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                <TrendingUp className="w-5 h-5 mr-2" />
-                Payout Information
-              </h3>
-              <div className="space-y-4">
+          {/* My Work */}
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+              <Briefcase className="w-5 h-5 mr-2" />
+              My Work
+            </h3>
+            {(() => {
+              const works: any[] = (profile as any)?.portfolios || profile.documents || [];
+              if (!works || works.length === 0) {
+                return <p className="text-gray-500">No work added yet</p>;
+              }
+              return (
+                <div className="space-y-3">
+                  {works.map((item: any, index: number) => {
+                    const isObject = item && typeof item === 'object';
+                    const title = isObject ? (item.title || `Work ${index + 1}`) : `Work ${index + 1}`;
+                    const url = isObject ? (item.url || item.link || item.previewUrl || '') : item;
+                    return (
+                      <div key={index} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+                            <FileText className="w-5 h-5 text-amber-600" />
+                          </div>
+                          <div>
+                            <h4 className="font-medium text-gray-900">{title}</h4>
+                            <p className="text-sm text-gray-600 truncate max-w-[50vw]">{url || 'No link provided'}</p>
+                          </div>
+                        </div>
+                        {url ? (
+                          <a
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-amber-600 hover:text-amber-700 text-sm font-medium"
+                          >
+                            View
+                          </a>
+                        ) : null}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+          </div>
+        </div>
+      </div>
+
+      {/* Edit Profile Dialog */}
+      {showEditDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-100 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            {/* Dialog Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h3 className="text-xl font-semibold text-gray-900">Edit Profile</h3>
+              <button
+                onClick={handleCancelEdit}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Dialog Content */}
+            <div className="p-6 space-y-6">
+              {/* Business Name & License */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Payout Method</label>
-                  <p className="text-gray-700">{profile.payoutMethod.type || 'Not configured'}</p>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Business Name
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.businessName}
+                    onChange={(e) => handleInputChange('businessName', e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-amber-600 focus:border-amber-600"
+                    placeholder="Enter business name"
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Account Number</label>
-                  <p className="text-gray-700">{profile.payoutMethod.accountNumber || 'Not provided'}</p>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    License Number
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.licenseNumber}
+                    onChange={(e) => handleInputChange('licenseNumber', e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-amber-600 focus:border-amber-600"
+                    placeholder="Enter license number"
+                  />
+                </div>
+              </div>
+
+              {/* Years of Experience */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Years of Experience
+                </label>
+                <input
+                  type="number"
+                  value={formData.yearsExperience}
+                  onChange={(e) => handleInputChange('yearsExperience', e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-amber-600 focus:border-amber-600"
+                  placeholder="Enter years of experience"
+                  min="0"
+                />
+              </div>
+
+              {/* Locations */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Locations
+                </label>
+                <div className="space-y-2">
+                  {formData.location.map((loc, index) => (
+                    <div key={index} className="flex items-center space-x-2">
+                      <input
+                        type="text"
+                        value={loc}
+                        onChange={(e) => {
+                          const newLocations = [...formData.location];
+                          newLocations[index] = e.target.value;
+                          handleInputChange('location', newLocations);
+                        }}
+                        className="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-amber-600 focus:border-amber-600"
+                        placeholder="Enter location"
+                      />
+                      <button
+                        onClick={() => {
+                          const newLocations = formData.location.filter((_, i) => i !== index);
+                          handleInputChange('location', newLocations);
+                        }}
+                        className="px-3 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => handleInputChange('location', [...formData.location, ''])}
+                    className="w-full px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-gray-400 hover:text-gray-700 transition-colors"
+                  >
+                    + Add Location
+                  </button>
+                </div>
+              </div>
+
+              {/* Documents */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Documents
+                </label>
+                <div className="space-y-2">
+                  {formData.documents.map((doc, index) => (
+                    <div key={index} className="flex items-center space-x-2">
+                      <input
+                        type="text"
+                        value={doc}
+                        onChange={(e) => {
+                          const newDocuments = [...formData.documents];
+                          newDocuments[index] = e.target.value;
+                          handleInputChange('documents', newDocuments);
+                        }}
+                        className="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-amber-600 focus:border-amber-600"
+                        placeholder="Enter document URL"
+                      />
+                      <button
+                        onClick={() => {
+                          const newDocuments = formData.documents.filter((_, i) => i !== index);
+                          handleInputChange('documents', newDocuments);
+                        }}
+                        className="px-3 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => handleInputChange('documents', [...formData.documents, ''])}
+                    className="w-full px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-gray-400 hover:text-gray-700 transition-colors"
+                  >
+                    + Add Document
+                  </button>
+                </div>
+              </div>
+
+              {/* Payout Method */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Payout Method Type
+                  </label>
+                  <select
+                    value={formData.payoutMethod.type}
+                    onChange={(e) => handleInputChange('payoutMethod', { ...formData.payoutMethod, type: e.target.value })}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-amber-600 focus:border-amber-600"
+                  >
+                    <option value="">Select payout method</option>
+                    <option value="bank">Bank Transfer</option>
+                    <option value="mobile_money">Mobile Money</option>
+                    <option value="cash">Cash</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Account Number
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.payoutMethod.accountNumber}
+                    onChange={(e) => handleInputChange('payoutMethod', { ...formData.payoutMethod, accountNumber: e.target.value })}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-amber-600 focus:border-amber-600"
+                    placeholder="Enter account number"
+                  />
                 </div>
               </div>
             </div>
-          )}
+
+            {/* Dialog Footer */}
+            <div className="flex items-center justify-end space-x-3 p-6 border-t border-gray-200">
+              <button
+                onClick={handleCancelEdit}
+                className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={loading}
+                className="px-6 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center space-x-2"
+              >
+                {loading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Save className="w-4 h-4" />
+                )}
+                <span>{loading ? 'Saving...' : 'Save Changes'}</span>
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

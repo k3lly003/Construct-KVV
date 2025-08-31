@@ -24,7 +24,7 @@ export interface ArchitectProfileData {
   location: string[]
   yearsExperience: number
   documents: string[]
-  specializations: string[]
+  specializations?: string[]
   payoutMethod?: {
     type: string
     accountNumber: string
