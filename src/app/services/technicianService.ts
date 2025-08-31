@@ -22,7 +22,7 @@ export interface TechnicianProfileData {
   location: string[]
   documents: string[]
   experience: number
-  specializations: string[]
+  specializations?: string[]
   payoutMethod?: {
     type: string
     accountNumber: string
