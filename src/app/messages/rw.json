@@ -1,15 +1,106 @@
 {
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Siba",
+    "save": "Emeza",
+    "edit": "Edit",
+    "delete": "Siba",
+    "confirm": "Emeza",
+    "back": "Garuka inyuma",
+    "next": "Komeza Imbere",
+    "previous": "Ibyabanje",
+    "submit": "Emeza",
+    "search": "Ishakiro",
+    "filter": "Filter",
+    "sort": "Sort",
+    "view": "Reba",
+    "add": "Ongeraho",
+    "remove": "Siba",
+    "close": "Funga",
+    "open": "Fungura",
+    "yes": "Yego",
+    "no": "Oya",
+    "language": "Ururimi",
+    "english": "English",
+    "french": "French",
+    "kinyarwanda": "Kinyarwanda",
+    "addToCart": "Add to cart",
+    "contactUs": "Twandikire",
+    "viewShop": "Reba Iduka"
+  },
+  "navigation": {
+    "home": "Home",
+    "My-store": "Iduka ryange",
+    "services": "Serivise",
+    "serviceRequests": "Serivise Zasabwe",
+    "designRequests": "Design Zasabwe",
+    "myWork": "Akazi kajye",
+    "workReviews": "Work Reviews",
+    "designReviews": "Design Reviews",
+    "deals": "Gupatana",
+    "projects": "Projects",
+    "bids": "Bids",
+    "shops": "Amaduka",
+    "pricing": "Ibiciro",
+    "help": "Ubufasha",
+    "join-as-a-pro": "Join as a pro",
+    "cart": "Cart",
+    "profile": "Profile",
+    "dashboard": "Dashboard",
+    "logout": "Logout",
+    "login": "konti",
+    "signup": "Fungura konti",
+    "buildHouse": "ubaka inzu",
+    "explore-services": "Reba Serivise dutanga"
+  },
+  "banner": {
+    "slide1": {
+      "title": "Serivise z'ubwubatsi",
+      "subtitle": "Dutanga",
+      "description": "Hindura inzozi zawe impamo ubifashijwemo n'impuguke mubwubatsi, tunagufashe kubona ibikoresho byujuje ubuziranenge.",
+      "buttonText": "Reba Serivise zose"
+    },
+    "slide2": {
+      "title": "Mukugukorera umushinga",
+      "subtitle": "Impuguke",
+      "description": "Stay on track with advanced project management tools. Real-time updates, resource allocation, and milestone tracking.",
+      "buttonText": "komereza aha"
+    },
+    "slide3": {
+      "title": "Design Solutions",
+      "subtitle": "Udusha",
+      "description": "Cutting-edge design solutions that blend aesthetics with functionality. 3D visualization and custom planning services.",
+      "buttonText": "Reba Designs"
+    },
+    "shopbanner": {
+      "contactSupplier": "Vugisha abagurisha",
+      "viewCatalog": "Reba Categori zihari",
+      "verifiedSupplier": "Abacuruzi bizewe",
+      "since": "Since {{year}}",
+      "fastDelivery": "Fast Delivery",
+      "reviews": "reviews",
+      "products": "Ibicuruzwa",
+      "services": "Serivise",
+      "status": "Status",
+      "taxId": "Tax ID",
+      "commissionRate": "Commission Rate",
+      "payoutMethod": "Uburyo bwokwishyura",
+      "contactEmail": "Imeri"
+    }
+  },
   "home": {
-    "maintenanceLabel": "Kurwanya Inzu",
+    "maintenanceLabel": "Bungabunga Inzu",
     "projects": "Ibikorwa",
-    "bidsBulk": "Gutanga & Ibintu Birenga",
-    "hireProfessional": "Gusaba Umwuga",
+    "bidsBulk": "Gupatana",
+    "hireProfessional": "Abanyamwuga",
     "viewMore": "Reba Ibindi",
     "seeProsNearYou": "Reba abantu b'umwuga hafi yawe",
     "maintenance": {
       "hero": {
-        "title": "Ibi bikorwa by'ubugoyi byakugiraho weekend yose. Ohere rero.",
-        "subtitle": "Reba kurwanya inzu yose"
+        "title": "Ibi bikorwa by'ubugoryi byakugiraho weekend yose. Ohere rero.",
+        "subtitle": "Reba uko w' abungabunga inzu yose"
       },
       "services": {
         "houseCleaning": "Gusukura Inzu",
@@ -63,6 +154,102 @@
       }
     }
   },
+  "auth": {
+    "signin": {
+      "title": "Injira",
+      "subtitle": "Uraza neza kuri Construct KVV",
+      "email": "Imeri",
+      "password": "Ijambo ry'ibanga",
+      "forgotPassword": "Wibagiwe ijambo ry'ibanga?",
+      "signInButton": "Injira",
+      "noAccount": "Niba utarafungura konti?",
+      "signUpLink": "Fungura konti"
+    },
+    "signup": {
+      "title": "Fungura Konti",
+      "subtitle": "Ujye muri Construct KVV uyu munsi",
+      "firstName": "Izina rya mbere",
+      "lastName": "Izina rya nyuma",
+      "email": "Imeri",
+      "password": "Ijambo ry'ibanga",
+      "confirmPassword": "Emeza ijambo ry'ibanga",
+      "agreeTerms": "Nemerera amabwiriza n'ibisabwa",
+      "signUpButton": "Fungura Konti",
+      "haveAccount": "Urafungura konti?",
+      "signInLink": "Injira"
+    }
+  },
+  "ProjectShowcase": {
+    "title": "Uri umuntu b'umwuga bwa iki?",
+    "subtitle": "Hitamo uko uri umukiriya, kugira ngo tubafashe.",
+    "seller": {
+      "title": "Umugurisha / Iduka",
+      "description": "Niba ufite iduka ushaka kugurisha ibicuruzwa byawe, jya hano.",
+      "button": "Reba Umugurisha"
+    },
+    "architect": {
+      "title": "Umubatsi / Umushushanyi",
+      "description": "Uri umubatsi cyangwa umushushanyi w'imbere y'inyu? Kanda hano.",
+      "button": "Reba Umubatsi"
+    },
+    "customer": {
+      "title": "Umukiriya",
+      "description": "Ushaka ibicuruzwa cyangwa serivise z'ubwubatsi?",
+      "button": "Reba Umukiriya"
+    }
+  },
+  "products": {
+    "title": "Ibicuruzwa",
+    "filters": {
+      "title": "Shungura",
+      "category": "Ibikoresho",
+      "price": "Igiciro",
+      "brand": "Ikirango",
+      "rating": "Urutonde",
+      "availability": "Kuboneka",
+      "clearFilters": "Siba Shungura"
+    },
+    "sort": {
+      "title": "Shungura",
+      "priceLowToHigh": "Igiciro: Hasi kuri hejuru",
+      "priceHighToLow": "Igiciro: Hejuru kuri hasi",
+      "nameAZ": "Izina: A kuri Z",
+      "nameZA": "Izina: Z kuri A",
+      "rating": "Urutonde",
+      "newest": "Gishya"
+    },
+    "product": {
+      "addToCart": "Ongeraho kuri Cart",
+      "buyNow": "Gura Nonaha",
+      "outOfStock": "Ntibihagije",
+      "inStock": "Bihagije",
+      "description": "Ibisobanura",
+      "specifications": "Ibisobanura",
+      "reviews": "Reviews",
+      "relatedProducts": "Ibicuruzwa Bihuje"
+    }
+  },
+  "cart": {
+    "title": "Cart yo Gushopping",
+    "empty": "Cart yawe nta kintu kiriho",
+    "emptySubtitle": "Tangira gushopping kugira ngo ongeraho ibintu kuri cart",
+    "continueShopping": "Komeza Gushopping",
+    "item": "kintu",
+    "items": "ibintu",
+    "subtotal": "Igiciro gito",
+    "tax": "Umusoro",
+    "shipping": "Kohereza",
+    "total": "Igiciro cyose",
+    "checkout": "Checkout",
+    "removeItem": "Siba Ikintu",
+    "updateQuantity": "Hindura Umubare"
+  },
+  "deals": {
+    "title": "Gupatana Rusange",
+    "subtitle": "Ibiciro by'igihe gito kuri ibikoresho by'ubwubatsi by'ubuziranenge",
+    "expiresIn": "Birahera mu",
+    "days": "iminsi"
+  },
   "categories": {
     "title": "Ibikoresho by'ibintu",
     "addCategory": "Ongeramo Ibikoresho",
@@ -87,5 +274,86 @@
     "subCategoriesFor": "Ibikoresho byo munsi bya {{name}}",
     "noSubCategories": "Nta bikoresho byo munsi",
     "noCategoriesFound": "Nta bikoresho byabonetse."
+  },
+  "productInfo": {
+    "addToCart": "Ongeraho kuri Cart",
+    "removeFromWishlist": "Siba kuri wishlist",
+    "addToWishlist": "Ongeraho kuri wishlist",
+    "shareProduct": "Sangira ibicuruzwa",
+    "description": "Ibisobanura",
+    "details": "Ibisobanura",
+    "noDetails": "Nta bisobanura bihari.",
+    "reviews": "reviews"
+  },
+  "relatedProducts": {
+    "title": "Ibicuruzwa bihuje:",
+    "loading": "Loading...",
+    "error": "Kuzana ibicuruzwa bihuje byanze.",
+    "none": "Nta bicuruzwa bihuje bihari."
+  },
+  "defaultBanner": {
+    "defaultTitle": "Uraza neza"
+  },
+  "VisualizePage": {
+    "title": "Reba inzu yawe yo guseka",
+    "describeLabel": "Sobanura inzu yawe yo guseka:",
+    "describePlaceholder": "urugero: 3 icyumba cy'urugero, ikibikamo cy'ubwubatsi, amadirishya manini, urubura...",
+    "uploadLabel": "📄 Ongeraho PDF/ishusho → Bona ibisobanura",
+    "extractingText": "Gusokora inyandiko, tegereza...",
+    "descriptionTooShort": "Ibisobanura bigomba kuba byibura inyuguti 250.",
+    "descriptionLength": "Andika ibibura inyuguti 250 (ubu {count}).",
+    "descriptionSufficient": "Uburebure bw'ibisobanura bihagije.",
+    "visualizeButton": "🎨 Reba",
+    "processing": "Gukora...",
+    "summaryTitle": "📝 Isesengura",
+    "generatedImageTitle": "🎨 Ishusho Yakoze",
+    "failedExtractImage": "Kusokora inyandiko kuri ishusho byanze.",
+    "failedExtractPDF": "Kusokora inyandiko kuri PDF byanze.",
+    "failedSummaryOrImage": "Gukora isesengura cyangwa ishusho byanze: {error}",
+    "noSummary": "Nta sesengura yasubijwe na Cohere.",
+    "pleaseUpload": "Ongeraho dosiye ya PDF cyangwa ishusho."
+  },
+  "VisualizeSection": {
+    "title": "Ushaka kureba inzu yawe yo guseka?",
+    "button": "Tangira Kureba"
+  },
+  "RecommendationsSection": {
+    "title": "Bikubwira",
+    "loading": "Kuzana ibikubwira...",
+    "error": "Kuzana ibikubwira byanze",
+    "noRecommendations": "Nta bikubwira bihari.",
+    "seeAllProducts": "Reba Ibicuruzwa Byose"
+  },
+  "dash": {
+    "footer": {
+      "copyright": "Copyright ©2026 constructkvv. Amahoro yose yarindiriwe."
+    }
+  },
+  "serviceBanner": {
+    "brand": "ConstructPro",
+    "heroTitle": "Shakisha Serivise z'Ubwubatsi z'Impuguke",
+    "heroSubtitle": "Uhuza n'ababatsi, abanyamwuga, n'abashushanyi bafite urutonde rwo hejuru kuri umushinga wawe wa gusubira inyuma",
+    "locationPlaceholder": "Andika aho uri",
+    "findServices": "Shakisha Serivise",
+    "customRequest": "Ntibiboneka ibikenewe? Ongeraho aho uri kandi tuzashakisha serivise mwiza kuri wewe",
+    "howItWorksTitle": "Uko ConstructPro Ikora",
+    "step1Title": "1. Sangira Ibisobanura by'Umushinga wawe",
+    "step1Desc": "Tubwire ibikenewe byawe by'ubwubatsi n'ibisabwa by'umushinga.",
+    "step2Title": "2. Uhuza n'Abanyamwuga",
+    "step2Desc": "Tukuhuza n'abantu b'umwuga bavuguruwe kuri 3 mu karere kawe.",
+    "step3Title": "3. Hitamo Byo Bikwiriye",
+    "step3Desc": "Gereranya ibisobanura kandi hitamo umuntu b'umwuga wo gufata umushinga wawe."
+  },
+  "serviceTrustSecurity": {
+    "whyChoose": "Kuki Gutoranya ConstructPro",
+    "whyChooseSubtitle": "Ibikorwa byawe by'ubwubatsi bikwiye abantu b'umwuga mwiza",
+    "verifiedProfessionalsTitle": "Abantu b'Umwuga Bavuguruwe",
+    "verifiedProfessionalsDesc": "Abantu bose bafite uruhushya kandi barasuzumwe",
+    "qualityGuaranteedTitle": "Ubuziranenge Bwizewe",
+    "qualityGuaranteedDesc": "Serivise z'urutonde rwo hejuru zifite reviews z'umukiriya zivuguruwe",
+    "fastMatchingTitle": "Guhuza Vuba",
+    "fastMatchingDesc": "Uhuza n'abantu b'umwuga mu masaha 24",
+    "awardWinnersTitle": "Abatsinze Ibikombe",
+    "awardWinnersDesc": "Abantu b'umwuga n'ibikorwa bizwi mu buzima"
   }
 }

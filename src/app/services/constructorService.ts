@@ -44,6 +44,13 @@ export interface ConstructorProfileData {
 
 // New interface for technician data structure
 export interface TechnicianData {
+  businessAddress: string
+  businessPhone: string
+  taxId: string
+  licenseNumber: string
+  insuranceInfo: any
+  businessName: string
+  yearsExperience: any
   id: string;
   userId: string;
   status: 'PENDING' | 'APPROVED' | 'REJECTED';
