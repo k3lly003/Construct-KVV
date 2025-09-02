@@ -1,13 +1,10 @@
 "use client";
 
 import Head from 'next/head';
-// import { BrickLoader } from "../(components)/BrickLoader";
 import { Banner } from "@/app/(components)/home/Banner";
 import ServicesShowCaseSection from "@/app/(components)/home/ServicesShowCaseSection";
 import { ProjectShowcase } from "@/app/(components)/home/ProjectShowcase";
 import { Products } from "@/app/(components)/Product";
-// import { reviewsData } from "../utils/fakes/HomeFakes";
-// import ReviewCarousel from "../(components)/home/ReviewCarousel";
 import { useEffect, useState } from "react";
 import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
 import { productService } from "@/app/services/productServices";

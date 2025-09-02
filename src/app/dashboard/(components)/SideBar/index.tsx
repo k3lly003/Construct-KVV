@@ -203,7 +203,7 @@ const SideBar = () => {
           {userRole === "TECHNICIAN" && (
             <>
               <SidebarLink
-                href="/dashboard/overview"
+                href="/dashboard"
                 icon={LayoutDashboard}
                 label={t('dashboard.overviews')}
                 isCollapsed={isSidebarCollapsed}
@@ -239,7 +239,7 @@ const SideBar = () => {
           {userRole === "ARCHITECT" && (
             <>
               <SidebarLink
-                href="/dashboard/overview"
+                href="/dashboard"
                 icon={LayoutDashboard}
                 label={t('dashboard.overviews')}
                 isCollapsed={isSidebarCollapsed}
@@ -275,7 +275,7 @@ const SideBar = () => {
           {userRole === "CONTRACTOR" && (
             <>
               <SidebarLink
-                href="/dashboard/overview"
+                href="/dashboard"
                 icon={LayoutDashboard}
                 label={t('dashboard.overviews')}
                 isCollapsed={isSidebarCollapsed}
@@ -304,7 +304,7 @@ const SideBar = () => {
           {userRole === "SELLER" && (
             <>
               <SidebarLink
-                href="/dashboard/overview"
+                href="/dashboard"
                 icon={LayoutDashboard}
                 label={t('dashboard.overviews')}
                 isCollapsed={isSidebarCollapsed}

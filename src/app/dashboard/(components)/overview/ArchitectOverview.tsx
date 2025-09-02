@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { getUserDataFromLocalStorage } from "../../utils/middlewares/UserCredentions";
-import { StatCard } from "../(components)/overview/stat-card";
-import Notifications from "../(components)/overview/notifications";
+import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
+import { StatCard } from "@/app/dashboard/(components)/overview/sections/stat-card";
+import Notifications from "@/app/dashboard/(components)/overview/sections/notifications";
 import {
   Table,
   TableHeader,
@@ -31,11 +31,11 @@ import { GenericButton } from "@/components/ui/generic-button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Funnel, Pencil, Trash2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import MyService from "../create-service/my-service";
-import Comments from "../(components)/overview/comments";
+import MyService from "@/app/dashboard/create-service/my-service";
+import Comments from "@/app/dashboard/(components)/overview/sections/comments";
 import Image from "next/image";
 
-export default function Home() {
+export default function ArchitectOverview() {
 
   const [userCredentials, setUserCredentials] = useState<{ firstName?: string; lastName?: string } | null>(null);
   const { getProductsBySellerId } = useProducts();

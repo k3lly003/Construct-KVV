@@ -40,7 +40,7 @@ export default function TestFlagPage() {
                 Language: {i18n.language} | Ready: {ready ? 'Yes' : 'No'} | Client: {isClient ? 'Yes' : 'No'}
               </h2>
               <p className="text-gray-600">
-                Click the flag toggle above to switch between English and French. 
+                Click the flag toggle above to switch between English, French, and Kinyarwanda. 
                 The content below should update immediately.
               </p>
             </div>
@@ -80,6 +80,15 @@ export default function TestFlagPage() {
                   <p><strong>Sign In:</strong> {getText('auth.signin.title', 'Sign In')}</p>
                   <p><strong>Email:</strong> {getText('auth.signin.email', 'Email')}</p>
                   <p><strong>Password:</strong> {getText('auth.signin.password', 'Password')}</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Kinyarwanda Test</h3>
+                <div className="space-y-2">
+                  <p><strong>Language:</strong> {getText('common.language', 'Language')}</p>
+                  <p><strong>Kinyarwanda:</strong> {getText('common.kinyarwanda', 'Kinyarwanda')}</p>
+                  <p><strong>Welcome:</strong> {getText('defaultBanner.defaultTitle', 'Welcome')}</p>
                 </div>
               </div>
             </div>

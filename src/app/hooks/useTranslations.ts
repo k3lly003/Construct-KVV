@@ -15,7 +15,7 @@ export const useTranslations = () => {
   const changeLanguage = (language: string) => {
     if (isClient) {
       i18n.changeLanguage(language);
-      setUserLocale(language as 'en' | 'fr');
+      setUserLocale(language as 'en' | 'fr' | 'rw');
     }
   };
 
