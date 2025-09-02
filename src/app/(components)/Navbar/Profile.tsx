@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   DropdownMenu,
@@ -16,35 +16,34 @@ import { useEffect, useState } from "react";
 import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
 import { getInitials } from "@/lib/utils";
 import { profileProps, UserData } from "@/app/utils/dtos/profile";
+import { useAuth } from "@/hooks/useAuth";
 
-
-const Profile = ({NK, userEmail, userName, profilePic}:profileProps) => {
+const Profile = ({ NK, userEmail, userName, profilePic }: profileProps) => {
   const [userData, setUserData] = useState<UserData | null>(null);
-  
+  const { logout } = useAuth();
+
   useEffect(() => {
     const data = getUserDataFromLocalStorage();
     setUserData(data);
   }, []);
 
   const logOutHandle = () => {
-  localStorage.clear();
-  // Optional: Redirect the user to the login page or home page after logging out
-  window.location.href = '/signin'; 
-};
-const getInitialsFromUserData = () => {
-  if (userData?.firstName && userData?.lastName) {
-    return getInitials(`${userData.firstName} ${userData.lastName}`);
-  }
-  return NK;
-};
+    logout();
+  };
 
+  const getInitialsFromUserData = () => {
+    if (userData?.firstName && userData?.lastName) {
+      return getInitials(`${userData.firstName} ${userData.lastName}`);
+    }
+    return NK;
+  };
 
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
           <Avatar>
-          {profilePic ? (
+            {profilePic ? (
               <AvatarImage src={profilePic} alt={userName} />
             ) : (
               <AvatarFallback>{getInitialsFromUserData()}</AvatarFallback>
@@ -54,11 +53,11 @@ const getInitialsFromUserData = () => {
         <DropdownMenuContent>
           <DropdownMenuLabel className="flex gap-3 justify-center items-center">
             <Avatar>
-            {profilePic ? (
-              <AvatarImage src={profilePic} alt={userName} />
-            ) : (
-              <AvatarFallback>{getInitialsFromUserData()}</AvatarFallback>
-            )}
+              {profilePic ? (
+                <AvatarImage src={profilePic} alt={userName} />
+              ) : (
+                <AvatarFallback>{getInitialsFromUserData()}</AvatarFallback>
+              )}
             </Avatar>
             <div>
               <p>{userName}</p>
@@ -66,17 +65,25 @@ const getInitialsFromUserData = () => {
             </div>
           </DropdownMenuLabel>
           {/* Role-based dashboard link */}
-          <Link href={
-            userData?.role === 'SELLER' ? '/dashboard/overview' :
-            userData?.role === 'ADMIN' ? '/dashboard' : '/dashboard'
-          }>
+          <Link
+            href={
+              userData?.role === "SELLER"
+                ? "/dashboard/overview"
+                : userData?.role === "ADMIN"
+                ? "/dashboard"
+                : "/dashboard"
+            }
+          >
             <DropdownMenuItem className="my-2">
               <LayoutDashboard />
               Dashboard
             </DropdownMenuItem>
           </Link>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick ={logOutHandle} className="hover:text-red-600">
+          <DropdownMenuItem
+            onClick={logOutHandle}
+            className="hover:text-red-600"
+          >
             <LogOut className="hover:text-red-600" />
             Log out
           </DropdownMenuItem>

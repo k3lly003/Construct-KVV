@@ -11,6 +11,7 @@ interface NotificationStore {
   markAllAsRead: () => Promise<void>;
   getUnreadCount: () => number;
   clearError: () => void;
+  clearNotifications: () => void;
 }
 
 export const useNotificationStore = create<NotificationStore>((set, get) => ({
@@ -19,6 +20,19 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
   error: null,
 
   fetchNotifications: async () => {
+    // Check if user is authenticated
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+
+    if (!token) {
+      set({
+        notifications: [],
+        isLoading: false,
+        error: "Authentication required",
+      });
+      return;
+    }
+
     set({ isLoading: true, error: null });
 
     try {
@@ -48,6 +62,15 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
   },
 
   markAsRead: async (id: string) => {
+    // Check if user is authenticated
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+
+    if (!token) {
+      set({ error: "Authentication required" });
+      return;
+    }
+
     try {
       await notificationService.markAsRead(id);
 
@@ -67,6 +90,15 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
   },
 
   markAllAsRead: async () => {
+    // Check if user is authenticated
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+
+    if (!token) {
+      set({ error: "Authentication required" });
+      return;
+    }
+
     try {
       await notificationService.markAllAsRead();
 
@@ -87,11 +119,23 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
   },
 
   getUnreadCount: () => {
+    // Check if user is authenticated
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+
+    if (!token) {
+      return 0;
+    }
+
     return get().notifications.filter((notification) => !notification.isRead)
       .length;
   },
 
   clearError: () => {
     set({ error: null });
+  },
+
+  clearNotifications: () => {
+    set({ notifications: [], error: null });
   },
 }));

@@ -9,8 +9,10 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { GenericButton } from "@/components/ui/generic-button";
-import { Bell, Clock } from "lucide-react";
+import { Bell, Clock, Lock } from "lucide-react";
 import { formatNotificationTime } from "@/app/utils/middlewares/formatTime";
+import { useAuth } from "@/hooks/useAuth";
+import { AuthPrompt } from "./auth-prompt";
 
 export interface Notification {
   id: string;
@@ -46,7 +48,36 @@ export function NotificationModal({
   isLoading,
   error,
 }: NotificationModalProps) {
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const unreadCount = notifications.filter((n) => !n.isRead).length;
+
+  // If not authenticated, show authentication required message
+  if (!authLoading && !isAuthenticated) {
+    return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent
+          className="max-w-md w-full bg-white border-amber-200"
+          onPointerDownOutside={onClose}
+          onEscapeKeyDown={onClose}
+        >
+          <DialogHeader className="border-b border-amber-200 pb-4">
+            <div className="flex items-center justify-between">
+              <DialogTitle className="text-lg font-semibold text-amber-900 flex items-center gap-2">
+                <Lock className="h-5 w-5 text-amber-600" />
+                Notifications
+              </DialogTitle>
+            </div>
+          </DialogHeader>
+
+          <AuthPrompt
+            title="Login to View Notifications"
+            message="You need to be logged in to view your notifications."
+            showLoginButton={true}
+          />
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   const getNotificationIcon = (type: Notification["type"]) => {
     switch (type) {

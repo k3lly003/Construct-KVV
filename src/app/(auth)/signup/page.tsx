@@ -11,6 +11,7 @@ import { Toaster, toast } from "sonner";
 import { z } from "zod";
 import axios from "axios";
 import { User } from "@/types/user";
+import { useAuth } from "@/hooks/useAuth";
 
 // Zod validation for signup
 const signupSchema = z.object({
@@ -41,6 +42,7 @@ const Page = () => {
   }>({});
 
   const router = useRouter();
+  const { login } = useAuth();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,15 +92,11 @@ const Page = () => {
 
       const data = response.data as { data?: { token?: string; user?: User } };
       console.log("Registration response:", data);
-      
-      // Store the authentication token if present
-      if (data.data?.token) {
-        localStorage.setItem("authToken", data.data.token);
-        console.log("Auth token stored");
-      }
-      if (data.data?.user) {
-        localStorage.setItem("user", JSON.stringify(data.data.user));
-        console.log("User data stored:", data.data.user);
+
+      // Use the authentication hook to login
+      if (data.data?.token && data.data?.user) {
+        login(data.data.token, data.data.user);
+        console.log("User logged in via signup");
       }
       toast.success("Signup successful! Please verify your email.");
       router.push("/otp");
