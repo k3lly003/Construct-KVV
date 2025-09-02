@@ -38,10 +38,18 @@ const nextConfig = {
         hostname: "source.unsplash.com",
         pathname: "/random/**",
       },
+      // TODO: Remove this when example.com URLs are replaced with proper image URLs
+      {
+        protocol: "https",
+        hostname: "example.com",
+        port: "",
+      },
     ],
     domains: [
       // other allowed domains...
       "certificatesinn.com",
+      // TODO: Remove example.com when placeholder URLs are replaced
+      "example.com",
     ],
   },
   eslint: {
