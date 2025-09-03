@@ -381,29 +381,51 @@ export const CartPage: React.FC = () => {
                 </div>
               </div>
               {/* Payment Method Dropdown */}
-              <div className="mb-4">
-                <label className="block text-gray-700 font-medium mb-2">
-                  Payment Method
-                </label>
-                <select
-                  value={paymentMethod}
-                  onChange={(e) => setPaymentMethod(e.target.value as any)}
-                  className="w-full border rounded-lg px-3 py-2"
-                  disabled={loading || isLoading}
-                >
-                  <option value="mobilemoney">MTN MOMO</option>
-                  <option value="card">Card</option>
-                  <option value="bank">Bank</option>
-                </select>
-              </div>
+              {/* Removed payment method dropdown and label */}
               <button
                 onClick={async () => {
-                  if (paymentMethod === "bank") {
-                    // Do the same as before, but redirect to the placeholder link
-                    window.location.href =
-                      "https://flutterwave.com/pay/sample-link";
-                  } else {
-                    await handleCheckout();
+                  if (!cart?.id) return;
+                  setLoading(true);
+                  try {
+                    const token =
+                      typeof window !== "undefined"
+                        ? localStorage.getItem("authToken")
+                        : null;
+                    if (!token) {
+                      toast.error("You must be logged in to checkout.");
+                      setLoading(false);
+                      setTimeout(() => {
+                        router.push("/signin");
+                      }, 1200);
+                      return;
+                    }
+                    const payload = { cartId: cart.id };
+                    console.log("[CHECKOUT] Sending order payload:", payload);
+                    const response = await fetch(
+                      "https://construct-kvv-bn-fork.onrender.com/api/v1/orders",
+                      {
+                        method: "POST",
+                        headers: {
+                          accept: "*/*",
+                          Authorization: `Bearer ${token}`,
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(payload),
+                      }
+                    );
+                    console.log("[CHECKOUT] Raw response:", response);
+                    if (!response.ok) {
+                      throw new Error("Failed to create order");
+                    }
+                    const data = await response.json();
+                    console.log("[CHECKOUT] Response data:", data);
+                    toast.success("Redirect to insert payment credentials");
+                    // Optionally redirect to payment page or show further UI
+                  } catch (err: any) {
+                    console.error("[CHECKOUT] Error:", err);
+                    toast.error(err?.message || "Order creation failed.");
+                  } finally {
+                    setLoading(false);
                   }
                 }}
                 disabled={loading || isLoading || cartItems.length === 0}
