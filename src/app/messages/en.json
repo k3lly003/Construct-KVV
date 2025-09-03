@@ -146,7 +146,7 @@
       "services": {
         "certifiedContractors": "Certified Contractors",
         "designSpecialists": "Design Specialists",
-        "projectManagers": "Project Managers"
+        "projectManagers": "Technicians"
       },
       "network": {
         "title": "Vetted Professional Network",
@@ -484,7 +484,7 @@
     "users": {
       "title": "All Users",
       "searchPlaceholder": "Search...",
-      "allRoles": "All Roles",
+      "allRoles": "Status",
       "roleCustomer": "Customer",
       "roleSeller": "Seller",
       "roleAdmin": "Admin",

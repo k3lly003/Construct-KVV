@@ -77,8 +77,15 @@ export const architectService = {
 
   // Get all approved architects
   async getApprovedArchitects(): Promise<Architect[]> {
-    const response = await axiosInstance.get<Architect[]>(`${API_BASE_URL}/api/v1/architects/approved`)
-    return response.data
+    const response = await axiosInstance.get<any>(`${API_BASE_URL}/api/v1/architects/approved`)
+    console.log('getApprovedArchitects response:', response.data);
+    // Handle different response formats
+    if (response.data && response.data.data && Array.isArray(response.data.data)) {
+      return response.data.data;
+    } else if (Array.isArray(response.data)) {
+      return response.data;
+    }
+    return [];
   },
 
   // Get architect by ID
@@ -101,14 +108,28 @@ export const architectService = {
 
   // Admin: Get all architects
   async getAllArchitects(): Promise<Architect[]> {
-    const response = await axiosInstance.get<Architect[]>(`${API_BASE_URL}/api/v1/architects/admin/all`)
-    return response.data
+    const response = await axiosInstance.get<any>(`${API_BASE_URL}/api/v1/architects/admin/all`)
+    console.log('getAllArchitects response:', response.data);
+    // Handle different response formats
+    if (response.data && response.data.data && Array.isArray(response.data.data)) {
+      return response.data.data;
+    } else if (Array.isArray(response.data)) {
+      return response.data;
+    }
+    return [];
   },
 
   // Admin: Get pending architect requests
   async getPendingArchitects(): Promise<Architect[]> {
-    const response = await axiosInstance.get<Architect[]>(`${API_BASE_URL}/api/v1/architects/admin/pending`)
-    return response.data
+    const response = await axiosInstance.get<any>(`${API_BASE_URL}/api/v1/architects/admin/pending`)
+    console.log('getPendingArchitects response:', response.data);
+    // Handle different response formats
+    if (response.data && response.data.data && Array.isArray(response.data.data)) {
+      return response.data.data;
+    } else if (Array.isArray(response.data)) {
+      return response.data;
+    }
+    return [];
   },
 
   // Admin: Update architect status

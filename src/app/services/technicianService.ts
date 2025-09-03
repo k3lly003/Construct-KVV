@@ -71,14 +71,40 @@ export const technicianService = {
 
   // Admin: Get all technicians
   async getAllTechnicians(): Promise<Technician[]> {
-    const response = await axiosInstance.get<Technician[]>(`${API_BASE_URL}/api/v1/technicians/admin/all`)
-    return response.data
+    const response = await axiosInstance.get<any>(`${API_BASE_URL}/api/v1/technicians/admin/all`)
+    console.log('getAllTechnicians response:', response.data);
+    // Handle different response formats
+    if (response.data && response.data.data && Array.isArray(response.data.data)) {
+      return response.data.data;
+    } else if (Array.isArray(response.data)) {
+      return response.data;
+    }
+    return [];
+  },
+  // Get all approved technicians
+  async getApprovedTechnicians(): Promise<Technician[]> {
+    const response = await axiosInstance.get<any>(`${API_BASE_URL}/api/v1/technicians/approved`)
+    console.log('getApprovedTechnicians response:', response.data);
+    // Handle different response formats
+    if (response.data && response.data.data && Array.isArray(response.data.data)) {
+      return response.data.data;
+    } else if (Array.isArray(response.data)) {
+      return response.data;
+    }
+    return [];
   },
 
   // Admin: Get pending technician requests
   async getPendingTechnicians(): Promise<Technician[]> {
-    const response = await axiosInstance.get<Technician[]>(`${API_BASE_URL}/api/v1/technicians/admin/pending`)
-    return response.data
+    const response = await axiosInstance.get<any>(`${API_BASE_URL}/api/v1/technicians/admin/pending`)
+    console.log('getPendingTechnicians response:', response.data);
+    // Handle different response formats
+    if (response.data && response.data.data && Array.isArray(response.data.data)) {
+      return response.data.data;
+    } else if (Array.isArray(response.data)) {
+      return response.data;
+    }
+    return [];
   },
 
   // Get current technician profile

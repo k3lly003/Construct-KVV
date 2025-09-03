@@ -1,5 +1,5 @@
 import { User } from '@/types/user';
-import axios from 'axios';
+import api from '@/lib/axios';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -19,26 +19,36 @@ export interface UsersResponse {
 export const UsersService = {
   async getAllUsers(authToken?: string, page = 1, limit = 10, search = '', role = '', isActive?: boolean): Promise<{ users: User[]; meta?: any }> {
     try {
-      const headers = authToken ? { Authorization: `Bearer ${authToken}` } : undefined;
-      let url = `${API_URL}/api/v1/user/all?page=1&limit=10`;
+      // Build URL using provided pagination params
+      let url = `${API_URL}/api/v1/user/all?page=${page}&limit=${limit}`;
       if (search) url += `&search=${encodeURIComponent(search)}`;
       if (role) url += `&role=${encodeURIComponent(role)}`;
       if (isActive !== undefined) url += `&isActive=${isActive}`;
-      const response = await axios.get(url, { headers });
+      // Use shared axios instance which auto-attaches Authorization from storage
+      // If an explicit token is provided, set it on the fly
+      const response = await api.get(url, authToken ? { headers: { Authorization: `Bearer ${authToken}` } } : undefined);
       const data: any = response.data;
-      if (data && typeof data === 'object' && data.data && Array.isArray(data.data.users)) {
-        // Extract pagination info
-        const pagination = data.data.pagination || {};
-        const meta = {
-          total: pagination.total,
-          page: pagination.page,
-          limit: pagination.limit,
-          totalPages: pagination.pages,
-        };
-        return { users: data.data.users, meta };
-      } else {
-        throw new Error('Unexpected response format when fetching users');
+      // Debug: inspect raw shape
+      if (typeof window !== 'undefined') {
+        console.log('[UsersService.getAllUsers] raw response:', data);
       }
+
+      // Accept multiple possible shapes gracefully
+      const users: User[] =
+        (data?.data?.users as User[] | undefined) ??
+        (data?.users as User[] | undefined) ??
+        (Array.isArray(data?.data) ? (data.data as User[]) : undefined) ??
+        (Array.isArray(data) ? (data as User[]) : []);
+
+      const pagination = data?.data?.pagination || data?.meta || {};
+      const meta = {
+        total: pagination.total,
+        page: pagination.page,
+        limit: pagination.limit,
+        totalPages: pagination.pages ?? pagination.totalPages,
+      };
+
+      return { users, meta };
     } catch (error: unknown) {
       console.error('Error fetching users:', error);
       throw error instanceof Error ? error : new Error(String(error));

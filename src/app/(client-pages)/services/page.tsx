@@ -1,6 +1,4 @@
 "use client";
-
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,6 +6,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 
 import { ServiceGrid } from '@/app/(components)/service/service-grid';
+import { useEffect, useState } from 'react';
+import { architectService, Architect } from '@/app/services/architectService';
+import { constructorService, Constructor } from '@/app/services/constructorService';
+import { technicianService, Technician } from '@/app/services/technicianService';
+import { serviceService } from '@/app/services/serviceServices';
 import ServiceBanner from '@/components/features/service/Banner-HIW';
 import TrustSecurity from '@/components/features/service/TrustSecurity';
 
@@ -30,6 +33,8 @@ import TrustSecurity from '@/components/features/service/TrustSecurity';
 
 export default function ServicesPage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState<any[]>([]);
   const [showLocationForm, setShowLocationForm] = useState(false);
   const [locationRequest, setLocationRequest] = useState({
     location: '',
@@ -62,6 +67,85 @@ export default function ServicesPage() {
     setShowLocationForm(false);
   };
 
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      try {
+        const [svc, architects, contractors, technicians] = await Promise.all([
+          serviceService.getServices().catch(() => []),
+          architectService.getApprovedArchitects().catch(() => []),
+          constructorService.getApprovedContractors().catch(() => []),
+          technicianService.getApprovedTechnicians().catch(() => []),
+        ]);
+        console.log('✅ ARCHITECTS:', architects);
+        console.log('✅ CONTRACTORS:', contractors);
+        console.log('✅ TECHNICIANS:', technicians);
+
+        const architectList: Architect[] = Array.isArray(architects)
+          ? (architects as Architect[])
+          : ((architects as any)?.data ?? []);
+        const contractorList: Constructor[] = Array.isArray(contractors)
+          ? (contractors as Constructor[])
+          : ((contractors as any)?.data ?? []);
+        const technicianList: Technician[] = Array.isArray(technicians)
+          ? (technicians as Technician[])
+          : ((technicians as any)?.data ?? []);
+
+        const normalizedArchitects = architectList.map((a) => ({
+          id: `architect-${a.id}`,
+          title: a.businessName || `${a.user?.firstName || ''} ${a.user?.lastName || ''}`.trim() || 'Architect',
+          provider: { name: `${a.user?.firstName || ''} ${a.user?.lastName || ''}`.trim() || 'Architect' },
+          gallery: a.user?.profilePic ? [a.user.profilePic] : [],
+          pricing: undefined,
+          location: { city: a.location?.[0] || '' },
+          features: [
+            'Role: Architect',
+            ...(a.licenseNumber ? ["License: " + a.licenseNumber] : []),
+            `Experience: ${a.yearsExperience || 0}y`,
+          ],
+        }));
+
+        const normalizedContractors = contractorList.map((c) => ({
+          id: `contractor-${c.id}`,
+          title: c.businessName || `${(c as any).firstName || ''} ${(c as any).lastName || ''}`.trim() || 'Contractor',
+          provider: { name: `${(c as any).firstName || ''} ${(c as any).lastName || ''}`.trim() || 'Contractor' },
+          gallery: (c as any).user?.profilePic ? [(c as any).user.profilePic] : [],
+          pricing: undefined,
+          location: { city: c.location?.[0] || '' },
+          features: [
+            'Role: Contractor',
+            ...(c.licenseNumber ? ["License: " + c.licenseNumber] : []),
+            `Experience: ${c.yearsExperience || 0}y`,
+          ],
+        }));
+
+        const normalizedTechnicians = technicianList.map((t) => ({
+          id: `technician-${t.id}`,
+          title: `${t.user?.firstName || ''} ${t.user?.lastName || ''}`.trim() || 'Technician',
+          provider: { name: `${t.user?.firstName || ''} ${t.user?.lastName || ''}`.trim() || 'Technician' },
+          gallery: t.user?.profilePic ? [t.user.profilePic] : [],
+          pricing: undefined,
+          location: { city: t.location?.[0] || '' },
+          features: [
+            'Role: Technician',
+            ...(Array.isArray(t.categories) ? t.categories.slice(0, 3) : []),
+            `Experience: ${t.experience || 0}y`,
+          ],
+        }));
+
+        setItems([
+          ...(Array.isArray(svc) ? svc : []),
+          ...normalizedArchitects,
+          ...normalizedContractors,
+          ...normalizedTechnicians,
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <ServiceBanner/>
@@ -85,7 +169,7 @@ export default function ServicesPage() {
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
           />
-          <ServiceGrid searchQuery={searchQuery} />
+          <ServiceGrid searchQuery={searchQuery} services={items} loading={loading} />
           </div>
         </div>
       </section>
