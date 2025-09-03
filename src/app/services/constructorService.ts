@@ -164,7 +164,7 @@ export const constructorService = {
 
   // Update current technician profile
   async updateConstructorProfile(data: ConstructorProfileData): Promise<{ success: boolean; data: Constructor }> {
-    const response = await axiosInstance.put<{ success: boolean; data: TechnicianData }>(`${API_BASE_URL}/api/v1/contractors/profile/me`, data)
+    const response = await axiosInstance.put<{ success: boolean; data: Constructor }>(`${API_BASE_URL}/api/v1/contractors/profile/me`, data)
     return response.data
   },
 

@@ -1,11 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { constructorService, Constructor } from "@/app/services/constructorService";
 
 export default function ApprovedConstructors({ searchQuery = "" }: { searchQuery?: string }) {
-  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState<any[]>([]);
 
@@ -60,11 +58,7 @@ export default function ApprovedConstructors({ searchQuery = "" }: { searchQuery
         <div className="col-span-full flex justify-center items-center py-12 text-gray-500">No contractors found.</div>
       ) : (
         filtered.map((prof) => (
-          <div 
-            key={prof.id} 
-            className="overflow-hidden hover:shadow-lg cursor-pointer hover:rounded-xl transition-all duration-300"
-            onClick={() => router.push(`/professionals/${prof.id}`)}
-          >
+          <div key={prof.id} className="overflow-hidden hover:shadow-lg cursor-pointer hover:rounded-xl">
             <section className="p-0">
               <div className="pb-4">
                 <div className="aspect-[4/3] rounded-lg overflow-hidden bg-gray-100">

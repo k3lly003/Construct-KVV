@@ -212,5 +212,6 @@ export const updateSellerStatus = async (id: string, status: SellerStatusUpdate,
       Authorization: `Bearer ${token}`,
     },
   });
-  return response.data;
+  return response.data as { message: string; seller: SellerProfile };
 };
+

@@ -169,7 +169,7 @@ export default function ServicesPage() {
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
           />
-          <ServiceGrid searchQuery={searchQuery} services={items} loading={loading} />
+          <ServiceGrid searchQuery={searchQuery} />
           </div>
         </div>
       </section>
