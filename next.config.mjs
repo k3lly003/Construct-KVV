@@ -42,6 +42,7 @@ const nextConfig = {
     domains: [
       // other allowed domains...
       "certificatesinn.com",
+      "example.com",
     ],
   },
   eslint: {

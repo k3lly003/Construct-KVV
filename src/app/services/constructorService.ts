@@ -118,15 +118,35 @@ export const constructorService = {
          return response.data
        },
 
+       // Get all contractors
+       async getAllContractors(): Promise<Constructor[]> {
+         const response = await axiosInstance.get<any>(`${API_BASE_URL}/api/v1/contractors/admin/all`);
+         console.log('getAllContractors response:', response.data);
+         // Handle different response formats
+         if (response.data && response.data.data && Array.isArray(response.data.data)) {
+           return response.data.data;
+         } else if (Array.isArray(response.data)) {
+           return response.data;
+         }
+         return [];
+       },
+
          // Get all approved contractors
        async getApprovedContractors(): Promise<Constructor[]> {
-         const response = await axiosInstance.get<Constructor[]>(`${API_BASE_URL}/api/v1/contractors/approved`)
-         return response.data
+         const response = await axiosInstance.get<any>(`${API_BASE_URL}/api/v1/contractors/approved`);
+         console.log('getApprovedContractors response:', response.data);
+         // Handle different response formats
+         if (response.data && response.data.data && Array.isArray(response.data.data)) {
+           return response.data.data;
+         } else if (Array.isArray(response.data)) {
+           return response.data;
+         }
+         return [];
        },
 
          // Get contractor by ID
        async getContractorById(id: string): Promise<Constructor> {
-         const response = await axiosInstance.get<Constructor>(`${API_BASE_URL}/api/v1/contractors/${id}`)
+         const response = await axiosInstance.get<Constructor>(`${API_BASE_URL}/api/v1/contractors/${id}`);
          return response.data
        },
 
@@ -143,21 +163,22 @@ export const constructorService = {
   },
 
   // Update current technician profile
-  async updateTechnicianProfile(data: TechnicianProfileData): Promise<{ success: boolean; data: TechnicianData }> {
-    const response = await axiosInstance.put<{ success: boolean; data: TechnicianData }>(`${API_BASE_URL}/api/v1/contractors/profile/me`, data)
-    return response.data
-  },
-
-  // Admin: Get all contractors
-  async getAllContractors(): Promise<Constructor[]> {
-    const response = await axiosInstance.get<Constructor[]>(`${API_BASE_URL}/api/v1/contractors/admin/all`)
+  async updateConstructorProfile(data: ConstructorProfileData): Promise<{ success: boolean; data: Constructor }> {
+    const response = await axiosInstance.put<{ success: boolean; data: Constructor }>(`${API_BASE_URL}/api/v1/contractors/profile/me`, data)
     return response.data
   },
 
   // Admin: Get pending contractor requests
   async getPendingContractors(): Promise<Constructor[]> {
-    const response = await axiosInstance.get<Constructor[]>(`${API_BASE_URL}/api/v1/contractors/admin/pending`)
-    return response.data
+    const response = await axiosInstance.get<any>(`${API_BASE_URL}/api/v1/contractors/admin/pending`)
+    console.log('getPendingContractors response:', response.data);
+    // Handle different response formats
+    if (response.data && response.data.data && Array.isArray(response.data.data)) {
+      return response.data.data;
+    } else if (Array.isArray(response.data)) {
+      return response.data;
+    }
+    return [];
   },
 
   // Admin: Update contractor status

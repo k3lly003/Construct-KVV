@@ -256,7 +256,7 @@ const ArchitectureProfile: React.FC = () => {
               disabled={loading}
               className="px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 bg-white text-gray-700 hover:bg-gray-50 border border-gray-300"
             >
-              <Edit className="w-4 h-4" />
+                <Edit className="w-4 h-4" />
               <span>Edit Profile</span>
             </button>
           </div>
@@ -319,7 +319,7 @@ const ArchitectureProfile: React.FC = () => {
               >
                 Edit
               </button>
-            </div>
+              </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
                 {
@@ -364,13 +364,13 @@ const ArchitectureProfile: React.FC = () => {
                     <div className="flex items-center gap-4">
                       <div className="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center">
                         <IconComponent className="h-4 w-4 text-white" />
-                      </div>
+              </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-gray-900 font-medium text-base">{item.label}</p>
                         <p className="text-gray-500 text-sm mt-1 break-words">{item.value}</p>
-                      </div>
-                    </div>
-                  </div>
+              </div>
+            </div>
+          </div>
                 )
               })}
             </div>
@@ -439,11 +439,11 @@ const ArchitectureProfile: React.FC = () => {
           </div>
 
           {/* My Work */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
               <Briefcase className="w-5 h-5 mr-2" />
               My Work
-            </h3>
+              </h3>
             {(() => {
               const works: any[] = (profile as any)?.portfolios || profile.documents || [];
               if (!works || works.length === 0) {
@@ -676,10 +676,10 @@ const ArchitectureProfile: React.FC = () => {
                 )}
                 <span>{loading ? 'Saving...' : 'Save Changes'}</span>
               </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          )}
     </div>
   );
 };

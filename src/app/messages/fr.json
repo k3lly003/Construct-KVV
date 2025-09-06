@@ -675,7 +675,7 @@
     "users": {
       "title": "Tous les utilisateurs",
       "searchPlaceholder": "Rechercher...",
-      "allRoles": "Tous les rôles",
+      "allRoles": "Statut",
       "roleCustomer": "Client",
       "roleSeller": "Vendeur",
       "roleAdmin": "Administrateur",
