@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { constructorService, Constructor } from "@/app/services/constructorService";
 
 export default function ApprovedConstructors({ searchQuery = "" }: { searchQuery?: string }) {
@@ -58,38 +59,40 @@ export default function ApprovedConstructors({ searchQuery = "" }: { searchQuery
         <div className="col-span-full flex justify-center items-center py-12 text-gray-500">No contractors found.</div>
       ) : (
         filtered.map((prof) => (
-          <div key={prof.id} className="overflow-hidden hover:shadow-lg cursor-pointer hover:rounded-xl">
-            <section className="p-0">
-              <div className="pb-4">
-                <div className="aspect-[4/3] rounded-lg overflow-hidden bg-gray-100">
-                  <Image
-                    src={prof.gallery && prof.gallery.length > 0 ? prof.gallery[0] : '/empty-cart.png'}
-                    width={100}
-                    height={100}
-                    alt={prof.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
+          <Link key={prof.id} href={`/professionals/contractor/${prof.id}`} className="block">
+            <div className="overflow-hidden hover:shadow-lg cursor-pointer hover:rounded-xl">
+              <section className="p-0">
+                <div className="pb-4">
+                  <div className="aspect-[4/3] rounded-lg overflow-hidden bg-gray-100">
+                    <Image
+                      src={prof.gallery && prof.gallery.length > 0 ? prof.gallery[0] : '/empty-cart.png'}
+                      width={100}
+                      height={100}
+                      alt={prof.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="px-4 pb-3">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xs px-2 py-1 rounded bg-amber-100 text-amber-700">Contractor</span>
-                  <span className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-600">{prof.location?.city || '-'}</span>
-                </div>
-                <h1 className="font-bold text-gray-900 text-lg leading-tight mb-1 line-clamp-2">{prof.title}</h1>
-                <p className="text-sm text-gray-600 mb-3">{prof.provider?.name || '-'}</p>
+                <div className="px-4 pb-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xs px-2 py-1 rounded bg-amber-100 text-amber-700">Contractor</span>
+                    <span className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-600">{prof.location?.city || '-'}</span>
+                  </div>
+                  <h1 className="font-bold text-gray-900 text-lg leading-tight mb-1 line-clamp-2">{prof.title}</h1>
+                  <p className="text-sm text-gray-600 mb-3">{prof.provider?.name || '-'}</p>
 
-                <div className="flex flex-wrap gap-1 mt-2">
-                  {(prof.features || []).filter((f: string) => !f.startsWith('Role:')).slice(0, 4).map((feature: string) => (
-                    <span key={feature} className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">
-                      {feature}
-                    </span>
-                  ))}
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {(prof.features || []).filter((f: string) => !f.startsWith('Role:')).slice(0, 4).map((feature: string) => (
+                      <span key={feature} className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">
+                        {feature}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </section>
-          </div>
+              </section>
+            </div>
+          </Link>
         ))
       )}
     </>

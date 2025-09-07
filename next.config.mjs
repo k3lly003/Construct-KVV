@@ -38,11 +38,18 @@ const nextConfig = {
         hostname: "source.unsplash.com",
         pathname: "/random/**",
       },
+      {
+        protocol: "https",
+        hostname: "construct-kvv-bn-fork.onrender.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
     domains: [
       // other allowed domains...
       "certificatesinn.com",
       "example.com",
+      "construct-kvv-bn-fork.onrender.com",
     ],
   },
   eslint: {

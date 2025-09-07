@@ -98,8 +98,6 @@ export default function Home() {
           </Link>
         </div>
       </section>
-      {/* UN-COMMENT THIS REVIEW ONCE THE TOOL HAVE GOME MANY REVIEW */}
-      {/* <ReviewCarousel reviews={reviewsData} /> */}
       <ServicesShowCaseSection />
       {/* Recommendations Section */}
       {user && (

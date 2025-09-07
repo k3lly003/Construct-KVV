@@ -84,7 +84,7 @@
       }
   },
   "home": {
-    "maintenance": "Entretien de la Maison",
+    "maintenanceLabel": "Entretien de la Maison",
     "projects": "Projets",
     "bidsBulk": "Devis et Vrac",
     "hireProfessional": "Engager un Professionnel",
@@ -98,7 +98,7 @@
       "services": {
         "houseCleaning": "Nettoyage de Maison",
         "interiorPainting": "Peinture Intérieure",
-        "handyman": "Bricolage"
+        "handyman": "Plancher"
       }
     },
     "project-contents": {
