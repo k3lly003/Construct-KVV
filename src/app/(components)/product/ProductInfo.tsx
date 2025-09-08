@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Minus, Plus, Heart, Share2, Star, ShoppingCart } from "lucide-react";
 import { GenericButton } from "@/components/ui/generic-button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,6 +10,7 @@ import { dashboardFakes } from "@/app/utils/fakes/DashboardFakes";
 import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
 import { productService } from "@/app/services/productServices";
 import { useCartStore } from "@/store/cartStore";
+import { getFallbackImage } from "@/app/utils/imageUtils";
 
 interface Product {
   id: string;
@@ -51,28 +52,13 @@ const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
 
   const addToCart = useCartStore((state) => state.addToCart);
 
-  const handleAddToCart = () => {
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      quantity: quantity,
-      image:
-        product.thumbnailUrl ||
-        product.imageUrl ||
-        (Array.isArray(product.image) && product.image.length > 0
-          ? product.image[0]
-          : undefined) ||
-        "/products/placeholder.jpg",
-      category: product.categoryId || "",
-      weight: product.weight || 0,
-      dimensions: product.dimensions || "",
-    });
-    toast.success(`Added ${quantity} ${product.name} to your cart`);
-    console.log(
-      "[ProductInfo] Cart after add:",
-      JSON.parse(localStorage.getItem("kvv_cart_items") || "[]")
-    );
+  const handleAddToCart = async () => {
+    try {
+      await addToCart(product.id, quantity);
+      toast.success(`Added ${quantity} ${product.name} to your cart`);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to add item to cart");
+    }
   };
 
   const toggleWishlist = async () => {
