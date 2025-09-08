@@ -14,6 +14,9 @@ import { Service } from "@/types/service";
 import { useRouter } from "next/navigation";
 import { dashboardFakes } from "@/app/utils/fakes/DashboardFakes";
 import { useTranslations } from "@/app/hooks/useTranslations";
+import { getFallbackImage } from "@/app/utils/imageUtils";
+import { useCartStore } from "@/store/cartStore";
+import { toast } from "sonner";
 
 export const Products: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -131,7 +134,10 @@ export const Products: React.FC = () => {
                     <div className="relative">
                       {product.thumbnailUrl ? (
                         <Image
-                          src={product.thumbnailUrl}
+                          src={getFallbackImage(
+                            product.thumbnailUrl,
+                            "product"
+                          )}
                           alt={product.name}
                           width={100}
                           height={100}
@@ -169,9 +175,17 @@ export const Products: React.FC = () => {
                         bgCol={"white"}
                         textCol={"text-gray-800"}
                         border={"border-1"}
-                        handleButton={() =>
-                          alert(`Add to Cart clicked for ${product.name}`)
-                        }
+                        handleButton={async () => {
+                          try {
+                            const { addToCart } = useCartStore.getState();
+                            await addToCart(product.id, 1);
+                            toast.success(`Added ${product.name} to cart`);
+                          } catch (error: any) {
+                            toast.error(
+                              error.message || "Failed to add item to cart"
+                            );
+                          }
+                        }}
                         padding={"p-3"}
                         round={"rounded-full"}
                       />

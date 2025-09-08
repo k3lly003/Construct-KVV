@@ -1,12 +1,14 @@
-import Image from "next/image";
 import React, { useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Heart } from "lucide-react";
 import { Button } from "./Button";
 import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
 import { productService } from "@/app/services/productServices";
 import { useCartStore } from "@/store/cartStore";
 import { toast } from "sonner";
+import { getAverageRating, ReviewType } from "@/app/utils/fakes/ProductFakes";
+import { getFallbackImage } from "@/app/utils/imageUtils";
 
 interface ProductCardProps {
   product: any;
@@ -20,9 +22,10 @@ const ProductCard = ({
   isHighlyRecommended = false,
 }: ProductCardProps) => {
   const thumbnail =
-    product.thumbnailUrl ||
-    (product.images && product.images[0]?.url) ||
-    "/products/placeholder.jpg";
+    getFallbackImage(
+      product.thumbnailUrl || (product.images && product.images[0]?.url),
+      "product"
+    ) || "/products/placeholder.jpg";
   const altText = (product.images && product.images[0]?.alt) || product.name;
   const name = product.name;
   const price = product.discountedPrice || product.price;
@@ -163,22 +166,13 @@ const ProductCard = ({
               bgCol={"white"}
               textCol={"text-gray-800"}
               border={"border-1"}
-              handleButton={() => {
-                addToCart({
-                  id: product.id,
-                  name: product.name,
-                  price: price,
-                  quantity: 1,
-                  image: thumbnail,
-                  category: product.category || "",
-                  weight: product.weight || 0,
-                  dimensions: product.dimensions || "",
-                });
-                toast.success(`Added ${product.name} to cart`);
-                console.log(
-                  "[ProductCard] Cart after add:",
-                  JSON.parse(localStorage.getItem("kvv_cart_items") || "[]")
-                );
+              handleButton={async () => {
+                try {
+                  await addToCart(product.id, 1);
+                  toast.success(`Added ${product.name} to cart`);
+                } catch (error: any) {
+                  toast.error(error.message || "Failed to add item to cart");
+                }
               }}
               padding={"p-3"}
               round={"rounded-full"}
