@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Portfolio, PortfolioPayload, PortfolioService, ProfessionalType } from '@/app/services/porfolioService';
+import { Portfolio, PortfolioPayload, PortfolioService, ProfessionalType, PublicPortfolioFilters } from '@/app/services/porfolioService';
 
 interface UsePortfolioResult {
   loading: boolean;
@@ -11,6 +11,8 @@ interface UsePortfolioResult {
   toggleVisibility: (portfolioId: string, authToken?: string) => Promise<Portfolio | null>;
   remove: (portfolioId: string, authToken?: string) => Promise<boolean>;
   getPublicByProfessional: (type: ProfessionalType, id: string) => Promise<Portfolio[]>;
+  getMyPortfolios: () => Promise<Portfolio[]>;
+  searchPublic: (filters?: PublicPortfolioFilters) => Promise<{ items: Portfolio[]; page: number; limit: number; total?: number }>;
 }
 
 export function usePortfolio(): UsePortfolioResult {
@@ -67,7 +69,17 @@ export function usePortfolio(): UsePortfolioResult {
     return !!res.success;
   }, [wrap]);
 
-  return { loading, error, lastMessage, create, getById, update, toggleVisibility, remove, getPublicByProfessional };
+  const getMyPortfolios = useCallback<UsePortfolioResult['getMyPortfolios']>(async () => {
+    const res = await wrap(() => PortfolioService.getMyPortfolios());
+    return res;
+  }, [wrap]);
+
+  const searchPublic = useCallback<UsePortfolioResult['searchPublic']>(async (filters) => {
+    const res = await wrap(() => PortfolioService.getPublicAll(filters ?? {}));
+    return res;
+  }, [wrap]);
+
+  return { loading, error, lastMessage, create, getById, update, toggleVisibility, remove, getPublicByProfessional, getMyPortfolios, searchPublic };
 }
 
 

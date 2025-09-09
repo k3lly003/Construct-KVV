@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { usePortfolio } from '@/app/hooks/usePortfolio';
 import ImageUploaderGrid from './ImageUploaderGrid';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface Props {
   onSuccess?: () => void;
@@ -136,7 +137,20 @@ export default function CreatePortfolioDialog({ onSuccess }: Props) {
           </div>
           <div>
             <label className="text-sm font-medium">Category</label>
-            <Input value={category} onChange={e => setCategory(e.target.value)} />
+            <Select value={category} onValueChange={setCategory}>
+              <SelectTrigger>
+                <SelectValue placeholder="Type of work" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Residential">Residential</SelectItem>
+                <SelectItem value="Commercial">Commercial</SelectItem>
+                <SelectItem value="Renovation">Renovation</SelectItem>
+                <SelectItem value="New Construction">New Construction</SelectItem>
+                <SelectItem value="Interior Design">Interior Design</SelectItem>
+                <SelectItem value="Landscape">Landscape</SelectItem>
+                <SelectItem value="Maintenance">Maintenance</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div>
             <label className="text-sm font-medium">Location</label>

@@ -33,7 +33,7 @@ export default function PortfolioPage() {
         <CreatePortfolioDialog onSuccess={() => { /* lists will refresh themselves on mount via effect; if needed we can lift state */ }} />
       </div>
 
-      {role === 'TECHNICIAN' && <CommonPortfolioList professionalType="technician" title="Recent Portfolio" description="Your most recent public items." />}
+      {role === 'TECHNICIAN' && <TechnicianPortfolioList professionalType="technician" title="Recent Portfolio" description="Your most recent public items." />}
       {role === 'CONTRACTOR' && <CommonPortfolioList professionalType="contractor" title="Recent Portfolio" description="Your most recent public items." />}
       {role === 'ARCHITECT' && <CommonPortfolioList professionalType="architect" title="Recent Portfolio" description="Your most recent public items." />}
 

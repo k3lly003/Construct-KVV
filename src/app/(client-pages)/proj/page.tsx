@@ -3,7 +3,7 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Search,
   Filter,
@@ -24,125 +24,57 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
-import { ProjectDetailsModal } from "@/app/(components)/projects/ProjectDetails";
-import { PlaceBidModal } from "@/app/(components)/projects/BiddingModal";
-import { mockProjects, Project } from "@/app/utils/fakes/projectFakes";
 import Head from "next/head";
 import DefaultPageBanner from "@/app/(components)/DefaultPageBanner";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "@/app/hooks/useTranslations";
-import { GenericButton } from "@/components/ui/generic-button";
-import { useProjects } from "@/app/hooks/useProjects";
-import SpecialistLocator from "@/components/ui/SpecialistLocator";
-import Link from "next/link";
+// SpecialistLocator not used on this page currently
+import { usePortfolio } from "@/app/hooks/usePortfolio";
+import { Portfolio } from "@/app/services/porfolioService";
+ 
 
 export default function Home() {
-  const [projects] = useState<Project[]>(mockProjects);
-  const [filteredProjects, setFilteredProjects] =
-    useState<Project[]>(mockProjects);
+  const { t } = useTranslations();
+  const { searchPublic, loading, error } = usePortfolio();
+  const router = useRouter();
 
+  const [items, setItems] = useState<Portfolio[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [budgetRange, setBudgetRange] = useState([0, 5000000]);
   const [locationFilter, setLocationFilter] = useState("");
-  const [sortBy] = useState("newest");
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [showBidModal, setShowBidModal] = useState(false);
-  const [bidProject, setBidProject] = useState<Project | null>(null);
-  const { t } = useTranslations();
-  const { isLoading, error } = useProjects();
+  const [professionalType, setProfessionalType] = useState<string | undefined>(undefined);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10);
 
-  // Filter and search logic
-  React.useEffect(() => {
-    const filtered = projects.filter((project) => {
-      // Search term filter
+  const filteredItems = useMemo(() => {
+    return items.filter((p) => {
       const searchMatch =
         searchTerm === "" ||
-        project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        project.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        project.category.toLowerCase().includes(searchTerm.toLowerCase());
+        p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (p.location || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (p.category || "").toLowerCase().includes(searchTerm.toLowerCase());
 
-      // Category filter
       const categoryMatch =
-        categoryFilter === "all" ||
-        project.category.toLowerCase().includes(categoryFilter.toLowerCase());
+        categoryFilter === "all" || (p.category || "").toLowerCase().includes(categoryFilter.toLowerCase());
 
-      // Status filter
-      const statusMatch =
-        statusFilter === "all" ||
-        project.status.toLowerCase() === statusFilter.toLowerCase();
-
-      // Budget filter
-      const budgetMatch =
-        project.budgetMin <= budgetRange[1] &&
-        project.budgetMax >= budgetRange[0];
-
-      // Location filter
       const locationMatch =
-        locationFilter === "" ||
-        project.location.toLowerCase().includes(locationFilter.toLowerCase());
+        locationFilter === "" || (p.location || "").toLowerCase().includes(locationFilter.toLowerCase());
 
-      return (
-        searchMatch &&
-        categoryMatch &&
-        statusMatch &&
-        budgetMatch &&
-        locationMatch
-      );
+      return searchMatch && categoryMatch && locationMatch;
     });
+  }, [items, searchTerm, categoryFilter, locationFilter]);
 
-    // Sort filtered results
-    filtered.sort((a, b) => {
-      switch (sortBy) {
-        case "deadline":
-          return (
-            new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
-          );
-        case "budget-high":
-          return b.budgetMax - a.budgetMax;
-        case "budget-low":
-          return a.budgetMin - b.budgetMin;
-        case "newest":
-        default:
-          return (
-            new Date(b.postedOn).getTime() - new Date(a.postedOn).getTime()
-          );
-      }
-    });
+  useEffect(() => {
+    const category = categoryFilter === "all" ? undefined : categoryFilter;
+    searchPublic({ category, location: locationFilter || undefined, professionalType: professionalType as any, page, limit })
+      .then(({ items }) => setItems(items))
+      .catch(() => setItems([]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoryFilter, locationFilter, professionalType, page, limit]);
 
-    setFilteredProjects(filtered);
-  }, [
-    projects,
-    searchTerm,
-    categoryFilter,
-    statusFilter,
-    budgetRange,
-    locationFilter,
-    sortBy,
-  ]);
-
-  const formatBudgetRange = (min: number, max: number) => {
-    const formatAmount = (amount: number) => {
-      if (amount >= 1000000) {
-        return `$${(amount / 1000000).toFixed(1)}M`;
-      }
-      return formatCurrency(amount);
-    };
-    return `${formatAmount(min)} - ${formatAmount(max)}`;
-  };
-
-  const handleViewDetails = (project: Project) => {
-    setSelectedProject(project);
-  };
-
-  const handlePlaceBid = (project: Project) => {
-    setBidProject(project);
-    setShowBidModal(true);
-    setSelectedProject(null);
-  };
+  // Unused UI pieces removed from original mock: status filter, budget slider, bidding modal
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -153,7 +85,7 @@ export default function Home() {
     }).format(amount);
   };
 
-  if (isLoading) {
+  if (loading) {
     return (
       <>
         <DefaultPageBanner
@@ -303,48 +235,16 @@ export default function Home() {
                 />
               </div>
 
-              <div>
-                <div className="flex items-center space-x-2 mb-4">
-                  <DollarSign className="h-4 w-4 text-gray-500" />
-                  <Label className="text-sm font-medium">Budget Range</Label>
-                </div>
-                <Slider
-                  value={budgetRange}
-                  onValueChange={setBudgetRange}
-                  max={5000000}
-                  min={0}
-                  step={100000}
-                  className="mb-2"
-                />
-                <div className="flex justify-between text-sm text-gray-500">
-                  <span>{formatCurrency(budgetRange[0])}</span>
-                  <span>{formatCurrency(budgetRange[1])}</span>
-                </div>
-              </div>
-
-              <div>
-                <Label className="text-sm font-medium">Status</Label>
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="mt-2">
-                    <SelectValue placeholder="All Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="open">Open</SelectItem>
-                    <SelectItem value="bidding">Bidding</SelectItem>
-                    <SelectItem value="closed">Closed</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              {/* Additional filters can go here (e.g., price range) */}
             </CardContent>
           </Card>
         </div>
 
         {/* Main Content */}
         <div className="flex-1 space-y-6">
-          {filteredProjects.map((project) => (
+          {filteredItems.map((p) => (
             <Card
-              key={project.id}
+              key={p.id}
               className="hover:shadow-lg transition-shadow duration-200"
             >
               <CardContent className="p-6">
@@ -352,60 +252,44 @@ export default function Home() {
                   <div className="space-y-2">
                     <div className="flex items-center space-x-3">
                       <Badge
-                        variant={
-                          project.type === "Commercial"
-                            ? "default"
-                            : "secondary"
-                        }
+                        variant={p.category?.toLowerCase() === "commercial" ? "default" : "secondary"}
                       >
-                        {project.type}
+                        {p.category || 'General'}
                       </Badge>
                       <Badge
-                        variant={
-                          project.status === "Open" ? "default" : "outline"
-                        }
-                        className={
-                          project.status === "Open"
-                            ? "bg-green-100 text-green-800"
-                            : ""
-                        }
+                        variant={p.isPublic ? "default" : "outline"}
+                        className={p.isPublic ? "bg-green-100 text-green-800" : "bg-red-100 text-red-700"}
                       >
-                        {project.status}
+                        {p.isPublic ? 'Visible' : 'Invisible'}
                       </Badge>
                     </div>
-                    <h2 className="text-xl font-semibold text-gray-900">
-                      {project.title}
-                    </h2>
+                    <h2 className="text-xl font-semibold text-gray-900">{p.title}</h2>
                   </div>
                   <div className="text-right">
                     <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                      C
+                      P
                     </span>
                   </div>
                 </div>
 
-                <p className="text-gray-600 mb-4">{project.description}</p>
+                <p className="text-gray-600 mb-4">{p.description}</p>
 
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
                     <MapPin className="h-4 w-4" />
-                    <span>{project.location}</span>
+                    <span>{p.location || 'N/A'}</span>
                   </div>
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
                     <Calendar className="h-4 w-4" />
-                    <span>{project.deadline}</span>
+                    <span>{p.workDate}</span>
                   </div>
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
                     <DollarSign className="h-4 w-4" />
-                    <span className="font-medium text-green-600">
-                      {formatBudgetRange(project.budgetMin, project.budgetMax)}
-                    </span>
+                    <span className="font-medium text-green-600">{p.budget || '—'}</span>
                   </div>
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
                     <Clock className="h-4 w-4" />
-                    <span className="font-medium text-green-600">
-                      {project.timeLeft} days
-                    </span>
+                    <span className="font-medium text-green-600">{p.duration || '—'}</span>
                   </div>
                 </div>
 
@@ -413,26 +297,16 @@ export default function Home() {
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-2 text-sm text-gray-600">
                       <Users className="h-4 w-4" />
-                      <span>{project.bidCount} Bids</span>
+                      <span>{(p.images?.length ?? 0)} Photos</span>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <span className="text-sm text-gray-600">Active</span>
+                      <div className={`w-2 h-2 ${p.isPublic ? 'bg-green-500' : 'bg-red-500'} rounded-full`}></div>
+                      <span className={`text-sm ${p.isPublic ? 'text-green-700' : 'text-red-700'}`}>{p.isPublic ? 'Visible' : 'Invisible'}</span>
                     </div>
                   </div>
                   <div className="flex space-x-3">
-                    <Button
-                      variant="outline"
-                      onClick={() => handleViewDetails(project)}
-                      className="flex items-center space-x-2"
-                    >
+                    <Button variant="outline" className="flex items-center space-x-2" onClick={() => router.push(`/proj/${p.id}`)}>
                       <span>View Details</span>
-                    </Button>
-                    <Button
-                      onClick={() => handlePlaceBid(project)}
-                      className="bg-orange-500 hover:bg-orange-600 text-white flex items-center space-x-2"
-                    >
-                      <span>Place Bid</span>
                     </Button>
                   </div>
                 </div>
@@ -442,30 +316,7 @@ export default function Home() {
         </div>
       </div>
 
-      {selectedProject && (
-        <ProjectDetailsModal
-          project={selectedProject}
-          isOpen={!!selectedProject}
-          onClose={() => setSelectedProject(null)}
-          onPlaceBid={handlePlaceBid}
-        />
-      )}
-
-      {bidProject && (
-        <PlaceBidModal
-          project={bidProject}
-          isOpen={showBidModal}
-          onClose={() => {
-            setShowBidModal(false);
-            setBidProject(null);
-          }}
-          onSubmit={(bidData) => {
-            console.log("Bid submitted:", bidData);
-            setShowBidModal(false);
-            setBidProject(null);
-          }}
-        />
-      )}
+      {/* Project-related modals removed in portfolio view */}
     </div>
   );
 }
