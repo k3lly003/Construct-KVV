@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export default function CreatePortfolioDialog({ onSuccess }: Props) {
+  const router = useRouter();
   const { create, loading, error } = usePortfolio();
   const [open, setOpen] = useState(false);
 
@@ -31,7 +33,7 @@ export default function CreatePortfolioDialog({ onSuccess }: Props) {
   const [isPublic, setIsPublic] = useState(true);
   const [localError, setLocalError] = useState<string | null>(null);
 
-  async function compressToDataUrl(file: File, maxBytes = 800_000, maxDimension = 1600, qualityStep = 0.85): Promise<string> {
+  async function compressToDataUrl(file: File, maxBytes = 120_000, maxDimension = 1000, qualityStep = 0.6): Promise<string> {
     const img = document.createElement('img');
     const reader = new FileReader();
     const dataUrl: string = await new Promise((resolve, reject) => {
@@ -59,7 +61,7 @@ export default function CreatePortfolioDialog({ onSuccess }: Props) {
 
     let quality = qualityStep;
     let out = canvas.toDataURL('image/jpeg', quality);
-    while (out.length * 0.75 > maxBytes && quality > 0.4) {
+    while (out.length * 0.75 > maxBytes && quality > 0.35) {
       quality -= 0.1;
       out = canvas.toDataURL('image/jpeg', quality);
     }
@@ -70,30 +72,51 @@ export default function CreatePortfolioDialog({ onSuccess }: Props) {
     e.preventDefault();
     setLocalError(null);
     // guard: limit number/size to avoid 413
-    const MAX_FILES = 8;
-    const MAX_FILE_BYTES = 2_000_000; // 2MB source before compression
+    const MAX_FILES = 3;
+    const MAX_FILE_BYTES = 1_000_000; // 1MB source before compression
     if (files.length > MAX_FILES) {
       setLocalError(`Please select up to ${MAX_FILES} images.`);
       return;
     }
     if (files.some(f => f.size > MAX_FILE_BYTES)) {
-      setLocalError('Each image must be <= 2MB.');
+      setLocalError('Each image must be <= 1MB.');
       return;
     }
 
     // compress to reasonable size/base64
     const base64Images = await Promise.all(files.map(f => compressToDataUrl(f)));
+    
+    // Additional check: ensure total payload size is reasonable
+    const totalBytes = base64Images.reduce((sum, img) => sum + Math.floor(img.length * 0.75), 0);
+    const MAX_TOTAL_BYTES = 350_000; // ~350KB total for all images
+    let finalImages = base64Images;
+    if (totalBytes > MAX_TOTAL_BYTES) {
+      // Try to trim images to fit within limit
+      const trimmed: string[] = [];
+      let running = 0;
+      for (const img of base64Images) {
+        const bytes = Math.floor(img.length * 0.75);
+        if (running + bytes > MAX_TOTAL_BYTES) break;
+        trimmed.push(img);
+        running += bytes;
+      }
+      if (trimmed.length === 0) {
+        setLocalError('Images are too large. Please choose smaller images.');
+        return;
+      }
+      finalImages = trimmed;
+    }
 
-    await create({
+    const created = await create({
       title,
       description,
       workDate,
-      images: base64Images,
+      images: finalImages,
       category,
       location,
       budget,
       duration,
-      skills: skills.split(',').map(s => s.trim()).filter(Boolean),
+      skills: skills ? [skills] : [],
       clientFeedback: clientFeedback || undefined,
       isPublic,
     });
@@ -111,6 +134,7 @@ export default function CreatePortfolioDialog({ onSuccess }: Props) {
     setClientFeedback('');
     setIsPublic(true);
     onSuccess?.();
+    router.refresh();
   }
 
   return (
@@ -169,8 +193,18 @@ export default function CreatePortfolioDialog({ onSuccess }: Props) {
             <ImageUploaderGrid files={files} previews={previews} onChange={(f, p) => { setFiles(f); setPreviews(p); }} />
           </div>
           <div>
-            <label className="text-sm font-medium">Skills (comma separated)</label>
-            <Input value={skills} onChange={e => setSkills(e.target.value)} />
+            <label className="text-sm font-medium">Skills</label>
+            <Select value={skills} onValueChange={setSkills}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a skill" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Carpentry">Carpentry</SelectItem>
+                <SelectItem value="Electrical">Electrical</SelectItem>
+                <SelectItem value="Plumbing">Plumbing</SelectItem>
+                <SelectItem value="Tile Work">Tile Work</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="md:col-span-2">
             <label className="text-sm font-medium">Client Feedback</label>

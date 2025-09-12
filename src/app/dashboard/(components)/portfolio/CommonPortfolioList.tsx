@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Portfolio, ProfessionalType } from '@/app/services/porfolioService';
 import { usePortfolio } from '@/app/hooks/usePortfolio';
 import { useUserStore } from '@/store/userStore';
+import { formatPortfolioDate } from '@/lib/dateUtils';
 
 interface Props {
   professionalType: ProfessionalType;
@@ -96,7 +97,7 @@ export default function CommonPortfolioList({ professionalType, title, descripti
                     <img src={p.images[0]} alt={p.title} className="mt-1 h-32 w-full object-cover rounded" />
                   )}
                   <p className="text-sm text-muted-foreground mt-1 line-clamp-3">{p.description}</p>
-                  <div className="text-xs text-gray-500">{p.location} • {p.workDate}</div>
+                  <div className="text-xs text-gray-500">{p.location} • {formatPortfolioDate(p.workDate)}</div>
                   <div className="flex gap-2 pt-2 items-center">
                     <Button size="sm" variant="secondary" onClick={() => beginEdit(p)}>Edit</Button>
                     <Button size="sm" onClick={() => handleToggle(p.id)}>Toggle Visibility</Button>

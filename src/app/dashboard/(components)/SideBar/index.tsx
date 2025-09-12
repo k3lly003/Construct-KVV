@@ -287,6 +287,12 @@ const SideBar = () => {
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
+                href="/dashboard/portfolio"
+                icon={CalendarDays}
+                label={t('navigation.portfolio')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
                 href="/dashboard/profile" // Assuming profile path for sellers
                 icon={User}
                 label={t('navigation.profile')}

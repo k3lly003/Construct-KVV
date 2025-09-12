@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -12,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import ImageUploaderGrid from './ImageUploaderGrid';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { formatPortfolioDate, formatDetailedDate } from '@/lib/dateUtils';
 
 interface Props {
   title?: string;
@@ -19,6 +21,7 @@ interface Props {
 }
 
 export default function TechnicianPortfolioList({ title, description }: Props) {
+  const router = useRouter();
   const { getMyPortfolios, update, toggleVisibility, loading } = usePortfolio();
   const [items, setItems] = useState<Portfolio[]>([]);
   const [editOpen, setEditOpen] = useState(false);
@@ -56,7 +59,7 @@ export default function TechnicianPortfolioList({ title, description }: Props) {
     setEditLocation(item.location ?? '');
     setEditBudget(item.budget ?? '');
     setEditDuration(item.duration ?? '');
-    setEditSkills(item.skills?.join(', ') ?? '');
+    setEditSkills(item.skills?.[0] ?? '');
     setEditFiles([]);
     setEditPreviews(item.images ?? []);
     setEditOpen(true);
@@ -65,7 +68,7 @@ export default function TechnicianPortfolioList({ title, description }: Props) {
   async function saveEdit() {
     if (!editing) return;
     // If new files selected, compress them and append to existing previews
-    async function compressToDataUrl(file: File, maxBytes = 800_000, maxDimension = 1600, qualityStep = 0.85): Promise<string> {
+    async function compressToDataUrl(file: File, maxBytes = 200_000, maxDimension = 1200, qualityStep = 0.7): Promise<string> {
       const img = document.createElement('img');
       const reader = new FileReader();
       const dataUrl: string = await new Promise((resolve, reject) => {
@@ -108,12 +111,13 @@ export default function TechnicianPortfolioList({ title, description }: Props) {
       budget: editBudget,
       duration: editDuration,
       images,
-      skills: editSkills.split(',').map(s => s.trim()).filter(Boolean),
+      skills: editSkills ? [editSkills] : [],
     });
     setEditOpen(false);
     setEditing(null);
     if (updated) {
       setItems(prev => prev.map(it => it.id === updated.id ? { ...it, ...updated } : it));
+      router.refresh();
     }
   }
 
@@ -187,7 +191,7 @@ export default function TechnicianPortfolioList({ title, description }: Props) {
                   </div>
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
                     <Calendar className="h-4 w-4" />
-                    <span>{p.workDate}</span>
+                    <span>{formatPortfolioDate(p.workDate)}</span>
                   </div>
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
                     <DollarSign className="h-4 w-4" />
@@ -269,7 +273,7 @@ export default function TechnicianPortfolioList({ title, description }: Props) {
                   </div>
                   <div className="flex items-center space-x-2 text-sm text-gray-700">
                     <Calendar className="h-4 w-4" />
-                    <span>{viewing.workDate || '—'}</span>
+                    <span>{formatDetailedDate(viewing.workDate)}</span>
                   </div>
                   <div className="flex items-center space-x-2 text-sm text-gray-700">
                     <DollarSign className="h-4 w-4" />
@@ -355,8 +359,18 @@ export default function TechnicianPortfolioList({ title, description }: Props) {
                 <ImageUploaderGrid files={editFiles} previews={editPreviews} onChange={(f, p) => { setEditFiles(f); setEditPreviews(p); }} />
               </div>
               <div className="md:col-span-2">
-                <label className="text-sm font-medium">Skills (comma separated)</label>
-                <Input value={editSkills} onChange={e => setEditSkills(e.target.value)} />
+                <label className="text-sm font-medium">Skills</label>
+                <Select value={editSkills} onValueChange={setEditSkills}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a skill" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Carpentry">Carpentry</SelectItem>
+                    <SelectItem value="Electrical">Electrical</SelectItem>
+                    <SelectItem value="Plumbing">Plumbing</SelectItem>
+                    <SelectItem value="Tile Work">Tile Work</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             <DialogFooter>

@@ -5,7 +5,7 @@ import TechnicianPortfolioList from "../(components)/portfolio/TechnicianPortfol
 import ContractorPortfolioList from "../(components)/portfolio/ContractorPortfolioList";
 import ArchitectPortfolioList from "../(components)/portfolio/ArchitectPortfolioList";
 import CreatePortfolioDialog from "../(components)/portfolio/CreatePortfolioDialog";
-import CommonPortfolioList from "../(components)/portfolio/CommonPortfolioList";
+// import CommonPortfolioList from "../(components)/portfolio/CommonPortfolioList";
 import { useUserStore } from "@/store/userStore";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -33,9 +33,9 @@ export default function PortfolioPage() {
         <CreatePortfolioDialog onSuccess={() => { /* lists will refresh themselves on mount via effect; if needed we can lift state */ }} />
       </div>
 
-      {role === 'TECHNICIAN' && <TechnicianPortfolioList professionalType="technician" title="Recent Portfolio" description="Your most recent public items." />}
-      {role === 'CONTRACTOR' && <CommonPortfolioList professionalType="contractor" title="Recent Portfolio" description="Your most recent public items." />}
-      {role === 'ARCHITECT' && <CommonPortfolioList professionalType="architect" title="Recent Portfolio" description="Your most recent public items." />}
+      {role === 'TECHNICIAN' && <TechnicianPortfolioList title="Recent Portfolio" description="Your most recent public items." />}
+      {role === 'CONTRACTOR' && <ContractorPortfolioList title="Recent Portfolio" description="Your most recent public items." />}
+      {role === 'ARCHITECT' && <ArchitectPortfolioList title="Recent Portfolio" description="Your most recent public items." />}
 
       {!role && (
         <Card className="w-full">

@@ -32,6 +32,7 @@ import { useTranslations } from "@/app/hooks/useTranslations";
 // SpecialistLocator not used on this page currently
 import { usePortfolio } from "@/app/hooks/usePortfolio";
 import { Portfolio } from "@/app/services/porfolioService";
+import { formatPortfolioDate, formatDetailedDate } from '@/lib/dateUtils';
  
 
 export default function Home() {
@@ -281,7 +282,7 @@ export default function Home() {
                   </div>
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
                     <Calendar className="h-4 w-4" />
-                    <span>{p.workDate}</span>
+                    <span>{formatPortfolioDate(p.workDate)}</span>
                   </div>
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
                     <DollarSign className="h-4 w-4" />
