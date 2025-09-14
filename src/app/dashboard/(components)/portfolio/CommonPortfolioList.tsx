@@ -18,7 +18,7 @@ interface Props {
 
 export default function CommonPortfolioList({ professionalType, title, description }: Props) {
   const { getPublicByProfessional, toggleVisibility, update, remove, loading } = usePortfolio();
-  const { id: userId } = useUserStore();
+  const userId = useUserStore(s => s.id);
   const [items, setItems] = useState<Portfolio[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState('');

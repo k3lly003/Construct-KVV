@@ -42,7 +42,7 @@ export function usePortfolio(): UsePortfolioResult {
   }, [wrap]);
 
   const getById = useCallback<UsePortfolioResult['getById']>(async (portfolioId) => {
-    const res = await wrap(() => PortfolioService.getById(portfolioId));
+    const res = await wrap(() => PortfolioService.getPortfolioById(portfolioId));
     return res;
   }, [wrap]);
 

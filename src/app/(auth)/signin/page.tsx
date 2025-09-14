@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Mail, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { IoLogoFacebook } from "react-icons/io5";
@@ -11,6 +11,7 @@ import { Toaster, toast } from "sonner";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
 import { GenericButton } from "@/components/ui/generic-button";
+import { useSession } from "@/app/hooks/useSession";
 
 // Zod validation
 const loginSchema = z.object({
@@ -28,6 +29,31 @@ const Page = () => {
   );
   const router = useRouter();
   const { t } = useTranslation();
+  const { refresh } = useSession();
+
+  // If a session already exists, try refresh and redirect away from signin
+  useEffect(() => {
+    let cancelled = false;
+    const maybeRedirect = async () => {
+      try {
+        const existing =
+          typeof window !== "undefined" &&
+          (localStorage.getItem("authToken") || localStorage.getItem("token"));
+        if (existing) {
+          const newToken = await refresh();
+          if (!cancelled && (existing || newToken)) {
+            router.replace("/");
+          }
+        }
+      } catch {
+        // ignore; user stays on signin
+      }
+    };
+    maybeRedirect();
+    return () => {
+      cancelled = true;
+    };
+  }, [refresh, router]);
 
   const handleSignIn = async (e: React.FormEvent) => {
   e.preventDefault();
@@ -65,6 +91,12 @@ const Page = () => {
     // Store token and user data in localStorage
     if (token) {
       localStorage.setItem("authToken", token);
+    }
+    // Kick the session service to refresh token/state after login
+    try {
+      await refresh();
+    } catch {
+      // ignore refresh failure; token from login is already stored
     }
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
