@@ -14,6 +14,88 @@ import { useTranslations } from "@/app/hooks/useTranslations";
 import { dashboardFakes } from "@/app/utils/fakes/DashboardFakes";
 import { MdLocationPin } from "react-icons/md";
 import { useRouter } from "next/navigation";
+import { ProductViewSkeleton } from "@/app/utils/skeleton/ProductSkeletons";
+
+function RecommendedProductsSection() {
+  const { t } = useTranslations();
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const userData = getUserDataFromLocalStorage();
+    setUser(userData);
+    if (!userData || !userData.id || !userData.token) {
+      setLoading(false);
+      setProducts([]);
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    productService
+      .fetchRecommendedProducts(userData.id, userData.token)
+      .then((prods) => {
+        setProducts(prods);
+      })
+      .catch((err) => {
+        setError("Failed to load recommended products");
+        setProducts([]);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (!user) return null;
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-7 py-12">
+      <h2 className="text-3xl font-bold mb-8 text-center">
+        {t(dashboardFakes.RecommendationsSection.title) ||
+          "Recommended for you"}
+      </h2>
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7">
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={i}
+              className="bg-gray-100 animate-pulse overflow-hidden w-64 m-2 rounded-xl"
+            >
+              <div className="w-full h-56 bg-gray-200" />
+              <div className="p-4">
+                <div className="h-5 bg-gray-200 rounded w-3/4 mb-2" />
+                <div className="h-4 bg-gray-200 rounded w-1/2 mb-2" />
+                <div className="h-4 bg-gray-200 rounded w-1/3 mb-4" />
+                <div className="h-10 bg-gray-200 rounded w-full" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : error ? (
+        <div className="text-red-500 text-center">{error}</div>
+      ) : products.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7 justify-center">
+          {products.map((product, idx) => (
+            <ProductCard key={product.id || idx} product={product} />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center">
+          <p className="mb-2">
+            {t(dashboardFakes.RecommendationsSection.noRecommendations) ||
+              "No recommended products available."}
+          </p>
+          <Link
+            href="/product"
+            className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded transition"
+          >
+            {t(dashboardFakes.RecommendationsSection.seeAllProducts) ||
+              "See all products"}
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function Home() {
   const { t } = useTranslations();
@@ -22,29 +104,33 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);
 
-  // Service dropdown state
+  // Service dropdown state - prioritized to align with Smart Match roles
   const serviceOptions = [
-    "Plumbing",
-    "Electrical",
-    "Painting",
-    "Roofing",
-    "Flooring",
-    "Carpentry",
-    "Masonry",
+    "Contractor",
+    "Architect / Design",
+    "Plumber",
+    "Technician",
+    // Common technician and construction specialties
+    "Electrician",
+    "Carpenter",
+    "Mason / Bricklayer",
+    "Painter",
+    "Roofer",
+    "Tiler / Flooring",
+    // Additional services
     "Landscaping",
     "Interior Design",
-    "Architecture",
     "HVAC",
     "Cleaning",
     "Security Systems",
-    "Glass Installation",
+    "Glass & Aluminum",
     "Waterproofing",
     "Solar Installation",
     "General Contracting",
     "Project Management",
     "Demolition",
     "Excavation",
-    "Welding",
+    "Welder",
   ];
   const [serviceInput, setServiceInput] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
@@ -347,49 +433,7 @@ export default function Home() {
       </section>
       <ServicesShowCaseSection />
       {/* Recommendations Section */}
-      {user && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-7 py-12">
-          <h2 className="text-3xl font-bold mb-8 text-center">
-            {t(dashboardFakes.RecommendationsSection.title)}
-          </h2>
-          {loading ? (
-            <div>{t(dashboardFakes.RecommendationsSection.loading)}</div>
-          ) : error ? (
-            <div className="text-red-500">
-              {t(dashboardFakes.RecommendationsSection.error)}
-            </div>
-          ) : recommendations.length > 0 ? (
-            <div className="flex flex-wrap px-4 gap-7 justify-center">
-              {(() => {
-                // Find max interactions (wasInteracted true and count)
-                const maxInteracted =
-                  recommendations.filter((p) => p.wasInteracted).length > 0;
-                return recommendations.map((product, idx) => (
-                  <div key={product.id} className="relative">
-                    <ProductCard
-                      product={product}
-                      showHighlyRecommended={maxInteracted}
-                      isHighlyRecommended={!!product.wasInteracted}
-                    />
-                  </div>
-                ));
-              })()}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center">
-              <p className="mb-2">
-                {t(dashboardFakes.RecommendationsSection.noRecommendations)}
-              </p>
-              <Link
-                href="/product"
-                className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded transition"
-              >
-                {t(dashboardFakes.RecommendationsSection.seeAllProducts)}
-              </Link>
-            </div>
-          )}
-        </div>
-      )}
+      <RecommendedProductsSection />
       <Products />
     </>
   );

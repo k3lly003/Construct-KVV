@@ -1,36 +1,687 @@
 "use client";
-import MultiStepForm from "@/components/ui/MultiStepForm";
-import { useRouter } from "next/navigation";
+import React from "react";
 
-const steps = [
-  {
-    title: "What type of kitchen do you want?",
-    options: ["Modern", "Classic", "Minimalist", "Industrial"],
-  },
-  {
-    title: "What’s your budget range?",
-    options: ["< $5,000", "$5,000 - $10,000", "$10,000 - $20,000", ">$20,000"],
-  },
-  {
-    title: "Preferred colors?",
-    options: ["White", "Black", "Wood", "Colorful"],
-  },
+type UserRoleOption =
+  | "Any"
+  | "Seller"
+  | "Architect"
+  | "Contractor"
+  | "Plumber"
+  | "Technician";
+type DesignRequestType =
+  | "RESIDENTIAL"
+  | "COMMERCIAL"
+  | "INDUSTRIAL"
+  | "LANDSCAPE"
+  | "INTERIOR"
+  | "URBAN_PLANNING"
+  | "RENOVATION"
+  | "SUSTAINABLE"
+  | "LUXURY"
+  | "AFFORDABLE";
+type TechnicianCategory =
+  | "MASON_BRICKLAYER"
+  | "CARPENTER"
+  | "CONCRETE_SPECIALIST"
+  | "ROOFING_TECHNICIAN"
+  | "PAINTER_DECORATOR"
+  | "PLASTERER_DRYWALL"
+  | "TILE_FLOORING_SPECIALIST"
+  | "WALLPAPER_INSTALLER"
+  | "WELDER_METAL_FABRICATOR"
+  | "GLASS_ALUMINUM_TECHNICIAN"
+  | "LOCKSMITH"
+  | "INSULATION_INSTALLER"
+  | "LANDSCAPER_GARDENING"
+  | "PAVING_ROADWORK"
+  | "FENCING_INSTALLER"
+  | "HANDYMAN"
+  | "PEST_CONTROL"
+  | "WATER_PUMP_BOREHOLE";
+
+interface MatchRequestBodyBase {
+  role?: UserRoleOption;
+  serviceType?: string;
+  location?: {
+    lat?: number;
+    lng?: number;
+    street?: string;
+    district?: string;
+    province?: string;
+    country?: string;
+  };
+  desiredDate?: string;
+  budget?: number;
+  minExperience?: number;
+}
+
+interface MatchResultItem {
+  userId: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+  role: string;
+  businessName?: string | null;
+  profilePic?: string | null;
+  score?: number | null;
+  avgRating?: number | null;
+  totalReviews?: number | null;
+  experience?: number | null;
+  isActive?: boolean | null;
+}
+
+const DESIGN_TYPES: DesignRequestType[] = [
+  "RESIDENTIAL",
+  "COMMERCIAL",
+  "INDUSTRIAL",
+  "LANDSCAPE",
+  "INTERIOR",
+  "URBAN_PLANNING",
+  "RENOVATION",
+  "SUSTAINABLE",
+  "LUXURY",
+  "AFFORDABLE",
+];
+
+const TECHNICIAN_CATEGORIES: TechnicianCategory[] = [
+  "MASON_BRICKLAYER",
+  "CARPENTER",
+  "CONCRETE_SPECIALIST",
+  "ROOFING_TECHNICIAN",
+  "PAINTER_DECORATOR",
+  "PLASTERER_DRYWALL",
+  "TILE_FLOORING_SPECIALIST",
+  "WALLPAPER_INSTALLER",
+  "WELDER_METAL_FABRICATOR",
+  "GLASS_ALUMINUM_TECHNICIAN",
+  "LOCKSMITH",
+  "INSULATION_INSTALLER",
+  "LANDSCAPER_GARDENING",
+  "PAVING_ROADWORK",
+  "FENCING_INSTALLER",
+  "HANDYMAN",
+  "PEST_CONTROL",
+  "WATER_PUMP_BOREHOLE",
 ];
 
 export default function ProMatchPage() {
-  const router = useRouter();
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
+  const [step, setStep] = React.useState(0);
+  const [submitting, setSubmitting] = React.useState(false);
+  const [resultsOpen, setResultsOpen] = React.useState(false);
+  const [results, setResults] = React.useState<MatchResultItem[]>([]);
+  const [apiError, setApiError] = React.useState<string | null>(null);
+  const [validationError, setValidationError] = React.useState<string | null>(
+    null
+  );
+
+  const [form, setForm] = React.useState<MatchRequestBodyBase>({
+    role: "Any",
+    serviceType: undefined,
+    location: {
+      district: "",
+      province: "",
+      country: "",
+    },
+    desiredDate: "",
+    budget: undefined,
+    minExperience: undefined,
+  });
+
+  const roleOptions: UserRoleOption[] = [
+    "Any",
+    "Seller",
+    "Architect",
+    "Contractor",
+    "Plumber",
+    "Technician",
+  ];
+
+  const totalSteps = 6;
+
+  const next = () => setStep((s) => Math.min(s + 1, totalSteps - 1));
+  const back = () => setStep((s) => Math.max(s - 1, 0));
+
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    setApiError(null);
+    setValidationError(null);
+    try {
+      // Require either coordinates (lat & lng) OR a district per backend rules
+      const hasCoords =
+        typeof form.location?.lat === "number" &&
+        typeof form.location?.lng === "number";
+      const hasDistrict =
+        !!form.location?.district && form.location?.district.trim().length > 0;
+      if (!hasCoords && !hasDistrict) {
+        setValidationError(
+          "Please provide either coordinates (lat & lng) or a district."
+        );
+        setStep(2);
+        setSubmitting(false);
+        return;
+      }
+
+      const payload: MatchRequestBodyBase = {};
+      if (form.role && form.role !== "Any") payload.role = form.role;
+      // Do not include serviceType in the API payload; it's UI-only.
+      if (form.desiredDate) payload.desiredDate = form.desiredDate;
+      if (typeof form.budget === "number" && !Number.isNaN(form.budget))
+        payload.budget = form.budget;
+      if (
+        typeof form.minExperience === "number" &&
+        !Number.isNaN(form.minExperience)
+      )
+        payload.minExperience = form.minExperience;
+      const loc = form.location || {};
+      const cleanedLoc: Record<string, any> = {};
+      if (typeof loc.lat === "number") cleanedLoc.lat = loc.lat;
+      if (typeof loc.lng === "number") cleanedLoc.lng = loc.lng;
+      if (loc.street) cleanedLoc.street = loc.street;
+      if (loc.district) cleanedLoc.district = loc.district;
+      if (loc.province) cleanedLoc.province = loc.province;
+      if (loc.country) cleanedLoc.country = loc.country;
+      if (Object.keys(cleanedLoc).length > 0)
+        payload.location = cleanedLoc as any;
+
+      const authToken =
+        typeof window !== "undefined"
+          ? localStorage.getItem("authToken")
+          : null;
+
+      // Debug: log submitted payload
+      try {
+        // eslint-disable-next-line no-console
+        console.log(
+          "[ProMatch] Submitting match payload:",
+          JSON.stringify(payload)
+        );
+      } catch {
+        // eslint-disable-next-line no-console
+        console.log("[ProMatch] Submitting match payload (raw):", payload);
+      }
+
+      const res = await fetch(`${API_URL}/api/v1/match`, {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+          ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || `Request failed with ${res.status}`);
+      }
+
+      const data = await res.json();
+      // Debug: log raw API response
+      // eslint-disable-next-line no-console
+      console.log("[ProMatch] Match API response:", data);
+      const normalized: MatchResultItem[] = Array.isArray(data?.results)
+        ? data.results.map((r: any) => ({
+            userId: r.userId || r.id || "",
+            name:
+              r.name ||
+              `${r.user?.firstName || ""} ${r.user?.lastName || ""}`.trim() ||
+              "Unknown",
+            email: r.email || r.user?.email || "",
+            phone: r.phone ?? r.user?.phone ?? null,
+            role: r.role || r.user?.role || form.role || "",
+            businessName: r.businessName ?? null,
+            profilePic: r.profilePic ?? r.user?.profilePic ?? null,
+            score: typeof r.score === "number" ? r.score : null,
+            avgRating: typeof r.avgRating === "number" ? r.avgRating : null,
+            totalReviews:
+              typeof r.totalReviews === "number" ? r.totalReviews : null,
+            experience:
+              typeof r.experience === "number"
+                ? r.experience
+                : typeof r.user?.experience === "number"
+                ? r.user.experience
+                : null,
+            isActive:
+              typeof r.isActive === "boolean"
+                ? r.isActive
+                : typeof r.user?.isActive === "boolean"
+                ? r.user.isActive
+                : null,
+          }))
+        : [];
+      setResults(normalized);
+      setResultsOpen(true);
+    } catch (e: unknown) {
+      setApiError(e instanceof Error ? e.message : "Unknown error");
+      setResults([]);
+      setResultsOpen(true);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 py-12">
-      <h1 className="text-3xl font-bold mb-8">Find Your Pro Match</h1>
-      <MultiStepForm
-        steps={steps}
-        onComplete={(data) => {
-          // You can handle the completed data here (e.g., send to API, show summary, etc.)
-          alert("Form completed! Check the console for your answers.");
-          console.log("MultiStepForm result:", data);
-          // Optionally redirect or show a summary page
-        }}
-      />
+    <div className="min-h-screen flex flex-col items-center bg-gray-50 py-12 px-4">
+      <h1 className="text-3xl font-bold mb-2">Find Your Pro Match</h1>
+      <p className="text-gray-600 mb-8 text-center max-w-xl">
+        Answer a few questions and we will match you with the best
+        professionals.
+      </p>
+
+      <div className="w-full max-w-2xl bg-white rounded-xl shadow p-6">
+        <div className="mb-6 text-sm text-gray-500">
+          Step {step + 1} of {totalSteps}
+        </div>
+        {validationError && (
+          <div className="mb-4 p-3 rounded-md bg-amber-50 text-amber-800 border border-amber-200 text-sm">
+            {validationError}
+          </div>
+        )}
+
+        {step === 0 && (
+          <div>
+            <h2 className="text-xl font-semibold mb-4">
+              What type of pro are you looking for?
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {roleOptions.map((r) => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => setForm((prev) => ({ ...prev, role: r }))}
+                  className={`px-4 py-3 border rounded-lg text-left ${
+                    form.role === r
+                      ? "border-amber-500 bg-amber-50"
+                      : "border-gray-300 hover:border-gray-400"
+                  }`}
+                >
+                  {r}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {step === 1 && (
+          <div>
+            <h2 className="text-xl font-semibold mb-4">
+              Select a service type
+            </h2>
+            {form.role === "Architect" && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {DESIGN_TYPES.map((d) => (
+                  <button
+                    key={d}
+                    type="button"
+                    onClick={() =>
+                      setForm((prev) => ({ ...prev, serviceType: d }))
+                    }
+                    className={`px-4 py-3 border rounded-lg text-left ${
+                      form.serviceType === d
+                        ? "border-amber-500 bg-amber-50"
+                        : "border-gray-300 hover:border-gray-400"
+                    }`}
+                  >
+                    {d.replace(/_/g, " ")}
+                  </button>
+                ))}
+              </div>
+            )}
+            {form.role === "Technician" && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-80 overflow-auto pr-1">
+                {TECHNICIAN_CATEGORIES.map((c) => (
+                  <button
+                    key={c}
+                    type="button"
+                    onClick={() =>
+                      setForm((prev) => ({ ...prev, serviceType: c }))
+                    }
+                    className={`px-4 py-3 border rounded-lg text-left ${
+                      form.serviceType === c
+                        ? "border-amber-500 bg-amber-50"
+                        : "border-gray-300 hover:border-gray-400"
+                    }`}
+                  >
+                    {c.replace(/_/g, " ")}
+                  </button>
+                ))}
+              </div>
+            )}
+            {(form.role === "Any" ||
+              form.role === "Contractor" ||
+              form.role === "Plumber") && (
+              <div>
+                <input
+                  type="text"
+                  placeholder="e.g., House build, Renovation, Plumbing repair"
+                  value={form.serviceType || ""}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, serviceType: e.target.value }))
+                  }
+                  className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Optional. If left empty, we will still match by role.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {step === 2 && (
+          <div>
+            <h2 className="text-xl font-semibold mb-4">
+              Where is the job located?
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <input
+                type="text"
+                placeholder="Street (optional)"
+                value={form.location?.street || ""}
+                onChange={(e) =>
+                  setForm((p) => ({
+                    ...p,
+                    location: { ...(p.location || {}), street: e.target.value },
+                  }))
+                }
+                className="px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+              <input
+                type="text"
+                placeholder="District (optional)"
+                value={form.location?.district || ""}
+                onChange={(e) =>
+                  setForm((p) => ({
+                    ...p,
+                    location: {
+                      ...(p.location || {}),
+                      district: e.target.value,
+                    },
+                  }))
+                }
+                className="px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+              <input
+                type="text"
+                placeholder="Province (optional)"
+                value={form.location?.province || ""}
+                onChange={(e) =>
+                  setForm((p) => ({
+                    ...p,
+                    location: {
+                      ...(p.location || {}),
+                      province: e.target.value,
+                    },
+                  }))
+                }
+                className="px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+              <input
+                type="text"
+                placeholder="Country (optional)"
+                value={form.location?.country || ""}
+                onChange={(e) =>
+                  setForm((p) => ({
+                    ...p,
+                    location: {
+                      ...(p.location || {}),
+                      country: e.target.value,
+                    },
+                  }))
+                }
+                className="px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+              <input
+                type="number"
+                step="any"
+                placeholder="Latitude (optional)"
+                value={
+                  typeof form.location?.lat === "number"
+                    ? String(form.location?.lat)
+                    : ""
+                }
+                onChange={(e) =>
+                  setForm((p) => ({
+                    ...p,
+                    location: {
+                      ...(p.location || {}),
+                      lat: e.target.value ? Number(e.target.value) : undefined,
+                    },
+                  }))
+                }
+                className="px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+              <input
+                type="number"
+                step="any"
+                placeholder="Longitude (optional)"
+                value={
+                  typeof form.location?.lng === "number"
+                    ? String(form.location?.lng)
+                    : ""
+                }
+                onChange={(e) =>
+                  setForm((p) => ({
+                    ...p,
+                    location: {
+                      ...(p.location || {}),
+                      lng: e.target.value ? Number(e.target.value) : undefined,
+                    },
+                  }))
+                }
+                className="px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+            </div>
+          </div>
+        )}
+
+        {step === 3 && (
+          <div>
+            <h2 className="text-xl font-semibold mb-4">
+              When do you need the service?
+            </h2>
+            <input
+              type="date"
+              value={form.desiredDate || ""}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, desiredDate: e.target.value }))
+              }
+              className="px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Optional. You can skip this.
+            </p>
+          </div>
+        )}
+
+        {step === 4 && (
+          <div>
+            <h2 className="text-xl font-semibold mb-4">What is your budget?</h2>
+            <input
+              type="number"
+              min="0"
+              placeholder="Enter amount (RWF)"
+              value={typeof form.budget === "number" ? String(form.budget) : ""}
+              onChange={(e) =>
+                setForm((p) => ({
+                  ...p,
+                  budget: e.target.value ? Number(e.target.value) : undefined,
+                }))
+              }
+              className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Optional. Helps prioritize suitable pros.
+            </p>
+          </div>
+        )}
+
+        {step === 5 && (
+          <div>
+            <h2 className="text-xl font-semibold mb-4">
+              Minimum years of experience?
+            </h2>
+            <input
+              type="number"
+              min="0"
+              placeholder="e.g., 3"
+              value={
+                typeof form.minExperience === "number"
+                  ? String(form.minExperience)
+                  : ""
+              }
+              onChange={(e) =>
+                setForm((p) => ({
+                  ...p,
+                  minExperience: e.target.value
+                    ? Number(e.target.value)
+                    : undefined,
+                }))
+              }
+              className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Optional. Leave empty for no minimum.
+            </p>
+          </div>
+        )}
+
+        <div className="mt-6 flex items-center justify-between">
+          <button
+            type="button"
+            onClick={back}
+            disabled={step === 0 || submitting}
+            className={`px-4 py-2 rounded-lg border ${
+              step === 0
+                ? "border-gray-200 text-gray-400"
+                : "border-gray-300 hover:bg-gray-50"
+            }`}
+          >
+            Back
+          </button>
+          {step < totalSteps - 1 ? (
+            <button
+              type="button"
+              onClick={next}
+              disabled={submitting}
+              className="px-5 py-2 rounded-lg bg-amber-600 text-white hover:bg-amber-700"
+            >
+              Next
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={submitting}
+              className="px-5 py-2 rounded-lg bg-amber-600 text-white hover:bg-amber-700 disabled:opacity-60"
+            >
+              {submitting ? "Matching..." : "Find Matches"}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {resultsOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="w-full max-w-3xl bg-white rounded-xl shadow-lg p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-semibold">Matched Professionals</h3>
+              <button
+                type="button"
+                onClick={() => setResultsOpen(false)}
+                className="px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-50"
+              >
+                Close
+              </button>
+            </div>
+            {apiError && (
+              <div className="mb-4 p-3 rounded-md bg-amber-50 text-amber-800 border border-amber-200 text-sm">
+                {apiError}
+              </div>
+            )}
+            {results.length === 0 ? (
+              <div className="text-gray-600">
+                No matches found for your criteria.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[60vh] overflow-auto pr-1">
+                {results.map((item) => (
+                  <div
+                    key={item.userId}
+                    className="border rounded-lg p-4 bg-white"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        {item.profilePic ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={item.profilePic}
+                            alt={item.name}
+                            className="w-10 h-10 rounded-full object-cover border border-gray-200"
+                          />
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-semibold border border-amber-200">
+                            {String(item.name || "")
+                              .split(" ")
+                              .filter(Boolean)
+                              .slice(0, 2)
+                              .map((s) => s.charAt(0).toUpperCase())
+                              .join("") || "--"}
+                          </div>
+                        )}
+                        <div className="font-semibold text-amber-900">
+                          {item.name}
+                        </div>
+                      </div>
+                      {typeof item.score === "number" && (
+                        <span className="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-700">
+                          Score: {item.score}
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-sm text-gray-600 mt-1 flex items-center gap-2">
+                      <span>{item.role}</span>
+                      {item?.isActive ? (
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200">
+                          Available
+                        </span>
+                      ) : null}
+                    </div>
+                    {typeof item.experience === "number" && (
+                      <div className="text-xs text-gray-500 mt-1">
+                        Experience: {item.experience} years
+                      </div>
+                    )}
+                    {item.businessName && (
+                      <div className="text-sm text-gray-700">
+                        {item.businessName}
+                      </div>
+                    )}
+                    <div className="text-sm text-gray-700 mt-2">
+                      {item.email}
+                    </div>
+                    {item.phone && (
+                      <div className="text-sm text-gray-700">{item.phone}</div>
+                    )}
+                    {(typeof item.avgRating === "number" ||
+                      typeof item.totalReviews === "number") && (
+                      <div className="text-xs text-gray-500 mt-1">
+                        Rating: {item.avgRating ?? "-"} (
+                        {item.totalReviews ?? 0} reviews)
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
