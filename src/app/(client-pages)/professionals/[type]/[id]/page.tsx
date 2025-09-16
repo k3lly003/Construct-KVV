@@ -3,11 +3,15 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Phone, Mail, MapPin, Calendar, Star, Award, Briefcase } from "lucide-react";
+import { ArrowLeft, Phone, Mail, MapPin, Calendar, Star, Award, Briefcase, Heart, ChevronLeft, ChevronRight, Clock, DollarSign, MapPin as LocationIcon } from "lucide-react";
 import { constructorService, Constructor } from "@/app/services/constructorService";
-import { architectService, Architect } from "@/app/services/architectService";
+import { architectService, Architect, CreateDesignRequestDTO, Portfolio } from "@/app/services/architectService";
 import { technicianService, Technician } from "@/app/services/technicianService";
 import { getAllSellers, SellerProfile } from "@/app/services/sellerService";
+import { useArchitect } from "@/app/hooks/useArchitect";
+import { useUserStore } from "@/store/userStore";
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork.onrender.com';
 
 interface ProfessionalData {
   id: string;
@@ -33,8 +37,83 @@ export default function ProfessionalDetailPage() {
   const [professional, setProfessional] = useState<ProfessionalData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [requestSuccess, setRequestSuccess] = useState<string | null>(null);
+  const [requestError, setRequestError] = useState<string | null>(null);
+  const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
+  const [selectedPortfolioId, setSelectedPortfolioId] = useState<string | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  const { createDesignrequest, getArchitectPortfolios, getProfessionalPortfolios } = useArchitect();
+  
+  // Get current user from store
+  const { firstName, lastName, email, role, isHydrated } = useUserStore();
+  
+  // Also get the full user data from localStorage for the ID
+  const [fullUserData, setFullUserData] = useState<any>(null);
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined' && isHydrated) {
+      const userData = localStorage.getItem("user");
+      if (userData) {
+        try {
+          const parsed = JSON.parse(userData);
+          setFullUserData(parsed);
+        } catch (error) {
+          console.error('Error parsing user data:', error);
+        }
+      }
+    }
+  }, [isHydrated]);
+  
+  const currentUser = isHydrated && firstName && fullUserData ? { 
+    id: fullUserData.id || fullUserData._id || email, // Try different ID fields
+    firstName, 
+    lastName, 
+    email, 
+    role,
+    ...fullUserData // Include all user data
+  } : null;
+
 
   const { type, id } = params;
+
+  // Handle design request submission
+  const handleDesignRequest = async () => {
+    if (!currentUser || !selectedPortfolioId) return;
+    
+    setRequestError(null);
+    setRequestSuccess(null);
+    
+    try {
+      const data: CreateDesignRequestDTO = {
+        portfolioId: selectedPortfolioId
+      };
+      
+      await createDesignrequest(data);
+      setRequestSuccess('Design request sent successfully! The architect will contact you directly.');
+    } catch (err: any) {
+      setRequestError(err.response?.data?.message || err.message || 'Failed to send design request');
+    }
+  };;
+
+  // Handle image slider navigation
+  const nextImage = () => {
+    if (portfolios.length > 0 && selectedPortfolioId) {
+      const currentPortfolio = portfolios.find(p => p.id === selectedPortfolioId);
+      if (currentPortfolio && currentPortfolio.images.length > 0) {
+        setCurrentImageIndex((prev) => (prev + 1) % currentPortfolio.images.length);
+      }
+    }
+  };
+
+  const prevImage = () => {
+    if (portfolios.length > 0 && selectedPortfolioId) {
+      const currentPortfolio = portfolios.find(p => p.id === selectedPortfolioId);
+      if (currentPortfolio && currentPortfolio.images.length > 0) {
+        setCurrentImageIndex((prev) => (prev - 1 + currentPortfolio.images.length) % currentPortfolio.images.length);
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchProfessional = async () => {
@@ -179,6 +258,39 @@ export default function ProfessionalDetailPage() {
       console.log('[ProfessionalDetail] additionalInfo:', professional.additionalInfo || {})
     }
   }, [professional])
+
+  // Fetch portfolios for professionals
+  useEffect(() => {
+    const fetchPortfolios = async () => {
+      if (professional) {
+        try {
+          // Map professional type to API format
+          const professionalTypeMap: Record<string, 'architect' | 'contractor' | 'technician' | 'seller'> = {
+            'Architect': 'architect',
+            'Contractor': 'contractor', 
+            'Technician': 'technician',
+            'Seller': 'seller'
+          };
+          
+          const apiType = professionalTypeMap[professional.type];
+          
+          if (apiType) {
+            const portfoliosData = await getProfessionalPortfolios(apiType, professional.id);
+            setPortfolios(portfoliosData);
+            // Set the first portfolio as selected by default
+            if (portfoliosData.length > 0) {
+              setSelectedPortfolioId(portfoliosData[0].id);
+              setCurrentImageIndex(0); // Reset image index
+            }
+          }
+        } catch (err) {
+          console.error('Error fetching portfolios:', err);
+        }
+      }
+    };
+
+    fetchPortfolios();
+  }, [professional, getProfessionalPortfolios]);
 
   if (loading) {
     return (
@@ -435,31 +547,218 @@ export default function ProfessionalDetailPage() {
               </div>
             )}
 
-            {/* Portfolio / Documents as image cards */}
-            {portfolioImages.length > 0 && (
+            {/* Portfolio Section */}
+            {portfolios.length > 0 && (
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Portfolio</h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {portfolioImages.map((src, idx) => (
-                      <div key={idx} className="rounded-xl overflow-hidden bg-gray-100 shadow-sm">
-                        <div className="aspect-[4/3]">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-semibold text-gray-900">Portfolio</h3>
+                  {professional.type === 'Architect' && (
+                    <div className="text-center">
+                      <p className="text-sm text-gray-600 mb-2">You like this work?</p>
+                      {currentUser ? (
+                        <Button 
+                          onClick={handleDesignRequest}
+                          className="bg-amber-500 hover:bg-amber-600 text-white"
+                          size="sm"
+                        >
+                          <Heart className="w-4 h-4 mr-2" />
+                          Request Design
+                        </Button>
+                      ) : (
+                        <Button 
+                          onClick={() => router.push('/signin')}
+                          className="bg-gray-500 hover:bg-gray-600 text-white"
+                          size="sm"
+                        >
+                          <Heart className="w-4 h-4 mr-2" />
+                          Sign In to Request
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </div>
+                
+                {/* Success/Error Messages */}
+                {requestSuccess && (
+                  <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+                    {requestSuccess}
+                  </div>
+                )}
+                {requestError && (
+                  <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                    {requestError}
+                  </div>
+                )}
+
+                {/* Portfolio Items */}
+                {portfolios.map((portfolio, portfolioIndex) => (
+                  <div key={portfolio.id} className="mb-8 last:mb-0">
+                    {/* Portfolio Header */}
+                    <div className="mb-4">
+                      <h4 className="text-lg font-semibold text-gray-900 mb-2">{portfolio.title}</h4>
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                          {portfolio.category}
+                        </span>
+                        {portfolio.location && (
+                          <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full flex items-center">
+                            <LocationIcon className="w-3 h-3 mr-1" />
+                            {portfolio.location}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Portfolio Details Grid */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      {/* Image Slider */}
+                      <div className="relative">
+                        {portfolio.images.length > 0 ? (
+                          <div className="relative">
+                            <div className="aspect-[4/3] rounded-lg overflow-hidden bg-gray-100">
                           <Image
-                            src={src}
-                            alt={`portfolio-${idx}`}
+                                src={portfolio.images[currentImageIndex]}
+                                alt={portfolio.title}
                             width={600}
                             height={450}
                             className="w-full h-full object-cover"
                           />
                         </div>
+                            
+                            {/* Navigation Buttons */}
+                            {portfolio.images.length > 1 && (
+                              <>
+                                <Button
+                                  onClick={prevImage}
+                                  className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2"
+                                  size="sm"
+                                >
+                                  <ChevronLeft className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                  onClick={nextImage}
+                                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2"
+                                  size="sm"
+                                >
+                                  <ChevronRight className="w-4 h-4" />
+                                </Button>
+                                
+                                {/* Image Counter */}
+                                <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                                  {currentImageIndex + 1} / {portfolio.images.length}
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="aspect-[4/3] rounded-lg bg-gray-100 flex items-center justify-center">
+                            <p className="text-gray-500">No images available</p>
+                          </div>
+                        )}
                       </div>
+
+                      {/* Portfolio Information */}
+                      <div className="space-y-4">
+                        {/* Description */}
+                        <div>
+                          <h5 className="font-medium text-gray-900 mb-2">Description</h5>
+                          <p className="text-gray-600 text-sm leading-relaxed">{portfolio.description}</p>
+                        </div>
+
+                        {/* Project Details */}
+                        <div className="grid grid-cols-2 gap-4">
+                          {portfolio.budget && (
+                            <div className="flex items-center gap-2">
+                              <DollarSign className="w-4 h-4 text-green-600" />
+                              <div>
+                                <p className="text-xs text-gray-500">Budget</p>
+                                <p className="text-sm font-medium text-gray-900">{portfolio.budget}</p>
+                              </div>
+                            </div>
+                          )}
+                          {portfolio.duration && (
+                            <div className="flex items-center gap-2">
+                              <Clock className="w-4 h-4 text-blue-600" />
+                              <div>
+                                <p className="text-xs text-gray-500">Duration</p>
+                                <p className="text-sm font-medium text-gray-900">{portfolio.duration}</p>
+                              </div>
+                            </div>
+                          )}
+                      </div>
+
+                        {/* Skills */}
+                        {portfolio.skills && portfolio.skills.length > 0 && (
+                          <div>
+                            <h5 className="font-medium text-gray-900 mb-2">Skills Used</h5>
+                            <div className="flex flex-wrap gap-2">
+                              {portfolio.skills.map((skill, index) => (
+                                <span key={index} className="px-2 py-1 bg-amber-100 text-amber-700 text-xs rounded">
+                                  {skill}
+                                </span>
                   ))}
                 </div>
               </div>
             )}
-            {portfolioImages.length === 0 && (
+
+                        {/* Client Feedback */}
+                        {portfolio.clientFeedback && (
+                          <div>
+                            <h5 className="font-medium text-gray-900 mb-2">Client Feedback</h5>
+                            <div className="bg-gray-50 p-3 rounded-lg">
+                              <p className="text-gray-700 text-sm italic">"{portfolio.clientFeedback}"</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {portfolios.length === 0 && (
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Portfolio</h3>
-                <p className="text-gray-600">No portfolio images available.</p>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-semibold text-gray-900">Portfolio</h3>
+                  {professional.type === 'Architect' && (
+                    <div className="text-center">
+                      <p className="text-sm text-gray-600 mb-2">You like this work?</p>
+                      {currentUser ? (
+                        <Button 
+                          onClick={handleDesignRequest}
+                          className="bg-amber-500 hover:bg-amber-600 text-white"
+                          size="sm"
+                        >
+                          <Heart className="w-4 h-4 mr-2" />
+                          Request Design
+                        </Button>
+                      ) : (
+                        <Button 
+                          onClick={() => router.push('/signin')}
+                          className="bg-gray-500 hover:bg-gray-600 text-white"
+                          size="sm"
+                        >
+                          <Heart className="w-4 h-4 mr-2" />
+                          Sign In to Request
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </div>
+                
+                {/* Success/Error Messages */}
+                {requestSuccess && (
+                  <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+                    {requestSuccess}
+                  </div>
+                )}
+                {requestError && (
+                  <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                    {requestError}
+                  </div>
+                )}
+                
+                <p className="text-gray-600">No portfolio items available.</p>
               </div>
             )}
           </div>
