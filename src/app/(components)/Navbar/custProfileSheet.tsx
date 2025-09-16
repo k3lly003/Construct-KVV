@@ -12,6 +12,7 @@ import {
 import EditProfileDialog from "./EditProfileDialog";
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSession } from '@/app/hooks/useSession';
 // import { useCustomerRequest } from '@/app/hooks/useCustomerRequest';
 
 interface CustomerProfileSheetProps {
@@ -24,6 +25,7 @@ interface CustomerProfileSheetProps {
 }
 
 export function CustomerProfileSheet({ firstName, lastName, email, phone, profilePic, initials }: CustomerProfileSheetProps) {
+  const { logout } = useSession();
 
   const [openEdit, setOpenEdit] = useState(false);
   const [openChangePassword, setOpenChangePassword] = useState(false);
@@ -157,9 +159,12 @@ export function CustomerProfileSheet({ firstName, lastName, email, phone, profil
           </Link>
         </div>
         <div className="p-6 flex justify-center items-center">
-          <button className="w-[50%] bg-white text-orange-600 py-3 px-4 rounded-lg font-semibold hover:bg-red-500 hover:text-white transition-colors flex items-center justify-center gap-2 cursor-pointer" onClick={() => {
-            localStorage.clear();
-            window.location.href = '/signin';
+          <button className="w-[50%] bg-white text-orange-600 py-3 px-4 rounded-lg font-semibold hover:bg-red-500 hover:text-white transition-colors flex items-center justify-center gap-2 cursor-pointer" onClick={async () => {
+            try {
+              await logout();
+            } finally {
+              window.location.href = '/signin';
+            }
           }}>
             Logout
             <LogOut className="w-4 h-4" />

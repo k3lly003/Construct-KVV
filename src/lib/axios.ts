@@ -1,7 +1,9 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL:
+    process.env.NEXT_PUBLIC_API_URL ||
+    'https://construct-kvv-bn-fork.onrender.com',
   headers: {
     "Content-Type": "application/json",
   },

@@ -202,12 +202,12 @@ const SideBar = () => {
 
           {userRole === "TECHNICIAN" && (
             <>
-              <SidebarLink
+              {/* <SidebarLink
                 href="/dashboard"
                 icon={LayoutDashboard}
                 label={t('dashboard.overviews')}
                 isCollapsed={isSidebarCollapsed}
-              />
+              /> */}
               <SidebarLink
 
                 href="/dashboard/service-requests"
@@ -216,9 +216,9 @@ const SideBar = () => {
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
-                href="/dashboard/projects"
+                href="/dashboard/portfolio"
                 icon={CalendarDays}
-                label={t('navigation.projects')}
+                label={t('navigation.portfolio')}
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
@@ -252,7 +252,7 @@ const SideBar = () => {
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
-                href="/dashboard/projects"
+                href="/dashboard/portfolio"
                 icon={CalendarDays}
                 label={t('navigation.myWork')}
                 isCollapsed={isSidebarCollapsed}
@@ -284,6 +284,12 @@ const SideBar = () => {
                 href="/dashboard/bids"
                 icon={TableProperties}
                 label={t('navigation.bids')}
+                isCollapsed={isSidebarCollapsed}
+              />
+              <SidebarLink
+                href="/dashboard/portfolio"
+                icon={CalendarDays}
+                label={t('navigation.portfolio')}
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
