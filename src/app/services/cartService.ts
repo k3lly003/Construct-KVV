@@ -81,7 +81,7 @@ class CartService {
           headers: this.getAuthHeaders(),
         }
       );
-      return response.data;
+      return response.data as CartResponse;
     } catch (error: any) {
       console.error("Error adding item to cart:", error);
       throw new Error(
@@ -98,7 +98,7 @@ class CartService {
       const response = await axios.get(`${API_BASE_URL}/cart`, {
         headers: this.getAuthHeaders(),
       });
-      return response.data;
+      return response.data as CartResponse;
     } catch (error: any) {
       console.error("Error fetching cart:", error);
       throw new Error(error.response?.data?.message || "Failed to fetch cart");
@@ -122,7 +122,7 @@ class CartService {
           headers: this.getAuthHeaders(),
         }
       );
-      return response.data;
+      return response.data as CartResponse;
     } catch (error: any) {
       console.error("Error updating cart item:", error);
       throw new Error(
@@ -142,7 +142,7 @@ class CartService {
           headers: this.getAuthHeaders(),
         }
       );
-      return response.data;
+      return response.data as CartResponse;
     } catch (error: any) {
       console.error("Error removing item from cart:", error);
       throw new Error(

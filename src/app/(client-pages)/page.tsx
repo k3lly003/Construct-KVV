@@ -54,7 +54,7 @@ function RecommendedProductsSection() {
           "Recommended for you"}
       </h2>
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7">
+        <div className="flex flex-wrap px-4 gap-7 justify-center lg:flex lg:justify-start">
           {[...Array(8)].map((_, i) => (
             <div
               key={i}
@@ -73,7 +73,7 @@ function RecommendedProductsSection() {
       ) : error ? (
         <div className="text-red-500 text-center">{error}</div>
       ) : products.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-7 justify-center">
+        <div className="flex flex-wrap px-4 gap-7 justify-center lg:flex lg:justify-start">
           {products.map((product, idx) => (
             <ProductCard key={product.id || idx} product={product} />
           ))}
@@ -233,11 +233,11 @@ export default function Home() {
           interface ProductRecommendationsResponse {
             recommendations: any[]; // You can replace 'any' with a more specific type for your recommendations
           }
-          const res = (await productService.getProductRecommendations(
+          const res = await productService.fetchRecommendedProducts(
             userData.id,
             userData.token
-          )) as ProductRecommendationsResponse;
-          setRecommendations(res.recommendations || []);
+          );
+          setRecommendations(res || []);
         }
       } catch (err: any) {
         setError("Failed to load recommendations");

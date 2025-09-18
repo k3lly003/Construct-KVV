@@ -3,6 +3,31 @@ import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
 
+// Types for AI recommendation API response
+interface RecommendationItem {
+  id: string;
+  product_id: string;
+  name: string;
+  description: string;
+  category: string;
+  price: number;
+  stock: number;
+  user_id: string;
+  interaction_weight: number;
+  interaction_type: string;
+  similarity_score: number;
+}
+
+interface AIRecommendationResponse {
+  success: boolean;
+  data: {
+    user_id: string;
+    type: string;
+    recommendations: RecommendationItem[];
+    based_on_products: number;
+  };
+}
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const RECOMMENDATION_API_URL = process.env.NEXT_PUBLIC_RECOMMENDATION_API_URL;
 
@@ -257,30 +282,6 @@ export const productService = {
   },
 
   /**
-   * Get product recommendations for a user
-   * @param userId - string
-   * @param token - string
-   * @returns API response data
-   */
-  async getProductRecommendations(userId: string, token: string) {
-    try {
-      const response = await axios.get(
-        `${API_URL}/api/v1/products/recommendations/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            accept: "application/json",
-          },
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching product recommendations:", error);
-      throw error;
-    }
-  },
-
-  /**
    * Fetch recommended products for a user using AI API, fallback to cheapest products if none.
    * Accepts either a userId string or a user object with an id property.
    * @param userId - The user ID (string) or user object
@@ -292,12 +293,28 @@ export const productService = {
     token: string
   ): Promise<Product[]> {
     // Extract userId if a user object is passed
-    const id =
-      typeof userId === "string"
-        ? userId
-        : userId && typeof userId === "object" && userId.id
-        ? userId.id
-        : undefined;
+    let id: string | undefined;
+    if (typeof userId === "string") {
+      id = userId;
+      console.log("[fetchRecommendedProducts] userId is a string:", id);
+    } else if (
+      userId &&
+      typeof userId === "object" &&
+      "id" in userId &&
+      userId.id
+    ) {
+      id = userId.id;
+      console.log(
+        "[fetchRecommendedProducts] userId is an object with id:",
+        id
+      );
+    } else {
+      id = undefined;
+      console.warn(
+        "[fetchRecommendedProducts] userId is missing or invalid:",
+        userId
+      );
+    }
     console.log("[fetchRecommendedProducts] Extracted userId:", id);
     if (!id) {
       console.warn(
@@ -307,16 +324,41 @@ export const productService = {
     }
     try {
       // 1. Fetch recommendations from AI API
+      console.log("[NEXT_AI_RECOMMENDATION_URL] ", RECOMMENDATION_API_URL);
       const aiUrl = `${RECOMMENDATION_API_URL}/api/v1/users/${id}/recommendations?top_n=8`;
       console.log(
         "[fetchRecommendedProducts] Fetching AI recommendations from:",
         aiUrl
       );
-      const aiRes = await axios.get(aiUrl, {
+      const aiRes = await axios.get<AIRecommendationResponse>(aiUrl, {
         headers: { accept: "application/json" },
       });
       console.log("[fetchRecommendedProducts] AI API response:", aiRes.data);
-      const recommendationsRaw = (aiRes.data as any)?.recommendations;
+      // Fix: recommendations are inside aiRes.data.data.recommendations
+      let recommendationsRaw: RecommendationItem[] = [];
+      if (
+        aiRes.data &&
+        aiRes.data.data &&
+        Array.isArray(aiRes.data.data.recommendations)
+      ) {
+        recommendationsRaw = aiRes.data.data.recommendations;
+        console.log(
+          "[fetchRecommendedProducts] Found recommendations in aiRes.data.data.recommendations"
+        );
+      } else if (
+        aiRes.data &&
+        Array.isArray((aiRes.data as any).recommendations)
+      ) {
+        recommendationsRaw = (aiRes.data as any).recommendations;
+        console.log(
+          "[fetchRecommendedProducts] Found recommendations in aiRes.data.recommendations"
+        );
+      } else {
+        recommendationsRaw = [];
+        console.warn(
+          "[fetchRecommendedProducts] No recommendations found in AI API response"
+        );
+      }
       const recommendations: Array<{ product_id: string }> = Array.isArray(
         recommendationsRaw
       )
@@ -350,7 +392,7 @@ export const productService = {
           productUrl
         );
         try {
-          const res = await axios.get(productUrl, {
+          const res = await axios.get<{ data: Product } | Product>(productUrl, {
             headers: { accept: "application/json" },
           });
           console.log(
@@ -358,7 +400,7 @@ export const productService = {
             res.data
           );
           // Support both { data: Product } and direct Product
-          return res.data && res.data ? res.data : res.data;
+          return (res.data as any)?.data || res.data;
         } catch (err) {
           console.warn(
             `[fetchRecommendedProducts] Failed to fetch product ${pid}:`,
@@ -367,9 +409,10 @@ export const productService = {
           return undefined;
         }
       });
-      const productsRaw: (Product | undefined)[] = await Promise.all(
-        productPromises
-      );
+      const productsRaw = (await Promise.all(productPromises)) as (
+        | Product
+        | undefined
+      )[];
       const products: Product[] = productsRaw.filter((p): p is Product =>
         Boolean(p)
       );
