@@ -39,6 +39,65 @@ interface ProductInfoProps {
 const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const { t } = useTranslations();
+  const API_URL =
+    "https://ai-product-recommender-rc4q.onrender.com/api/v1/products";
+
+  type InteractionType = "view" | "click" | "add_to_cart";
+  const postInteraction = (
+    interactionType: InteractionType,
+    interactionWeight: number
+  ) => {
+    try {
+      const user = getUserDataFromLocalStorage();
+      const payload = {
+        product_id: (product as any).id,
+        name: (product as any).name ?? "",
+        description: (product as any).description ?? "",
+        price: (product as any).discountedPrice ?? (product as any).price ?? 0,
+        stock: (product as any).stock ?? (product as any).quantity ?? 0,
+        category:
+          (product as any).category ??
+          (product as any).categoryName ??
+          (product as any).category_title ??
+          (product as any)?.category?.name ??
+          "General",
+        user_id: user?.id,
+        interaction_weight: interactionWeight,
+        interaction_type: interactionType,
+      } as const;
+
+      // eslint-disable-next-line no-console
+      console.log(`[ProductInfo] ${interactionType} payload:`, payload);
+
+      fetch(API_URL, {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        keepalive: true,
+      })
+        .then(async (res) => {
+          const data = await res.json().catch(() => ({}));
+          // eslint-disable-next-line no-console
+          console.log(
+            `[ProductInfo] ${interactionType} interaction response:`,
+            data
+          );
+        })
+        .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.log(
+            `[ProductInfo] ${interactionType} interaction error:`,
+            error
+          );
+        });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(`[ProductInfo] ${interactionType} interaction error:`, error);
+    }
+  };
 
   const incrementQuantity = () => {
     setQuantity(quantity + 1);
@@ -56,6 +115,8 @@ const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
     try {
       await addToCart(product.id, quantity);
       toast.success(`Added ${quantity} ${product.name} to your cart`);
+      // Send external interaction (non-blocking)
+      postInteraction("add_to_cart", 5);
     } catch (error: any) {
       toast.error(error.message || "Failed to add item to cart");
     }

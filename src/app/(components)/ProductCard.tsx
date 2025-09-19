@@ -1,13 +1,10 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Heart } from "lucide-react";
 import { Button } from "./Button";
 import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
-import { productService } from "@/app/services/productServices";
 import { useCartStore } from "@/store/cartStore";
 import { toast } from "sonner";
-import { getAverageRating, ReviewType } from "@/app/utils/fakes/ProductFakes";
 import { getFallbackImage } from "@/app/utils/imageUtils";
 
 interface ProductCardProps {
@@ -32,88 +29,87 @@ const ProductCard = ({
   const originalPrice = product.discountedPrice ? product.price : null;
   const productId = product.id;
 
-  const startTimeRef = useRef<number | null>(null);
   const addToCart = useCartStore((state) => state.addToCart);
+  const hasSentViewRef = useRef<boolean>(false);
 
-  useEffect(() => {
-    startTimeRef.current = Date.now();
-    // On mount, send 'viewed' interaction
-    const user = getUserDataFromLocalStorage();
-    if (user && user.id && user.token) {
-      productService
-        .postProductInteraction({
-          userId: user.id,
-          productId: productId,
-          type: "viewed",
-          timeSpent: 0,
-          token: user.token,
-        })
-        .then((res) => {
-          console.log("[ProductCard] Viewed interaction sent:", res);
-        })
-        .catch((err) => {
-          console.log("[ProductCard] Viewed interaction error:", err);
-        });
-    }
-    return () => {
-      // On unmount, send 'viewed' with time spent if not already sent as 'clicked'
-      if (startTimeRef.current) {
-        const timeSpent = Math.floor(
-          (Date.now() - startTimeRef.current) / 1000
-        );
-        if (user && user.id && user.token) {
-          productService
-            .postProductInteraction({
-              userId: user.id,
-              productId: productId,
-              type: "viewed",
-              timeSpent,
-              token: user.token,
-            })
-            .then((res) => {
-              console.log(
-                "[ProductCard] Viewed (unmount) interaction sent:",
-                res
-              );
-            })
-            .catch((err) => {
-              console.log(
-                "[ProductCard] Viewed (unmount) interaction error:",
-                err
-              );
-            });
-        }
-      }
-    };
-  }, [productId]);
+  type InteractionType = "view" | "click" | "add_to_cart";
+  const API_BASE =
+    process.env.NEXT_PUBLIC_RECOMMENDATION_API_URL;
+  const API_URL = `${API_BASE}/api/v1/products`;
 
-  const handleClick = () => {
-    // On click, send 'clicked' interaction with time spent
-    const user = getUserDataFromLocalStorage();
-    const timeSpent = startTimeRef.current
-      ? Math.floor((Date.now() - startTimeRef.current) / 1000)
-      : 0;
-    if (user && user.id && user.token) {
-      productService
-        .postProductInteraction({
-          userId: user.id,
-          productId: productId,
-          type: "clicked",
-          timeSpent,
-          token: user.token,
+  const postInteraction = (
+    interactionType: InteractionType,
+    interactionWeight: number
+  ) => {
+    try {
+      const user = getUserDataFromLocalStorage();
+      const payload = {
+        product_id: product.id,
+        name: product.name ?? "",
+        description: product.description ?? "",
+        price: product.discountedPrice ?? product.price ?? 0,
+        stock: product.stock ?? product.quantity ?? 0,
+        category:
+          product.category ??
+          product.categoryName ??
+          product.category_title ??
+          product?.category?.name ??
+          "General",
+        user_id: user?.id,
+        interaction_weight: interactionWeight,
+        interaction_type: interactionType,
+      } as const;
+
+      console.log(`[ProductCard] ${interactionType} payload:`, payload);
+
+      // Fire-and-forget; do not await to avoid blocking UI
+      fetch(API_URL, {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        keepalive: true,
+      })
+        .then(async (res) => {
+          const data = await res.json().catch(() => ({}));
+          console.log(
+            `[ProductCard] ${interactionType} interaction response:`,
+            data
+          );
         })
-        .then((res) => {
-          console.log("[ProductCard] Clicked interaction sent:", res);
-        })
-        .catch((err) => {
-          console.log("[ProductCard] Clicked interaction error:", err);
+        .catch((error) => {
+          console.log(
+            `[ProductCard] ${interactionType} interaction error:`,
+            error
+          );
         });
+    } catch (error) {
+      console.log(`[ProductCard] ${interactionType} interaction error:`, error);
     }
   };
 
+  const handleMouseEnter = () => {
+    if (hasSentViewRef.current) return;
+    hasSentViewRef.current = true;
+    postInteraction("view", 1);
+  };
+
+  const handleCardClick = () => {
+    postInteraction("click", 2);
+  };
+
   return (
-    <Link href={`/product/${productId}`} className="block">
-      <div className="bg-white overflow-hidden w-64 m-2 hover:shadow-lg cursor-pointer hover:rounded-xl transition-shadow h-[440px] flex flex-col">
+    <Link
+      href={`/product/${productId}`}
+      className="block"
+      onClick={handleCardClick}
+    >
+      <div
+        className="bg-white overflow-hidden w-64 m-2 hover:shadow-lg cursor-pointer hover:rounded-xl transition-shadow h-[440px] flex flex-col"
+        onMouseEnter={handleMouseEnter}
+      >
         <div className="relative">
           <Image
             src={thumbnail}
@@ -170,8 +166,12 @@ const ProductCard = ({
                 try {
                   await addToCart(product.id, 1);
                   toast.success(`Added ${product.name} to cart`);
+                  // Send interaction after successful add to cart
+                  postInteraction("add_to_cart", 5);
+                  return true;
                 } catch (error: any) {
                   toast.error(error.message || "Failed to add item to cart");
+                  return false;
                 }
               }}
               padding={"p-3"}

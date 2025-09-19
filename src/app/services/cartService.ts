@@ -113,8 +113,8 @@ class CartService {
     quantity: number
   ): Promise<CartResponse> {
     try {
-      const response = await axios.patch(
-        `${API_BASE_URL}/cart/${cartItemId}`,
+      const response = await axios.put(
+        `${API_BASE_URL}/cart/items/${cartItemId}`,
         {
           quantity,
         },
@@ -137,7 +137,7 @@ class CartService {
   async removeFromCart(cartItemId: string): Promise<CartResponse> {
     try {
       const response = await axios.delete(
-        `${API_BASE_URL}/cart/${cartItemId}`,
+        `${API_BASE_URL}/cart/items/${cartItemId}`,
         {
           headers: this.getAuthHeaders(),
         }

@@ -310,36 +310,56 @@ export const CartPage: React.FC = () => {
                       </p>
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() =>
+                          onClick={() => {
+                            if (!item.cartItemId) {
+                              toast.error(
+                                "Missing cart item id; refresh your cart."
+                              );
+                              return;
+                            }
                             handleUpdateQuantity(
-                              item.cartItemId || item.id,
+                              item.cartItemId,
                               Math.max(1, item.quantity - 1)
-                            )
+                            );
+                          }}
+                          disabled={
+                            isLoading || !item.cartItemId || item.quantity <= 1
                           }
-                          disabled={isLoading}
-                          className="p-1 rounded-md hover:bg-gray-100 disabled:opacity-50"
+                          className="p-1 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <Minus className="h-4 w-4" />
                         </button>
                         <span className="w-8 text-center">{item.quantity}</span>
                         <button
-                          onClick={() =>
+                          onClick={() => {
+                            if (!item.cartItemId) {
+                              toast.error(
+                                "Missing cart item id; refresh your cart."
+                              );
+                              return;
+                            }
                             handleUpdateQuantity(
-                              item.cartItemId || item.id,
+                              item.cartItemId,
                               item.quantity + 1
-                            )
-                          }
-                          disabled={isLoading}
+                            );
+                          }}
+                          disabled={isLoading || !item.cartItemId}
                           className="p-1 rounded-md hover:bg-gray-100 disabled:opacity-50"
                         >
                           <Plus className="h-4 w-4" />
                         </button>
                       </div>
                       <button
-                        onClick={() =>
-                          handleRemoveItem(item.cartItemId || item.id)
-                        }
-                        disabled={isLoading}
+                        onClick={() => {
+                          if (!item.cartItemId) {
+                            toast.error(
+                              "Missing cart item id; refresh your cart."
+                            );
+                            return;
+                          }
+                          handleRemoveItem(item.cartItemId);
+                        }}
+                        disabled={isLoading || !item.cartItemId}
                         className="text-red-600 hover:text-red-700 flex items-center gap-1 text-sm disabled:opacity-50"
                       >
                         <Trash2 className="h-4 w-4" />
