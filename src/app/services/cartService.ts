@@ -98,6 +98,7 @@ class CartService {
       const response = await axios.get(`${API_BASE_URL}/cart`, {
         headers: this.getAuthHeaders(),
       });
+      console.log("Cart response:", response.data);
       return response.data as CartResponse;
     } catch (error: any) {
       console.error("Error fetching cart:", error);

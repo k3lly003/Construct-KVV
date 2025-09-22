@@ -1,33 +1,55 @@
 import axios from "axios";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  "https://construct-kvv-bn-fork.onrender.com";
+const API_BASE_URL = "https://construct-kvv-bn-fork.onrender.com/api/v1";
 
-export interface PaymentPayload {
-  paymentType: "bank" | "mobilemoney" | "card";
+export async function initiateSplitPayment({
+  sellerId,
+  paymentType = "card",
+  tx_ref,
+  amount,
+  currency = "RWF",
+  redirect_url = "https://www.constructkvv.com/payment-complete",
+  order_id,
+  email,
+  phone_number,
+  narration,
+  token,
+}: {
   sellerId: string;
-  payload: Record<string, any>;
-}
-
-export async function initiateSplitPayment(
-  data: PaymentPayload,
-  token: string
-) {
-  try {
-    const response = await axios.post(
-      `${API_URL}/api/v1/payment/initiate-split`,
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-          accept: "*/*",
-        },
-      }
-    );
-    return response.data;
-  } catch (error: any) {
-    throw error.response?.data || error;
-  }
+  paymentType?: string;
+  tx_ref: string;
+  amount: number;
+  currency?: string;
+  redirect_url?: string;
+  order_id: string;
+  email: string;
+  phone_number: string;
+  narration: string;
+  token: string;
+}) {
+  const response = await axios.post(
+    `${API_BASE_URL}/payment/initiate-split`,
+    {
+      sellerId,
+      paymentType,
+      payload: {
+        tx_ref,
+        amount,
+        currency,
+        redirect_url,
+        order_id,
+        email,
+        phone_number,
+        narration,
+      },
+    },
+    {
+      headers: {
+        accept: "*/*",
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  return response.data;
 }

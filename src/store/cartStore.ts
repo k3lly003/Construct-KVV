@@ -163,7 +163,7 @@ export const useCartStore = create<CartState>((set, get) => ({
           cartItemId: item.id, // Store the cart item ID for API operations
           productId: item.product.id,
           name: item.product.name,
-          price: parseFloat(item.product.discountedPrice || item.product.price),
+          price: parseFloat(item.product.price),
           quantity: item.quantity,
           image: "", // Will be handled by image utilities
           category: item.product.categoryId,
