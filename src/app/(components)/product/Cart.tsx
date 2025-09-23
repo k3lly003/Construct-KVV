@@ -19,6 +19,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { getFallbackImage } from "@/app/utils/imageUtils";
 import { orderService } from "@/app/services/orderService";
 import { useUserStore } from "@/store/userStore";
+import { getCheckoutDetails } from "@/app/services/cartService";
 
 export const CartPage: React.FC = () => {
   const {
@@ -120,6 +121,17 @@ export const CartPage: React.FC = () => {
     }
   };
 
+  const getBaseUrl = () => {
+    if (typeof window !== "undefined") {
+      if (window.location.hostname === "localhost") {
+        return "http://localhost:3001";
+      } else {
+        return "https://www.constructkvv.com";
+      }
+    }
+    return "https://www.constructkvv.com";
+  };
+
   const handlePlaceOrder = async () => {
     if (!cart?.id) return;
     setLoading(true);
@@ -136,6 +148,9 @@ export const CartPage: React.FC = () => {
         }, 1200);
         return;
       }
+      // 0. Get checkout details and log to console
+      const checkoutDetails = await getCheckoutDetails(cart.id, token);
+      console.log("[CHECKOUT DETAILS]", checkoutDetails);
       // 1. Place the order
       const response = await orderService.placeOrder(cart.id, "string", token);
       if (!response.data?.id) throw new Error("Order creation failed");
@@ -152,19 +167,43 @@ export const CartPage: React.FC = () => {
       const amount = order.total;
       const order_id = order.id;
       const narration = `Payment for order ${order.id}`;
+      // Persist for redirect handling
+      if (typeof window !== "undefined") {
+        localStorage.setItem("lastOrderId", order_id);
+        localStorage.setItem("lastTxRef", tx_ref);
+      }
       // 3. Initiate payment
+      const baseUrl = getBaseUrl();
+      // Get user info from localStorage if available
+      let localUserEmail = userEmail || "";
+      let localUserPhone = userPhone || "";
+      if (typeof window !== "undefined") {
+        const userStr = localStorage.getItem("user");
+        if (userStr) {
+          try {
+            const userObj = JSON.parse(userStr);
+            if (userObj.email) localUserEmail = userObj.email;
+            if (userObj.phone_number) localUserPhone = userObj.phone_number;
+          } catch {}
+        }
+      }
       const paymentRes: any = await initiateSplitPayment({
         sellerId,
         paymentType: "card",
         tx_ref,
         amount,
         currency: "RWF",
-        redirect_url: "https://www.constructkvv.com/payment-complete",
+        redirect_url: `${baseUrl}/payment-complete`,
         order_id,
-        email: userEmail || "rugiraalain03@gmail.com",
-        phone_number: userPhone, // TODO: Replace with real phone from user store
+        email: localUserEmail,
+        phone_number: localUserPhone, // Now from localStorage if available
         narration,
         token,
+        customizations: {
+          title: "Construct kvv",
+          description: "Payment services",
+          logo: `${baseUrl}/favicon.ico`,
+        },
       });
       if (paymentRes.data?.link) {
         toast.success("Redirecting to payment...");
@@ -215,6 +254,37 @@ export const CartPage: React.FC = () => {
       toast.success("Order status updated");
     } catch (err: any) {
       toast.error(err?.message || "Failed to update status");
+    } finally {
+      setOrderLoading(null);
+    }
+  };
+
+  // Add this function to handle order deletion
+  const handleDeleteOrder = async (orderId: string) => {
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+    if (!token) return;
+    setOrderLoading(orderId);
+    try {
+      const res = await fetch(
+        `https://construct-kvv-bn-fork.onrender.com/api/v1/orders/${orderId}`,
+        {
+          method: "DELETE",
+          headers: {
+            accept: "*/*",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await res.json();
+      if (data.success) {
+        toast.success("Your order has been deleted");
+        await fetchPendingOrders();
+      } else {
+        throw new Error(data.message || "Failed to delete order");
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to delete order");
     } finally {
       setOrderLoading(null);
     }
@@ -519,6 +589,19 @@ export const CartPage: React.FC = () => {
                       ))}
                     </ul>
                   </div>
+                  {/* Delete Icon */}
+                  <button
+                    onClick={() => handleDeleteOrder(order.id)}
+                    disabled={orderLoading === order.id}
+                    className="ml-2 text-red-600 hover:text-red-700 flex items-center gap-1 text-xs sm:text-sm disabled:opacity-50 transition-transform transform hover:scale-110 hover:bg-red-50 rounded-full p-1"
+                    title="Delete Order"
+                  >
+                    {orderLoading === order.id ? (
+                      <Loader2 className="h-6 w-6 animate-spin" />
+                    ) : (
+                      <Trash2 className="h-6 w-6 transition-colors" />
+                    )}
+                  </button>
                 </div>
               ))}
             </div>

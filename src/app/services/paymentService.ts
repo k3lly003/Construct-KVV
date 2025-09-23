@@ -14,6 +14,7 @@ export async function initiateSplitPayment({
   phone_number,
   narration,
   token,
+  customizations,
 }: {
   sellerId: string;
   paymentType?: string;
@@ -26,6 +27,11 @@ export async function initiateSplitPayment({
   phone_number: string;
   narration: string;
   token: string;
+  customizations?: {
+    title: string;
+    description: string;
+    logo: string;
+  };
 }) {
   const response = await axios.post(
     `${API_BASE_URL}/payment/initiate-split`,
@@ -41,6 +47,7 @@ export async function initiateSplitPayment({
         email,
         phone_number,
         narration,
+        ...(customizations ? { customizations } : {}),
       },
     },
     {
