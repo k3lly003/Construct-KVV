@@ -9,6 +9,8 @@ import {
 } from "@/app/services/cartService";
 import { useAuth } from "@/hooks/useAuth";
 
+export type { CartItem } from "@/app/services/cartService";
+
 // Local cart item interface for compatibility with existing components
 export interface LocalCartItem {
   id: string;

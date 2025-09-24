@@ -175,15 +175,17 @@ export const Products: React.FC = () => {
                         bgCol={"white"}
                         textCol={"text-gray-800"}
                         border={"border-1"}
-                        handleButton={async () => {
+                        handleButton={async (e) => {
                           try {
                             const { addToCart } = useCartStore.getState();
                             await addToCart(product.id, 1);
                             toast.success(`Added ${product.name} to cart`);
+                            return true;
                           } catch (error: any) {
                             toast.error(
                               error.message || "Failed to add item to cart"
                             );
+                            return false;
                           }
                         }}
                         padding={"p-3"}
