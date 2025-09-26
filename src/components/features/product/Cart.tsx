@@ -1,10 +1,15 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react';
-import { Trash2, Plus, Minus, Truck, ShieldCheck, PackageCheck } from 'lucide-react';
-import { initialCartItems } from '@/app/utils/fakes/CartFakes';
-import Image from 'next/image';
-
+import React, { useState } from "react";
+import {
+  Trash2,
+  Plus,
+  Minus,
+  Truck,
+  ShieldCheck,
+  PackageCheck,
+} from "lucide-react";
+import Image from "next/image";
 
 export interface CartItem {
   id: string;
@@ -18,12 +23,12 @@ export interface CartItem {
 }
 
 export const CartPage: React.FC = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>(initialCartItems);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]); // Start with empty or fetch from API
   const [loading, setLoading] = useState(false);
 
   const updateQuantity = (id: string, change: number) => {
-    setCartItems(items =>
-      items.map(item =>
+    setCartItems((items) =>
+      items.map((item) =>
         item.id === id
           ? { ...item, quantity: Math.max(1, item.quantity + change) }
           : item
@@ -32,10 +37,13 @@ export const CartPage: React.FC = () => {
   };
 
   const removeItem = (id: string) => {
-    setCartItems(items => items.filter(item => item.id !== id));
+    setCartItems((items) => items.filter((item) => item.id !== id));
   };
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
   const shipping = subtotal > 500 ? 0 : 49.99;
   const total = subtotal + shipping;
 
@@ -55,7 +63,10 @@ export const CartPage: React.FC = () => {
           <div className="lg:col-span-2">
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
               {cartItems.map((item) => (
-                <div key={item.id} className="p-6 border-b border-gray-200 last:border-0">
+                <div
+                  key={item.id}
+                  className="p-6 border-b border-gray-200 last:border-0"
+                >
                   <div className="flex items-center gap-6">
                     <Image
                       src={item.image}
@@ -65,12 +76,20 @@ export const CartPage: React.FC = () => {
                       className="w-24 h-24 object-cover rounded-lg"
                     />
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900">{item.name}</h3>
-                      <p className="text-sm text-gray-500 mb-2">{item.category}</p>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {item.name}
+                      </h3>
+                      <p className="text-sm text-gray-500 mb-2">
+                        {item.category}
+                      </p>
                       {item.dimensions && (
-                        <p className="text-sm text-gray-500">Dimensions: {item.dimensions}</p>
+                        <p className="text-sm text-gray-500">
+                          Dimensions: {item.dimensions}
+                        </p>
                       )}
-                      <p className="text-sm text-gray-500">Weight: {item.weight}kg</p>
+                      <p className="text-sm text-gray-500">
+                        Weight: {item.weight}kg
+                      </p>
                     </div>
                     <div className="flex flex-col items-end gap-2">
                       <p className="text-lg font-semibold text-gray-900">
@@ -108,8 +127,10 @@ export const CartPage: React.FC = () => {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-sm p-6 sticky top-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">Order Summary</h2>
-              
+              <h2 className="text-xl font-semibold text-gray-900 mb-6">
+                Order Summary
+              </h2>
+
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
@@ -118,13 +139,15 @@ export const CartPage: React.FC = () => {
                 <div className="flex justify-between">
                   <span className="text-gray-600">Shipping</span>
                   <span className="font-semibold">
-                    {shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}
+                    {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
                   </span>
                 </div>
                 <div className="border-t pt-4">
                   <div className="flex justify-between">
                     <span className="text-lg font-semibold">Total</span>
-                    <span className="text-lg font-semibold">${total.toFixed(2)}</span>
+                    <span className="text-lg font-semibold">
+                      ${total.toFixed(2)}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -133,9 +156,11 @@ export const CartPage: React.FC = () => {
                 onClick={handleCheckout}
                 disabled={loading}
                 className={`w-full bg-blue-600 text-white py-3 rounded-lg font-semibold
-                  hover:bg-blue-700 transition-colors ${loading ? 'opacity-75 cursor-not-allowed' : ''}`}
+                  hover:bg-blue-700 transition-colors ${
+                    loading ? "opacity-75 cursor-not-allowed" : ""
+                  }`}
               >
-                {loading ? 'Processing...' : 'Proceed to Checkout'}
+                {loading ? "Processing..." : "Proceed to Checkout"}
               </button>
 
               {/* Benefits */}

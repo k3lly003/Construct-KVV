@@ -67,6 +67,60 @@ export interface Architect {
   }
 }
 
+export interface Portfolio {
+  id: string
+  title: string
+  description: string
+  workDate: string
+  images: string[]
+  category: string
+  location?: string
+  budget?: string
+  duration?: string
+  skills: string[]
+  clientFeedback?: string
+  isPublic: boolean
+  createdAt: string
+  updatedAt: string
+  architectId?: string
+  contractorId?: string
+  technicianId?: string
+  sellerId?: string
+}
+
+export interface CreateDesignRequestDTO {
+  portfolioId?: string
+}
+
+export interface DesignRequest {
+  id: string
+  portfolioId: string | null
+  customerId: string
+  architectId: string
+  createdAt: string
+  updatedAt: string
+  customer: {
+    id: string
+    firstName: string
+    lastName: string
+    email: string
+    phone: string
+  }
+  architect: {
+    id: string
+    user: {
+      firstName: string
+      lastName: string
+      email: string
+    }
+  }
+  portfolio?: {
+    id: string
+    title: string
+    description: string
+  }
+}
+
 // Architect Service
 export const architectService = {
   // Register a new architect
@@ -136,5 +190,44 @@ export const architectService = {
   async updateArchitectStatus(id: string, status: ArchitectStatusUpdate): Promise<{ message: string; architect: Architect }> {
     const response = await axiosInstance.put<{ message: string; architect: Architect }>(`${API_BASE_URL}/api/v1/architects/admin/${id}/status`, status)
     return response.data
+  },
+
+  // Get architect portfolios
+  async getArchitectPortfolios(architectId: string): Promise<Portfolio[]> {
+    try {
+      const response = await axiosInstance.get<{success: boolean; data: Portfolio[]; count: number}>(`${API_BASE_URL}/api/v1/portfolio/public/architect/${architectId}`);
+      return response.data.data || [];
+    } catch (error) {
+      console.error('Error fetching portfolios:', error);
+      return [];
+    }
+  },
+
+  // Get professional portfolios (generic method for all professional types)
+  async getProfessionalPortfolios(professionalType: 'architect' | 'contractor' | 'technician' | 'seller', professionalId: string): Promise<Portfolio[]> {
+    try {
+      const response = await axiosInstance.get<{success: boolean; data: Portfolio[]; count: number}>(`${API_BASE_URL}/api/v1/portfolio/public/${professionalType}/${professionalId}`);
+      return response.data.data || [];
+    } catch (error) {
+      console.error('Error fetching professional portfolios:', error);
+      return [];
+    }
+  },
+
+  // Create design request
+  async createDesignRequest(data: CreateDesignRequestDTO): Promise<DesignRequest> {
+    const response = await axiosInstance.post<DesignRequest>(
+      `${API_BASE_URL}/api/v1/design-requests`, 
+      {
+        portfolioId: data.portfolioId 
+      }
+    );
+    return response.data;
+  },
+
+  // Get design requests for architect
+  async getDesignRequests(): Promise<DesignRequest[]> {
+    const response = await axiosInstance.get<{ success: boolean; data: DesignRequest[] }>(`${API_BASE_URL}/api/v1/architects/me/design-requests`);
+    return response.data.data || [];
   }
 }
