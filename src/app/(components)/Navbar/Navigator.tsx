@@ -642,10 +642,10 @@ const Navbar: React.FC = () => {
               {t("navigation.projects")}
             </button>
             <Link
-              href="/shops"
+              href="/portfolios"
               className="inline-flex items-center px-1 pt-1 mb-2 text-sm font-medium text-gray-900 hover:text-amber-500"
             >
-              {t("navigation.shops")}
+              {t("navigation.portfolio")}
             </Link>
             <Link
               href="/pricing"

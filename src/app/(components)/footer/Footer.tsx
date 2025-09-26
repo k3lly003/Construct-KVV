@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import Head from 'next/head';
 import { dashboardFakes } from '@/app/utils/fakes/DashboardFakes';
+import Link from 'next/link';
 
 const constructionImages = [
   "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=300",
@@ -76,9 +77,9 @@ export const Footer: React.FC = () => {
 
             {/* Navigation Links */}
             <nav className="space-y-4">
-              <a href="#" className="block hover:text-yellow-400 transition-colors">{t('footer.about')}</a>
-              <a href="#" className="block hover:text-yellow-400 transition-colors">{t('footer.shop')}</a>
-              <a href="#" className="block hover:text-yellow-400 transition-colors">{t('footer.contact')}</a>
+              {/* <a href="#" className="block hover:text-yellow-400 transition-colors">{t('footer.about')}</a> */}
+              <Link href="/portfolios" className="block hover:text-yellow-400 transition-colors">{t('footer.portfolio')}</Link>
+              <Link href="/contact" className="block hover:text-yellow-400 transition-colors">{t('footer.contact')}</Link>
               <a href="#" className="block hover:text-yellow-400 transition-colors">{t('footer.terms')}</a>
             </nav>
           </div>

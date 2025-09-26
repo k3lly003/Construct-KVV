@@ -38,7 +38,7 @@
     "designRequests": "Design Requests",
     "myWork": "My Work",
     "workReviews": "Work Reviews",
-    "designReviews": "Design Reviews",
+    "designMarketPlace": "Design market place",
     "deals": "Deals",
     "projects": "Projects",
     "portfolio": "Portfolio",
@@ -339,6 +339,7 @@
       "noProductsFound": "No Products found."
     },
     "overviews":"Overview",
+    "revenueSplit": "Revenue Split",
     "orders": "Orders",
     "products": "Products",
     "customers": "Customers",
@@ -542,7 +543,7 @@
       "statusRejected": "REJECTED"
     },
     "support": "Support",
-    "salesReport": "Sales Report",
+    "salesReport": "projects",
     "productsManagement": "Products Management",
     "productsManagementDesc": "View and manage all products registered on your platform. Edit, delete, or update product details as needed. Changes will be notified to users through the dashboard and email.",
     "export": "Export",
@@ -672,7 +673,7 @@
   },
   "footer": {
     "about": "About",
-    "shop": "Shop",
+    "portfolio": "Portfolios",
     "contact": "Contact us",
     "terms": "Terms & condition",
     "reachOut": "Reach out",

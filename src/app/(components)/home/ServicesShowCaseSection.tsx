@@ -215,7 +215,7 @@ export default function ServicesShowCaseSection() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`pb-3 px-1 text-sm font-medium transition-colors relative flex items-center gap-2 ${activeTab === tab.id ? "text-amber-600 border-b-2 border-amber-600" : "text-gray-600 hover:text-gray-900"
+            className={`pb-3 px-1 text-md font-semibold transition-colors relative flex items-center gap-2 ${activeTab === tab.id ? "text-amber-600 border-b-2 border-amber-600" : "text-gray-600 hover:text-gray-900"
               }`}
           >
             {tab.icon}

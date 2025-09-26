@@ -26,7 +26,6 @@ export default function ConstructorOverview() {
     userInfo,
     stats,
     recentOrders,
-    topCustomers,
     revenueData,
     projectsData,
     searchTerm,

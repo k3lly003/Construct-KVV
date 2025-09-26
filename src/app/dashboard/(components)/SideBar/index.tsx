@@ -8,22 +8,22 @@ import {
   LogOut,
   CircleHelp,
   Settings,
-  Store,
   Tag,
   Bell,
   TableProperties,
   Package,
   User, // New icon for Profile
   Layers,
-  DollarSign,
   CalendarDays,
   MailPlus,
-  HandHelping, // New icon for Sales Report
+  HandHelping,
+  BriefcaseBusiness,
+  ChartCandlestick,
+  Presentation, // New icon for Sales Report
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import CustomSheet from "../shad_/CustomSheet";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from 'next/navigation';
 import { useTranslations } from '@/app/hooks/useTranslations';
@@ -96,11 +96,11 @@ const SideBar = () => {
     toggleSidebar();
   };
 
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  // const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-  const handleOpenSheet = () => {
-    setIsSheetOpen(true);
-  };
+  // const handleOpenSheet = () => {
+  //   setIsSheetOpen(true);
+  // };
 
   const sidebarClassName = `fixed flex flex-col bg-white dark:bg-gray-800 z-30 ${isSidebarCollapsed ? "w-0 md:w-16" : "w-72 md:w-64"
     }transition-all duration-500 overflow-hidden h-full shadow-md dark:shadow-2xl`;
@@ -174,12 +174,6 @@ const SideBar = () => {
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
-                href="/dashboard/shops"
-                icon={Store}
-                label={t('navigation.shops')}
-                isCollapsed={isSidebarCollapsed}
-              />
-              <SidebarLink
                 href="/dashboard/categories"
                 icon={Tag}
                 label={t('navigation.categories', 'Categories')}
@@ -192,9 +186,9 @@ const SideBar = () => {
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
-                href="/dashboard/requests"
+                href="/dashboard/revenue-split"
                 icon={Layers}
-                label={t('dashboard.sellerRequests')}
+                label={t('dashboard.revenueSplit')}
                 isCollapsed={isSidebarCollapsed}
               />
             </>
@@ -202,12 +196,6 @@ const SideBar = () => {
 
           {userRole === "TECHNICIAN" && (
             <>
-              {/* <SidebarLink
-                href="/dashboard"
-                icon={LayoutDashboard}
-                label={t('dashboard.overviews')}
-                isCollapsed={isSidebarCollapsed}
-              /> */}
               <SidebarLink
 
                 href="/dashboard/service-requests"
@@ -264,9 +252,9 @@ const SideBar = () => {
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
-                href="/dashboard/design-reviews"
-                icon={MailPlus}
-                label={t('navigation.designReviews')}
+                href="/dashboard/market-place"
+                icon={ChartCandlestick}
+                label={t('navigation.designMarketPlace')}
                 isCollapsed={isSidebarCollapsed}
               />
             </>
@@ -299,9 +287,9 @@ const SideBar = () => {
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
-                href="/dashboard/sales-report" // Assuming sales report path for sellers
-                icon={DollarSign}
-                label={t('dashboard.salesReport', 'Sales Report')}
+                href="/dashboard/projects" // Assuming sales report path for sellers
+                icon={BriefcaseBusiness}
+                label={t('dashboard.salesReport', 'projects')}
                 isCollapsed={isSidebarCollapsed}
               />
             </>
@@ -323,21 +311,15 @@ const SideBar = () => {
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
-                href="/dashboard/projects"
-                icon={TableProperties}
-                label={t('navigation.projects')}
-                isCollapsed={isSidebarCollapsed}
-              />
-              <SidebarLink
                 href="/dashboard/profile" // Assuming profile path for sellers
                 icon={User}
                 label={t('navigation.profile')}
                 isCollapsed={isSidebarCollapsed}
               />
               <SidebarLink
-                href="/dashboard/sales-report" // Assuming sales report path for sellers
-                icon={DollarSign}
-                label={t('dashboard.salesReport', 'Sales Report')}
+                href="/dashboard/portfolio" // Assuming sales report path for sellers
+                icon={Presentation}
+                label={t('navigation.portfolio')}
                 isCollapsed={isSidebarCollapsed}
               />
             </>
