@@ -149,8 +149,8 @@ export const CartPage: React.FC = () => {
         return;
       }
       // 0. Get checkout details and log to console
-      const checkoutDetails = await getCheckoutDetails(cart.id, token);
-      console.log("[CHECKOUT DETAILS]", checkoutDetails);
+      // const checkoutDetails = await getCheckoutDetails(cart.id, token);
+      // console.log("[CHECKOUT DETAILS]", checkoutDetails);
       // 1. Place the order
       const response = await orderService.placeOrder(cart.id, "string", token);
       if (!response.data?.id) throw new Error("Order creation failed");
@@ -171,6 +171,7 @@ export const CartPage: React.FC = () => {
       if (typeof window !== "undefined") {
         localStorage.setItem("lastOrderId", order_id);
         localStorage.setItem("lastTxRef", tx_ref);
+        localStorage.setItem("lastCartId", cart.id); // Store cartId for payment-complete page
       }
       // 3. Initiate payment
       const baseUrl = getBaseUrl();

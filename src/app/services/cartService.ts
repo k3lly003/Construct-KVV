@@ -186,14 +186,13 @@ class CartService {
 export const cartService = new CartService();
 
 export async function getCheckoutDetails(cartId: string, token: string) {
-  const response = await axios.get(
-    `${API_BASE_URL}/cart/checkout-details/${cartId}`,
-    {
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const url = `${API_BASE_URL}/cart/checkout-details/${cartId}`;
+  console.log("[getCheckoutDetails] Request:", { url, cartId, token });
+  const response = await axios.get(url, {
+    headers: {
+      accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return response.data;
 }
