@@ -82,7 +82,7 @@ export default function ConstructorOverview() {
             Welcome Back, {userInfo.fullName || "User"}!
           </h1>
           <p className="text-gray-500">
-            Here is what happening with your store today
+            Here is what happening with your Work today
           </p>
         </div>
         {/* Charts Section */}

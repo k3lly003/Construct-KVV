@@ -84,7 +84,7 @@ export default function RevenueSplitPage() {
         <button
           className={`px-4 py-2 rounded font-semibold transition-colors duration-150 ${
             filterChecked === "all"
-              ? "bg-blue-600 text-white"
+              ? "bg-amber-600 text-white"
               : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
           }`}
           onClick={() => setFilterChecked("all")}
@@ -94,7 +94,7 @@ export default function RevenueSplitPage() {
         <button
           className={`px-4 py-2 rounded font-semibold transition-colors duration-150 ${
             filterChecked === "checked"
-              ? "bg-blue-600 text-white"
+              ? "bg-amber-600 text-white"
               : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
           }`}
           onClick={() => setFilterChecked("checked")}
@@ -104,7 +104,7 @@ export default function RevenueSplitPage() {
         <button
           className={`px-4 py-2 rounded font-semibold transition-colors duration-150 ${
             filterChecked === "unchecked"
-              ? "bg-blue-600 text-white"
+              ? "bg-amber-600 text-white"
               : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
           }`}
           onClick={() => setFilterChecked("unchecked")}
@@ -166,7 +166,7 @@ export default function RevenueSplitPage() {
                   <td className="px-4 py-2">
                     RWF {split.platformCommission.toLocaleString()}
                   </td>
-                  <td className="px-4 py-2 font-bold text-blue-700 dark:text-blue-400">
+                  <td className="px-4 py-2 font-bold text-amber-700 dark:text-amber-400">
                     RWF {split.totalAmount.toLocaleString()}
                   </td>
                   <td
@@ -199,7 +199,7 @@ export default function RevenueSplitPage() {
             ) : activeSeller ? (
               <div>
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+                  <div className="w-12 h-12 rounded-full bg-amber-600 text-white flex items-center justify-center font-bold">
                     {initials(
                       activeSeller.user?.firstName,
                       activeSeller.user?.lastName
@@ -238,7 +238,7 @@ export default function RevenueSplitPage() {
             )}
             <div className="mt-6 text-right">
               <button
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                className="px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700"
                 onClick={() => setSellerModalOpen(false)}
               >
                 Close
