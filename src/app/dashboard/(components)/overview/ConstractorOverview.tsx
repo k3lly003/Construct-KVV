@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { StatCard } from "@/app/dashboard/(components)/overview/sections/stat-card";
 import Comments from "@/app/dashboard/(components)/overview/sections/comments";
@@ -15,10 +15,101 @@ import { Input } from "@/components/ui/input";
 import { useCategories } from "@/app/hooks/useCategories";
 import { useDashboard } from "@/hooks/useDashboard";
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend
-} from 'recharts';
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+} from "recharts";
+import {
+  Calendar,
+  Clock,
+  Users,
+  Target,
+  TrendingUp,
+  Award,
+} from "lucide-react";
 
-const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const COLORS = [
+  "#F59E0B",
+  "#D97706",
+  "#B45309",
+  "#92400E",
+  "#78350F",
+  "#451A03",
+];
+
+// Dummy data for the contractor dashboard
+const contractorData = {
+  profile: {
+    name: "John Miller",
+    avatar: "/user1.jpeg",
+    role: "Senior Construction Contractor",
+    company: "Miller Construction Co.",
+  },
+  summary: {
+    totalBids: 12,
+    projectsWon: 4,
+    activeProjects: 2,
+  },
+  budgetData: [
+    { category: "Materials", budget: 50000, spent: 35000 },
+    { category: "Labor", budget: 40000, spent: 28000 },
+    { category: "Equipment", budget: 25000, spent: 18000 },
+    { category: "Permits", budget: 5000, spent: 4500 },
+    { category: "Other", budget: 10000, spent: 6000 },
+  ],
+  progressData: [
+    { week: "Week 1", completion: 10 },
+    { week: "Week 2", completion: 30 },
+    { week: "Week 3", completion: 60 },
+    { week: "Week 4", completion: 80 },
+    { week: "Week 5", completion: 95 },
+  ],
+  milestones: [
+    { id: 1, title: "Foundation Completed", status: "completed", icon: "✅" },
+    { id: 2, title: "Walls Up", status: "completed", icon: "🧱" },
+    { id: 3, title: "Roofing Started", status: "in-progress", icon: "🏗️" },
+    { id: 4, title: "Electrical Work", status: "pending", icon: "⚡" },
+    { id: 5, title: "Final Inspection", status: "pending", icon: "📋" },
+  ],
+  workers: [
+    { id: 1, name: "Mike Johnson", role: "Foreman", avatar: "/user2.jpeg" },
+    { id: 2, name: "Sarah Davis", role: "Electrician", avatar: "/user3.jpeg" },
+    { id: 3, name: "Tom Wilson", role: "Plumber", avatar: "/user4.jpeg" },
+    { id: 4, name: "Lisa Brown", role: "Carpenter", avatar: "/user5.jpeg" },
+    { id: 5, name: "James Taylor", role: "Mason", avatar: "/user1.jpeg" },
+    { id: 6, name: "Anna Garcia", role: "Painter", avatar: "/user2.jpeg" },
+  ],
+  deadlines: [
+    {
+      id: 1,
+      task: "Complete electrical wiring",
+      dueDate: "2024-10-15",
+      priority: "high",
+    },
+    {
+      id: 2,
+      task: "Install plumbing fixtures",
+      dueDate: "2024-10-18",
+      priority: "medium",
+    },
+    {
+      id: 3,
+      task: "Finish interior painting",
+      dueDate: "2024-10-22",
+      priority: "low",
+    },
+  ],
+};
 
 export default function ConstructorOverview() {
   // Custom dashboard hook
@@ -37,240 +128,312 @@ export default function ConstructorOverview() {
     handleClearError,
   } = useDashboard();
 
-  // Other hooks
-  const { products, isLoading: productsLoading } = useProducts();
-  const { categories, isLoading: categoriesLoading } = useCategories();
+  // Console log userInfo to see available data
+  console.log("UserInfo data:", userInfo);
 
-  const searchedProducts = products.filter((product) =>
-    Object.values(product).some((value) =>
-      String(value).toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
-
-  const getCategoryName = (categoryId: string) => {
-    const category = categories.find(cat => cat.id === categoryId);
-    return category ? category.name : "Unknown";
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case "high":
+        return "bg-red-100 text-red-800";
+      case "medium":
+        return "bg-amber-100 text-amber-800";
+      case "low":
+        return "bg-green-100 text-green-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
   };
 
-  if (isLoading) {
-    return <div className="p-8 text-lg">Loading analytics...</div>;
-  }
-  
-  if (hasError) {
-    return (
-      <div className="p-8">
-        <div className="text-red-500 mb-4">{error}</div>
-        <button 
-          onClick={() => {
-            handleClearError();
-            handleRefresh();
-          }}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Retry
-        </button>
-      </div>
-    );
-  }
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    });
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
-      <div className="px-2">
-        {/* Header */}
-        <div className="mb-10">
-          <h1 className="text-2xl font-semibold">
-            Welcome Back, {userInfo.fullName || "User"}!
-          </h1>
-          <p className="text-gray-500">
-            Here is what happening with your Work today
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800">
+      <div className="p-4 lg:p-8 space-y-8">
+        {/* 1. Header / Welcome Section */}
+        <div className="bg-gradient-to-r from-amber-400 to-amber-600 rounded-2xl shadow-lg p-6 lg:p-8 text-white">
+          <div className="flex flex-col lg:flex-row items-center gap-6">
+            <div className="relative">
+              <img
+                src={userInfo.avatar || contractorData.profile.avatar}
+                alt={userInfo.fullName || "User"}
+                className="w-20 h-20 lg:w-24 lg:h-24 rounded-full border-4 border-white shadow-lg object-cover"
+              />
+              <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-1">
+                <div className="w-3 h-3 bg-white rounded-full"></div>
+              </div>
+            </div>
+            <div className="text-center lg:text-left">
+              <h1 className="text-2xl lg:text-3xl font-bold mb-2">
+                Welcome back, {userInfo.fullName || "User"}!
+              </h1>
+              <p className="text-amber-100 text-lg mb-1">
+                {userInfo.role || contractorData.profile.role}
+              </p>
+              <p className="text-amber-200 text-sm">
+                {userInfo.company || contractorData.profile.company}
+              </p>
+            </div>
+          </div>
         </div>
+
+        {/* 2. Bids & Projects Summary */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-gradient-to-r from-amber-400 to-amber-500 rounded-xl">
+                <Target className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Total Bids Placed
+                </p>
+                <p className="text-2xl font-semibold text-gray-900 dark:text-white">
+                  {contractorData.summary.totalBids}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-gradient-to-r from-amber-500 to-amber-600 rounded-xl">
+                <Award className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Projects Won
+                </p>
+                <p className="text-2xl font-semibold text-gray-900 dark:text-white">
+                  {contractorData.summary.projectsWon}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-gradient-to-r from-amber-600 to-amber-700 rounded-xl">
+                <TrendingUp className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Active Projects
+                </p>
+                <p className="text-2xl font-semibold text-gray-900 dark:text-white">
+                  {contractorData.summary.activeProjects}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Charts Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-          {/* Revenue Over Time Line Chart */}
-          <div className="bg-white dark:bg-gray-800 rounded shadow p-4">
-            <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Revenue Over Time</h2>
-            <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={revenueData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis 
-                  dataKey="month" 
-                  tickFormatter={m => m?.slice(0,7)} 
-                  tick={{ fill: '#9CA3AF' }}
-                  axisLine={{ stroke: '#374151' }}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+          {/* 3. Budget Overview (Bar Chart) */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+              <div className="w-2 h-6 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full"></div>
+              Budget Overview
+            </h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart
+                data={contractorData.budgetData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+                <XAxis
+                  dataKey="category"
+                  tick={{ fill: "#6B7280", fontSize: 12 }}
+                  axisLine={{ stroke: "#D1D5DB" }}
                 />
-                <YAxis 
-                  tick={{ fill: '#9CA3AF' }}
-                  axisLine={{ stroke: '#374151' }}
+                <YAxis
+                  tick={{ fill: "#6B7280", fontSize: 12 }}
+                  axisLine={{ stroke: "#D1D5DB" }}
+                  tickFormatter={(value) => `$${value / 1000}k`}
                 />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#1F2937', 
-                    border: '1px solid #374151',
-                    color: '#F9FAFB'
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#FFFFFF",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: "8px",
+                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
                   }}
+                  formatter={(value: any) => [`$${value.toLocaleString()}`, ""]}
                 />
-                <Line type="monotone" dataKey="revenue" stroke="#8884d8" strokeWidth={2} />
+                <Bar
+                  dataKey="budget"
+                  fill="#FCD34D"
+                  name="Budget"
+                  radius={[4, 4, 0, 0]}
+                />
+                <Bar
+                  dataKey="spent"
+                  fill="#F59E0B"
+                  name="Spent"
+                  radius={[4, 4, 0, 0]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* 4. Project Progress (Line Chart) */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+              <div className="w-2 h-6 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full"></div>
+              Project Progress Timeline
+            </h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart
+                data={contractorData.progressData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+                <XAxis
+                  dataKey="week"
+                  tick={{ fill: "#6B7280", fontSize: 12 }}
+                  axisLine={{ stroke: "#D1D5DB" }}
+                />
+                <YAxis
+                  tick={{ fill: "#6B7280", fontSize: 12 }}
+                  axisLine={{ stroke: "#D1D5DB" }}
+                  tickFormatter={(value) => `${value}%`}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#FFFFFF",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: "8px",
+                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+                  }}
+                  formatter={(value: any) => [`${value}%`, "Completion"]}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="completion"
+                  stroke="#F59E0B"
+                  strokeWidth={3}
+                  dot={{ fill: "#F59E0B", strokeWidth: 2, r: 6 }}
+                  activeDot={{ r: 8, fill: "#D97706" }}
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>
-          {/* Projects by Status Pie Chart */}
-          <div className="bg-white dark:bg-gray-800 rounded shadow p-4">
-            <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Projects by Status</h2>
-            <ResponsiveContainer width="100%" height={250}>
-              <PieChart>
-                <Pie
-                  data={projectsData}
-                  dataKey="_count._all"
-                  nameKey="status"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  fill="#82ca9d"
-                  label
+        </div>
+
+        {/* Bottom Section */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          {/* 5. Milestones & Timeline */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+              <div className="w-2 h-6 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full"></div>
+              Project Milestones
+            </h2>
+            <div className="space-y-4">
+              {contractorData.milestones.map((milestone, index) => (
+                <div
+                  key={milestone.id}
+                  className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
-                  {projectsData.map((entry: any, index: number) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Legend 
-                  wrapperStyle={{ color: '#9CA3AF' }}
-                />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#1F2937', 
-                    border: '1px solid #374151',
-                    color: '#F9FAFB'
-                  }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-        {/* Stats Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <StatCard
-            title="Total Customers"
-            value={stats?.totalCustomers?.toLocaleString() ?? '--'}
-            change={0}
-            trend="up"
-          />
-          <StatCard
-            title="Total Revenue"
-            value={stats?.totalRevenue ? `$${stats.totalRevenue.toLocaleString()}` : '--'}
-            change={0}
-            trend="up"
-          />
-          <StatCard
-            title="Total Orders"
-            value={stats?.totalOrders?.toLocaleString() ?? '--'}
-            change={0}
-            trend="up"
-          />
-        </div>
-        {/* Main Content Section: Product Table */}
-        <div className="flex flex-col lg:flex-row gap-8 w-full">
-          {/* Left Column: Recent Orders and Product Table */}
-          <div className="rounded-md w-full">
-            {/* Recent Orders Table */}
-            <div className="mb-8">
-              <h2 className="text-lg font-semibold mb-2">Recent Orders</h2>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-amber-300">Order ID</TableHead>
-                    <TableHead className="text-amber-300">Customer</TableHead>
-                    <TableHead className="text-amber-300">Date & Time</TableHead>
-                    <TableHead className="text-amber-300">Total</TableHead>
-                    <TableHead className="text-amber-300">Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {recentOrders?.length > 0 ? recentOrders.map((order: any) => (
-                    <TableRow key={order.id}>
-                      <TableCell className="py-4 text-bold">{order.id}</TableCell>
-                      <TableCell className="py-5">{order.customerName || '-'}</TableCell>
-                      <TableCell className="py-4">{order.createdAt ? new Date(order.createdAt).toLocaleString() : '-'}</TableCell>
-                      <TableCell className="">{order.total ? `$${order.total}` : '-'}</TableCell>
-                      <TableCell className="">{order.status || '-'}</TableCell>
-                    </TableRow>
-                  )) : (
-                    <TableRow>
-                      <TableCell colSpan={5} className="text-red-500 text-center py-4">
-                        No recent orders found.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-            {/* Product Table */}
-            <div>
-              <div className="mb-4 flex items-center justify-between">
-                <Input
-                  type="search"
-                  placeholder="Search by any product details..."
-                  className="w-[300px] sm:w-[400px]"
-                  value={searchTerm}
-                  onChange={e => handleSearch(e.target.value)}
-                />
-              </div>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-amber-300">Product Name</TableHead>
-                    <TableHead className="text-amber-300">Description</TableHead>
-                    <TableHead className="text-amber-300">Date & Time</TableHead>
-                    <TableHead className="text-amber-300">Category</TableHead>
-                    <TableHead className="text-amber-300">Price</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {searchedProducts.map((product) => (
-                    <TableRow key={product.id}>
-                      <TableCell className="py-4 text-bold">{product.name}</TableCell>
-                      <TableCell className="py-5 max-auto overflo">{product.description}</TableCell>
-                      <TableCell className="py-4">{product.createdAt ? new Date(product.createdAt).toLocaleString() : "-"}</TableCell>
-                      <TableCell className="py-4">{getCategoryName(product.categoryId)}</TableCell>
-                      <TableCell className="">{product.price ? `$${product.price}` : "-"}</TableCell>
-                    </TableRow>
-                  ))}
-                  {searchedProducts.length === 0 && (
-                    <TableRow>
-                      <TableCell colSpan={6} className="text-red-500 text-center py-4">
-                        No Products found.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
-          {/* Right Column: Top Customers */}
-          {/* <div className="space-y-8 w-full lg:w-[30%]">
-            <div className="p-6 bg-white rounded shadow">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Top Customers</h2>
-              </div>
-              <div className="space-y-4">
-                {topCustomers?.length > 0 ? topCustomers.map((customer: any) => (
-                  <div key={customer.id} className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <img src={customer.avatar || 'https://i.pravatar.cc/150?u=' + customer.id} alt={customer.name} className="w-10 h-10 rounded-full object-cover" />
-                      <div>
-                        <p className="font-medium">{customer.name}</p>
-                        <p className="text-sm text-gray-500">{customer.purchases} Purchases</p>
-                      </div>
-                    </div>
-                    <span className="font-medium">${customer.amount?.toLocaleString()}</span>
+                  <div
+                    className={`w-10 h-10 rounded-full flex items-center justify-center text-lg
+                    ${
+                      milestone.status === "completed"
+                        ? "bg-green-100"
+                        : milestone.status === "in-progress"
+                        ? "bg-amber-100"
+                        : "bg-gray-100"
+                    }`}
+                  >
+                    {milestone.icon}
                   </div>
-                )) : (
-                  <div className="text-gray-500">No top customers found.</div>
-                )}
-              </div>
+                  <div className="flex-1">
+                    <p
+                      className={`font-medium ${
+                        milestone.status === "completed"
+                          ? "text-green-800"
+                          : milestone.status === "in-progress"
+                          ? "text-amber-800"
+                          : "text-gray-600"
+                      }`}
+                    >
+                      {milestone.title}
+                    </p>
+                    <p className="text-sm text-gray-500 capitalize">
+                      {milestone.status.replace("-", " ")}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
-            <Comments />
-          </div> */}
+          </div>
+
+          {/* 6. Assigned Workers */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+              <div className="w-2 h-6 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full"></div>
+              Team Members
+            </h2>
+            <div className="grid grid-cols-2 gap-4">
+              {contractorData.workers.map((worker) => (
+                <div
+                  key={worker.id}
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                >
+                  <img
+                    src={worker.avatar}
+                    alt={worker.name}
+                    className="w-10 h-10 rounded-full object-cover border-2 border-amber-200"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-gray-900 dark:text-white text-sm truncate">
+                      {worker.name}
+                    </p>
+                    <p className="text-xs text-gray-500">{worker.role}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 7. Upcoming Deadlines */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+              <div className="w-2 h-6 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full"></div>
+              Upcoming Deadlines
+            </h2>
+            <div className="space-y-4">
+              {contractorData.deadlines.map((deadline) => (
+                <div
+                  key={deadline.id}
+                  className="p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(
+                        deadline.priority
+                      )}`}
+                    >
+                      {deadline.priority.toUpperCase()}
+                    </span>
+                    <div className="flex items-center gap-1 text-gray-500">
+                      <Calendar className="w-4 h-4" />
+                      <span className="text-sm">
+                        {formatDate(deadline.dueDate)}
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-gray-900 dark:text-white font-medium">
+                    {deadline.task}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
