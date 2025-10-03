@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect, Suspense } from "react";
 import { useNegotiation } from "@/app/hooks/useNegotiation";
 import { useUserStore } from "@/store/userStore";
+import { constructorService } from "@/app/services/constructorService";
 import { Paperclip, Send } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -20,6 +21,14 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const AMBER = "#FFC107";
 const WHITE = "#FFFFFF";
+// Helper to abbreviate full name to initials, e.g., "John Doe" -> "JD"
+function getInitialsFromName(name: string) {
+  if (!name) return "";
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "";
+  if (parts.length === 1) return parts[0][0]?.toUpperCase() ?? "";
+  return `${(parts[0][0] || "").toUpperCase()}${(parts[parts.length - 1][0] || "").toUpperCase()}`;
+}
 
 const BidDetailsCard = ({
   bid,
@@ -84,7 +93,7 @@ const MessageBubble = ({
       ? msg.message
       : msg.message.slice(0, maxPreviewLength) + "...";
 
-  // Amber for seller, white for user
+  // Amber for contractor, white for user
   const bubbleBg = isSeller
     ? `bg-[${AMBER}] text-black`
     : `bg-[${WHITE}] text-black border border-gray-200`;
@@ -108,7 +117,7 @@ const MessageBubble = ({
                 border: isSeller ? "2px solid #FFC107" : "2px solid #eee",
               }}
             >
-              {displayNameSafe}
+              {getInitialsFromName(displayNameSafe)}
             </AvatarFallback>
           )}
         </Avatar>
@@ -208,7 +217,7 @@ const InitialBidMessage = ({
                 border: "2px solid #FFC107",
               }}
             >
-              {displayNameSafe}
+              {getInitialsFromName(displayNameSafe)}
             </AvatarFallback>
           )}
         </Avatar>
@@ -323,6 +332,8 @@ const ChatContent = ({
   const [newMessage, setNewMessage] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [contractorName, setContractorName] = useState<string>("");
+  const [contractorPic, setContractorPic] = useState<string | undefined>(undefined);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   const allMessages = React.useMemo(() => {
@@ -331,7 +342,7 @@ const ChatContent = ({
       id: `initial-bid-${initialBidData.id}`,
       bidId: initialBidData.id,
       senderId: initialBidData.sellerId || "",
-      senderType: "SELLER" as const,
+      senderType: "CONTRACTOR" as const,
       message: initialBidData.message,
       createdAt: initialBidData.createdAt,
       isInitialBid: true as const,
@@ -353,14 +364,33 @@ const ChatContent = ({
     }
   }, [allMessages]);
 
-  // Only 'SELLER' and 'CUSTOMER' are valid sender types for negotiation
-  const isSeller = userRole === "SELLER";
+  // Sender roles
+  const isContractor = userRole === "CONTRACTOR";
   const isCustomer = userRole === "CUSTOMER";
+
+  // Load current contractor profile for avatar/alt
+  useEffect(() => {
+    async function loadProfile() {
+      if (!isContractor) return;
+      try {
+        const res = await constructorService.getCurrentProfile();
+        const user = res?.data?.user;
+        if (user) {
+          const name = `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim();
+          setContractorName(name || "Contractor");
+          if (user.profilePic) setContractorPic(user.profilePic);
+        }
+      } catch {
+        // ignore
+      }
+    }
+    loadProfile();
+  }, [isContractor]);
 
   const handleSendMessage = async () => {
     if (!newMessage.trim() && !file) return;
-    if (!isHydrated || (!isSeller && !isCustomer)) {
-      toast.error("You must be a Seller or a Customer to send messages.");
+    if (!isHydrated || (!isContractor && !isCustomer)) {
+      toast.error("You must be a Contractor or a Customer to send messages.");
       return;
     }
 
@@ -368,7 +398,7 @@ const ChatContent = ({
       await sendMessage({
         bidId,
         message: newMessage,
-        senderType: isSeller ? "SELLER" : "USER",
+        senderType: isContractor ? "CONTRACTOR" : "USER",
         file: file || undefined,
       });
       setNewMessage("");
@@ -438,13 +468,13 @@ const ChatContent = ({
           <BidDetailsCard bid={initialBidData ?? null} />
           <div className="space-y-6">
             {allMessages?.map((msg) => {
-              // Determine if this is a seller or user message
-              const isSellerMsg = msg.senderType === "SELLER";
+              // Determine if this is a contractor or user message
+              const isSellerMsg = msg.senderType === "CONTRACTOR";
               const isOwnMessage = isSellerMsg
-                ? userRole === "SELLER"
-                : userRole !== "SELLER";
+                ? userRole === "CONTRACTOR"
+                : userRole !== "CONTRACTOR";
               let displayName = "";
-              let profilePic = undefined;
+              let profilePic = undefined as string | undefined;
               if (isSellerMsg) {
                 if (
                   "bid" in msg &&
@@ -462,20 +492,21 @@ const ChatContent = ({
                       lastName?: string;
                     };
                   };
-                  profilePic = seller.user?.profilePic || undefined;
+                  profilePic = seller.user?.profilePic || contractorPic;
                   if (profilePic) {
-                    displayName = `${seller.user?.firstName ?? ""} ${
-                      seller.user?.lastName ?? ""
+                    displayName = `${seller.user?.firstName ?? contractorName.split(" ")[0] ?? ""} ${
+                      seller.user?.lastName ?? contractorName.split(" ")[1] ?? ""
                     }`.trim();
                   } else if (seller.user?.firstName && seller.user?.lastName) {
                     displayName = `${seller.user.firstName[0].toUpperCase()}${seller.user.lastName[0].toUpperCase()}`;
                   } else if (seller.businessName) {
                     displayName = getBusinessInitials(seller.businessName);
                   } else {
-                    displayName = "S";
+                    displayName = contractorName ? contractorName : "C";
                   }
                 } else {
-                  displayName = "Seller";
+                  displayName = contractorName || "Contractor";
+                  profilePic = contractorPic || undefined;
                 }
               } else {
                 // User info from localStorage

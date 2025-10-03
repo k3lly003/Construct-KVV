@@ -110,7 +110,7 @@ const Page = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Seller bids state
+  // Contractor bids state
   const [bids, setBids] = useState<any[]>([]);
   const [bidsLoading, setBidsLoading] = useState(true);
   const [bidsError, setBidsError] = useState<string | null>(null);
@@ -128,6 +128,11 @@ const Page = () => {
   const [availableProjects, setAvailableProjects] = useState<any[]>([]);
   const [projectsLoading, setProjectsLoading] = useState(true);
   const [projectsError, setProjectsError] = useState<string | null>(null);
+  // Project details modal state
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [detailsProject, setDetailsProject] = useState<any | null>(null);
+  const [detailsLoading, setDetailsLoading] = useState(false);
+  const [detailsError, setDetailsError] = useState<string | null>(null);
 
   // --- State for Place Bid Modal ---
   const [bidModalOpen, setBidModalOpen] = useState(false);
@@ -259,7 +264,7 @@ const Page = () => {
             ? localStorage.getItem("authToken")
             : null;
         if (!token || !API_URL) throw new Error("No auth token or API URL");
-        const res = await fetch(`${API_URL}/api/v1/bids/seller`, {
+        const res = await fetch(`${API_URL}/api/v1/bids/contractor`, {
           headers: {
             Authorization: `Bearer ${token}`,
             accept: "*/*",
@@ -289,20 +294,16 @@ const Page = () => {
             ? localStorage.getItem("authToken")
             : null;
         if (!token || !API_URL) throw new Error("No auth token or API URL");
-        const res = await fetch(`${API_URL}/api/v1/final-project/get-all`, {
-          method: "POST",
+        // Use new endpoint to fetch only OPEN projects
+        const res = await fetch(`${API_URL}/api/v1/final-project/open`, {
           headers: {
             Authorization: `Bearer ${token}`,
             accept: "application/json",
           },
-          body: "",
         });
         if (!res.ok) throw new Error("Failed to fetch available projects");
         const data = await res.json();
-        // Only show projects with status OPEN
-        setAvailableProjects(
-          (data || []).filter((p: any) => p.status === "OPEN")
-        );
+        setAvailableProjects(data || []);
         console.log("Available projects", data);
       } catch (e: any) {
         setProjectsError(e.message || "Failed to load available projects");
@@ -312,6 +313,32 @@ const Page = () => {
     }
     fetchAvailableProjects();
   }, []);
+
+  // --- Handlers to view details modal ---
+  async function openProjectDetails(projectId: string) {
+    setDetailsError(null);
+    setDetailsLoading(true);
+    setDetailsProject(null);
+    setDetailsOpen(true);
+    try {
+      const token =
+        typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+      if (!token || !API_URL) throw new Error("No auth token or API URL");
+      const res = await fetch(`${API_URL}/api/v1/final-project/${projectId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          accept: "application/json",
+        },
+      });
+      if (!res.ok) throw new Error("Failed to fetch project details");
+      const data = await res.json();
+      setDetailsProject(data);
+    } catch (e: any) {
+      setDetailsError(e.message || "Failed to load project details");
+    } finally {
+      setDetailsLoading(false);
+    }
+  }
 
   // --- Withdraw Bid Handler (PATCH) ---
   async function withdrawBid(bidId: string) {
@@ -338,7 +365,7 @@ const Page = () => {
       setBidsLoading(true);
       setBidsError(null);
       try {
-        const res = await fetch(`${API_URL}/api/v1/bids/seller`, {
+        const res = await fetch(`${API_URL}/api/v1/bids/contractor`, {
           headers: {
             Authorization: `Bearer ${token}`,
             accept: "*/*",
@@ -412,7 +439,7 @@ const Page = () => {
       setBidsLoading(true);
       setBidsError(null);
       try {
-        const res = await fetch(`${API_URL}/api/v1/bids/seller`, {
+        const res = await fetch(`${API_URL}/api/v1/bids/contractor`, {
           headers: {
             Authorization: `Bearer ${token}`,
             accept: "*/*",
@@ -430,19 +457,15 @@ const Page = () => {
       setProjectsLoading(true);
       setProjectsError(null);
       try {
-        const res = await fetch(`${API_URL}/api/v1/final-project/get-all`, {
-          method: "POST",
+        const res = await fetch(`${API_URL}/api/v1/final-project/open`, {
           headers: {
             Authorization: `Bearer ${token}`,
             accept: "application/json",
           },
-          body: "",
         });
         if (!res.ok) throw new Error("Failed to fetch available projects");
         const data = await res.json();
-        setAvailableProjects(
-          (data || []).filter((p: any) => p.status === "OPEN")
-        );
+        setAvailableProjects(data || []);
       } catch (e: any) {
         setProjectsError(e.message || "Failed to load available projects");
       } finally {
@@ -1482,17 +1505,66 @@ const Page = () => {
                             ? "..."
                             : ""}
                         </div>
-                        <button
-                          className="mt-2 bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600"
-                          onClick={() => openBidModal(project)}
-                        >
-                          {t('dashboard.bid')}
-                        </button>
+                        <div className="mt-3 flex flex-col sm:flex-row sm:items-center gap-2">
+                          <button
+                            className="w-full sm:w-auto bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600"
+                            onClick={() => openBidModal(project)}
+                          >
+                            {t('dashboard.bid')}
+                          </button>
+                          <button
+                            className="w-full sm:w-auto bg-white text-amber-700 border border-amber-400 px-4 py-2 rounded hover:bg-amber-50"
+                            onClick={() => openProjectDetails(project.id)}
+                          >
+                            {t('dashboard.viewDetails') || 'View Details'}
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
                 )}
               </section>
+              {/* Details Modal */}
+              <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
+                <DialogContent className="max-w-3xl">
+                  <DialogHeader>
+                    <DialogTitle>Project Details</DialogTitle>
+                  </DialogHeader>
+                  {detailsLoading ? (
+                    <div>Loading...</div>
+                  ) : detailsError ? (
+                    <div className="text-red-500">{detailsError}</div>
+                  ) : detailsProject ? (
+                    <div className="space-y-3 text-sm text-gray-700">
+                      <div><span className="font-semibold">ID:</span> {detailsProject.id}</div>
+                      <div><span className="font-semibold">Status:</span> {detailsProject.status}</div>
+                      <div><span className="font-semibold">Created:</span> {new Date(detailsProject.createdAt).toLocaleDateString()}</div>
+                      {detailsProject.summary && (
+                        <div>
+                          <div className="font-semibold">AI Summary</div>
+                          <div className="text-gray-600">{detailsProject.summary}</div>
+                        </div>
+                      )}
+                      {detailsProject.totalEstimatedCost && (
+                        <div><span className="font-semibold">Estimated Cost:</span> {new Intl.NumberFormat('en-RW',{style:'currency',currency:detailsProject.currency||'RWF',minimumFractionDigits:0}).format(detailsProject.totalEstimatedCost)}</div>
+                      )}
+                      {Array.isArray(detailsProject.partialSummaries) && detailsProject.partialSummaries.filter((s:string)=>s?.trim()).length>0 && (
+                        <div>
+                          <div className="font-semibold mb-1">AI Analysis</div>
+                          <ul className="list-disc pl-5 space-y-1">
+                            {detailsProject.partialSummaries.filter((s:string)=>s?.trim()).map((s:string,i:number)=>(
+                              <li key={i}>{s}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  ) : null}
+                  <DialogFooter>
+                    <GenericButton onClick={() => setDetailsOpen(false)}>Close</GenericButton>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
           </>
         );

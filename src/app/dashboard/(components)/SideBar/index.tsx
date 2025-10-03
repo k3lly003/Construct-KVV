@@ -19,6 +19,7 @@ import {
   CalendarDays,
   MailPlus,
   HandHelping, // New icon for Sales Report
+  Building, // New icon for Construction Projects
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
