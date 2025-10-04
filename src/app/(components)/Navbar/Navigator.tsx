@@ -397,6 +397,13 @@ const Navbar: React.FC = () => {
                     Help
                   </Link>
                   <Link
+                    href="/design-marketplace"
+                    className="py-2 text-gray-900 hover:text-amber-500 border-b"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Design Marketplace
+                  </Link>
+                  <Link
                     href="/cart"
                     className="py-2 text-gray-900 hover:text-amber-500 border-b flex items-center gap-2 relative"
                     onClick={() => setMobileMenuOpen(false)}
@@ -652,6 +659,12 @@ const Navbar: React.FC = () => {
               className="inline-flex items-center px-1 pt-1 mb-2 text-sm font-medium text-gray-900 hover:text-amber-500"
             >
               {t("navigation.pricing")}
+            </Link>
+            <Link
+              href="/design-marketplace"
+              className="inline-flex items-center px-1 pt-1 mb-2 text-sm font-medium text-gray-900 hover:text-amber-500"
+            >
+              Design Marketplace
             </Link>
           </div>
         </div>
