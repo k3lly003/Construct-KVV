@@ -355,5 +355,12 @@
     "fastMatchingDesc": "Uhuza n'abantu b'umwuga mu masaha 24",
     "awardWinnersTitle": "Abatsinze Ibikombe",
     "awardWinnersDesc": "Abantu b'umwuga n'ibikorwa bizwi mu buzima"
+  },
+  "dashboard": {
+    "bids": "Bids",
+    "wonBids": "Bids Zatsinze",
+    "noWonBidsFound": "Nta bids zatsinze ziboneka.",
+    "viewProject": "Reba Umushinga",
+    "negotiation": "Guhuza"
   }
 }
