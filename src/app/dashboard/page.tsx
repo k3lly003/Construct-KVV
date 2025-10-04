@@ -36,7 +36,7 @@ const Page=()=> {
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-4">OverView Not Available</h1>
-            <p className="text-gray-600">Dear anonymous friend, you don't have a capacity yet.</p>
+            <p className="text-gray-600">Dear anonymous friend, you don&apos;t have a capacity yet.</p>
           </div>
         </div>
       )}

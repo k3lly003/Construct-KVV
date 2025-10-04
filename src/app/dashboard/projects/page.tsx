@@ -4,8 +4,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useUserStore } from "@/store/userStore";
 import TechnicianProjects from "../(components)/projects/TechnicianProjects";
 import ArchitectureProject from "../(components)/projects/ArchitectureProject";
+import ContractorProjects from "../(components)/projects/ConstracturProject";
 
 const page = () => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { role, isHydrated } = useUserStore();
 
   if (!isHydrated) {
@@ -23,7 +25,7 @@ const page = () => {
     <>
       {role === "TECHNICIAN" && <TechnicianProjects />}
       {role === "ARCHITECT" && <ArchitectureProject />}
-
+      {role === "CONTRACTOR" && <ContractorProjects />}
       {!role && (
         <Card className="w-full">
           <CardHeader>

@@ -12,5 +12,5 @@ export type {
   DashboardStats, 
   RecentOrder, 
   TopCustomer, 
-  AnalyticsData 
+  AnalyticsData
 } from "./dashboardStore";

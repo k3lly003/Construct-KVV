@@ -5,6 +5,7 @@ import AdminProfile from '@/app/dashboard/(components)/profile/AdminProfile';
 import ConstractorProfile from '@/app/dashboard/(components)/profile/ConstractorProfile';
 import TechnicianProfile from '../(components)/profile/TechnicianProfile';
 import ArchitectureProfile from '../(components)/profile/ArchitectureProfile';
+import SellerProfile from '@/app/dashboard/(components)/profile/SellerProfile';
 
 export default function ProfilePage() {
   const { role, isHydrated } = useUserStore();
@@ -31,7 +32,7 @@ export default function ProfilePage() {
       
       {role === "ARCHITECT" && <ArchitectureProfile />}
       
-      {role === "SELLER" && <AdminProfile />}
+      {role === "SELLER" && <SellerProfile />}
       
       {!role && (
         <div className="flex items-center justify-center min-h-screen">

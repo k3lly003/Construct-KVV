@@ -151,6 +151,74 @@ export const getSellerProfile = async (sellerId: string, token: string) => {
   return response.data;
 };
 
+// ============ New seller-facing endpoints ============
+
+// Helper to unwrap common envelope shapes
+function unwrap<T>(payload: any): T {
+  if (payload && typeof payload === 'object') {
+    if (Array.isArray(payload)) return payload as T;
+    if ('data' in payload) return (payload as any).data as T;
+  }
+  return payload as T;
+}
+
+export type SellerOrder = { _id: string; status: string; [key: string]: any };
+export type SellerDashboard = { [key: string]: any };
+
+// GET /api/v1/seller/profile → current seller profile
+export const getMySellerProfile = async (token: string): Promise<SellerProfile> => {
+  const response = await axios.get(`${API_URL}/api/v1/seller/profile`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return unwrap<SellerProfile>(response.data);
+};
+
+// GET /api/v1/seller/orders
+export const getSellerOrders = async (token: string): Promise<SellerOrder[]> => {
+  const response = await axios.get(`${API_URL}/api/v1/seller/orders`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return unwrap<SellerOrder[]>(response.data);
+};
+
+// PUT /api/v1/seller/orders/{orderId}/status
+export const updateSellerOrderStatus = async (
+  orderId: string,
+  status: string,
+  token: string
+): Promise<SellerOrder> => {
+  const response = await axios.put(
+    `${API_URL}/api/v1/seller/orders/${orderId}/status`,
+    { status },
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return unwrap<SellerOrder>(response.data);
+};
+
+// GET /api/v1/seller/dashboard
+export const getSellerDashboard = async (token: string): Promise<SellerDashboard> => {
+  const response = await axios.get(`${API_URL}/api/v1/seller/dashboard`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return unwrap<SellerDashboard>(response.data);
+};
+
+// GET /api/v1/seller → all sellers (public/admin depending on backend rules)
+export const listSellers = async (token?: string): Promise<SellerProfile[]> => {
+  const response = await axios.get(`${API_URL}/api/v1/seller`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+  });
+  return unwrap<SellerProfile[]>(response.data);
+};
+
+// GET /api/v1/seller/requests → pending registrations
+export const getSellerRequests = async (token: string): Promise<SellerProfile[]> => {
+  const response = await axios.get(`${API_URL}/api/v1/seller/requests`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return unwrap<SellerProfile[]>(response.data);
+};
+
 // Admin methods for seller management
 export const getAllSellers = async (token: string): Promise<SellerProfile[]> => {
   const response = await axios.get(`${API_URL}/api/v1/sellers/admin/all`, {

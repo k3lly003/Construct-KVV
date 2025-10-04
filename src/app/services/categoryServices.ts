@@ -25,7 +25,7 @@ export const categoryService = {
           },
         }
       );
-      console.log("CREATED-CATEGORY-DATA", response.data);
+      console.log("CREATED-CATEGORY-DATA-CONSOLE", response.data);
       // Ensure the returned data matches the Category type
       if (
         response.data &&
