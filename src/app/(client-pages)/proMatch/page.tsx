@@ -114,6 +114,8 @@ export default function ProMatchPage() {
   const [validationError, setValidationError] = React.useState<string | null>(
     null
   );
+  const [locating, setLocating] = React.useState(false);
+  const [locateError, setLocateError] = React.useState<string | null>(null);
 
   const [form, setForm] = React.useState<MatchRequestBodyBase>({
     role: "Any",
@@ -141,6 +143,142 @@ export default function ProMatchPage() {
 
   const next = () => setStep((s) => Math.min(s + 1, totalSteps - 1));
   const back = () => setStep((s) => Math.max(s - 1, 0));
+
+  const handleLocateMe = async () => {
+    // eslint-disable-next-line no-console
+    console.log("[ProMatch] Locate Me button clicked");
+    setLocateError(null);
+    if (!("geolocation" in navigator)) {
+      const msg = "Geolocation is not supported by your browser.";
+      setLocateError(msg);
+      // eslint-disable-next-line no-console
+      console.log("[ProMatch] Geolocation not supported");
+      return;
+    }
+    setLocating(true);
+    // eslint-disable-next-line no-console
+    console.log("[ProMatch] Starting geolocation...");
+    try {
+      const position: GeolocationPosition = await new Promise(
+        (resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0,
+          });
+        }
+      );
+      const { latitude, longitude } = position.coords;
+      // eslint-disable-next-line no-console
+      console.log("[ProMatch] Coordinates retrieved:", { latitude, longitude });
+
+      setForm((prev) => ({
+        ...prev,
+        location: { ...(prev.location || {}), lat: latitude, lng: longitude },
+      }));
+      // eslint-disable-next-line no-console
+      console.log("[ProMatch] Set location.lat and location.lng");
+
+      const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(
+        latitude
+      )}&lon=${encodeURIComponent(longitude)}&addressdetails=1`;
+      // eslint-disable-next-line no-console
+      console.log("[ProMatch] Fetching reverse geocoding:", url);
+      const resp = await fetch(url, {
+        headers: {
+          accept: "application/json",
+          // Nominatim usage policy recommends a descriptive User-Agent
+          "User-Agent": "Construct-KVV/1.0 (proMatch reverse geocode)",
+          referer: typeof window !== "undefined" ? window.location.origin : "",
+        } as any,
+      });
+      if (!resp.ok) {
+        const text = await resp.text();
+        throw new Error(text || `Reverse geocoding failed (${resp.status})`);
+      }
+      const data = await resp.json();
+      // eslint-disable-next-line no-console
+      console.log("[ProMatch] Reverse geocoding response:", data);
+
+      const address: Record<string, string | undefined> = data?.address || {};
+      const country = address.country || "";
+      const province = address.state || ""; // Province from state
+      const district = (address.county || "").replace(/District/i, "").trim();
+      const street = address.road || "";
+
+      if (country) {
+        setForm((prev) => ({
+          ...prev,
+          location: { ...(prev.location || {}), country },
+        }));
+        // eslint-disable-next-line no-console
+        console.log("[ProMatch] Populated country:", country);
+      }
+      if (province) {
+        setForm((prev) => ({
+          ...prev,
+          location: { ...(prev.location || {}), province },
+        }));
+        // eslint-disable-next-line no-console
+        console.log("[ProMatch] Populated province (state):", province);
+      }
+      if (district) {
+        setForm((prev) => ({
+          ...prev,
+          location: { ...(prev.location || {}), district },
+        }));
+        // eslint-disable-next-line no-console
+        console.log("[ProMatch] Populated district/city:", district);
+      }
+      if (street) {
+        setForm((prev) => ({
+          ...prev,
+          location: { ...(prev.location || {}), street },
+        }));
+        // eslint-disable-next-line no-console
+        console.log("[ProMatch] Populated street (road):", street);
+      }
+      // Explicit logs for lat/lng already set earlier
+      // eslint-disable-next-line no-console
+      console.log(
+        "[ProMatch] Confirm lat/lng populated:",
+        latitude.toFixed(6),
+        longitude.toFixed(6)
+      );
+    } catch (err: unknown) {
+      let message = "Failed to get your location.";
+      if (
+        typeof window !== "undefined" &&
+        "GeolocationPositionError" in window
+      ) {
+        // no-op, type guard for older TS targets
+      }
+      if (err && typeof err === "object" && "code" in (err as any)) {
+        const e = err as GeolocationPositionError;
+        if (e.code === e.PERMISSION_DENIED) {
+          message =
+            "Permission denied. Please allow location access and try again.";
+        } else if (e.code === e.POSITION_UNAVAILABLE) {
+          message =
+            "Location information is unavailable. Check your network or GPS.";
+        } else if (e.code === e.TIMEOUT) {
+          message =
+            "Location request timed out. Try again from an area with better signal.";
+        } else {
+          message = e.message || message;
+        }
+      } else if (err instanceof Error) {
+        message = err.message || message;
+      }
+      setLocateError(message);
+      // eslint-disable-next-line no-console
+      console.log("[ProMatch] Locate Me error:", err);
+    } finally {
+      setLocating(false);
+      // eslint-disable-next-line no-console
+      console.log("[ProMatch] Geolocation flow finished");
+    }
+  };
 
   const handleSubmit = async () => {
     setSubmitting(true);
@@ -374,104 +512,153 @@ export default function ProMatchPage() {
             <h2 className="text-xl font-semibold mb-4">
               Where is the job located?
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <input
-                type="text"
-                placeholder="Street (optional)"
-                value={form.location?.street || ""}
-                onChange={(e) =>
-                  setForm((p) => ({
-                    ...p,
-                    location: { ...(p.location || {}), street: e.target.value },
-                  }))
-                }
-                className="px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
-              />
-              <input
-                type="text"
-                placeholder="District (optional)"
-                value={form.location?.district || ""}
-                onChange={(e) =>
-                  setForm((p) => ({
-                    ...p,
-                    location: {
-                      ...(p.location || {}),
-                      district: e.target.value,
-                    },
-                  }))
-                }
-                className="px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
-              />
-              <input
-                type="text"
-                placeholder="Province (optional)"
-                value={form.location?.province || ""}
-                onChange={(e) =>
-                  setForm((p) => ({
-                    ...p,
-                    location: {
-                      ...(p.location || {}),
-                      province: e.target.value,
-                    },
-                  }))
-                }
-                className="px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
-              />
-              <input
-                type="text"
-                placeholder="Country (optional)"
-                value={form.location?.country || ""}
-                onChange={(e) =>
-                  setForm((p) => ({
-                    ...p,
-                    location: {
-                      ...(p.location || {}),
-                      country: e.target.value,
-                    },
-                  }))
-                }
-                className="px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
-              />
-              <input
-                type="number"
-                step="any"
-                placeholder="Latitude (optional)"
-                value={
-                  typeof form.location?.lat === "number"
-                    ? String(form.location?.lat)
-                    : ""
-                }
-                onChange={(e) =>
-                  setForm((p) => ({
-                    ...p,
-                    location: {
-                      ...(p.location || {}),
-                      lat: e.target.value ? Number(e.target.value) : undefined,
-                    },
-                  }))
-                }
-                className="px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
-              />
-              <input
-                type="number"
-                step="any"
-                placeholder="Longitude (optional)"
-                value={
-                  typeof form.location?.lng === "number"
-                    ? String(form.location?.lng)
-                    : ""
-                }
-                onChange={(e) =>
-                  setForm((p) => ({
-                    ...p,
-                    location: {
-                      ...(p.location || {}),
-                      lng: e.target.value ? Number(e.target.value) : undefined,
-                    },
-                  }))
-                }
-                className="px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
-              />
+            <div className="mb-3 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+              <p className="text-sm text-gray-600">
+                Provide an address or let us detect your location.
+              </p>
+              <button
+                type="button"
+                onClick={handleLocateMe}
+                disabled={locating}
+                className="w-full sm:w-auto inline-flex items-center justify-center sm:justify-start px-4 py-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-semibold transition disabled:opacity-60"
+              >
+                {locating ? (
+                  <span className="mr-2 inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    className="w-4 h-4 mr-2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 6v6l4 2m4-2a8 8 0 11-16 0 8 8 0 0116 0z"
+                    />
+                  </svg>
+                )}
+                {locating ? "Locating..." : "Locate Me"}
+              </button>
+            </div>
+            {locateError && (
+              <div className="mb-3 p-3 rounded-md bg-amber-50 text-amber-800 border border-amber-200 text-sm">
+                {locateError}
+              </div>
+            )}
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <input
+                  type="text"
+                  placeholder="Street (optional)"
+                  value={form.location?.street || ""}
+                  onChange={(e) =>
+                    setForm((p) => ({
+                      ...p,
+                      location: {
+                        ...(p.location || {}),
+                        street: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                />
+                <input
+                  type="text"
+                  placeholder="District (optional)"
+                  value={form.location?.district || ""}
+                  onChange={(e) =>
+                    setForm((p) => ({
+                      ...p,
+                      location: {
+                        ...(p.location || {}),
+                        district: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                />
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <input
+                  type="text"
+                  placeholder="Province (optional)"
+                  value={form.location?.province || ""}
+                  onChange={(e) =>
+                    setForm((p) => ({
+                      ...p,
+                      location: {
+                        ...(p.location || {}),
+                        province: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                />
+                <input
+                  type="text"
+                  placeholder="Country (optional)"
+                  value={form.location?.country || ""}
+                  onChange={(e) =>
+                    setForm((p) => ({
+                      ...p,
+                      location: {
+                        ...(p.location || {}),
+                        country: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                />
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <input
+                  type="number"
+                  step="any"
+                  placeholder="Latitude (optional)"
+                  value={
+                    typeof form.location?.lat === "number"
+                      ? String(form.location?.lat)
+                      : ""
+                  }
+                  onChange={(e) =>
+                    setForm((p) => ({
+                      ...p,
+                      location: {
+                        ...(p.location || {}),
+                        lat: e.target.value
+                          ? Number(e.target.value)
+                          : undefined,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                />
+                <input
+                  type="number"
+                  step="any"
+                  placeholder="Longitude (optional)"
+                  value={
+                    typeof form.location?.lng === "number"
+                      ? String(form.location?.lng)
+                      : ""
+                  }
+                  onChange={(e) =>
+                    setForm((p) => ({
+                      ...p,
+                      location: {
+                        ...(p.location || {}),
+                        lng: e.target.value
+                          ? Number(e.target.value)
+                          : undefined,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                />
+              </div>
             </div>
           </div>
         )}
@@ -609,11 +796,11 @@ export default function ProMatchPage() {
                 No matches found for your criteria.
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[60vh] overflow-auto pr-1">
+              <div className="flex flex-col gap-4 max-h-[60vh] overflow-auto pr-1">
                 {results.map((item) => (
                   <div
                     key={item.userId}
-                    className="border rounded-lg p-4 bg-white"
+                    className="border rounded-lg p-4 bg-white w-full max-w-2xl mx-auto"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -622,10 +809,10 @@ export default function ProMatchPage() {
                           <img
                             src={item.profilePic}
                             alt={item.name}
-                            className="w-10 h-10 rounded-full object-cover border border-gray-200"
+                            className="w-16 h-16 rounded-full object-cover border border-gray-200"
                           />
                         ) : (
-                          <div className="w-10 h-10 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-semibold border border-amber-200">
+                          <div className="w-16 h-16 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-semibold border border-amber-200 text-lg">
                             {String(item.name || "")
                               .split(" ")
                               .filter(Boolean)
