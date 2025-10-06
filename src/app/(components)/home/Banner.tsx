@@ -36,15 +36,15 @@ export const Banner: React.FC = () => {
       )}
 
       {/* Content */}
-      <div className="relative h-full flex items-center justify-center text-start">
-        <div className="max-w-7xl flex flex-col justify-start">
+      <div className="relative h-full flex items-center justify-center text-start px-5 h-full">
+        <div className="max-w-7xl flex flex-col justify-start p-5">
           {currentSlideData?.subtitleKey && (
             <span className="text-yellow-500 text-xl font-semibold mb-2 block">
               {t(currentSlideData.subtitleKey)}
             </span>
           )}
           {currentSlideData?.titleKey && (
-            <h2 className="text-green-500 text-7xl font-bold mb-4">
+            <h2 className="text-green-500 text-7xl font-bold mb-4 px-5">
               {t(currentSlideData.titleKey)}
             </h2>
           )}

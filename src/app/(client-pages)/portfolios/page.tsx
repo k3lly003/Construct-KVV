@@ -306,7 +306,7 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="flex space-x-3">
-                    <Button variant="outline" className="flex items-center space-x-2" onClick={() => router.push(`/proj/${p.id}`)}>
+                    <Button variant="outline" className="flex items-center space-x-2" onClick={() => router.push(`/portfolios/${p.id}`)}>
                       <span>View Details</span>
                     </Button>
                   </div>

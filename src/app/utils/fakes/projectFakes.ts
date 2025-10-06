@@ -16,18 +16,21 @@ export const projectItems = [
     titleKey: "ProjectShowcase.seller.title",
     descriptionKey: "ProjectShowcase.seller.description",
     buttonKey: "ProjectShowcase.seller.button",
+    link: "/register/supplier",
   },
   {
     image: architectImg,
     titleKey: "ProjectShowcase.architect.title",
     descriptionKey: "ProjectShowcase.architect.description",
     buttonKey: "ProjectShowcase.architect.button",
+    link: "/register/architect",
   },
   {
     image: customerImg,
     titleKey: "ProjectShowcase.customer.title",
     descriptionKey: "ProjectShowcase.customer.description",
     buttonKey: "ProjectShowcase.customer.button",
+    link: "/register/technician",
   },
 ];
 

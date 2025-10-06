@@ -193,25 +193,9 @@ export default function ArchitectRegistration() {
   };
 
   if (isSubmitted) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md mx-auto text-center">
-          <CardContent className="pt-6">
-            <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">
-              Registration Complete!
-            </h2>
-            <p className="text-slate-600 mb-6">
-              Thank you for registering as an Architect! Your application has been submitted successfully.
-              We&apos;ll review your information and get back to you soon. Please wait for a moment to be approved and log in later.
-            </p>
-            <Button onClick={() => router.push("/")} className="w-full">
-              Return Home
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
+    // Redirect to OTP verification page instead of showing completion message
+    router.push('/auth-verification');
+    return null;
   }
 
   return (

@@ -100,27 +100,33 @@ const EditProfileDialog = ({ isOpen, onClose, userData }: EditProfileDialogProps
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Profile Picture Section */}
           <div className="flex flex-col items-center space-y-4">
-            <div className="relative group">
-              <Avatar className="h-24 w-24 cursor-pointer" onClick={handleAvatarClick}>
-                {previewUrl ? (
-                  <AvatarImage src={previewUrl} alt="Profile" />
-                ) : (
-                  <AvatarFallback>{getInitials(formData.firstName + ' ' + formData.lastName)}</AvatarFallback>
-                )}
-              </Avatar>
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                <Camera className="h-6 w-6 text-white" />
-              </div>
+          <label htmlFor="profilePic" className="relative group cursor-pointer">
+            <Avatar className="h-24 w-24">
+              {previewUrl ? (
+                <AvatarImage src={previewUrl} alt="Profile" />
+              ) : (
+                <AvatarFallback>
+                  {getInitials(formData.firstName + ' ' + formData.lastName)}
+                </AvatarFallback>
+              )}
+            </Avatar>
+            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+              <Camera className="h-6 w-6 text-white" />
             </div>
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              accept="image/*"
-              className="hidden"
-            />
-            <p className="text-sm text-gray-500">Click to change profile picture</p>
-          </div>
+          </label>
+          
+          <input
+            type="file"
+            id="profilePic"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            accept="image/*"
+            className="sr-only"
+          />
+          
+          <p className="text-sm text-gray-500">Click to change profile picture</p>
+        </div>
+          {/* </div> */}
 
           <div className="space-y-2">
             <Label htmlFor="firstName">First Name</Label>

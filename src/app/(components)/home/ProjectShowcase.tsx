@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { projectItems } from "@/app/utils/fakes/projectFakes";
 import { useTranslation } from "react-i18next";
+import Link from "next/link";
 
 
 export const ProjectShowcase: React.FC = () => {
@@ -11,7 +12,7 @@ export const ProjectShowcase: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="py-20 bg-gradient-to-b from-slate-50 to-white w-full">
+    <div className="py-20 bg-gradient-to-b from-slate-50 to-white w-full border">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-4xl font-bold text-black mb-4 text-center">
           {t("ProjectShowcase.title")}
@@ -49,11 +50,10 @@ export const ProjectShowcase: React.FC = () => {
               <div
                 className={`absolute inset-0 p-8 flex flex-col justify-end
                 transition-all duration-500 transform
-                ${
-                  activeIndex === index
+                ${activeIndex === index
                     ? "translate-y-0 opacity-100"
                     : "translate-y-8 opacity-0"
-                }`}
+                  }`}
               >
                 <div className="relative">
                   {/* Line animation */}
@@ -69,10 +69,12 @@ export const ProjectShowcase: React.FC = () => {
                     {t(item.descriptionKey)}
                   </p>
                   {/* <Link></Link> */}
-                  <button className="text-white flex items-center group/btn">
-                    <span className="mr-2">{t(item.buttonKey)}</span>
-                    <ArrowRight className="h-4 w-4 transform transition-transform group-hover/btn:translate-x-1" />
-                  </button>
+                  <Link href={item.link}>
+                    <button className="text-white flex items-center group/btn">
+                      <span className="mr-2">{t(item.buttonKey)}</span>
+                      <ArrowRight className="h-4 w-4 transform transition-transform group-hover/btn:translate-x-1" />
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>

@@ -186,17 +186,17 @@
     "seller": {
       "title": "Seller / Shop",
       "description": "If you have a store looking forward to sell your products navigate here.",
-      "button": "View Seller"
+      "button": "Register Here"
     },
     "architect": {
       "title": "Architecture / Designer",
       "description": "Are you an architecture or an interior designer? Click here.",
-      "button": "View Architect"
+      "button": "Register Here"
     },
     "customer": {
-      "title": "Customer",
-      "description": "Looking for a construction product or services?",
-      "button": "View Customer"
+      "title": "technician",
+      "description": "A technician who's ready to tackle your technical challenges?",
+      "button": "Register Here"
     }
   },
   "products": {
