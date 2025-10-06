@@ -16,10 +16,11 @@ import {
   Layers,
   CalendarDays,
   MailPlus,
-
   HandHelping, // New icon for Sales Report
   Building, // New icon for Construction Projects
-
+  ChartCandlestick, // Icon for Design Marketplace
+  BriefcaseBusiness, // Icon for Projects
+  Presentation, // Icon for Portfolio
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

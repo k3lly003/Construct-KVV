@@ -253,7 +253,7 @@ const DesignDetails: React.FC<{ params: Promise<{ designId: string }> }> = ({ pa
               <p className="font-medium">Error loading design</p>
               <p className="text-sm">{error || 'Design not found'}</p>
               <div className="mt-4 flex gap-2 justify-center">
-                <Button onClick={fetchDesignDetails} variant="outline">
+                <Button onClick={() => designId && fetchDesignDetails(designId)} variant="outline">
                   Try Again
                 </Button>
                 <Button onClick={() => router.push('/design-marketplace')} variant="outline">
