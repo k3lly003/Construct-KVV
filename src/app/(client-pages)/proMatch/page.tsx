@@ -68,6 +68,10 @@ interface MatchResultItem {
   totalReviews?: number | null;
   experience?: number | null;
   isActive?: boolean | null;
+  architectId?: string | null;
+  contractorId?: string | null;
+  technicianId?: string | null;
+  sellerId?: string | null;
 }
 
 const DESIGN_TYPES: DesignRequestType[] = [
@@ -116,6 +120,17 @@ export default function ProMatchPage() {
   );
   const [locating, setLocating] = React.useState(false);
   const [locateError, setLocateError] = React.useState<string | null>(null);
+  const [selectedPro, setSelectedPro] = React.useState<MatchResultItem | null>(
+    null
+  );
+  const [portfolio, setPortfolio] = React.useState<any | null>(null);
+  const [portfolioLoading, setPortfolioLoading] = React.useState(false);
+  const [portfolioError, setPortfolioError] = React.useState<string | null>(
+    null
+  );
+  const [previewOpen, setPreviewOpen] = React.useState(false);
+  const [previewImages, setPreviewImages] = React.useState<string[]>([]);
+  const [previewIndex, setPreviewIndex] = React.useState(0);
 
   const [form, setForm] = React.useState<MatchRequestBodyBase>({
     role: "Any",
@@ -280,6 +295,93 @@ export default function ProMatchPage() {
     }
   };
 
+  const openProDetails = async (pro: MatchResultItem) => {
+    setSelectedPro(pro);
+    setPortfolio(null);
+    setPortfolioError(null);
+    setPortfolioLoading(true);
+    // eslint-disable-next-line no-console
+    console.log("[ProMatch] Opening details for:", pro);
+    try {
+      const archId = pro.architectId || null;
+      const contId = pro.contractorId || null;
+      const roleLower = (pro.role || "").toLowerCase();
+      // eslint-disable-next-line no-console
+      console.log(
+        "[ProMatch] Preparing to fetch portfolio (by role-specific IDs):",
+        {
+          architectId: archId,
+          contractorId: contId,
+          technicianId: pro.technicianId || null,
+          sellerId: pro.sellerId || null,
+          role: pro.role,
+        }
+      );
+      let endpoint = "";
+      if (archId && roleLower.includes("architect")) {
+        endpoint = `${API_URL}/api/v1/portfolio/public/architect/${encodeURIComponent(
+          archId
+        )}`;
+        // eslint-disable-next-line no-console
+        console.log(
+          "[ProMatch] Role detected: architect. Using architect endpoint."
+        );
+      } else if (contId && roleLower.includes("contractor")) {
+        endpoint = `${API_URL}/api/v1/portfolio/public/contractor/${encodeURIComponent(
+          contId
+        )}`;
+        // eslint-disable-next-line no-console
+        console.log(
+          "[ProMatch] Role detected: contractor. Using contractor endpoint."
+        );
+      } else {
+        // eslint-disable-next-line no-console
+        console.log(
+          "[ProMatch] Missing architectId/contractorId or unsupported role; skipping portfolio fetch"
+        );
+        setPortfolioLoading(false);
+        return;
+      }
+      // eslint-disable-next-line no-console
+      console.log("[ProMatch] Fetching portfolio:", endpoint);
+      const res = await fetch(endpoint, {
+        headers: { accept: "application/json" },
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || `Failed to fetch portfolio (${res.status})`);
+      }
+      const data = await res.json();
+      // eslint-disable-next-line no-console
+      console.log("[ProMatch] Portfolio response:", data);
+      setPortfolio(data);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Unknown portfolio error";
+      setPortfolioError(msg);
+      // eslint-disable-next-line no-console
+      console.log("[ProMatch] Portfolio error:", e);
+    } finally {
+      setPortfolioLoading(false);
+    }
+  };
+
+  const openImagePreview = (images: string[], index: number) => {
+    if (!Array.isArray(images) || images.length === 0) return;
+    setPreviewImages(images);
+    setPreviewIndex(Math.max(0, Math.min(index, images.length - 1)));
+    setPreviewOpen(true);
+  };
+
+  const goPrevImage = () => {
+    setPreviewIndex(
+      (i) => (i - 1 + previewImages.length) % previewImages.length
+    );
+  };
+
+  const goNextImage = () => {
+    setPreviewIndex((i) => (i + 1) % previewImages.length);
+  };
+
   const handleSubmit = async () => {
     setSubmitting(true);
     setApiError(null);
@@ -386,6 +488,10 @@ export default function ProMatchPage() {
                 : typeof r.user?.isActive === "boolean"
                 ? r.user.isActive
                 : null,
+            architectId: r.architectId ?? r.user?.architectId ?? null,
+            contractorId: r.contractorId ?? r.user?.contractorId ?? null,
+            technicianId: r.technicianId ?? r.user?.technicianId ?? null,
+            sellerId: r.sellerId ?? r.user?.sellerId ?? null,
           }))
         : [];
       setResults(normalized);
@@ -800,7 +906,15 @@ export default function ProMatchPage() {
                 {results.map((item) => (
                   <div
                     key={item.userId}
-                    className="border rounded-lg p-4 bg-white w-full max-w-2xl mx-auto"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => openProDetails(item)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        openProDetails(item);
+                      }
+                    }}
+                    className="border rounded-lg p-4 bg-white w-full max-w-2xl mx-auto cursor-pointer hover:shadow-md transition"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -866,6 +980,315 @@ export default function ProMatchPage() {
                 ))}
               </div>
             )}
+          </div>
+        </div>
+      )}
+      {selectedPro && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 px-4"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="w-full max-w-[900px] h-[85vh] bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col">
+            <div className="relative">
+              <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white px-6 py-4">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className="text-xl font-semibold">
+                      Professional Details
+                    </h3>
+                    <p className="text-sm text-amber-100">
+                      {(selectedPro.role || "").toString()}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedPro(null)}
+                    className="ml-4 inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/20 hover:bg-white/30"
+                    aria-label="Close"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      className="w-5 h-5 text-white"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="flex-1 overflow-auto p-6">
+              <div className="flex flex-col md:flex-row gap-6">
+                <div className="flex items-start gap-4">
+                  {selectedPro.profilePic ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={selectedPro.profilePic}
+                      alt={selectedPro.name}
+                      className="w-20 h-20 rounded-full object-cover border border-gray-200"
+                    />
+                  ) : (
+                    <div className="w-20 h-20 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-semibold border border-amber-200 text-xl">
+                      {String(selectedPro.name || "")
+                        .split(" ")
+                        .filter(Boolean)
+                        .slice(0, 2)
+                        .map((s) => s.charAt(0).toUpperCase())
+                        .join("") || "--"}
+                    </div>
+                  )}
+                  <div>
+                    <div className="text-lg font-semibold text-amber-900">
+                      {selectedPro.name}
+                    </div>
+                    <div className="text-sm text-gray-700">
+                      {selectedPro.email}
+                    </div>
+                    {selectedPro.phone ? (
+                      <div className="text-sm text-gray-700">
+                        {selectedPro.phone}
+                      </div>
+                    ) : null}
+                    {typeof selectedPro.avgRating === "number" ||
+                    typeof selectedPro.totalReviews === "number" ? (
+                      <div className="text-xs text-gray-600 mt-1">
+                        Rating: {selectedPro.avgRating ?? "-"} (
+                        {selectedPro.totalReviews ?? 0} reviews)
+                      </div>
+                    ) : null}
+                    <div className="mt-3 flex gap-3">
+                      {selectedPro.email ? (
+                        <a
+                          href={`mailto:${selectedPro.email}`}
+                          className="inline-flex items-center px-3 py-1.5 rounded-md bg-amber-500 hover:bg-amber-600 text-white text-sm"
+                        >
+                          Contact Email
+                        </a>
+                      ) : null}
+                      {selectedPro.phone ? (
+                        <a
+                          href={`tel:${selectedPro.phone}`}
+                          className="inline-flex items-center px-3 py-1.5 rounded-md bg-amber-500 hover:bg-amber-600 text-white text-sm"
+                        >
+                          Call
+                        </a>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3 text-sm md:flex-1">
+                  {typeof selectedPro.experience === "number" ? (
+                    <div className="p-3 rounded-lg border bg-gray-50">
+                      <div className="text-gray-500">Experience</div>
+                      <div className="font-medium">
+                        {selectedPro.experience} years
+                      </div>
+                    </div>
+                  ) : null}
+                  {selectedPro.businessName ? (
+                    <div className="p-3 rounded-lg border bg-gray-50">
+                      <div className="text-gray-500">Business Name</div>
+                      <div className="font-medium">
+                        {selectedPro.businessName}
+                      </div>
+                    </div>
+                  ) : null}
+                  {/* Placeholder for license/address if provided in future API expansion */}
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-lg font-semibold text-amber-900">
+                    Portfolio
+                  </h4>
+                  {portfolioLoading ? (
+                    <span className="inline-flex items-center text-sm text-gray-600">
+                      <span className="mr-2 inline-block w-4 h-4 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
+                      Loading...
+                    </span>
+                  ) : null}
+                </div>
+                {portfolioError ? (
+                  <div className="p-3 rounded-md bg-amber-50 text-amber-800 border border-amber-200 text-sm">
+                    {portfolioError}
+                  </div>
+                ) : null}
+                {!portfolioLoading && !portfolioError ? (
+                  <div>
+                    {Array.isArray(portfolio?.data) &&
+                    portfolio.data.length > 0 ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {portfolio.data.map((proj: any, idx: number) => (
+                          <div
+                            key={idx}
+                            className="border rounded-lg overflow-hidden shadow-sm"
+                          >
+                            <div className="bg-gradient-to-r from-amber-50 to-amber-100 px-4 py-3">
+                              <div className="font-semibold text-amber-900">
+                                {proj.title || "Untitled Project"}
+                              </div>
+                              {proj.category ? (
+                                <div className="text-xs text-amber-700">
+                                  {proj.category}
+                                </div>
+                              ) : null}
+                            </div>
+                            <div className="p-4 space-y-2 text-sm">
+                              {proj.description ? (
+                                <p className="text-gray-700">
+                                  {proj.description}
+                                </p>
+                              ) : null}
+                              <div className="grid grid-cols-2 gap-2">
+                                {proj.workDate ? (
+                                  <div className="text-gray-600">
+                                    <span className="text-gray-500">
+                                      Work Date:
+                                    </span>{" "}
+                                    {proj.workDate}
+                                  </div>
+                                ) : null}
+                                {proj.location ? (
+                                  <div className="text-gray-600">
+                                    <span className="text-gray-500">
+                                      Location:
+                                    </span>{" "}
+                                    {proj.location}
+                                  </div>
+                                ) : null}
+                                {proj.budget ? (
+                                  <div className="text-gray-600">
+                                    <span className="text-gray-500">
+                                      Budget:
+                                    </span>{" "}
+                                    {proj.budget}
+                                  </div>
+                                ) : null}
+                                {proj.duration ? (
+                                  <div className="text-gray-600">
+                                    <span className="text-gray-500">
+                                      Duration:
+                                    </span>{" "}
+                                    {proj.duration}
+                                  </div>
+                                ) : null}
+                              </div>
+                              {Array.isArray(proj.skills) &&
+                              proj.skills.length > 0 ? (
+                                <div className="flex flex-wrap gap-2 mt-1">
+                                  {proj.skills.map((s: string, i: number) => (
+                                    <span
+                                      key={i}
+                                      className="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 border border-amber-200"
+                                    >
+                                      {s}
+                                    </span>
+                                  ))}
+                                </div>
+                              ) : null}
+                              {proj.clientFeedback ? (
+                                <div className="mt-2 p-2 rounded-md bg-gray-50 border text-gray-700">
+                                  <div className="text-xs text-gray-500 mb-1">
+                                    Client Feedback
+                                  </div>
+                                  <div>{proj.clientFeedback}</div>
+                                </div>
+                              ) : null}
+                              {Array.isArray(proj.images) &&
+                              proj.images.length > 0 ? (
+                                <div className="mt-3 grid grid-cols-3 gap-2">
+                                  {proj.images.map((img: string, i: number) => (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img
+                                      key={i}
+                                      src={img}
+                                      alt={`Portfolio image ${i + 1}`}
+                                      className="w-full h-24 object-cover rounded cursor-zoom-in hover:opacity-90"
+                                      onClick={() =>
+                                        openImagePreview(proj.images, i)
+                                      }
+                                    />
+                                  ))}
+                                </div>
+                              ) : null}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-gray-600">
+                        No portfolio available.
+                      </div>
+                    )}
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {previewOpen && (
+        <div
+          className="fixed inset-0 z-[70] bg-black/80 flex items-center justify-center px-4"
+          role="dialog"
+          aria-modal="true"
+        >
+          <button
+            type="button"
+            aria-label="Close preview"
+            onClick={() => setPreviewOpen(false)}
+            className="absolute top-4 right-4 inline-flex items-center justify-center w-10 h-10 rounded-full bg-amber-600 hover:bg-amber-700 text-white"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+          <div className="relative w-full max-w-4xl max-h-[85vh] flex items-center justify-center">
+            <button
+              type="button"
+              aria-label="Previous image"
+              onClick={goPrevImage}
+              className="absolute left-0 md:-left-12 top-1/2 -translate-y-1/2 px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 text-white"
+            >
+              ‹
+            </button>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={previewImages[previewIndex]}
+              alt={`Preview ${previewIndex + 1}`}
+              className="max-w-full max-h-[85vh] object-contain rounded-md shadow-2xl"
+            />
+            <button
+              type="button"
+              aria-label="Next image"
+              onClick={goNextImage}
+              className="absolute right-0 md:-right-12 top-1/2 -translate-y-1/2 px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 text-white"
+            >
+              ›
+            </button>
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-white bg-black/40 px-2 py-1 rounded">
+              {previewIndex + 1} / {previewImages.length}
+            </div>
           </div>
         </div>
       )}
