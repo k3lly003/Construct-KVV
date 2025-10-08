@@ -232,7 +232,7 @@ const Page = () => {
               {t('dashboard.addService')}
             </GenericButton>
           </Link>
-          <Link href="/dashboard/products/create">
+          <Link href="/dashboard/my-store/create">
             <GenericButton className="gap-2">
               <Plus className="h-4 w-4" />
               {t('dashboard.addProduct')}
