@@ -1,34 +1,41 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { useFloorplanProject } from '@/app/hooks/useFloorplanProject';
-import { ProjectDetails } from '@/app/services/floorplanProjectService';
-import { useUserStore } from '@/store/userStore';
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import {
-  Building, 
-  Calendar, 
-  DollarSign, 
-  Clock, 
-  Users, 
-  FileText, 
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { useFloorplanProject } from "@/app/hooks/useFloorplanProject";
+import { ProjectDetails } from "@/app/services/floorplanProjectService";
+import { useUserStore } from "@/store/userStore";
+import {
+  Building,
+  Calendar,
+  DollarSign,
+  Clock,
+  Users,
+  FileText,
   Sparkles,
   ArrowLeft,
   ToggleLeft,
-  ToggleRight
-} from 'lucide-react';
-import { toast } from 'sonner';
-import Head from 'next/head';
+  ToggleRight,
+} from "lucide-react";
+import { toast } from "sonner";
+import Head from "next/head";
 
 export default function ProjectDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const { role } = useUserStore();
-  const { getProjectById, updateProjectStatus, loading } = useFloorplanProject();
-  
+  const { getProjectById, updateProjectStatus, loading } =
+    useFloorplanProject();
+
   const [project, setProject] = useState<ProjectDetails | null>(null);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
@@ -38,18 +45,18 @@ export default function ProjectDetailsPage() {
     const loadProject = async () => {
       try {
         const projectData = await getProjectById(projectId);
-        console.log('🔍 Full project response:', projectData);
-        console.log('📊 Analysis data:', {
+        console.log("🔍 Full project response:", projectData);
+        console.log("📊 Analysis data:", {
           partialSummaries: projectData.partialSummaries,
           summary: projectData.summary,
           text: projectData.text,
-          estimationSource: projectData.estimationSource
+          estimationSource: projectData.estimationSource,
         });
         setProject(projectData);
       } catch (err) {
-        console.error('Failed to load project:', err);
-        toast.error('Failed to load project details');
-        router.push('/projects');
+        console.error("Failed to load project:", err);
+        toast.error("Failed to load project details");
+        router.push("/projects");
       }
     };
 
@@ -58,7 +65,9 @@ export default function ProjectDetailsPage() {
     }
   }, [projectId, getProjectById, router]);
 
-  const handleStatusUpdate = async (newStatus: "DRAFT" | "OPEN" | "CLOSED" | "COMPLETED") => {
+  const handleStatusUpdate = async (
+    newStatus: "DRAFT" | "OPEN" | "CLOSED" | "COMPLETED"
+  ) => {
     if (!project) return;
 
     setIsUpdatingStatus(true);
@@ -67,17 +76,17 @@ export default function ProjectDetailsPage() {
       setProject({ ...project, status: newStatus });
       toast.success(`Project status updated to ${newStatus} successfully!`);
     } catch (err) {
-      console.error('Failed to update project status:', err);
-      toast.error('Failed to update project status');
+      console.error("Failed to update project status:", err);
+      toast.error("Failed to update project status");
     } finally {
       setIsUpdatingStatus(false);
     }
   };
 
-  const formatCurrency = (amount?: number, currency = 'RWF') => {
-    if (!amount) return 'Not specified';
-    return new Intl.NumberFormat('en-RW', {
-      style: 'currency',
+  const formatCurrency = (amount?: number, currency = "RWF") => {
+    if (!amount) return "Not specified";
+    return new Intl.NumberFormat("en-RW", {
+      style: "currency",
       currency: currency,
       minimumFractionDigits: 0,
     }).format(amount);
@@ -85,11 +94,16 @@ export default function ProjectDetailsPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'DRAFT': return 'bg-gray-100 text-gray-800';
-      case 'OPEN': return 'bg-green-100 text-green-800';
-      case 'CLOSED': return 'bg-yellow-100 text-yellow-800';
-      case 'COMPLETED': return 'bg-blue-100 text-blue-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "DRAFT":
+        return "bg-gray-100 text-gray-800";
+      case "OPEN":
+        return "bg-green-100 text-green-800";
+      case "CLOSED":
+        return "bg-yellow-100 text-yellow-800";
+      case "COMPLETED":
+        return "bg-blue-100 text-blue-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -102,9 +116,9 @@ export default function ProjectDetailsPage() {
               <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900 mx-auto"></div>
               <p className="mt-4 text-gray-600">Loading project details...</p>
             </div>
-            </div>
           </div>
         </div>
+      </div>
     );
   }
 
@@ -113,58 +127,68 @@ export default function ProjectDetailsPage() {
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 py-8">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Project Not Found</h1>
-            <p className="text-gray-600 mb-4">The project you're looking for doesn't exist or has been removed.</p>
-            <Button onClick={() => router.push('/projects')}>
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+              Project Not Found
+            </h1>
+            <p className="text-gray-600 mb-4">
+              The project you're looking for doesn't exist or has been removed.
+            </p>
+            <Button onClick={() => router.push("/projects")}>
               Back to Projects
             </Button>
           </div>
-          </div>
         </div>
+      </div>
     );
   }
 
   // Filter out empty AI partial summaries so we only render meaningful content
-  const nonEmptySummaries = project?.partialSummaries?.filter((s) => typeof s === 'string' && s.trim().length > 0) || [];
+  const nonEmptySummaries =
+    project?.partialSummaries?.filter(
+      (s) => typeof s === "string" && s.trim().length > 0
+    ) || [];
 
   return (
     <div className="min-h-screen bg-gray-50">
-        <Head>
+      <Head>
         <title>Project Details | Construct KVV</title>
-        <meta name="description" content="View detailed information about your construction project" />
-        </Head>
+        <meta
+          name="description"
+          content="View detailed information about your construction project"
+        />
+      </Head>
 
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
           <Button
-              variant="outline"
-            onClick={() => router.push('/projects')}
+            variant="outline"
+            onClick={() => router.push("/projects")}
             className="mb-4"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Projects
           </Button>
-          
+
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
                 Project #{project.id.slice(-8)}
-                  </h1>
+              </h1>
               <div className="flex items-center gap-3">
                 <Badge className="bg-blue-100 text-blue-800">
                   AI Generated
                 </Badge>
                 <Badge className={getStatusColor(project.status)}>
                   {project.status}
-                    </Badge>
+                </Badge>
                 <span className="text-sm text-gray-500">
                   Created {new Date(project.createdAt).toLocaleDateString()}
                 </span>
-                  </div>
-                </div>
-            {role !== "CONTRACTOR" && (
-              <div className="flex items-center gap-2">
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {role !== "CONTRACTOR" && (
                 <Button
                   variant="outline"
                   className="border-amber-400 text-amber-700 hover:bg-amber-50"
@@ -172,10 +196,18 @@ export default function ProjectDetailsPage() {
                 >
                   View Bids
                 </Button>
-              </div>
-            )}
-                </div>
-              </div>
+              )}
+              <Button
+                className="bg-gradient-to-r from-amber-500 to-amber-600 text-white hover:from-amber-600 hover:to-amber-700"
+                onClick={() =>
+                  router.push(`/projects/${project.id}/management`)
+                }
+              >
+                Open Project Workspace
+              </Button>
+            </div>
+          </div>
+        </div>
 
         <div className="grid gap-6">
           {/* Project Overview */}
@@ -189,7 +221,9 @@ export default function ProjectDetailsPage() {
             <CardContent className="space-y-4">
               {project.summary && (
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">AI Summary</h4>
+                  <h4 className="font-semibold text-gray-900 mb-2">
+                    AI Summary
+                  </h4>
                   <p className="text-gray-600">{project.summary}</p>
                 </div>
               )}
@@ -200,9 +234,12 @@ export default function ProjectDetailsPage() {
                     <DollarSign className="h-8 w-8 text-green-600 mx-auto mb-2" />
                     <h4 className="font-semibold text-gray-900">Total Cost</h4>
                     <p className="text-lg font-bold text-green-600">
-                      {formatCurrency(project.totalEstimatedCost, project.currency)}
-                  </p>
-                </div>
+                      {formatCurrency(
+                        project.totalEstimatedCost,
+                        project.currency
+                      )}
+                    </p>
+                  </div>
                 )}
 
                 {project.estimatedDuration && (
@@ -212,7 +249,7 @@ export default function ProjectDetailsPage() {
                     <p className="text-lg font-bold text-blue-600">
                       {project.estimatedDuration} months
                     </p>
-                    </div>
+                  </div>
                 )}
 
                 {project.numberOfWorkers && (
@@ -226,10 +263,12 @@ export default function ProjectDetailsPage() {
                 )}
               </div>
             </CardContent>
-            </Card>
+          </Card>
 
           {/* Cost Breakdown */}
-          {(project.laborCost || project.materialCost || project.otherExpenses) && (
+          {(project.laborCost ||
+            project.materialCost ||
+            project.otherExpenses) && (
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -241,7 +280,9 @@ export default function ProjectDetailsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {project.laborCost && (
                     <div className="text-center">
-                      <h4 className="font-semibold text-gray-900">Labor Cost</h4>
+                      <h4 className="font-semibold text-gray-900">
+                        Labor Cost
+                      </h4>
                       <p className="text-lg font-bold text-blue-600">
                         {formatCurrency(project.laborCost, project.currency)}
                       </p>
@@ -249,21 +290,28 @@ export default function ProjectDetailsPage() {
                   )}
                   {project.materialCost && (
                     <div className="text-center">
-                      <h4 className="font-semibold text-gray-900">Material Cost</h4>
+                      <h4 className="font-semibold text-gray-900">
+                        Material Cost
+                      </h4>
                       <p className="text-lg font-bold text-green-600">
                         {formatCurrency(project.materialCost, project.currency)}
-                          </p>
-                        </div>
+                      </p>
+                    </div>
                   )}
                   {project.otherExpenses && (
                     <div className="text-center">
-                      <h4 className="font-semibold text-gray-900">Other Expenses</h4>
+                      <h4 className="font-semibold text-gray-900">
+                        Other Expenses
+                      </h4>
                       <p className="text-lg font-bold text-purple-600">
-                        {formatCurrency(project.otherExpenses, project.currency)}
-                          </p>
-                        </div>
+                        {formatCurrency(
+                          project.otherExpenses,
+                          project.currency
+                        )}
+                      </p>
+                    </div>
                   )}
-                      </div>
+                </div>
               </CardContent>
             </Card>
           )}
@@ -285,7 +333,7 @@ export default function ProjectDetailsPage() {
                   <pre className="text-sm text-gray-700 whitespace-pre-wrap">
                     {project.text}
                   </pre>
-                      </div>
+                </div>
               </CardContent>
             </Card>
           )}
@@ -308,7 +356,7 @@ export default function ProjectDetailsPage() {
                     <div key={index} className="bg-blue-50 p-4 rounded-lg">
                       <h4 className="font-semibold text-blue-900 mb-2">
                         Analysis Part {index + 1}
-                        </h4>
+                      </h4>
                       <p className="text-blue-800">{summary}</p>
                     </div>
                   ))}
@@ -333,30 +381,36 @@ export default function ProjectDetailsPage() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                     <div>
-                      <h4 className="font-semibold text-gray-900">Current Status</h4>
+                      <h4 className="font-semibold text-gray-900">
+                        Current Status
+                      </h4>
                       <p className="text-sm text-gray-600">
-                        {project.status === "DRAFT" && "Project is in draft mode - contractors cannot bid yet"}
-                        {project.status === "OPEN" && "Project is open for contractor bidding"}
-                        {project.status === "CLOSED" && "Bidding is closed - no new bids accepted"}
-                        {project.status === "COMPLETED" && "Project is completed"}
+                        {project.status === "DRAFT" &&
+                          "Project is in draft mode - contractors cannot bid yet"}
+                        {project.status === "OPEN" &&
+                          "Project is open for contractor bidding"}
+                        {project.status === "CLOSED" &&
+                          "Bidding is closed - no new bids accepted"}
+                        {project.status === "COMPLETED" &&
+                          "Project is completed"}
                       </p>
-          </div>
+                    </div>
                     <Badge className={getStatusColor(project.status)}>
                       {project.status}
-                  </Badge>
-                </div>
+                    </Badge>
+                  </div>
 
                   <div className="flex gap-3">
                     {project.status === "DRAFT" && (
                       <Button
                         onClick={() => handleStatusUpdate("OPEN")}
-                    disabled={isUpdatingStatus}
+                        disabled={isUpdatingStatus}
                         className="bg-green-600 hover:bg-green-700"
                       >
                         {isUpdatingStatus ? "Opening..." : "Open for Bidding"}
                       </Button>
                     )}
-                    
+
                     {project.status === "OPEN" && (
                       <Button
                         onClick={() => handleStatusUpdate("CLOSED")}
@@ -366,23 +420,28 @@ export default function ProjectDetailsPage() {
                         {isUpdatingStatus ? "Closing..." : "Close Bidding"}
                       </Button>
                     )}
-                    
+
                     {project.status === "CLOSED" && (
                       <Button
                         onClick={() => handleStatusUpdate("COMPLETED")}
                         disabled={isUpdatingStatus}
                         className="bg-blue-600 hover:bg-blue-700"
                       >
-                        {isUpdatingStatus ? "Completing..." : "Mark as Completed"}
+                        {isUpdatingStatus
+                          ? "Completing..."
+                          : "Mark as Completed"}
                       </Button>
                     )}
                   </div>
 
                   {project.status === "OPEN" && (
                     <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                      <h4 className="font-semibold text-green-900 mb-2">✅ Project is Open for Bidding</h4>
+                      <h4 className="font-semibold text-green-900 mb-2">
+                        ✅ Project is Open for Bidding
+                      </h4>
                       <p className="text-green-800 text-sm">
-                        Contractors can now place bids on your project. You'll receive notifications when new bids are submitted.
+                        Contractors can now place bids on your project. You'll
+                        receive notifications when new bids are submitted.
                       </p>
                     </div>
                   )}
@@ -390,8 +449,8 @@ export default function ProjectDetailsPage() {
               </CardContent>
             </Card>
           )}
-          </div>
         </div>
       </div>
+    </div>
   );
 }
