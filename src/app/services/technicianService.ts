@@ -123,6 +123,12 @@ export const technicianService = {
   async updateTechnicianStatus(id: string, status: TechnicianStatusUpdate): Promise<{ message: string; technician: Technician }> {
     const response = await axiosInstance.put<{ message: string; technician: Technician }>(`${API_BASE_URL}/api/v1/technicians/admin/${id}/status`, status)
     return response.data
+  },
+
+  // Get technician by ID
+  async getTechnicianById(id: string): Promise<Technician> {
+    const response = await axiosInstance.get<{ success: boolean; data: Technician }>(`${API_BASE_URL}/api/v1/technicians/${id}`)
+    return response.data.data
   }
 }
 

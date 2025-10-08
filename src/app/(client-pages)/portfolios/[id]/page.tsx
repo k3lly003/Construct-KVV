@@ -23,12 +23,15 @@ import {
   Eye,
   AlertCircle
 } from "lucide-react";
-import { useRequests } from '@/app/hooks/useRequests';
+import { useRequests } from '@/app/hooks/useRequestService';
 import { CreateServiceRequestData } from '@/app/services/requestService';
+import { useRequestDesign } from '@/app/hooks/useRequestDesign';
+import { CreateDesignRequestData } from '@/app/services/requestDesign';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { architectService, type Architect } from '@/app/services/architectService';
+import { technicianService, type Technician } from '@/app/services/technicianService';
 import { getInitials } from '@/lib/utils';
 
 export default function PortfolioDetailsPage() {
@@ -53,30 +56,57 @@ export default function PortfolioDetailsPage() {
   });
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [architect, setArchitect] = useState<Architect | null>(null);
+  const [technician, setTechnician] = useState<Technician | null>(null);
+  const [professionalType, setProfessionalType] = useState<'architect' | 'technician' | null>(null);
 
   const { createRequest, loading: requestLoading } = useRequests();
+  const { createRequest: createDesignRequest, loading: designRequestLoading } = useRequestDesign();
 
   useEffect(() => {
     if (!portfolioId) return;
     getById(portfolioId).then(setItem).catch(() => setItem(null));
   }, [getById, portfolioId]);
 
-  // Fetch architect info for portfolio owner
+  // Professional checker and fetch professional info
   useEffect(() => {
-    const fetchArchitect = async () => {
+    const fetchProfessional = async () => {
       try {
-        if (item?.architectId) {
+        if (item?.architectId && !item?.technicianId) {
+          // Portfolio owner is an architect
+          setProfessionalType('architect');
           const data = await architectService.getArchitectById(item.architectId);
-          // Some endpoints wrap data under { success, data }
           const normalized: Architect = (data as any)?.data ?? (data as any);
           setArchitect(normalized);
+          setTechnician(null);
+          } else if (item?.technicianId && !item?.architectId) {
+            // Portfolio owner is a technician
+            setProfessionalType('technician');
+            const data = await technicianService.getTechnicianById(item.technicianId);
+            console.log('Technician data structure:', data);
+            setTechnician(data);
+            setArchitect(null);
+        } else {
+          // Neither or both - default to architect if architectId exists
+          if (item?.architectId) {
+            setProfessionalType('architect');
+            const data = await architectService.getArchitectById(item.architectId);
+            const normalized: Architect = (data as any)?.data ?? (data as any);
+            setArchitect(normalized);
+          }
+          setTechnician(null);
         }
       } catch (e) {
+        console.error('Error fetching professional:', e);
         setArchitect(null);
+        setTechnician(null);
+        setProfessionalType(null);
       }
     };
-    fetchArchitect();
-  }, [item?.architectId]);
+    
+    if (item) {
+      fetchProfessional();
+    }
+  }, [item?.architectId, item?.technicianId]);
 
   // Handle return URL after login
   useEffect(() => {
@@ -120,11 +150,6 @@ export default function PortfolioDetailsPage() {
   };
 
   const handleRequestService = async () => {
-    if (!requestData.description.trim() || !requestData.location.trim() || requestData.budget <= 0) {
-      toast.error('Please fill in all required fields');
-      return;
-    }
-
     if (!item) {
       toast.error('Portfolio information not available');
       return;
@@ -136,16 +161,27 @@ export default function PortfolioDetailsPage() {
     }
 
     try {
-      const serviceRequestData: CreateServiceRequestData = {
-        technicianId: portfolioId, // Use portfolio ID as technician ID
-        category: requestData.category || 'GENERAL',
-        description: requestData.description,
-        location: requestData.location,
-        urgency: requestData.urgency,
-        budget: requestData.budget
-      };
+      if (professionalType === 'technician') {
+        // Use service request API for technicians (simplified)
+        const serviceRequestData: CreateServiceRequestData = {
+          portfolioId: item.id
+        };
 
-      await createRequest(serviceRequestData);
+        await createRequest(serviceRequestData);
+        toast.success('Service request submitted successfully!');
+      } else if (professionalType === 'architect') {
+        // Use design request API for architects
+        const designRequestData: CreateDesignRequestData = {
+          portfolioId: item.id
+        };
+
+        await createDesignRequest(designRequestData);
+        toast.success('Design request submitted successfully!');
+      } else {
+        toast.error('Unable to determine professional type');
+        return;
+      }
+
       setShowRequestForm(false);
       setRequestData({
         category: 'PLUMBER',
@@ -154,13 +190,24 @@ export default function PortfolioDetailsPage() {
         urgency: 'MEDIUM',
         budget: 0
       });
-      toast.success('Service request submitted successfully!');
     } catch (error) {
-      console.error('Failed to create service request:', error);
-      toast.error('Failed to submit service request. Please try again.');
+      console.error('Failed to create request:', error);
+      toast.error('Failed to submit request. Please try again.');
     }
   };
- console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAA",item);
+
+  // Handle view profile click
+  const handleViewProfile = () => {
+    if (professionalType === 'architect' && item?.architectId) {
+      router.push(`/professionals/architect/architect-${item.architectId}`);
+    } else if (professionalType === 'technician' && item?.technicianId) {
+      router.push(`/professionals/technician/technician-${item.technicianId}`);
+    } else {
+      toast.error('Professional profile not available');
+    }
+  };
+
+ 
   return (
     <div className="min-h-screen bg-gray-50">
       <DefaultPageBanner title={t("", "Portfolio Details")} backgroundImage="/store-img.jpg" />
@@ -292,22 +339,26 @@ export default function PortfolioDetailsPage() {
               {/* Portfolio Owner Info */}
               <div className="bg-white rounded-xl shadow-sm p-6">
                 <div className="flex items-start space-x-4 mb-4">
-                  {architect?.user?.profilePic ? (
+                  {(architect?.user?.profilePic || technician?.user?.profilePic) ? (
                     <img
-                      src={architect.user.profilePic}
-                      alt={`${architect.user.firstName} ${architect.user.lastName}`}
+                      src={(architect?.user?.profilePic || technician?.user?.profilePic) ?? ''}
+                      alt={`${architect?.user?.firstName || technician?.user?.firstName || 'Professional'} ${architect?.user?.lastName || technician?.user?.lastName || ''}`}
                       className="w-16 h-16 rounded-full object-cover"
                     />
                   ) : (
                     <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
                       <span className="text-lg font-medium text-gray-600">
-                        {getInitials(`${architect?.user?.firstName ?? 'P'} ${architect?.user?.lastName ?? ''}`)}
+                        {getInitials(`${architect?.user?.firstName || technician?.user?.firstName || 'P'} ${architect?.user?.lastName || technician?.user?.lastName || ''}`)}
                       </span>
                     </div>
                   )}
                   <div className="flex-1">
                     <div className="flex items-center space-x-2">
-                      <h3 className="font-semibold text-gray-900">{architect ? `${architect.user.firstName} ${architect.user.lastName}` : 'Portfolio Owner'}</h3>
+                      <h3 className="font-semibold text-gray-900">
+                        {architect?.user ? `${architect.user.firstName} ${architect.user.lastName}` : 
+                         technician?.user ? `${technician.user.firstName} ${technician.user.lastName}` : 
+                         'Portfolio Owner'}
+                      </h3>
                       <Shield className="w-5 h-5 text-green-500" />
                     </div>
                     <div className="flex items-center space-x-1 mt-1">
@@ -330,20 +381,21 @@ export default function PortfolioDetailsPage() {
                 </div>
 
                 <div className="flex space-x-3 mt-6">
-                  <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center">
+                  <button 
+                    onClick={handleViewProfile}
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center"
+                  >
                     <Eye className="w-4 h-4 mr-2" />
                     View profile
-                  </button>
-                  <button className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors flex items-center justify-center">
-                    <Phone className="w-4 h-4 mr-2" />
-                    Call
                   </button>
                 </div>
               </div>
 
               {/* Service Request Form */}
               <div className="bg-white rounded-xl shadow-sm p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Request Service</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  {professionalType === 'architect' ? 'Request Design' : 'Request Service'}
+                </h3>
                 
                 {!showRequestForm ? (
                   <div className="space-y-4">
@@ -352,12 +404,12 @@ export default function PortfolioDetailsPage() {
                       className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center"
                     >
                       <Check className="w-5 h-5 mr-2" />
-                      Request Service
+                      {professionalType === 'architect' ? 'Request Design' : 'Request Service'}
                     </button>
                     
                     {!isAuthenticated && (
                       <p className="text-xs text-gray-500 text-center">
-                        You need to be logged in to request a service
+                        You need to be logged in to {professionalType === 'architect' ? 'request a design' : 'request a service'}
                       </p>
                     )}
                   </div>
@@ -382,110 +434,39 @@ export default function PortfolioDetailsPage() {
                       </div>
                     )}
 
-                    <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Category
-                      </label>
-                      <select
-                        value={requestData.category}
-                        onChange={(e) => setRequestData(prev => ({ ...prev, category: e.target.value }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                      >
-                        <option value="PLUMBER">PLUMBER</option>
-                        <option value="ELECTRICIAN">ELECTRICIAN</option>
-                        <option value="CARPENTER">CARPENTER</option>
-                        <option value="MASON">MASON</option>
-                        <option value="PAINTER">PAINTER</option>
-                        <option value="ROOFER">ROOFER</option>
-                        <option value="TILER">TILER</option>
-                        <option value="WELDER">WELDER</option>
-                        <option value="LOCKSMITH">LOCKSMITH</option>
-                        <option value="HVAC_TECHNICIAN">HVAC_TECHNICIAN</option>
-                        <option value="LANDSCAPER">LANDSCAPER</option>
-                        <option value="HANDYMAN">HANDYMAN</option>
-                        <option value="PEST_CONTROL">PEST_CONTROL</option>
-                        <option value="CLEANER">CLEANER</option>
-                        <option value="GLASS_TECHNICIAN">GLASS_TECHNICIAN</option>
-                        <option value="INSULATION_INSTALLER">INSULATION_INSTALLER</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Service Description *
-                      </label>
-                      <textarea
-                        value={requestData.description}
-                        onChange={(e) => setRequestData(prev => ({ ...prev, description: e.target.value }))}
-                        placeholder="Need to fix a leaking pipe in the kitchen"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
-                        rows={3}
-                        required
-                      />
-                      <p className="text-xs text-gray-500 mt-1">
-                        Describe the service you need in detail
-                      </p>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Location *
-                      </label>
-                      <input
-                        type="text"
-                        value={requestData.location}
-                        onChange={(e) => setRequestData(prev => ({ ...prev, location: e.target.value }))}
-                        placeholder="Kigali, Rwanda"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Urgency Level
-                      </label>
-                      <select
-                        value={requestData.urgency}
-                        onChange={(e) => setRequestData(prev => ({ ...prev, urgency: e.target.value as 'LOW' | 'MEDIUM' | 'HIGH' }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                      >
-                        <option value="LOW">LOW - Can wait a few days</option>
-                        <option value="MEDIUM">MEDIUM - Within 1-2 days</option>
-                        <option value="HIGH">HIGH - Urgent, same day</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Budget (RWF) *
-                      </label>
-                      <input
-                        type="number"
-                        value={requestData.budget}
-                        onChange={(e) => setRequestData(prev => ({ ...prev, budget: parseInt(e.target.value) || 0 }))}
-                        placeholder="50000"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        min="0"
-                        required
-                      />
-                      <p className="text-xs text-gray-500 mt-1">
-                        Enter your budget in Rwandan Francs
-                      </p>
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <div className="flex items-start space-x-2">
+                        <div className="text-blue-500 mt-0.5">
+                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div className="text-sm text-blue-800">
+                          <p className="font-medium">
+                            {professionalType === 'architect' ? 'Design Request' : 'Service Request'}
+                          </p>
+                          <p className="mt-1">
+                            {professionalType === 'architect' 
+                              ? 'This will send a design request to the architect. They will contact you to discuss your project requirements.'
+                              : 'This will send a service request to the technician. They will contact you to discuss your service needs.'
+                            }
+                          </p>
+                        </div>
+                      </div>
                     </div>
 
                     <div className="flex space-x-3">
                       <button
                         onClick={handleRequestService}
-                        disabled={requestLoading}
+                        disabled={requestLoading || designRequestLoading}
                         className="flex bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white font-semibold py-3 px-4 rounded-lg transition-colors flex items-center justify-center"
                       >
-                        {requestLoading ? (
+                        {(requestLoading || designRequestLoading) ? (
                           <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                         ) : (
                           <Check className="w-5 h-5 mr-2" />
                         )}
-                        {requestLoading ? 'Submitting...' : 'Submit Request'}
+                        {(requestLoading || designRequestLoading) ? 'Submitting...' : 'Submit Request'}
                       </button>
                       <button
                         onClick={() => setShowRequestForm(false)}
@@ -500,7 +481,10 @@ export default function PortfolioDetailsPage() {
                         <AlertCircle className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
                         <div className="text-sm text-blue-800">
                           <p className="font-medium">What happens next?</p>
-                          <p className="mt-1">Your service request will be sent to the portfolio owner (technician). They'll review your requirements and respond with a quote and timeline. You'll be notified when they respond.</p>
+                          <p className="mt-1">
+                            Your {professionalType === 'architect' ? 'design' : 'service'} request will be sent to the portfolio owner ({professionalType === 'architect' ? 'architect' : 'technician'}). 
+                            They'll review your requirements and respond with a quote and timeline. You'll be notified when they respond.
+                          </p>
                         </div>
                       </div>
                     </div>

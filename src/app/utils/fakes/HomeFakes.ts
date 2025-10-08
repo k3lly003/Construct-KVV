@@ -21,7 +21,7 @@ export const HomeBannerSlides = [
     subtitleKey: "banner.slide2.subtitle",
     descriptionKey: "banner.slide2.description",
     buttonTextKey: "banner.slide2.buttonText",
-    image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80",
+    image: "/project-management.avif",
   },
   {
     id: 3,
@@ -29,7 +29,7 @@ export const HomeBannerSlides = [
     subtitleKey: "banner.slide3.subtitle",
     descriptionKey: "banner.slide3.description",
     buttonTextKey: "banner.slide3.buttonText",
-    image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80",
+    image: "/design-agree.jpg",
   },
 ];
 

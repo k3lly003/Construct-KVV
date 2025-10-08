@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Clock, DollarSign, EyeIcon, Loader2, MapPin, Users } from 'lucide-react';
+import { Calendar, Clock, DollarSign, EyeIcon, Loader2, MapPin, RefreshCcw, Users } from 'lucide-react';
 import { Portfolio } from '@/app/services/porfolioService';
 import { usePortfolio } from '@/app/hooks/usePortfolio';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -149,8 +149,15 @@ export default function ArchitectPortfolioList({ title, description }: Props) {
   return (
     <Card className="w-full">
       <CardHeader>
+        <div className='flex justify-between align-middle items-center'>
         <CardTitle>{headerTitle}</CardTitle>
+        <div className='border flex items-center space-x-2 bg-amber-500 hover:bg-amber-600 text-white flex items-center w-[100px] rounded px-3'>
+         <button className="" onClick={() => router.refresh()}>refresh</button>
+         <RefreshCcw className="w-5 h-5" />
+        </div> 
+        </div>
         <CardDescription>{headerDesc}</CardDescription>
+        {/* refresh the page */}      
       </CardHeader>
       <CardContent>
         {items.length === 0 && (

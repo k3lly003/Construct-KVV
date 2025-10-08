@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useRequests } from '@/app/hooks/useRequests';
+import { useRequests } from '@/app/hooks/useRequestService';
 import { ServiceRequest } from '@/app/services/requestService';
 import { 
   MapPin, 

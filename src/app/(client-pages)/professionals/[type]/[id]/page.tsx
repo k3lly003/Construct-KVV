@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Phone, Mail, MapPin, Calendar, Star, Award, Briefcase, Heart, ChevronLeft, ChevronRight, Clock, DollarSign, MapPin as LocationIcon } from "lucide-react";
+import { ArrowLeft, Phone, Mail, MapPin, Calendar, Star, Award, Briefcase, Heart, ChevronLeft, ChevronRight, Clock, DollarSign, MapPin as LocationIcon, MessageCircle } from "lucide-react";
 import { constructorService, Constructor } from "@/app/services/constructorService";
 import { architectService, Architect, CreateDesignRequestDTO, Portfolio } from "@/app/services/architectService";
 import { technicianService, Technician } from "@/app/services/technicianService";
@@ -94,7 +94,21 @@ export default function ProfessionalDetailPage() {
     } catch (err: any) {
       setRequestError(err.response?.data?.message || err.message || 'Failed to send design request');
     }
-  };;
+  };
+
+  // Handle WhatsApp click
+  const handleWhatsAppClick = () => {
+    const phoneNumber = contactBusinessPhone || professional?.phone;
+    
+    if (phoneNumber) {
+      // Remove any non-numeric characters and add country code if needed
+      const cleanNumber = phoneNumber.replace(/\D/g, '');
+      const whatsappNumber = cleanNumber.startsWith('250') ? cleanNumber : `250${cleanNumber}`;
+      window.open(`https://wa.me/${whatsappNumber}`, '_blank');
+    } else {
+      alert('Phone number not available');
+    }
+  };
 
   // Handle image slider navigation
   const nextImage = () => {
@@ -788,6 +802,13 @@ export default function ProfessionalDetailPage() {
                     <Phone className="w-4 h-4 mr-2" />
                     Call Now
                   </a>
+                </Button>
+                <Button 
+                  onClick={handleWhatsAppClick}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white"
+                >
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  WhatsApp
                 </Button>
                 <Button variant="outline" className="w-full" asChild>
                   <a href={contactBusinessEmail ? `mailto:${contactBusinessEmail}` : '#'}>

@@ -29,12 +29,7 @@ export interface ServiceRequest {
 }
 
 export interface CreateServiceRequestData {
-  technicianId: string;
-  category: string;
-  description: string;
-  location: string;
-  urgency: 'LOW' | 'MEDIUM' | 'HIGH';
-  budget: number;
+  portfolioId: string;
 }
 
 export interface ServiceRequestFilters {

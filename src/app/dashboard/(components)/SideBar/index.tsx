@@ -227,12 +227,12 @@ const SideBar = () => {
 
           {userRole === "ARCHITECT" && (
             <>
-              <SidebarLink
+              {/* <SidebarLink
                 href="/dashboard"
                 icon={LayoutDashboard}
                 label={t('dashboard.overviews')}
                 isCollapsed={isSidebarCollapsed}
-              />
+              /> */}
               <SidebarLink
 
                 href="/dashboard/design-requests"
@@ -252,23 +252,23 @@ const SideBar = () => {
                 label={t('navigation.profile')}
                 isCollapsed={isSidebarCollapsed}
               />
-              <SidebarLink
+              {/* <SidebarLink
                 href="/dashboard/market-place"
                 icon={ChartCandlestick}
                 label={t('navigation.designMarketPlace')}
                 isCollapsed={isSidebarCollapsed}
-              />
+              /> */}
             </>
           )}
 
           {userRole === "CONTRACTOR" && (
             <>
-              <SidebarLink
+              {/* <SidebarLink
                 href="/dashboard"
                 icon={LayoutDashboard}
                 label={t('dashboard.overviews')}
                 isCollapsed={isSidebarCollapsed}
-              />
+              /> */}
               <SidebarLink
                 href="/dashboard/bids"
                 icon={TableProperties}
