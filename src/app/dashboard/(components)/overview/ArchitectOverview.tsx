@@ -56,9 +56,9 @@ const architectData = {
     completed: 0,
   },
   requestsData: [
-    { status: "Pending", count: 5 },
-    { status: "In Progress", count: 3 },
-    { status: "Completed", count: 4 },
+    { status: "Pending", count: 2 },
+    { status: "In Progress", count: 1 },
+    { status: "Completed", count: 1 },
   ],
   portfolio: [
     {
@@ -359,7 +359,7 @@ export default function ArchitectOverview() {
             design.description ||
             design.buildingDescription ||
             "No description available",
-          thumbnail: design.images?.[0] ,
+          thumbnail: design.images?.[0],
           images: design.images || [],
           documents: design.documents || [],
         }));
@@ -472,14 +472,7 @@ export default function ArchitectOverview() {
                   </div>
                   <div className="text-amber-100 text-sm">Designs Uploaded</div>
                 </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold">
-                    {userCredentials?.requests || architectData.stats.requests}
-                  </div>
-                  <div className="text-amber-100 text-sm">
-                    Requests Received
-                  </div>
-                </div>
+                <RequestsReceivedQuickStat />
                 <div className="text-center">
                   <div className="text-2xl font-bold">
                     {userCredentials?.completed ||
@@ -1030,6 +1023,50 @@ export default function ArchitectOverview() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function RequestsReceivedQuickStat() {
+  const [count, setCount] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    async function fetchRequestsCount() {
+      try {
+        setLoading(true);
+        setError(null);
+        const token =
+          typeof window !== "undefined"
+            ? localStorage.getItem("authToken")
+            : null;
+        if (!token) throw new Error("No auth token");
+        const res = await architectService.getMyDesignRequestsPaged({
+          page: 1,
+          limit: 10,
+          sort: "createdAt",
+          order: "desc",
+        });
+        if (mounted) setCount(res.pagination?.total ?? (res.data?.length || 0));
+      } catch (e: any) {
+        if (mounted) setError(e?.message || "Failed to load");
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+    fetchRequestsCount();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  return (
+    <div className="text-center">
+      <div className="text-2xl font-bold">{loading ? "..." : count ?? 0}</div>
+      <div className="text-amber-100 text-sm">Requests Received</div>
+      {error && <div className="text-[10px] text-red-100 mt-1">{error}</div>}
     </div>
   );
 }

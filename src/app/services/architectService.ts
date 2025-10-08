@@ -290,6 +290,34 @@ export const architectService = {
     return response.data.data || [];
   },
 
+  // Get architect's design requests with pagination (preferred for counts)
+  async getMyDesignRequestsPaged(params?: {
+    page?: number;
+    limit?: number;
+    sort?: string;
+    order?: "asc" | "desc";
+  }): Promise<{
+    success: boolean;
+    data: DesignRequest[];
+    pagination: { page: number; limit: number; total: number; pages: number };
+  }> {
+    const {
+      page = 1,
+      limit = 10,
+      sort = "createdAt",
+      order = "desc",
+    } = params || {};
+    const url = `${API_BASE_URL}/api/v1/design-requests/architects/me?page=${page}&limit=${limit}&sort=${encodeURIComponent(
+      sort
+    )}&order=${order}`;
+    const response = await axiosInstance.get<{
+      success: boolean;
+      data: DesignRequest[];
+      pagination: { page: number; limit: number; total: number; pages: number };
+    }>(url);
+    return response.data;
+  },
+
   // Get architect's designs
   async getMyDesigns(
     includeInactive: boolean = false
