@@ -59,7 +59,7 @@ class RevenueSplitService {
 
   async getSplitCalculations(token?: string): Promise<SplitCalculation[]> {
     const authToken = token || this.getToken();
-    const response = await axios.get(
+    const response = await axios.get<{ data: SplitCalculation[] }>(
       `${API_BASE_URL}/cart/split-calculations`,
       {
         headers: {
@@ -76,7 +76,7 @@ class RevenueSplitService {
     token?: string
   ): Promise<SplitCalculation> {
     const authToken = token || this.getToken();
-    const response = await axios.patch(
+    const response = await axios.patch<{ data: SplitCalculation }>(
       `${API_BASE_URL}/cart/split-calculation/${id}/check`,
       {},
       {
@@ -126,7 +126,17 @@ class RevenueSplitService {
     limit: number;
   }> {
     const authToken = token || this.getToken();
-    const response = await axios.get(`${API_BASE_URL}/seller`, {
+    const response = await axios.get<{
+      data: {
+        sellers: Seller[];
+        pagination: {
+          total: number;
+          pages: number;
+          page: number;
+          limit: number;
+        };
+      };
+    }>(`${API_BASE_URL}/seller`, {
       params: { page, limit, sortBy, order },
       headers: {
         accept: "*/*",
