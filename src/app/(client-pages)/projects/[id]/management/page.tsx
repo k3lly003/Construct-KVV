@@ -123,57 +123,59 @@ export default function ProjectManagementPage() {
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="h-72 sm:h-80">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <defs>
-                            <linearGradient
-                              id="spentGradient"
-                              x1="0"
-                              y1="0"
-                              x2="1"
-                              y2="1"
+                    <div className="space-y-4">
+                      <div className="h-56 sm:h-64">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <defs>
+                              <linearGradient
+                                id="spentGradient"
+                                x1="0"
+                                y1="0"
+                                x2="1"
+                                y2="1"
+                              >
+                                <stop offset="0%" stopColor="#f59e0b" />
+                                <stop offset="50%" stopColor="#fbbf24" />
+                                <stop offset="100%" stopColor="#d97706" />
+                              </linearGradient>
+                            </defs>
+                            <Pie
+                              dataKey="value"
+                              data={[
+                                { name: "Spent", value: budget.totalSpent },
+                                {
+                                  name: "Remaining",
+                                  value: Math.max(0, budget.remaining),
+                                },
+                              ]}
+                              innerRadius={60}
+                              outerRadius={80}
+                              paddingAngle={2}
+                              stroke="#fff"
                             >
-                              <stop offset="0%" stopColor="#f59e0b" />
-                              <stop offset="50%" stopColor="#fbbf24" />
-                              <stop offset="100%" stopColor="#d97706" />
-                            </linearGradient>
-                          </defs>
-                          <Pie
-                            dataKey="value"
-                            data={[
-                              { name: "Spent", value: budget.totalSpent },
-                              {
-                                name: "Remaining",
-                                value: Math.max(0, budget.remaining),
-                              },
-                            ]}
-                            innerRadius={60}
-                            outerRadius={80}
-                            paddingAngle={2}
-                            stroke="#fff"
-                          >
-                            <Cell fill="url(#spentGradient)" />
-                            <Cell fill="#FCD34D" />
-                          </Pie>
-                          <Legend verticalAlign="bottom" height={24} />
-                          <Tooltip
-                            formatter={(v: any) =>
-                              `${Number(v).toLocaleString()}`
-                            }
-                          />
-                        </PieChart>
-                      </ResponsiveContainer>
-                      <div className="mt-4 grid grid-cols-3 gap-3 text-sm sm:text-base">
+                              <Cell fill="url(#spentGradient)" />
+                              <Cell fill="#FCD34D" />
+                            </Pie>
+                            <Legend verticalAlign="bottom" height={24} />
+                            <Tooltip
+                              formatter={(v: any) =>
+                                `${Number(v).toLocaleString()}`
+                              }
+                            />
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm sm:text-base">
                         <div>
                           <div className="text-muted-foreground">Total</div>
-                          <div className="font-semibold text-base sm:text-lg">
+                          <div className="font-semibold text-base sm:text-lg break-words">
                             {budget.totalBudget.toLocaleString()}
                           </div>
                         </div>
                         <div>
                           <div className="text-muted-foreground">Spent</div>
-                          <div className="font-semibold text-base sm:text-lg">
+                          <div className="font-semibold text-base sm:text-lg break-words">
                             {budget.totalSpent.toLocaleString()}
                           </div>
                         </div>
@@ -181,7 +183,7 @@ export default function ProjectManagementPage() {
                           <div className="text-muted-foreground">Remaining</div>
                           <div className="flex items-center gap-2 flex-wrap">
                             <span
-                              className={`font-semibold text-base sm:text-lg ${
+                              className={`font-semibold text-base sm:text-lg break-words ${
                                 budget.remaining < 0 ? "text-amber-800" : ""
                               }`}
                             >
@@ -196,7 +198,7 @@ export default function ProjectManagementPage() {
                     </div>
 
                     <div
-                      className="space-y-3 max-h-64 sm:max-h-72 md:max-h-80 overflow-y-auto pr-1"
+                      className="space-y-3 max-h-[38vh] sm:max-h-72 md:max-h-80 overflow-y-auto pr-1"
                       aria-label="Expenses summary list"
                     >
                       {budget.expenses
