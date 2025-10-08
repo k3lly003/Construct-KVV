@@ -63,6 +63,37 @@ export interface Milestone extends MilestonePayload {
   finalProjectId: string;
 }
 
+export interface TimelinePayload {
+  startedAt: string; // ISO string
+  endedAt: string; // ISO string
+}
+
+export interface Timeline extends TimelinePayload {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  finalProjectId: string;
+}
+
+export interface BudgetExpensePayload {
+  description: string;
+  stage: "Foundation" | "Roofing" | "Finishing";
+  expenseAmount: number;
+}
+
+export interface BudgetExpense extends BudgetExpensePayload {
+  id: string;
+  createdAt: string;
+  finalProjectId: string;
+}
+
+export interface BudgetSummary {
+  expenses: BudgetExpense[];
+  totalBudget: number;
+  totalSpent: number;
+  remaining: number;
+}
+
 async function getAuthenticatedContractorId(token: string): Promise<string> {
   const maskedToken = token
     ? `${token.slice(0, 6)}...${token.slice(-4)}`
@@ -231,10 +262,11 @@ export async function upsertMilestone(
 ): Promise<Milestone> {
   const existing = await getMilestoneByProject(token, finalProjectId);
   if (existing) {
-    const url = `${API_BASE_URL}/api/v1/milestones/${finalProjectId}`;
+    const url = `${API_BASE_URL}/api/v1/milestones/${existing.id}`;
     console.log("[ContractorService] upsertMilestone: PUT INIT", {
       url,
       finalProjectId,
+      milestoneId: existing.id,
       payload,
     });
     const response = await axiosInstance.put<Milestone>(url, payload, {
@@ -263,6 +295,139 @@ export async function upsertMilestone(
   });
   console.log(
     "[ContractorService] upsertMilestone: POST RESPONSE",
+    response.data
+  );
+  return response.data;
+}
+
+export async function getTimelineByProject(
+  token: string,
+  finalProjectId: string
+): Promise<Timeline | null> {
+  const url = `${API_BASE_URL}/api/v1/timelines/project/${finalProjectId}`;
+  const maskedToken = token
+    ? `${token.slice(0, 6)}...${token.slice(-4)}`
+    : "<none>";
+  console.log("[ContractorService] getTimelineByProject: INIT", {
+    url,
+    finalProjectId,
+    tokenMasked: maskedToken,
+  });
+  try {
+    const response = await axiosInstance.get<Timeline[]>(url, {
+      headers: {
+        accept: "*/*",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log("[ContractorService] getTimelineByProject: RESPONSE", {
+      status: response.status,
+      data: response.data,
+    });
+    const list = response.data || [];
+    return list.length > 0 ? list[0] : null;
+  } catch (error) {
+    console.error("[ContractorService] getTimelineByProject: ERROR", error);
+    return null;
+  }
+}
+
+export async function upsertTimeline(
+  token: string,
+  finalProjectId: string,
+  payload: TimelinePayload
+): Promise<Timeline> {
+  const existing = await getTimelineByProject(token, finalProjectId);
+  if (existing) {
+    const url = `${API_BASE_URL}/api/v1/timelines/${existing.id}`;
+    console.log("[ContractorService] upsertTimeline: PUT INIT", {
+      url,
+      finalProjectId,
+      timelineId: existing.id,
+      payload,
+    });
+    const response = await axiosInstance.put<Timeline>(url, payload, {
+      headers: {
+        "Content-Type": "application/json",
+        accept: "*/*",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(
+      "[ContractorService] upsertTimeline: PUT RESPONSE",
+      response.data
+    );
+    return response.data;
+  }
+
+  const url = `${API_BASE_URL}/api/v1/timelines`;
+  const body = { ...payload, finalProjectId };
+  console.log("[ContractorService] upsertTimeline: POST INIT", { url, body });
+  const response = await axiosInstance.post<Timeline>(url, body, {
+    headers: {
+      "Content-Type": "application/json",
+      accept: "*/*",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  console.log(
+    "[ContractorService] upsertTimeline: POST RESPONSE",
+    response.data
+  );
+  return response.data;
+}
+
+export async function getBudgetByProject(
+  token: string,
+  finalProjectId: string
+): Promise<BudgetSummary | null> {
+  const url = `${API_BASE_URL}/api/v1/budget/${finalProjectId}`;
+  const maskedToken = token
+    ? `${token.slice(0, 6)}...${token.slice(-4)}`
+    : "<none>";
+  console.log("[ContractorService] getBudgetByProject: INIT", {
+    url,
+    finalProjectId,
+    tokenMasked: maskedToken,
+  });
+  try {
+    const response = await axiosInstance.get<BudgetSummary>(url, {
+      headers: {
+        accept: "*/*",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log("[ContractorService] getBudgetByProject: RESPONSE", {
+      status: response.status,
+      data: response.data,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("[ContractorService] getBudgetByProject: ERROR", error);
+    return null;
+  }
+}
+
+export async function createBudgetExpense(
+  token: string,
+  finalProjectId: string,
+  payload: BudgetExpensePayload
+): Promise<BudgetExpense> {
+  const url = `${API_BASE_URL}/api/v1/budget/${finalProjectId}`;
+  console.log("[ContractorService] createBudgetExpense: POST INIT", {
+    url,
+    finalProjectId,
+    payload,
+  });
+  const response = await axiosInstance.post<BudgetExpense>(url, payload, {
+    headers: {
+      "Content-Type": "application/json",
+      accept: "*/*",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  console.log(
+    "[ContractorService] createBudgetExpense: POST RESPONSE",
     response.data
   );
   return response.data;

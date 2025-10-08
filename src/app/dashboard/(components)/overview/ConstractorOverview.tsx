@@ -1,5 +1,7 @@
 "use client";
 
+import React from "react";
+
 import { StatCard } from "@/app/dashboard/(components)/overview/sections/stat-card";
 import Comments from "@/app/dashboard/(components)/overview/sections/comments";
 import {
@@ -151,6 +153,58 @@ export default function ConstructorOverview() {
     });
   };
 
+  // Live projectsBidOn fetched from bids endpoint
+  const API_URL = process.env.NEXT_PUBLIC_API_URL as string | undefined;
+  const [bidsLoading, setBidsLoading] = React.useState<boolean>(true);
+  const [projectsBidOn, setProjectsBidOn] = React.useState<number>(0);
+  const [bidsError, setBidsError] = React.useState<string | null>(null);
+  const [acceptedCount, setAcceptedCount] = React.useState<number>(0);
+  const [rejectedCount, setRejectedCount] = React.useState<number>(0);
+
+  React.useEffect(() => {
+    let mounted = true;
+    async function fetchBids() {
+      setBidsLoading(true);
+      setBidsError(null);
+      try {
+        const token =
+          typeof window !== "undefined"
+            ? localStorage.getItem("authToken")
+            : null;
+        if (!token || !API_URL) throw new Error("No auth token or API URL");
+        const res = await fetch(`${API_URL}/api/v1/bids/contractor`, {
+          headers: { Authorization: `Bearer ${token}`, accept: "*/*" },
+        });
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(`Failed to fetch bids: ${res.status} ${errorText}`);
+        }
+        const data = await res.json();
+        let bidsData: any[] = [];
+        if (Array.isArray(data)) bidsData = data;
+        else if (data?.data && Array.isArray(data.data)) bidsData = data.data;
+        else if (data?.bids && Array.isArray(data.bids)) bidsData = data.bids;
+        if (mounted) {
+          setProjectsBidOn(bidsData.length);
+          setAcceptedCount(
+            bidsData.filter((b: any) => b?.status === "ACCEPTED").length
+          );
+          setRejectedCount(
+            bidsData.filter((b: any) => b?.status === "REJECTED").length
+          );
+        }
+      } catch (e: any) {
+        if (mounted) setBidsError(e?.message || "Failed to load bids");
+      } finally {
+        if (mounted) setBidsLoading(false);
+      }
+    }
+    fetchBids();
+    return () => {
+      mounted = false;
+    };
+  }, [API_URL]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50 dark:from-gray-900 dark:to-gray-800">
       <div className="p-4 lg:p-8 space-y-8">
@@ -175,7 +229,7 @@ export default function ConstructorOverview() {
                 {userInfo.role || ""}
               </p>
               <p className="text-amber-200 text-sm">
-                { contractorData.profile.company}
+                {contractorData.profile.company}
               </p>
             </div>
           </div>
@@ -193,8 +247,13 @@ export default function ConstructorOverview() {
                   Total Bids Placed
                 </p>
                 <p className="text-2xl font-semibold text-gray-900 dark:text-white">
-                  {contractorData.summary.totalBids}
+                  {bidsLoading
+                    ? "..."
+                    : projectsBidOn || contractorData.summary.totalBids}
                 </p>
+                {bidsError && (
+                  <p className="text-xs text-red-500 mt-1">{bidsError}</p>
+                )}
               </div>
             </div>
           </div>
@@ -209,7 +268,9 @@ export default function ConstructorOverview() {
                   Projects Won
                 </p>
                 <p className="text-2xl font-semibold text-gray-900 dark:text-white">
-                  {contractorData.summary.projectsWon}
+                  {bidsLoading
+                    ? "..."
+                    : acceptedCount || contractorData.summary.projectsWon}
                 </p>
               </div>
             </div>
@@ -222,10 +283,10 @@ export default function ConstructorOverview() {
               </div>
               <div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Active Projects
+                  Rejected
                 </p>
                 <p className="text-2xl font-semibold text-gray-900 dark:text-white">
-                  {contractorData.summary.activeProjects}
+                  {bidsLoading ? "..." : rejectedCount}
                 </p>
               </div>
             </div>

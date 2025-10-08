@@ -3,6 +3,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+  Tooltip,
+} from "recharts";
+import {
   Card,
   CardContent,
   CardDescription,
@@ -22,11 +30,16 @@ import { Label } from "@/components/ui/label";
 import type {
   ContractorProject,
   Milestone,
+  Timeline,
 } from "@/app/services/ContractorService";
 import {
   getContractorProjects,
   getMilestoneByProject,
   upsertMilestone,
+  getTimelineByProject,
+  upsertTimeline,
+  getBudgetByProject,
+  createBudgetExpense,
 } from "@/app/services/ContractorService";
 import { toast } from "sonner";
 
@@ -53,12 +66,48 @@ export default function ContractorProjects() {
 
   const [timelineName, setTimelineName] = useState("");
   const [timelineDue, setTimelineDue] = useState("");
+  const [startedAt, setStartedAt] = useState("");
+  const [endedAt, setEndedAt] = useState("");
 
   const [budgetItem, setBudgetItem] = useState("");
   const [budgetCost, setBudgetCost] = useState("");
+  const [budgetStage, setBudgetStage] = useState<
+    "Foundation" | "Roofing" | "Finishing" | ""
+  >("");
   const [milestonesByProject, setMilestonesByProject] = useState<
     Record<string, Milestone | null>
   >({});
+  const [timelineByProject, setTimelineByProject] = useState<
+    Record<string, Timeline | null>
+  >({});
+  const [budgetByProject, setBudgetByProject] = useState<
+    Record<
+      string,
+      {
+        expenses: {
+          id: string;
+          description: string;
+          stage: "Foundation" | "Roofing" | "Finishing";
+          createdAt: string;
+          finalProjectId: string;
+          expenseAmount: number;
+        }[];
+        totalBudget: number;
+        totalSpent: number;
+        remaining: number;
+      } | null
+    >
+  >({});
+
+  const formatDateOnly = (iso?: string) => {
+    if (!iso) return "—";
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) {
+      const datePart = iso.includes("T") ? iso.split("T")[0] : iso;
+      return datePart;
+    }
+    return d.toLocaleDateString();
+  };
 
   const contractorId = useMemo(() => {
     try {
@@ -111,6 +160,8 @@ export default function ContractorProjects() {
         });
         setProjects(data);
         const entries: Record<string, Milestone | null> = {};
+        const timelines: Record<string, Timeline | null> = {};
+        const budgets: typeof budgetByProject = {};
         for (const p of data) {
           try {
             const m = await getMilestoneByProject(token, p.id);
@@ -123,8 +174,28 @@ export default function ContractorProjects() {
             );
             entries[p.id] = null;
           }
+          try {
+            const t = await getTimelineByProject(token, p.id);
+            timelines[p.id] = t;
+          } catch (e) {
+            console.warn(
+              "[ContractorProjects] preload timeline failed",
+              p.id,
+              e
+            );
+            timelines[p.id] = null;
+          }
+          try {
+            const b = await getBudgetByProject(token, p.id);
+            budgets[p.id] = b;
+          } catch (e) {
+            console.warn("[ContractorProjects] preload budget failed", p.id, e);
+            budgets[p.id] = null;
+          }
         }
         setMilestonesByProject(entries);
+        setTimelineByProject(timelines);
+        setBudgetByProject(budgets);
       } catch (err) {
         console.error("[ContractorProjects] fetchProjects: ERROR", err);
         setError("Failed to load projects.");
@@ -162,8 +233,11 @@ export default function ContractorProjects() {
     setFinishing("");
     setTimelineName("");
     setTimelineDue("");
+    setStartedAt("");
+    setEndedAt("");
     setBudgetItem("");
     setBudgetCost("");
+    setBudgetStage("");
   };
 
   const handleSave = async () => {
@@ -201,6 +275,45 @@ export default function ContractorProjects() {
           [activeProject.id]: saved,
         }));
         toast.success("Milestone saved successfully");
+      }
+
+      if (activeSection === "Timeline" && activeProject) {
+        const payload = {
+          startedAt: startedAt || new Date().toISOString(),
+          endedAt: endedAt || new Date().toISOString(),
+        };
+        console.log("[ContractorProjects] timeline:upsert", {
+          finalProjectId: activeProject.id,
+          payload,
+        });
+        const saved = await upsertTimeline(token, activeProject.id, payload);
+        setTimelineByProject((prev) => ({
+          ...prev,
+          [activeProject.id]: saved,
+        }));
+        toast.success("Timeline saved successfully");
+      }
+
+      if (activeSection === "Budget" && activeProject) {
+        const description = budgetItem.trim();
+        const expenseAmount = Number(budgetCost || 0);
+        const stage = budgetStage as "Foundation" | "Roofing" | "Finishing";
+        if (!description || !expenseAmount || !stage) {
+          toast.error("Please provide description, stage and amount");
+          return;
+        }
+        const saved = await createBudgetExpense(token, activeProject.id, {
+          description,
+          stage,
+          expenseAmount,
+        });
+        console.log("[ContractorProjects] budget:created", saved);
+        const refreshed = await getBudgetByProject(token, activeProject.id);
+        setBudgetByProject((prev) => ({
+          ...prev,
+          [activeProject.id]: refreshed,
+        }));
+        toast.success("Expense added successfully");
       }
     } catch (e) {
       console.error("[ContractorProjects] handleSave:error", e);
@@ -312,6 +425,21 @@ export default function ContractorProjects() {
               }
             } catch {}
 
+            const timeline = timelineByProject[project.id];
+            let progressPercent: number | null = null;
+            if (timeline?.startedAt && timeline?.endedAt) {
+              const startMs = new Date(timeline.startedAt).getTime();
+              const endMs = new Date(timeline.endedAt).getTime();
+              const nowMs = Date.now();
+              if (endMs > startMs) {
+                const pct = ((nowMs - startMs) / (endMs - startMs)) * 100;
+                progressPercent = Math.max(
+                  0,
+                  Math.min(100, Number(pct.toFixed(2)))
+                );
+              }
+            }
+
             return (
               <motion.div
                 key={project.id}
@@ -324,10 +452,10 @@ export default function ContractorProjects() {
                   <CardHeader className="md:w-[40%] pb-4 md:pb-6 border-b md:border-b-0 md:border-r">
                     <div className="flex items-start justify-between">
                       <div>
-                        <CardTitle className="text-base sm:text-lg">
+                        <CardTitle className="text-lg sm:text-xl">
                           Project Owner
                         </CardTitle>
-                        <CardDescription className="mt-1">
+                        <CardDescription className="mt-0.5 text-base">
                           {project.owner.firstName} {project.owner.lastName}
                         </CardDescription>
                       </div>
@@ -335,8 +463,8 @@ export default function ContractorProjects() {
                         CLOSED
                       </div>
                     </div>
-                    <div className="mt-4 space-y-2 text-sm">
-                      <div className="grid grid-cols-3 gap-2">
+                    <div className="mt-1 space-y-2 text-base">
+                      <div className="grid grid-cols-3 gap-3">
                         <span className="text-muted-foreground col-span-1">
                           Email
                         </span>
@@ -344,7 +472,7 @@ export default function ContractorProjects() {
                           {project.owner.email}
                         </span>
                       </div>
-                      <div className="grid grid-cols-3 gap-2">
+                      <div className="grid grid-cols-3 gap-3">
                         <span className="text-muted-foreground col-span-1">
                           Phone
                         </span>
@@ -352,34 +480,161 @@ export default function ContractorProjects() {
                           {project.owner.phone}
                         </span>
                       </div>
+                      {budgetByProject[project.id] && (
+                        <div className="mt-4">
+                          <div className="rounded-lg overflow-hidden">
+                            <div className="bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 p-[1px] rounded-lg">
+                              <div className="bg-card rounded-lg p-3">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm font-medium">
+                                    Budget
+                                  </span>
+                                  {(() => {
+                                    const b = budgetByProject[project.id]!;
+                                    const isLoss = b.totalSpent > b.totalBudget;
+                                    return (
+                                      <span
+                                        className={`text-xs font-semibold ${
+                                          isLoss
+                                            ? "text-amber-800"
+                                            : "text-amber-700"
+                                        }`}
+                                      >
+                                        {isLoss ? "Over budget" : "On track"}
+                                      </span>
+                                    );
+                                  })()}
+                                </div>
+                                <div className="mt-3 h-32">
+                                  <ResponsiveContainer
+                                    width="100%"
+                                    height="100%"
+                                  >
+                                    <PieChart>
+                                      <Pie
+                                        dataKey="value"
+                                        data={(() => {
+                                          const b =
+                                            budgetByProject[project.id]!;
+                                          return [
+                                            {
+                                              name: "Spent",
+                                              value: b.totalSpent,
+                                            },
+                                            {
+                                              name: "Remaining",
+                                              value: Math.max(0, b.remaining),
+                                            },
+                                          ];
+                                        })()}
+                                        innerRadius={30}
+                                        outerRadius={50}
+                                        paddingAngle={2}
+                                        stroke="#fff"
+                                      >
+                                        <Cell fill="#F59E0B" />
+                                        <Cell fill="#FCD34D" />
+                                      </Pie>
+                                      <Legend
+                                        verticalAlign="bottom"
+                                        height={24}
+                                      />
+                                      <Tooltip
+                                        formatter={(v: any) =>
+                                          `${Number(v).toLocaleString()}`
+                                        }
+                                      />
+                                    </PieChart>
+                                  </ResponsiveContainer>
+                                </div>
+                                <div className="mt-3 space-y-2 max-h-28 overflow-auto pr-1">
+                                  {budgetByProject[project.id]!.expenses.slice()
+                                    .sort(
+                                      (a, b) =>
+                                        new Date(b.createdAt).getTime() -
+                                        new Date(a.createdAt).getTime()
+                                    )
+                                    .slice(0, 4)
+                                    .map((e) => (
+                                      <div
+                                        key={e.id}
+                                        className="flex items-center justify-between text-sm"
+                                      >
+                                        <div className="flex items-center gap-2">
+                                          <span className="h-2 w-2 rounded-full bg-amber-500" />
+                                          <span className="font-medium">
+                                            {e.description}
+                                          </span>
+                                          <span className="text-muted-foreground">
+                                            ({e.stage})
+                                          </span>
+                                          <span className="hidden sm:inline">
+                                            •
+                                          </span>
+                                          <span className="text-muted-foreground">
+                                            {formatDateOnly(e.createdAt)}
+                                          </span>
+                                        </div>
+                                        <span className="font-semibold">
+                                          {e.expenseAmount.toLocaleString()}
+                                        </span>
+                                      </div>
+                                    ))}
+                                </div>
+                                <div className="mt-2 grid grid-cols-3 gap-2 text-xs">
+                                  <div className="flex flex-col">
+                                    <span className="text-muted-foreground">
+                                      Total
+                                    </span>
+                                    <span className="font-semibold">
+                                      {budgetByProject[
+                                        project.id
+                                      ]!.totalBudget.toLocaleString()}
+                                    </span>
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-muted-foreground">
+                                      Spent
+                                    </span>
+                                    <span className="font-semibold">
+                                      {budgetByProject[
+                                        project.id
+                                      ]!.totalSpent.toLocaleString()}
+                                    </span>
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-muted-foreground">
+                                      Remaining
+                                    </span>
+                                    <span className="font-semibold">
+                                      {budgetByProject[
+                                        project.id
+                                      ]!.remaining.toLocaleString()}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </CardHeader>
                   <CardContent className="md:w-[60%] pt-4 md:pt-6">
-                    <div className="grid md:grid-cols-2 gap-4 text-sm">
+                    <div className="grid md:grid-cols-2 gap-5 text-base">
                       <div className="space-y-3">
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-3 gap-3">
                           <span className="text-muted-foreground col-span-1">
                             Agreed amount
                           </span>
-                          <span className="col-span-2 font-medium">
+                          <span className="col-span-2 font-semibold">
                             {acceptedBid
                               ? `${acceptedBid.amount} ${project.currency}`
                               : "—"}
                           </span>
                         </div>
-                        {milestonesByProject[project.id] && (
-                          <div className="grid grid-cols-3 gap-2">
-                            <span className="text-muted-foreground col-span-1">
-                              Milestone
-                            </span>
-                            <span className="col-span-2">
-                              F: {milestonesByProject[project.id]?.foundation}%
-                              · R: {milestonesByProject[project.id]?.roofing}% ·
-                              Fi: {milestonesByProject[project.id]?.finishing}%
-                            </span>
-                          </div>
-                        )}
-                        <div className="grid grid-cols-3 gap-2">
+                        {/* milestone visuals moved to a dedicated card below */}
+                        <div className="grid grid-cols-3 gap-3">
                           <span className="text-muted-foreground col-span-1">
                             Duration
                           </span>
@@ -387,7 +642,7 @@ export default function ContractorProjects() {
                             {project.estimatedDuration} days
                           </span>
                         </div>
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-3 gap-3">
                           <span className="text-muted-foreground col-span-1">
                             Workers
                           </span>
@@ -397,27 +652,27 @@ export default function ContractorProjects() {
                         </div>
                       </div>
                       <div className="space-y-3">
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-3 gap-3">
                           <span className="text-muted-foreground col-span-1">
                             Labor cost
                           </span>
-                          <span className="col-span-2">
+                          <span className="col-span-2 font-medium">
                             {project.laborCost} {project.currency}
                           </span>
                         </div>
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-3 gap-3">
                           <span className="text-muted-foreground col-span-1">
                             Material cost
                           </span>
-                          <span className="col-span-2">
+                          <span className="col-span-2 font-medium">
                             {project.materialCost} {project.currency}
                           </span>
                         </div>
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-3 gap-3">
                           <span className="text-muted-foreground col-span-1">
                             Cost / sq ft
                           </span>
-                          <span className="col-span-2">
+                          <span className="col-span-2 font-medium">
                             {project.costPerSquareFoot} {project.currency}
                           </span>
                         </div>
@@ -458,6 +713,187 @@ export default function ContractorProjects() {
                         </Button>
                       </div>
                     </div>
+
+                    {milestonesByProject[project.id] && (
+                      <div className="mt-5">
+                        <Card className="border-amber-100">
+                          <CardHeader className="pb-2">
+                            <CardTitle className="text-sm">
+                              Milestones
+                            </CardTitle>
+                            <CardDescription>
+                              Current phase distribution
+                            </CardDescription>
+                          </CardHeader>
+                          <CardContent className="space-y-3">
+                            <div className="flex items-center gap-2">
+                              <span className="w-20 text-xs text-muted-foreground">
+                                Foundation
+                              </span>
+                              <div className="h-2 w-full rounded bg-amber-100 overflow-hidden">
+                                <motion.div
+                                  className="h-2 rounded bg-gradient-to-r from-amber-500 to-amber-600"
+                                  initial={{ width: 0 }}
+                                  animate={{
+                                    width: `${
+                                      milestonesByProject[project.id]
+                                        ?.foundation ?? 0
+                                    }%`,
+                                  }}
+                                  transition={{ duration: 0.4 }}
+                                />
+                              </div>
+                              <span className="w-10 text-right text-xs">
+                                {milestonesByProject[project.id]?.foundation}%
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="w-20 text-xs text-muted-foreground">
+                                Roofing
+                              </span>
+                              <div className="h-2 w-full rounded bg-amber-100 overflow-hidden">
+                                <motion.div
+                                  className="h-2 rounded bg-gradient-to-r from-amber-500 to-amber-600"
+                                  initial={{ width: 0 }}
+                                  animate={{
+                                    width: `${
+                                      milestonesByProject[project.id]
+                                        ?.roofing ?? 0
+                                    }%`,
+                                  }}
+                                  transition={{ duration: 0.4 }}
+                                />
+                              </div>
+                              <span className="w-10 text-right text-xs">
+                                {milestonesByProject[project.id]?.roofing}%
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="w-20 text-xs text-muted-foreground">
+                                Finishing
+                              </span>
+                              <div className="h-2 w-full rounded bg-amber-100 overflow-hidden">
+                                <motion.div
+                                  className="h-2 rounded bg-gradient-to-r from-amber-500 to-amber-600"
+                                  initial={{ width: 0 }}
+                                  animate={{
+                                    width: `${
+                                      milestonesByProject[project.id]
+                                        ?.finishing ?? 0
+                                    }%`,
+                                  }}
+                                  transition={{ duration: 0.4 }}
+                                />
+                              </div>
+                              <span className="w-10 text-right text-xs">
+                                {milestonesByProject[project.id]?.finishing}%
+                              </span>
+                            </div>
+                            <div className="flex items-center justify-end pt-1">
+                              {(() => {
+                                const f =
+                                  milestonesByProject[project.id]?.foundation ||
+                                  0;
+                                const r =
+                                  milestonesByProject[project.id]?.roofing || 0;
+                                const fi =
+                                  milestonesByProject[project.id]?.finishing ||
+                                  0;
+                                const avg = Number(
+                                  ((f + r + fi) / 3).toFixed(2)
+                                );
+                                return (
+                                  <span className="text-sm sm:text-base font-semibold text-amber-700">
+                                    Total progress: {avg}%
+                                  </span>
+                                );
+                              })()}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    )}
+                    {timeline && (
+                      <div className="mt-5">
+                        <div className="rounded-xl p-[1px] bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600">
+                          <Card className="border-amber-100 rounded-[11px]">
+                            <CardHeader className="pb-2">
+                              <div className="flex items-center justify-between">
+                                <CardTitle className="text-sm">
+                                  Timeline
+                                </CardTitle>
+                                {progressPercent !== null && (
+                                  <span className="text-xs font-medium text-amber-700 dark:text-amber-300">
+                                    {progressPercent}%
+                                  </span>
+                                )}
+                              </div>
+                              <CardDescription>
+                                Project schedule window
+                              </CardDescription>
+                            </CardHeader>
+                            <CardContent className="text-xs sm:text-sm text-muted-foreground">
+                              <div className="flex flex-col gap-3">
+                                <motion.div
+                                  initial={{ opacity: 0 }}
+                                  animate={{ opacity: 1 }}
+                                  transition={{ duration: 0.3 }}
+                                  className="flex items-center justify-between text-foreground"
+                                >
+                                  <span className="inline-flex items-center gap-2">
+                                    <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
+                                    Start: {formatDateOnly(timeline.startedAt)}
+                                  </span>
+                                  <span className="hidden sm:inline">•</span>
+                                  <span className="inline-flex items-center gap-2">
+                                    <span className="h-2 w-2 rounded-full bg-amber-600" />
+                                    End: {formatDateOnly(timeline.endedAt)}
+                                  </span>
+                                </motion.div>
+                                {progressPercent !== null && (
+                                  <div className="h-2 w-full rounded bg-amber-100 overflow-hidden">
+                                    <motion.div
+                                      className="h-2 rounded bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600"
+                                      initial={{ width: 0 }}
+                                      animate={{ width: `${progressPercent}%` }}
+                                      transition={{ duration: 0.6 }}
+                                    />
+                                  </div>
+                                )}
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      </div>
+                    )}
+                    {!timelineByProject[project.id] && (
+                      <div className="mt-5">
+                        <Card className="border-dashed">
+                          <CardHeader className="pb-2">
+                            <CardTitle className="text-sm">Timeline</CardTitle>
+                            <CardDescription>
+                              No timeline defined yet. Use “Timeline” to set
+                              start and end.
+                            </CardDescription>
+                          </CardHeader>
+                        </Card>
+                      </div>
+                    )}
+                    {!milestonesByProject[project.id] && (
+                      <div className="mt-5">
+                        <Card className="border-dashed">
+                          <CardHeader className="pb-2">
+                            <CardTitle className="text-sm">
+                              Milestones
+                            </CardTitle>
+                            <CardDescription>
+                              No milestones yet for this project. Use “Manage
+                              Milestone” to add progress.
+                            </CardDescription>
+                          </CardHeader>
+                        </Card>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </motion.div>
@@ -525,47 +961,77 @@ export default function ContractorProjects() {
 
                 {activeSection === "Timeline" && (
                   <div className="space-y-4 mt-2">
-                    <div className="grid gap-2">
-                      <Label htmlFor="t-name">Entry name</Label>
-                      <Input
-                        id="t-name"
-                        value={timelineName}
-                        onChange={(e) => setTimelineName(e.target.value)}
-                        placeholder="Framing phase"
-                      />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="t-due">Due date</Label>
-                      <Input
-                        id="t-due"
-                        type="date"
-                        value={timelineDue}
-                        onChange={(e) => setTimelineDue(e.target.value)}
-                      />
+                    <div className="rounded-lg p-[1px] bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600">
+                      <div className="rounded-[9px] bg-background/60 backdrop-blur supports-[backdrop-filter]:bg-background/70 p-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div className="grid gap-2">
+                            <Label htmlFor="t-start">Start</Label>
+                            <Input
+                              id="t-start"
+                              className="focus-visible:ring-amber-500"
+                              type="datetime-local"
+                              value={startedAt}
+                              onChange={(e) => setStartedAt(e.target.value)}
+                            />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="t-end">End</Label>
+                            <Input
+                              id="t-end"
+                              className="focus-visible:ring-amber-500"
+                              type="datetime-local"
+                              value={endedAt}
+                              onChange={(e) => setEndedAt(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}
 
                 {activeSection === "Budget" && (
                   <div className="space-y-4 mt-2">
-                    <div className="grid gap-2">
-                      <Label htmlFor="b-item">Item</Label>
-                      <Input
-                        id="b-item"
-                        value={budgetItem}
-                        onChange={(e) => setBudgetItem(e.target.value)}
-                        placeholder="Concrete mix"
-                      />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="b-cost">Cost</Label>
-                      <Input
-                        id="b-cost"
-                        type="number"
-                        value={budgetCost}
-                        onChange={(e) => setBudgetCost(e.target.value)}
-                        placeholder="2500"
-                      />
+                    <div className="rounded-lg p-[1px] bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600">
+                      <div className="rounded-[9px] bg-background/60 backdrop-blur supports-[backdrop-filter]:bg-background/70 p-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                          <div className="grid gap-2 sm:col-span-2">
+                            <Label htmlFor="b-desc">Description</Label>
+                            <Input
+                              id="b-desc"
+                              value={budgetItem}
+                              onChange={(e) => setBudgetItem(e.target.value)}
+                              placeholder="Buying all needed materials"
+                            />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="b-amount">Amount</Label>
+                            <Input
+                              id="b-amount"
+                              type="number"
+                              value={budgetCost}
+                              onChange={(e) => setBudgetCost(e.target.value)}
+                              placeholder="10000000"
+                            />
+                          </div>
+                          <div className="grid gap-2 sm:col-span-1">
+                            <Label htmlFor="b-stage">Stage</Label>
+                            <select
+                              id="b-stage"
+                              className="h-10 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                              value={budgetStage}
+                              onChange={(e) =>
+                                setBudgetStage(e.target.value as any)
+                              }
+                            >
+                              <option value="">Select stage</option>
+                              <option value="Foundation">Foundation</option>
+                              <option value="Roofing">Roofing</option>
+                              <option value="Finishing">Finishing</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}
