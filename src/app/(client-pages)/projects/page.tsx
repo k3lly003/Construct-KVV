@@ -128,19 +128,7 @@ export default function Home() {
             {t("projects.availableDescription")}
           </p>
 
-          {/* Get Your Specialist Section */}
-          <div className="mt-8 mb-8 p-6 bg-white border border-amber-200 rounded-lg shadow-md">
-            <h3 className="text-xl font-bold text-amber-900 mb-2">
-              {t("projects.getProfessionals", "Get Your professionals")}
-            </h3>
-            <p className="text-amber-800 mb-4">
-              {t(
-                "projects.findProfessionals",
-                "Find certified professionals near your location."
-              )}
-            </p>
-            <SpecialistLocator />
-          </div>
+       
           {/* Call to Action */}
           <div className="bg-amber-500 p-6 rounded-lg border border-amber-600 shadow-md">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

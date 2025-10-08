@@ -159,8 +159,8 @@ export default function ConstructorOverview() {
           <div className="flex flex-col lg:flex-row items-center gap-6">
             <div className="relative">
               <img
-                src={userInfo.avatar || contractorData.profile.avatar}
-                alt={userInfo.fullName || "User"}
+                src={userInfo.profilePic || ""}
+                alt={userInfo.firstName || "User"}
                 className="w-20 h-20 lg:w-24 lg:h-24 rounded-full border-4 border-white shadow-lg object-cover"
               />
               <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-1">
@@ -172,10 +172,10 @@ export default function ConstructorOverview() {
                 Welcome back, {userInfo.fullName || "User"}!
               </h1>
               <p className="text-amber-100 text-lg mb-1">
-                {userInfo.role || contractorData.profile.role}
+                {userInfo.role || ""}
               </p>
               <p className="text-amber-200 text-sm">
-                {userInfo.company || contractorData.profile.company}
+                { contractorData.profile.company}
               </p>
             </div>
           </div>
