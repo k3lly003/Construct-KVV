@@ -219,7 +219,7 @@ const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
         </div>
       </div>
       {/* Quantity and Add to Cart */}
-      <div className="flex gap-4 items-center">
+      <div className="flex gap-4 items-center flex-wrap">
         <div className="flex items-center border rounded-md">
           <GenericButton
             onClick={decrementQuantity}
