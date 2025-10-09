@@ -359,7 +359,7 @@ const Navbar: React.FC = () => {
                     )}
                   </div>
                   {/* Build House link (mobile) */}
-                  <button
+                  {/* <button
                     type="button"
                     className="py-2 text-gray-900 hover:text-amber-500 border-b bg-transparent w-full text-left"
                     onClick={() => {
@@ -375,7 +375,7 @@ const Navbar: React.FC = () => {
                     }}
                   >
                     Build your house
-                  </button>
+                  </button> */}
                   {/* Projects link (mobile) */}
                   <button
                     type="button"
@@ -627,7 +627,7 @@ const Navbar: React.FC = () => {
               </AnimatePresence>
             </div>
             {/* Build House link (desktop) */}
-            <button
+            {/* <button
               type="button"
               className="inline-flex items-center px-1 pt-1 mb-2 hover:text-amber-500 text-sm font-medium text-gray-900"
               onClick={() => {
@@ -645,7 +645,7 @@ const Navbar: React.FC = () => {
               }}
             >
               {t("navigation.buildHouse")}
-            </button>
+            </button> */}
             {/* Projects link (desktop) */}
             <button
               type="button"
