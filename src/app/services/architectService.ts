@@ -286,7 +286,7 @@ export const architectService = {
     const response = await axiosInstance.get<{
       success: boolean;
       data: DesignRequest[];
-    }>(`${API_BASE_URL}/api/v1/architects/me/design-requests`);
+    }>(`${API_BASE_URL}/api/v1/design-requests/architects/me?page=1&limit=10&sort=createdAt&order=desc`);
     return response.data.data || [];
   },
 
