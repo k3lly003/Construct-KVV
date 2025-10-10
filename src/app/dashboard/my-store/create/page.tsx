@@ -24,9 +24,7 @@ import CategorySelect from "./CategorySelect";
 import ProductImageUpload from "./ProductImageUpload";
 import { useShop } from '@/app/hooks/useShop';
 import { useCustomerProfile } from '@/app/hooks/useCustomerProfile';
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Terminal } from "lucide-react";
-import Link from 'next/link';
+// Removed unused imports: Alert, Terminal, Link (no longer needed)
 
 
 const Page = () => {
@@ -37,7 +35,7 @@ const Page = () => {
   // Console logs to verify fetched data
   // console.log("Fetched Shop Data:", myShop);
 
-  const form = useForm<CreateProductInput & { images: { url: string; alt: string; isDefault: boolean; file?: File }[] }>({
+  const form = useForm<CreateProductInput & { images: { url: string; alt: string; isDefault: boolean; file?: File }[]; shopId?: string | null }>({
     // resolver: zodResolver(createProductSchema),
     defaultValues: {
       name: '',
@@ -50,7 +48,7 @@ const Page = () => {
       isActive: true,
       sellerId: '',
       categoryId: "",
-      shopId: '',
+      shopId: '', // Optional - no shop required
       discountedPrice: '',
       attributes: {},
       images: [],
@@ -61,9 +59,13 @@ const Page = () => {
       form.setValue('sellerId', profile.id);
       console.log("Setting sellerId in form:", profile.id);
     }
+    // Shop is now optional - only set if available
     if (myShop?.id) {
       form.setValue('shopId', myShop.id);
       console.log("Setting shopId in form:", myShop.id);
+    } else {
+      form.setValue('shopId', '');
+      console.log("No shop found - product will be created without shop association");
     }
   }, [profile, myShop, form]);
 
@@ -97,132 +99,145 @@ const Page = () => {
 
   const onSubmit = async (data: CreateProductInput & { images: { url: string; alt: string; isDefault: boolean; file?: File }[] }) => {
     try {
+      // Basic validation
+      if (!data.name?.trim()) {
+        throw new Error('Product name is required');
+      }
+      if (!data.price?.trim()) {
+        throw new Error('Price is required');
+      }
+      if (!data.sku?.trim()) {
+        throw new Error('SKU is required');
+      }
+
       const formData = new FormData();
 
       // Get the current images from form state (which includes the file property)
-      const currentImages = form.getValues("images") as { url: string; alt: string; isDefault: boolean; file?: File }[];
+      const currentImages = form.getValues("images") as { url: string; alt: string; isDefault: boolean; file?: File }[] || [];
       
-      // Separate images and the rest of the product data
-      const { images, ...productData } = data;
+      // Append basic product data directly to FormData (matching backend expectations)
+      formData.append('name', data.name.trim());
+      if (data.description?.trim()) formData.append('description', data.description.trim());
+      formData.append('price', data.price.trim());
+      formData.append('stock', data.stock.toString());
+      formData.append('inventory', data.inventory.toString());
+      formData.append('sku', data.sku.trim());
+      if (data.slug?.trim()) formData.append('slug', data.slug.trim());
+      formData.append('isActive', data.isActive.toString());
+      formData.append('sellerId', data.sellerId);
+      if (data.categoryId?.trim()) formData.append('categoryId', data.categoryId);
+      if (data.shopId?.trim()) formData.append('shopId', data.shopId);
+      if (data.discountedPrice?.trim()) formData.append('discountedPrice', data.discountedPrice.trim());
+      if (data.attributes && Object.keys(data.attributes).length > 0) {
+        formData.append('attributes', JSON.stringify(data.attributes));
+      }
 
-      // Append product data as JSON string
-      formData.append('data', JSON.stringify(productData));
-
-      // Build and append image metadata as JSON string, using unique fileKeys
-      const imageData = currentImages.map((img, index) => {
-        const fileKey = `image${index + 1}`;
-        return {
-          fileKey,
-          alt: img.alt,
-          isDefault: img.isDefault,
-        };
-      });
-      formData.append('imageData', JSON.stringify(imageData));
-
-      // Append each file with a unique key matching fileKey
-      currentImages.forEach((img, index) => {
+      // Append images as files (backend expects 'images' field with multiple files)
+      currentImages.forEach((img) => {
         if (img.file) {
-          const fileKey = `image${index + 1}`;
-          formData.append(fileKey, img.file);
+          formData.append('images', img.file);
         }
+      });
+
+      console.log('=== FORM SUBMISSION DEBUG ===');
+      console.log('Form data being sent:', {
+        name: data.name,
+        price: data.price,
+        sku: data.sku,
+        sellerId: data.sellerId,
+        shopId: data.shopId,
+        categoryId: data.categoryId,
+        imageCount: currentImages.filter(img => img.file).length
       });
 
       await createProduct(formData);
       form.reset();
     } catch (error) {
+      console.error('Product creation error:', error);
       // Error handled by mutation
     }
   };
 
   const watchAllFields = form.watch();
 
-  if (isMyShopLoading || isProfileLoading) {
+  if (isProfileLoading) {
     return (
       <div className="flex items-center justify-center h-full p-8">
         <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
-        <p className="ml-4 text-lg">Loading your data...</p>
+        <p className="ml-4 text-lg">Loading your profile...</p>
       </div>
     );
   }
 
-  if (!myShop) {
-    return (
-       <div className="p-8">
-         <Alert>
-           <Terminal className="h-4 w-4" />
-           <AlertTitle>Shop Required!</AlertTitle>
-           <AlertDescription>
-             You need to create a shop before you can add products. 
-             <Link href="/dashboard/profile" className="font-bold text-amber-600 hover:underline ml-1">
-                Go to your profile to create one.
-             </Link>
-           </AlertDescription>
-         </Alert>
-       </div>
-    );
-  }
+  // Shop requirement removed - sellers can now add products directly
 
   return (
-    <div className="flex flex-col md:flex-row gap-5 p-8 w-[100%]">
+    <div className="flex flex-col lg:flex-row gap-0 w-full min-h-screen max-w-none -mx-9 -my-7 bg-white dark:bg-gray-800 ml-2 p-10">
       {/* Form Section */}
-      <div className="flex-1 max-w-xl w-[55%]">
+      <div className="flex-1 lg:flex-[2] p-2">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {/* Basic Information */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Basic Information</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <h3 className="text-base font-semibold">Basic Information</h3>
+              <div className="space-y-4">
                 <FormField
                   control={form.control}
                   name="name"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Product Name</FormLabel>
+                    <FormItem className="space-y-2">
+                      <FormLabel className="text-sm font-medium">Product Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter product name" {...field} />
+                        <Input 
+                          placeholder="Enter product name" 
+                          {...field} 
+                          className="h-10"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem className="space-y-2">
+                      <FormLabel className="text-sm font-medium">Description</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Enter product description"
+                          className="min-h-[100px] resize-none"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Enter product description"
-                        className="min-h-[100px]"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </div>
 
             <Separator />
 
             {/* Pricing & Inventory */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Pricings</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="space-y-3">
+              <h3 className="text-base font-semibold">Pricings</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="price"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Price</FormLabel>
+                    <FormItem className="space-y-2">
+                      <FormLabel className="text-sm font-medium">Price</FormLabel>
                       <FormControl>
                         <Input
                           type="text"
+                          placeholder="0.00"
                           value={form.watch('price')}
                           onChange={e => form.setValue('price', e.target.value)}
+                          className="h-10"
                         />
                       </FormControl>
                       <FormMessage />
@@ -233,31 +248,36 @@ const Page = () => {
                   control={form.control}
                   name="discountedPrice"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Discounted Price</FormLabel>
+                    <FormItem className="space-y-2">
+                      <FormLabel className="text-sm font-medium">Discounted Price</FormLabel>
                       <FormControl>
                         <Input
                           type="text"
+                          placeholder="0.00"
                           value={form.watch('discountedPrice')}
                           onChange={e => form.setValue('discountedPrice', e.target.value)}
+                          className="h-10"
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="stock"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Stock</FormLabel>
+                    <FormItem className="space-y-2">
+                      <FormLabel className="text-sm font-medium">Stock</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
                           placeholder="0"
                           {...field}
                           onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                          className="h-10"
                         />
                       </FormControl>
                       <FormMessage />
@@ -291,34 +311,43 @@ const Page = () => {
             <Separator />
 
             {/* Category */}
-            <FormField
-              control={form.control}
-              name="categoryId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <CategorySelect
-                      value={field.value}
-                      onChange={field.onChange}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="space-y-3">
+              <h3 className="text-base font-semibold">Category</h3>
+              <FormField
+                control={form.control}
+                name="categoryId"
+                render={({ field }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel className="text-sm font-medium">Product Category</FormLabel>
+                    <FormControl>
+                      <CategorySelect
+                        value={field.value || ""}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
 
             {/* Submit Button */}
-            <div className="flex justify-end gap-3 pt-4 border-t">
+            <div className="flex justify-end gap-3 pt-6 border-t border-gray-200 dark:border-gray-700">
               <GenericButton
                 type="button"
                 variant="outline"
                 onClick={() => {}}
                 disabled={isLoading}
+                className="h-10 px-6"
               >
                 Cancel
               </GenericButton>
-              <GenericButton type="submit" disabled={isLoading} className="gap-2">
+              <GenericButton 
+                type="submit" 
+                disabled={isLoading} 
+                className="gap-2 h-10 px-6"
+              >
                 {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
                 Create Product
               </GenericButton>
@@ -326,10 +355,10 @@ const Page = () => {
           </form>
         </Form>
       </div>
-      <Separator orientation="vertical" className="hidden md:block h-full" />
+      <div className="hidden lg:block w-px bg-gray-200 dark:bg-gray-600"></div>
       {/* Preview Section */}
-      <div className="flex-1 max-w-md w-[45%]">
-        <h3 className="text-lg font-semibold">Live Preview</h3>
+      <div className="flex-1 lg:flex-[1] p-2">
+        <h3 className="text-base font-semibold">Live Preview</h3>
         <ProductPreview
           name={watchAllFields.name}
           description={watchAllFields.description}

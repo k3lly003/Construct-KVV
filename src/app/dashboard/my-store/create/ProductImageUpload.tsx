@@ -15,21 +15,21 @@ const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   return (
-    <div className="mb-6">
-      <h3 className="font-semibold mb-2 flex items-center gap-2">
-        Product Image
+    <div className="space-y-3">
+      <h3 className="text-base font-semibold flex items-center gap-2">
+        Product Images
         <span className="text-gray-400 cursor-pointer" title="Upload product images">
           ⓘ
         </span>
       </h3>
-      <div className="flex gap-2">
+      <div className="flex gap-3 flex-wrap">
         {/* Upload box */}
         <div
-          className="w-24 h-24 border-2 border-dashed border-teal-300 rounded flex flex-col items-center justify-center cursor-pointer hover:bg-teal-50 transition"
+          className="w-24 h-24 border-2 border-dashed border-teal-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-teal-50 transition-colors"
           onClick={() => fileInputRef.current?.click()}
         >
           <span className="text-2xl text-teal-400">📷</span>
-          <span className="text-xs text-teal-500 mt-1">Click to Upload</span>
+          <span className="text-xs text-teal-500 mt-1 text-center">Click to Upload</span>
           <input
             type="file"
             accept="image/*"
@@ -51,13 +51,13 @@ const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
         </div>
         {/* Image previews */}
         {images.map((img, idx) => (
-          <div key={idx} className="relative group w-24 h-24 rounded overflow-hidden">
+          <div key={idx} className="relative group w-24 h-24 rounded-lg overflow-hidden border border-gray-200">
             {img.url
               ? (
                 <Image
                   src={img.url}
-                  width={34}
-                  height={34}
+                  width={96}
+                  height={96}
                   alt={img.alt}
                   className="object-cover w-full h-full"
                 />
@@ -70,10 +70,10 @@ const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
             }
             <button
               type="button"
-              className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
+              className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
               onClick={() => onRemoveImage(idx)}
             >
-              <span className="bg-white text-red-600 px-3 py-1 rounded shadow font-semibold">
+              <span className="bg-white text-red-600 px-2 py-1 rounded text-xs font-semibold">
                 Remove
               </span>
             </button>

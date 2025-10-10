@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
+import React from "react";
 import { StatCard } from "@/app/dashboard/(components)/overview/sections/stat-card";
-import Comments from "@/app/dashboard/(components)/overview/sections/comments";
 import {
   Table,
   TableHeader,
@@ -15,10 +15,257 @@ import { Input } from "@/components/ui/input";
 import { useCategories } from "@/app/hooks/useCategories";
 import { useDashboard } from "@/hooks/useDashboard";
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend
-} from 'recharts';
+  fetchSellerProductsCount,
+  fetchSellerRevenueAndOrders,
+} from "@/app/services/sellerOverviewService";
+import { getSellerOrders } from "@/app/services/sellerOverviewService";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+} from "recharts";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
+import api from "@/lib/axios";
 
-const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const COLORS = [
+  "#8884d8",
+  "#82ca9d",
+  "#ffc658",
+  "#ff8042",
+  "#0088FE",
+  "#00C49F",
+  "#FFBB28",
+  "#FF8042",
+];
+
+// Seller Earnings component: fetch, filter by sellerId (from localStorage), summarize and chart
+function SellerEarnings() {
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const [error, setError] = React.useState<string | null>(null);
+  const [items, setItems] = React.useState<
+    Array<{ sellerId: string; netAmount: number; createdAt: string }>
+  >([]);
+
+  const getSellerIdFromStorage = () => {
+    try {
+      if (typeof window === "undefined") return null;
+      const userStr = localStorage.getItem("user");
+      const sidKey = localStorage.getItem("sellerId");
+      let finalSellerId: string | null = null;
+      if (userStr) {
+        try {
+          const user: any = JSON.parse(userStr);
+          const sellerIdFromSeller =
+            user?.seller?.id ?? user?.seller?._id ?? null;
+          const fallbackUserId = user?.id ?? user?._id ?? null;
+          finalSellerId = sellerIdFromSeller || fallbackUserId || null;
+          console.log("[SellerEarnings] sellerId derivation", {
+            user,
+            sellerIdFromSeller,
+            fallbackUserId,
+            finalSellerId,
+          });
+        } catch (e) {
+          console.log("[SellerEarnings] user parse error", e);
+        }
+      }
+      if (!finalSellerId && sidKey) {
+        console.log(
+          "[SellerEarnings] using sellerId key from localStorage",
+          sidKey
+        );
+        finalSellerId = sidKey;
+      }
+      return finalSellerId;
+    } catch (e) {
+      console.log("[SellerEarnings] getSellerIdFromStorage error", e);
+      return null;
+    }
+  };
+
+  React.useEffect(() => {
+    let mounted = true;
+    async function load() {
+      try {
+        setLoading(true);
+        setError(null);
+        const res = await api.get("/api/v1/cart/split-calculations", {
+          headers: { accept: "*/*" },
+        });
+        const payload: any = res?.data || {};
+        const list: any[] = Array.isArray(payload)
+          ? payload
+          : payload.data || payload.items || payload.splits || [];
+        const sellerId = getSellerIdFromStorage();
+        console.log("[SellerEarnings] fetched", {
+          count: list.length,
+          sellerId,
+        });
+        const filtered = sellerId
+          ? list.filter((i: any) => i?.sellerId === sellerId)
+          : [];
+        if (mounted)
+          setItems(
+            filtered.map((i: any) => ({
+              sellerId: i.sellerId,
+              netAmount: Number(i.netAmount || 0),
+              createdAt: i.createdAt,
+            }))
+          );
+      } catch (e: any) {
+        if (mounted) setError(e?.message || "Failed to load earnings");
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const startOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth(), 1);
+  const endOfMonth = (d: Date) =>
+    new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59, 999);
+  const isInRange = (dateIso: string, from: Date, to: Date) => {
+    const t = new Date(dateIso).getTime();
+    return t >= from.getTime() && t <= to.getTime();
+  };
+
+  const now = new Date();
+  const thisMonthFrom = startOfMonth(now);
+  const thisMonthTo = endOfMonth(now);
+  const lastMonthRef = new Date(now.getFullYear(), now.getMonth() - 1, 15);
+  const lastMonthFrom = startOfMonth(lastMonthRef);
+  const lastMonthTo = endOfMonth(lastMonthRef);
+
+  const thisMonthEarnings = items
+    .filter((i) => isInRange(i.createdAt, thisMonthFrom, thisMonthTo))
+    .reduce((sum, i) => sum + (i.netAmount || 0), 0);
+  const lastMonthEarnings = items
+    .filter((i) => isInRange(i.createdAt, lastMonthFrom, lastMonthTo))
+    .reduce((sum, i) => sum + (i.netAmount || 0), 0);
+
+  // Aggregate by day for chart
+  const dailyMap = new Map<string, number>();
+  for (const i of items) {
+    const d = new Date(i.createdAt);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}-${String(d.getDate()).padStart(2, "0")}`;
+    dailyMap.set(key, (dailyMap.get(key) || 0) + (i.netAmount || 0));
+  }
+  const chartData = Array.from(dailyMap.entries())
+    .sort((a, b) => (a[0] < b[0] ? -1 : 1))
+    .map(([key, value]) => {
+      const [y, m, d] = key.split("-");
+      const dateObj = new Date(Number(y), Number(m) - 1, Number(d));
+      const label = dateObj.toLocaleDateString("en-US", {
+        month: "short",
+        day: "2-digit",
+      });
+      return { dateLabel: label, netAmount: value };
+    });
+
+  if (loading) {
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-1 space-y-4">
+          <div className="h-24 rounded-lg bg-gray-200 dark:bg-gray-700 animate-pulse" />
+          <div className="h-24 rounded-lg bg-gray-200 dark:bg-gray-700 animate-pulse" />
+        </div>
+        <div className="lg:col-span-2">
+          <div className="h-64 rounded-lg bg-gray-200 dark:bg-gray-700 animate-pulse" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!items.length) {
+    return <div className="text-gray-500">No earnings data available</div>;
+  }
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Left: summaries */}
+      <div className="lg:col-span-1 space-y-4">
+        <Card className="bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/10">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-amber-800 dark:text-amber-300">
+              This Month Earnings
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-semibold">
+              RWF {thisMonthEarnings.toLocaleString()}
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/10">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-amber-800 dark:text-amber-300">
+              Last Month Earnings
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-semibold">
+              RWF {lastMonthEarnings.toLocaleString()}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Right: bar chart */}
+      <div className="lg:col-span-2">
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart
+            data={chartData}
+            margin={{ top: 8, right: 16, left: 0, bottom: 8 }}
+          >
+            <defs>
+              <linearGradient id="earningsGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.9} />
+                <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.3} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+            <XAxis
+              dataKey="dateLabel"
+              tick={{ fill: "#6B7280" }}
+              axisLine={{ stroke: "#D1D5DB" }}
+            />
+            <YAxis
+              tick={{ fill: "#6B7280" }}
+              axisLine={{ stroke: "#D1D5DB" }}
+            />
+            <Tooltip
+              formatter={(v: any) => [
+                `RWF ${Number(v).toLocaleString()}`,
+                "Net Amount",
+              ]}
+              labelStyle={{ color: "#111827" }}
+              contentStyle={{ borderRadius: 8 }}
+            />
+            <Bar
+              dataKey="netAmount"
+              fill="url(#earningsGradient)"
+              radius={[4, 4, 0, 0]}
+            />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+}
 
 export default function SellerOverview() {
   // Custom dashboard hook
@@ -42,6 +289,111 @@ export default function SellerOverview() {
   const { products, isLoading: productsLoading } = useProducts();
   const { categories, isLoading: categoriesLoading } = useCategories();
 
+  // Seller products count (from service fetching all products then filtering by sellerId)
+  const [sellerProductsCount, setSellerProductsCount] =
+    React.useState<number>(0);
+  const [sellerProductsLoading, setSellerProductsLoading] =
+    React.useState<boolean>(true);
+  const [sellerProductsError, setSellerProductsError] = React.useState<
+    string | null
+  >(null);
+
+  // Revenue and Orders from split-calculations
+  const [sellerTotals, setSellerTotals] = React.useState<{
+    totalRevenue: number;
+    totalOrders: number;
+  }>({ totalRevenue: 0, totalOrders: 0 });
+  const [sellerTotalsLoading, setSellerTotalsLoading] =
+    React.useState<boolean>(true);
+  const [sellerTotalsError, setSellerTotalsError] = React.useState<
+    string | null
+  >(null);
+
+  // Preferred Orders state
+  const [sellerOrders, setSellerOrders] = React.useState<any[]>([]);
+  const [sellerOrdersLoading, setSellerOrdersLoading] =
+    React.useState<boolean>(true);
+  const [sellerOrdersError, setSellerOrdersError] = React.useState<
+    string | null
+  >(null);
+
+  React.useEffect(() => {
+    let mounted = true;
+    async function loadSellerProductsCount() {
+      try {
+        setSellerProductsLoading(true);
+        setSellerProductsError(null);
+        // Log user record from localStorage and effect start
+        try {
+          const userStr =
+            typeof window !== "undefined" ? localStorage.getItem("user") : null;
+          console.log("[SellerOverview] effect:start", {
+            hasWindow: typeof window !== "undefined",
+            hasUser: !!userStr,
+          });
+          if (userStr) {
+            const user = JSON.parse(userStr);
+            console.log("[SellerOverview] localStorage.user", user);
+          }
+        } catch (e) {
+          console.log("[SellerOverview] localStorage.user:parse_error", e);
+        }
+        const count = await fetchSellerProductsCount();
+        if (mounted) setSellerProductsCount(count);
+        console.log("[SellerOverview] effect:success", { count });
+      } catch (e: any) {
+        if (mounted)
+          setSellerProductsError(e?.message || "Failed to load products");
+        console.log("[SellerOverview] effect:error", e);
+      } finally {
+        if (mounted) setSellerProductsLoading(false);
+        console.log("[SellerOverview] effect:finish");
+      }
+    }
+    loadSellerProductsCount();
+    // Load revenue and orders
+    (async () => {
+      try {
+        setSellerTotalsLoading(true);
+        setSellerTotalsError(null);
+        console.log("[SellerOverview] totals:start");
+        const totals = await fetchSellerRevenueAndOrders();
+        setSellerTotals(totals);
+        console.log("[SellerOverview] totals:success", totals);
+      } catch (e: any) {
+        setSellerTotalsError(e?.message || "Failed to load revenue & orders");
+        console.log("[SellerOverview] totals:error", e);
+      } finally {
+        setSellerTotalsLoading(false);
+        console.log("[SellerOverview] totals:finish");
+      }
+    })();
+    // Load preferred orders
+    (async () => {
+      try {
+        setSellerOrdersLoading(true);
+        setSellerOrdersError(null);
+        const userStr =
+          typeof window !== "undefined" ? localStorage.getItem("user") : null;
+        const user = userStr ? JSON.parse(userStr) : null;
+        const orders = await getSellerOrders(user);
+        const sorted = [...orders].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        setSellerOrders(sorted.slice(0, 5));
+      } catch (e: any) {
+        setSellerOrdersError(e?.message || "Failed to load orders");
+      } finally {
+        setSellerOrdersLoading(false);
+      }
+    })();
+    return () => {
+      mounted = false;
+      console.log("[SellerOverview] effect:cleanup");
+    };
+  }, []);
+
   const searchedProducts = products.filter((product) =>
     Object.values(product).some((value) =>
       String(value).toLowerCase().includes(searchTerm.toLowerCase())
@@ -49,19 +401,19 @@ export default function SellerOverview() {
   );
 
   const getCategoryName = (categoryId: string) => {
-    const category = categories.find(cat => cat.id === categoryId);
+    const category = categories.find((cat) => cat.id === categoryId);
     return category ? category.name : "Unknown";
   };
 
   if (isLoading) {
     return <div className="p-8 text-lg">Loading analytics...</div>;
   }
-  
+
   if (hasError) {
     return (
       <div className="p-8">
         <div className="text-red-500 mb-4">{error}</div>
-        <button 
+        <button
           onClick={() => {
             handleClearError();
             handleRefresh();
@@ -78,7 +430,7 @@ export default function SellerOverview() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
       <div className="px-2">
         {/* Header */}
-        <div className="mb-10">
+        <div className="mb-10 pt-8">
           <h1 className="text-2xl font-semibold">
             Welcome Back, {userInfo.fullName || "User"}!
           </h1>
@@ -86,192 +438,199 @@ export default function SellerOverview() {
             Here is what happening with your store today
           </p>
         </div>
-        {/* Charts Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-          {/* Revenue Over Time Line Chart */}
-          <div className="bg-white dark:bg-gray-800 rounded shadow p-4">
-            <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Revenue Over Time</h2>
-            <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={revenueData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis 
-                  dataKey="month" 
-                  tickFormatter={m => m?.slice(0,7)} 
-                  tick={{ fill: '#9CA3AF' }}
-                  axisLine={{ stroke: '#374151' }}
-                />
-                <YAxis 
-                  tick={{ fill: '#9CA3AF' }}
-                  axisLine={{ stroke: '#374151' }}
-                />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#1F2937', 
-                    border: '1px solid #374151',
-                    color: '#F9FAFB'
-                  }}
-                />
-                <Line type="monotone" dataKey="revenue" stroke="#8884d8" strokeWidth={2} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-          {/* Projects by Status Pie Chart */}
-          <div className="bg-white dark:bg-gray-800 rounded shadow p-4">
-            <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Projects by Status</h2>
-            <ResponsiveContainer width="100%" height={250}>
-              <PieChart>
-                <Pie
-                  data={projectsData}
-                  dataKey="_count._all"
-                  nameKey="status"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  fill="#82ca9d"
-                  label
-                >
-                  {projectsData.map((entry: any, index: number) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Legend 
-                  wrapperStyle={{ color: '#9CA3AF' }}
-                />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#1F2937', 
-                    border: '1px solid #374151',
-                    color: '#F9FAFB'
-                  }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+
+        {/* Seller Earnings Overview */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Seller Earnings Overview</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <SellerEarnings />
+          </CardContent>
+        </Card>
+
         {/* Stats Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <StatCard
-            title="Total Customers"
-            value={stats?.totalCustomers?.toLocaleString() ?? '--'}
+            title="Total product"
+            value={
+              sellerProductsLoading
+                ? "..."
+                : sellerProductsCount.toLocaleString()
+            }
             change={0}
             trend="up"
           />
           <StatCard
             title="Total Revenue"
-            value={stats?.totalRevenue ? `$${stats.totalRevenue.toLocaleString()}` : '--'}
+            value={
+              sellerTotalsLoading
+                ? "..."
+                : `RWF ${sellerTotals.totalRevenue.toLocaleString()}`
+            }
             change={0}
             trend="up"
           />
           <StatCard
             title="Total Orders"
-            value={stats?.totalOrders?.toLocaleString() ?? '--'}
+            value={
+              sellerTotalsLoading
+                ? "..."
+                : sellerTotals.totalOrders.toLocaleString()
+            }
             change={0}
             trend="up"
           />
         </div>
-        {/* Main Content Section: Product Table */}
-        <div className="flex flex-col lg:flex-row gap-8 w-full">
-          {/* Left Column: Recent Orders and Product Table */}
-          <div className="rounded-md w-full">
-            {/* Recent Orders Table */}
-            <div className="mb-8">
-              <h2 className="text-lg font-semibold mb-2">Recent Orders</h2>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-amber-300">Order ID</TableHead>
-                    <TableHead className="text-amber-300">Customer</TableHead>
-                    <TableHead className="text-amber-300">Date & Time</TableHead>
-                    <TableHead className="text-amber-300">Total</TableHead>
-                    <TableHead className="text-amber-300">Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {recentOrders?.length > 0 ? recentOrders.map((order: any) => (
-                    <TableRow key={order.id}>
-                      <TableCell className="py-4 text-bold">{order.id}</TableCell>
-                      <TableCell className="py-5">{order.customerName || '-'}</TableCell>
-                      <TableCell className="py-4">{order.createdAt ? new Date(order.createdAt).toLocaleString() : '-'}</TableCell>
-                      <TableCell className="">{order.total ? `$${order.total}` : '-'}</TableCell>
-                      <TableCell className="">{order.status || '-'}</TableCell>
-                    </TableRow>
-                  )) : (
-                    <TableRow>
-                      <TableCell colSpan={5} className="text-red-500 text-center py-4">
-                        No recent orders found.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-            {/* Product Table */}
-            <div>
-              <div className="mb-4 flex items-center justify-between">
-                <Input
-                  type="search"
-                  placeholder="Search by any product details..."
-                  className="w-[300px] sm:w-[400px]"
-                  value={searchTerm}
-                  onChange={e => handleSearch(e.target.value)}
-                />
-              </div>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-amber-300">Product Name</TableHead>
-                    <TableHead className="text-amber-300">Description</TableHead>
-                    <TableHead className="text-amber-300">Date & Time</TableHead>
-                    <TableHead className="text-amber-300">Category</TableHead>
-                    <TableHead className="text-amber-300">Price</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {searchedProducts.map((product) => (
-                    <TableRow key={product.id}>
-                      <TableCell className="py-4 text-bold">{product.name}</TableCell>
-                      <TableCell className="py-5 max-auto overflo">{product.description}</TableCell>
-                      <TableCell className="py-4">{product.createdAt ? new Date(product.createdAt).toLocaleString() : "-"}</TableCell>
-                      <TableCell className="py-4">{getCategoryName(product.categoryId)}</TableCell>
-                      <TableCell className="">{product.price ? `$${product.price}` : "-"}</TableCell>
-                    </TableRow>
-                  ))}
-                  {searchedProducts.length === 0 && (
-                    <TableRow>
-                      <TableCell colSpan={6} className="text-red-500 text-center py-4">
-                        No Products found.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
+
+        {/* Preferred Orders */}
+        <div className="mb-8">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-2xl font-semibold">
+              Preferred Ordered Products
+            </h2>
           </div>
-          {/* Right Column: Top Customers */}
-          {/* <div className="space-y-8 w-full lg:w-[30%]">
-            <div className="p-6 bg-white rounded shadow">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Top Customers</h2>
-              </div>
-              <div className="space-y-4">
-                {topCustomers?.length > 0 ? topCustomers.map((customer: any) => (
-                  <div key={customer.id} className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <img src={customer.avatar || 'https://i.pravatar.cc/150?u=' + customer.id} alt={customer.name} className="w-10 h-10 rounded-full object-cover" />
-                      <div>
-                        <p className="font-medium">{customer.name}</p>
-                        <p className="text-sm text-gray-500">{customer.purchases} Purchases</p>
-                      </div>
-                    </div>
-                    <span className="font-medium">${customer.amount?.toLocaleString()}</span>
-                  </div>
-                )) : (
-                  <div className="text-gray-500">No top customers found.</div>
-                )}
-              </div>
+          {sellerOrdersLoading ? (
+            <div className="space-y-3">
+              <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+              <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
+              <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
             </div>
-            <Comments />
-          </div> */}
+          ) : sellerOrders.length === 0 ? (
+            <div className="text-gray-500">No preferred orders yet.</div>
+          ) : (
+            <Card className="bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/10">
+              <CardContent className="pt-6">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-amber-700 dark:text-amber-300">
+                        #
+                      </TableHead>
+                      <TableHead className="text-amber-700 dark:text-amber-300">
+                        Buyer Name
+                      </TableHead>
+                      <TableHead className="text-amber-700 dark:text-amber-300">
+                        Email
+                      </TableHead>
+                      <TableHead className="text-amber-700 dark:text-amber-300">
+                        Product
+                      </TableHead>
+                      <TableHead className="text-amber-700 dark:text-amber-300">
+                        Price
+                      </TableHead>
+                      <TableHead className="text-amber-700 dark:text-amber-300">
+                        Quantity
+                      </TableHead>
+                      <TableHead className="text-amber-700 dark:text-amber-300">
+                        Status
+                      </TableHead>
+                      <TableHead className="text-amber-700 dark:text-amber-300">
+                        Created
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {sellerOrders.map((o: any, idx: number) => {
+                      const firstProduct = o?.products?.[0] || {};
+                      const productName = firstProduct?.name || "—";
+                      const quantity = firstProduct?.quantity || 0;
+                      const price = firstProduct?.price || 0;
+                      const buyerName = o?.buyer?.name || o?.buyerName || "—";
+                      const buyerEmail =
+                        o?.buyer?.email || o?.buyerEmail || "—";
+                      const status = String(o?.status || "").toUpperCase();
+                      const isPaid = status === "PAID";
+                      const created = o?.createdAt
+                        ? new Date(o.createdAt).toLocaleString()
+                        : "—";
+                      return (
+                        <TableRow key={o.orderId || idx}>
+                          <TableCell className="py-4">{idx + 1}.</TableCell>
+                          <TableCell className="py-4">{buyerName}</TableCell>
+                          <TableCell className="py-4">{buyerEmail}</TableCell>
+                          <TableCell className="py-4">{productName}</TableCell>
+                          <TableCell className="py-4">
+                            {price
+                              ? `RWF ${Number(price).toLocaleString()}`
+                              : "-"}
+                          </TableCell>
+                          <TableCell className="py-4">{quantity}</TableCell>
+                          <TableCell className="py-4">
+                            <Badge
+                              className={
+                                isPaid ? "bg-green-500" : "bg-yellow-500"
+                              }
+                            >
+                              {status || "—"}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="py-4">{created}</TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+
+        {/* Product Table */}
+        <div>
+          <div className="mb-4 flex items-center justify-between">
+            <Input
+              type="search"
+              placeholder="Search by any product details..."
+              className="w-[300px] sm:w-[400px]"
+              value={searchTerm}
+              onChange={(e) => handleSearch(e.target.value)}
+            />
+          </div>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-amber-300">Product Name</TableHead>
+                <TableHead className="text-amber-300">Description</TableHead>
+                <TableHead className="text-amber-300">Date & Time</TableHead>
+                <TableHead className="text-amber-300">Category</TableHead>
+                <TableHead className="text-amber-300">Price</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {searchedProducts.map((product) => (
+                <TableRow key={product.id}>
+                  <TableCell className="py-4 text-bold">
+                    {product.name}
+                  </TableCell>
+                  <TableCell className="py-5 max-auto overflo">
+                    {product.description}
+                  </TableCell>
+                  <TableCell className="py-4">
+                    {product.createdAt
+                      ? new Date(product.createdAt).toLocaleString()
+                      : "-"}
+                  </TableCell>
+                  <TableCell className="py-4">
+                    {getCategoryName(product.categoryId)}
+                  </TableCell>
+                  <TableCell className="">
+                    {product.price ? `RWF ${product.price}` : "-"}
+                  </TableCell>
+                </TableRow>
+              ))}
+              {searchedProducts.length === 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={6}
+                    className="text-red-500 text-center py-4"
+                  >
+                    No Products found.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
         </div>
       </div>
     </div>

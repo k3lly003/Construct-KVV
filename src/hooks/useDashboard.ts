@@ -2,6 +2,7 @@
 
 import { useDashboardStore, useUserStore } from "../store";
 import { useCallback, useMemo } from "react";
+import { getInitials } from "@/app/utils/middlewares/getInitials";
 
 /**
  * Custom hook that provides dashboard-specific functionality
@@ -26,12 +27,15 @@ export function useDashboard() {
     clearError,
   } = useDashboardStore();
 
-  const { role, firstName, lastName, email } = useUserStore();
+  const { role, firstName, lastName, email, profilePic } = useUserStore();
+
+  // Dummy profilePic for dashboard avatars
+  const dummyProfilePic = "/user1.jpeg";
 
   // Computed values
   const stats = useMemo(() => {
     if (!analytics) return null;
-    
+
     return {
       totalCustomers: analytics.users?.totalCustomers || 0,
       totalRevenue: analytics.ecommerce?.totalSales || 0,
@@ -60,34 +64,54 @@ export function useDashboard() {
   }, [analytics]);
 
   // User info
-  const userInfo = useMemo(() => ({
-    fullName: `${firstName || ""} ${lastName || ""}`.trim(),
-    firstName,
-    lastName,
-    email,
-    role,
-  }), [firstName, lastName, email, role]);
+  const userInfo = useMemo(
+    () => ({
+      fullName: `${firstName || ""} ${lastName || ""}`.trim(),
+      firstName,
+      lastName,
+      email,
+      role,
+      profilePic,
+      profileInitials:
+        !profilePic && firstName && lastName
+          ? getInitials(firstName, lastName)
+          : undefined,
+    }),
+    [firstName, lastName, email, role, profilePic]
+  );
 
   // Actions
   const handleRefresh = useCallback(async () => {
     await refreshAnalytics();
   }, [refreshAnalytics]);
 
-  const handleSearch = useCallback((term: string) => {
-    setSearchTerm(term);
-  }, [setSearchTerm]);
+  const handleSearch = useCallback(
+    (term: string) => {
+      setSearchTerm(term);
+    },
+    [setSearchTerm]
+  );
 
-  const handleCategoryFilter = useCallback((category: string | null) => {
-    setSelectedCategory(category);
-  }, [setSelectedCategory]);
+  const handleCategoryFilter = useCallback(
+    (category: string | null) => {
+      setSelectedCategory(category);
+    },
+    [setSelectedCategory]
+  );
 
-  const handleTimeRangeChange = useCallback((range: "7d" | "30d" | "90d" | "1y") => {
-    setSelectedTimeRange(range);
-  }, [setSelectedTimeRange]);
+  const handleTimeRangeChange = useCallback(
+    (range: "7d" | "30d" | "90d" | "1y") => {
+      setSelectedTimeRange(range);
+    },
+    [setSelectedTimeRange]
+  );
 
-  const handleViewChange = useCallback((view: "overview" | "detailed") => {
-    setDashboardView(view);
-  }, [setDashboardView]);
+  const handleViewChange = useCallback(
+    (view: "overview" | "detailed") => {
+      setDashboardView(view);
+    },
+    [setDashboardView]
+  );
 
   const handleClearError = useCallback(() => {
     clearError();
@@ -107,20 +131,20 @@ export function useDashboard() {
     revenueData,
     projectsData,
     userInfo,
-    
+
     // UI State
     searchTerm,
     selectedCategory,
     selectedTimeRange,
     dashboardView,
     lastUpdated,
-    
+
     // Loading states
     isLoading,
     hasError,
     hasData,
     error: analyticsError,
-    
+
     // Actions
     handleRefresh,
     handleSearch,

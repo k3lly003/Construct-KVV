@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { StatCard } from "@/app/dashboard/(components)/overview/sections/stat-card";
 import Comments from "@/app/dashboard/(components)/overview/sections/comments";
@@ -15,10 +15,31 @@ import { Input } from "@/components/ui/input";
 import { useCategories } from "@/app/hooks/useCategories";
 import { useDashboard } from "@/hooks/useDashboard";
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend
-} from 'recharts';
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
+} from "recharts";
+import { useEffect, useState } from "react";
+import { revenueSplitService } from "@/app/services/RevenueSplitService";
 
-const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const COLORS = [
+  "#8884d8",
+  "#82ca9d",
+  "#ffc658",
+  "#ff8042",
+  "#0088FE",
+  "#00C49F",
+  "#FFBB28",
+  "#FF8042",
+];
 
 export default function AdminOverview() {
   // Custom dashboard hook
@@ -42,6 +63,20 @@ export default function AdminOverview() {
   const { products, isLoading: productsLoading } = useProducts();
   const { categories, isLoading: categoriesLoading } = useCategories();
 
+  const [totalCommission, setTotalCommission] = useState<number>(0);
+  const [totalGross, setTotalGross] = useState<number>(0);
+
+  useEffect(() => {
+    revenueSplitService
+      .getTotalPlatformCommission()
+      .then(setTotalCommission)
+      .catch(() => setTotalCommission(0));
+    revenueSplitService
+      .getTotalGross()
+      .then(setTotalGross)
+      .catch(() => setTotalGross(0));
+  }, []);
+
   const searchedProducts = products.filter((product) =>
     Object.values(product).some((value) =>
       String(value).toLowerCase().includes(searchTerm.toLowerCase())
@@ -49,19 +84,19 @@ export default function AdminOverview() {
   );
 
   const getCategoryName = (categoryId: string) => {
-    const category = categories.find(cat => cat.id === categoryId);
+    const category = categories.find((cat) => cat.id === categoryId);
     return category ? category.name : "Unknown";
   };
 
   if (isLoading) {
     return <div className="p-8 text-lg">Loading analytics...</div>;
   }
-  
+
   if (hasError) {
     return (
       <div className="p-8">
         <div className="text-red-500 mb-4">{error}</div>
-        <button 
+        <button
           onClick={() => {
             handleClearError();
             handleRefresh();
@@ -90,34 +125,43 @@ export default function AdminOverview() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           {/* Revenue Over Time Line Chart */}
           <div className="bg-white dark:bg-gray-800 rounded shadow p-4">
-            <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Revenue Over Time</h2>
+            <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
+              Revenue Over Time
+            </h2>
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={revenueData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis 
-                  dataKey="month" 
-                  tickFormatter={m => m?.slice(0,7)} 
-                  tick={{ fill: '#9CA3AF' }}
-                  axisLine={{ stroke: '#374151' }}
+                <XAxis
+                  dataKey="month"
+                  tickFormatter={(m) => m?.slice(0, 7)}
+                  tick={{ fill: "#9CA3AF" }}
+                  axisLine={{ stroke: "#374151" }}
                 />
-                <YAxis 
-                  tick={{ fill: '#9CA3AF' }}
-                  axisLine={{ stroke: '#374151' }}
+                <YAxis
+                  tick={{ fill: "#9CA3AF" }}
+                  axisLine={{ stroke: "#374151" }}
                 />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#1F2937', 
-                    border: '1px solid #374151',
-                    color: '#F9FAFB'
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#1F2937",
+                    border: "1px solid #374151",
+                    color: "#F9FAFB",
                   }}
                 />
-                <Line type="monotone" dataKey="revenue" stroke="#8884d8" strokeWidth={2} />
+                <Line
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="#8884d8"
+                  strokeWidth={2}
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>
           {/* Projects by Status Pie Chart */}
           <div className="bg-white dark:bg-gray-800 rounded shadow p-4">
-            <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Projects by Status</h2>
+            <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
+              Projects by Status
+            </h2>
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie
@@ -131,17 +175,18 @@ export default function AdminOverview() {
                   label
                 >
                   {projectsData.map((entry: any, index: number) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
                   ))}
                 </Pie>
-                <Legend 
-                  wrapperStyle={{ color: '#9CA3AF' }}
-                />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: '#1F2937', 
-                    border: '1px solid #374151',
-                    color: '#F9FAFB'
+                <Legend wrapperStyle={{ color: "#9CA3AF" }} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#1F2937",
+                    border: "1px solid #374151",
+                    color: "#F9FAFB",
                   }}
                 />
               </PieChart>
@@ -149,25 +194,34 @@ export default function AdminOverview() {
           </div>
         </div>
         {/* Stats Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
           <StatCard
             title="Total Customers"
-            value={stats?.totalCustomers?.toLocaleString() ?? '--'}
+            value={stats?.totalCustomers?.toLocaleString() ?? "--"}
             change={0}
             trend="up"
           />
           <StatCard
-            title="Total Revenue"
-            value={stats?.totalRevenue ? `$${stats.totalRevenue.toLocaleString()}` : '--'}
+            title="Total Gross"
+            value={`RWF ${totalGross.toLocaleString()}`}
             change={0}
             trend="up"
           />
+
           <StatCard
             title="Total Orders"
-            value={stats?.totalOrders?.toLocaleString() ?? '--'}
+            value={stats?.totalOrders?.toLocaleString() ?? "--"}
             change={0}
             trend="up"
           />
+          <StatCard
+            title="Total Commission"
+            value={`RWF ${totalCommission.toLocaleString()}`}
+            change={0}
+            trend="up"
+          />
+      
         </div>
         {/* Main Content Section: Product Table */}
         <div className="flex flex-col lg:flex-row gap-8 w-full">
@@ -181,23 +235,42 @@ export default function AdminOverview() {
                   <TableRow>
                     <TableHead className="text-amber-300">Order ID</TableHead>
                     <TableHead className="text-amber-300">Customer</TableHead>
-                    <TableHead className="text-amber-300">Date & Time</TableHead>
+                    <TableHead className="text-amber-300">
+                      Date & Time
+                    </TableHead>
                     <TableHead className="text-amber-300">Total</TableHead>
                     <TableHead className="text-amber-300">Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {recentOrders?.length > 0 ? recentOrders.map((order: any) => (
-                    <TableRow key={order.id}>
-                      <TableCell className="py-4 text-bold">{order.id}</TableCell>
-                      <TableCell className="py-5">{order.customerName || '-'}</TableCell>
-                      <TableCell className="py-4">{order.createdAt ? new Date(order.createdAt).toLocaleString() : '-'}</TableCell>
-                      <TableCell className="">{order.total ? `$${order.total}` : '-'}</TableCell>
-                      <TableCell className="">{order.status || '-'}</TableCell>
-                    </TableRow>
-                  )) : (
+                  {recentOrders?.length > 0 ? (
+                    recentOrders.map((order: any) => (
+                      <TableRow key={order.id}>
+                        <TableCell className="py-4 text-bold">
+                          {order.id}
+                        </TableCell>
+                        <TableCell className="py-5">
+                          {order.customerName || "-"}
+                        </TableCell>
+                        <TableCell className="py-4">
+                          {order.createdAt
+                            ? new Date(order.createdAt).toLocaleString()
+                            : "-"}
+                        </TableCell>
+                        <TableCell className="">
+                          {order.total ? `RWF ${order.total}` : "-"}
+                        </TableCell>
+                        <TableCell className="">
+                          {order.status || "-"}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-red-500 text-center py-4">
+                      <TableCell
+                        colSpan={5}
+                        className="text-red-500 text-center py-4"
+                      >
                         No recent orders found.
                       </TableCell>
                     </TableRow>
@@ -213,15 +286,21 @@ export default function AdminOverview() {
                   placeholder="Search by any product details..."
                   className="w-[300px] sm:w-[400px]"
                   value={searchTerm}
-                  onChange={e => handleSearch(e.target.value)}
+                  onChange={(e) => handleSearch(e.target.value)}
                 />
               </div>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="text-amber-300">Product Name</TableHead>
-                    <TableHead className="text-amber-300">Description</TableHead>
-                    <TableHead className="text-amber-300">Date & Time</TableHead>
+                    <TableHead className="text-amber-300">
+                      Product Name
+                    </TableHead>
+                    <TableHead className="text-amber-300">
+                      Description
+                    </TableHead>
+                    <TableHead className="text-amber-300">
+                      Date & Time
+                    </TableHead>
                     <TableHead className="text-amber-300">Category</TableHead>
                     <TableHead className="text-amber-300">Price</TableHead>
                   </TableRow>
@@ -229,16 +308,31 @@ export default function AdminOverview() {
                 <TableBody>
                   {searchedProducts.map((product) => (
                     <TableRow key={product.id}>
-                      <TableCell className="py-4 text-bold">{product.name}</TableCell>
-                      <TableCell className="py-5 max-auto overflo">{product.description}</TableCell>
-                      <TableCell className="py-4">{product.createdAt ? new Date(product.createdAt).toLocaleString() : "-"}</TableCell>
-                      <TableCell className="py-4">{getCategoryName(product.categoryId)}</TableCell>
-                      <TableCell className="">{product.price ? `$${product.price}` : "-"}</TableCell>
+                      <TableCell className="py-4 text-bold">
+                        {product.name}
+                      </TableCell>
+                      <TableCell className="py-5 max-auto overflo">
+                        {product.description}
+                      </TableCell>
+                      <TableCell className="py-4">
+                        {product.createdAt
+                          ? new Date(product.createdAt).toLocaleString()
+                          : "-"}
+                      </TableCell>
+                      <TableCell className="py-4">
+                        {getCategoryName(product.categoryId)}
+                      </TableCell>
+                      <TableCell className="">
+                        {product.price ? `RWF ${product.price}` : "-"}
+                      </TableCell>
                     </TableRow>
                   ))}
                   {searchedProducts.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={6} className="text-red-500 text-center py-4">
+                      <TableCell
+                        colSpan={6}
+                        className="text-red-500 text-center py-4"
+                      >
                         No Products found.
                       </TableCell>
                     </TableRow>
@@ -263,7 +357,7 @@ export default function AdminOverview() {
                         <p className="text-sm text-gray-500">{customer.purchases} Purchases</p>
                       </div>
                     </div>
-                    <span className="font-medium">${customer.amount?.toLocaleString()}</span>
+                    <span className="font-medium">RWF {customer.amount?.toLocaleString()}</span>
                   </div>
                 )) : (
                   <div className="text-gray-500">No top customers found.</div>

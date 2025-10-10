@@ -5,11 +5,19 @@ import { create } from "zustand";
 // Define the shape of your user state
 interface UserState {
   id: string | null;
-  role: "ADMIN" | "SELLER" | "CUSTOMER" | "CONTRACTOR" | "ARCHITECT" | "TECHNICIAN" | null;
+  role:
+    | "ADMIN"
+    | "SELLER"
+    | "CUSTOMER"
+    | "CONTRACTOR"
+    | "ARCHITECT"
+    | "TECHNICIAN"
+    | null;
   firstName: string | null;
   lastName: string | null;
   name: string | null;
   email: string | null;
+  profilePic: string | null;
   isHydrated: boolean; // Flag to indicate if client-side data has been loaded
 
   // Action to load user data from localStorage
@@ -27,6 +35,7 @@ export const useUserStore = create<UserState>((set) => ({
   lastName: null,
   name: null,
   email: null,
+  profilePic: null,
   isHydrated: false,
 
   loadUserData: () => {
@@ -36,11 +45,18 @@ export const useUserStore = create<UserState>((set) => ({
       if (user) {
         set({
           id: user.id ?? null,
-          role: user.role as "ADMIN" | "SELLER" | "CUSTOMER" | "CONTRACTOR" | "ARCHITECT" | "TECHNICIAN", // Now supports all professional roles
+          role: user.role as
+            | "ADMIN"
+            | "SELLER"
+            | "CUSTOMER"
+            | "CONTRACTOR"
+            | "ARCHITECT"
+            | "TECHNICIAN", // Now supports all professional roles
           firstName: user.firstName,
           lastName: user.lastName,
           name: `${user.firstName} ${user.lastName}`,
           email: `${user.email}`,
+          profilePic: user.profilePic || null,
           isHydrated: true, // Mark as hydrated once data is loaded
         });
       } else {
