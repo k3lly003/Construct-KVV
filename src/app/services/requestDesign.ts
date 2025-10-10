@@ -52,8 +52,7 @@ export const requestDesign = {
     if (filters?.status) params.append('status', filters.status);
     if (filters?.page) params.append('page', filters.page.toString());
     if (filters?.limit) params.append('limit', filters.limit.toString());
-
-    const response = await api.get(`/api/v1/architects/me/design-requests?${params.toString()}`);
+    const response = await api.get(`/api/v1/design-requests/architects/me?${params.toString()}`);
     return response.data as DesignRequest[];
   },
 

@@ -227,7 +227,12 @@ export const architectService = {
 
   // Get design requests for architect
   async getDesignRequests(): Promise<DesignRequest[]> {
-    const response = await axiosInstance.get<{ success: boolean; data: DesignRequest[] }>(`${API_BASE_URL}/api/v1/architects/me/design-requests`);
-    return response.data.data || [];
+    const response = await axiosInstance.get<{ success?: boolean; data?: DesignRequest[] }>(`${API_BASE_URL}/api/v1/design-requests/architects/me`);
+    // Support both wrapped and raw array responses
+    const maybeWrapped = response.data as { success?: boolean; data?: DesignRequest[] } | DesignRequest[];
+    if (Array.isArray(maybeWrapped)) {
+      return maybeWrapped;
+    }
+    return maybeWrapped.data || [];
   }
 }
