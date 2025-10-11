@@ -178,6 +178,52 @@ export const productService = {
     }
   },
 
+  /**
+   * Get products for the authenticated seller (NEW ENDPOINT)
+   * @param authToken - Bearer token
+   * @param page - Page number (default: 1)
+   * @param limit - Number of products per page (default: 10)
+   * @returns Array of products belonging to the authenticated seller
+   */
+  async getMyProducts(
+    authToken: string,
+    page: number = 1,
+    limit: number = 10
+  ): Promise<Product[]> {
+    try {
+      console.log("=== GET MY PRODUCTS DEBUG ===");
+      console.log("API URL:", `${API_URL}/api/v1/products/seller/my-products`);
+      console.log("Page:", page, "Limit:", limit);
+      
+      const response = await axios.get<{ data: Product[] }>(
+        `${API_URL}/api/v1/products/seller/my-products?page=${page}&limit=${limit}`,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+      
+      console.log("My Products API Response:", response.data);
+      return Array.isArray(response.data.data) ? response.data.data : [];
+    } catch (error: unknown) {
+      console.error("Error fetching my products:", error);
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "isAxiosError" in error &&
+        (error as any).isAxiosError &&
+        "response" in error &&
+        (error as any).response
+      ) {
+        const errResponse = (error as any).response;
+        console.error("API Error Response:", errResponse.data);
+        console.error("API Error Status:", errResponse.status);
+      }
+      throw error instanceof Error ? error : new Error(String(error));
+    }
+  },
+
   async getPaidOrdersForUser(
     page = 1,
     limit = 10,
