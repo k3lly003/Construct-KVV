@@ -71,6 +71,12 @@ export const useProducts = () => {
     return productService.getProductsBySellerId(sellerId, authToken);
   }, [authToken]);
 
+  // Get my products (authenticated seller's products)
+  const getMyProducts = useCallback(async (page: number = 1, limit: number = 10) => {
+    if (!authToken) throw new Error("Not authenticated");
+    return productService.getMyProducts(authToken, page, limit);
+  }, [authToken]);
+
   const createProduct = useCallback(async (formData: FormData) => {
     return createProductMutation.mutateAsync(formData);
   }, [createProductMutation]);
@@ -93,5 +99,6 @@ export const useProducts = () => {
     getProductById,
     getProductBySlug,
     getProductsBySellerId,
+    getMyProducts,
   };
 }; 
