@@ -22,14 +22,13 @@ import { useProducts } from '@/app/hooks/useProduct';
 import ProductPreview from "../../(components)/products/ProductPreview";
 import CategorySelect from "./CategorySelect";
 import ProductImageUpload from "./ProductImageUpload";
-import { useShop } from '@/app/hooks/useShop';
+// Removed useShop import - sellers no longer need shops
 import { useCustomerProfile } from '@/app/hooks/useCustomerProfile';
 // Removed unused imports: Alert, Terminal, Link (no longer needed)
 
 
 const Page = () => {
   const { createProduct, isLoading } = useProducts();
-  const { myShop, isMyShopLoading } = useShop();
   const { profile, isLoading: isProfileLoading } = useCustomerProfile();
 
   // Console logs to verify fetched data
@@ -59,15 +58,10 @@ const Page = () => {
       form.setValue('sellerId', profile.id);
       console.log("Setting sellerId in form:", profile.id);
     }
-    // Shop is now optional - only set if available
-    if (myShop?.id) {
-      form.setValue('shopId', myShop.id);
-      console.log("Setting shopId in form:", myShop.id);
-    } else {
-      form.setValue('shopId', '');
-      console.log("No shop found - product will be created without shop association");
-    }
-  }, [profile, myShop, form]);
+    // Sellers no longer need shops - always set shopId to empty
+    form.setValue('shopId', '');
+    console.log("Sellers no longer need shops - product will be created without shop association");
+  }, [profile, form]);
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,

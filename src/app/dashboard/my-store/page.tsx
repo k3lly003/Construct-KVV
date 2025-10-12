@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   Table,
   TableHeader,
@@ -11,13 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { GenericButton } from "@/components/ui/generic-button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
-import { ChevronDown, Funnel, Pencil, Plus, Trash2, Upload } from "lucide-react";
+import { Funnel, Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -27,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import Link from "next/link";
 import { useProducts } from "@/app/hooks/useProduct";
-import { useShop } from '@/app/hooks/useShop';
+// Removed useShop import - sellers no longer need shops
 import {
   Dialog,
   DialogContent,
@@ -39,7 +33,7 @@ import {
 import { toast } from "sonner";
 import CategorySelect from "@/app/dashboard/my-store/create/CategorySelect";
 import { useTranslations } from '@/app/hooks/useTranslations';
-import MyService from "../create-service/my-service";
+// Removed MyService import - sellers only deal with products now
 
 // Temporary Pagination component implementation
 interface PaginationProps {
@@ -87,15 +81,12 @@ const Pagination = ({ total, current, onPageChange }: PaginationProps) => {
 
 const Page = () => {
   const { t } = useTranslations();
-  const [activeTab, setActiveTab] = useState("products"); // Default to products
   const [searchTerm, setSearchTerm] = useState("");
   const [resultsPerPage, setResultsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
-  const { myShop, myShopError, isMyShopLoading } = useShop();
-  const sellerId = myShop?.seller?.id || null;
+  // Removed shop dependency - sellers no longer need shops
   const {
-    getProductsBySellerId,
+    getMyProducts,
     isLoading,
     error,
     deleteProduct,
@@ -104,6 +95,8 @@ const Page = () => {
   } = useProducts();
 
   const [products, setProducts] = useState<any[]>([]);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(false);
+  const isFetchingRef = useRef(false);
 
   // Dialog state
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -111,43 +104,96 @@ const Page = () => {
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const [editForm, setEditForm] = useState<any | null>(null);
 
-  // Fetch products for this seller
+  // Fetch products for the authenticated seller
   useEffect(() => {
-    if (!sellerId) return;
-    getProductsBySellerId(sellerId)
-      .then((data) => setProducts(data))
-      .catch(() => setProducts([]));
-  }, [sellerId, getProductsBySellerId]);
+    const fetchProducts = async () => {
+      // Prevent multiple simultaneous requests
+      if (isFetchingRef.current) {
+        console.log("Request already in progress, skipping...");
+        return;
+      }
 
-  // Filter products based on the active tab
-  useEffect(() => {
-    if (activeTab === "products") {
-      // Show all products (since we're only fetching products)
-      setFilteredProducts(products);
-    } else {
-      // For services, we don't filter products since services are handled by MyService component
-      setFilteredProducts([]);
+      // Check if auth token is available
+      const authToken = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+      if (!authToken) {
+        console.log("No auth token available, skipping fetch...");
+        return;
+      }
+
+      console.log("=== FETCHING PRODUCTS ===");
+      console.log("Current Page:", currentPage);
+      console.log("Results Per Page:", resultsPerPage);
+      console.log("Auth Token: Present");
+      
+      isFetchingRef.current = true;
+      setIsLoadingProducts(true);
+      try {
+        const data = await getMyProducts(currentPage, resultsPerPage);
+        console.log("Products fetched successfully:", data);
+        console.log("First product structure:", data[0]);
+        console.log("Products count:", data.length);
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching my products:", error);
+        setProducts([]);
+      } finally {
+        setIsLoadingProducts(false);
+        isFetchingRef.current = false;
+      }
+    };
+
+    fetchProducts();
+  }, [getMyProducts, currentPage, resultsPerPage]);
+
+  // Function to refresh products (for manual refresh after CRUD operations)
+  const refreshProducts = useCallback(async () => {
+    // Prevent multiple simultaneous requests
+    if (isFetchingRef.current) {
+      console.log("Request already in progress, skipping refresh...");
+      return;
     }
-    setCurrentPage(1); // Reset page on tab change
-  }, [activeTab, products]);
 
-  // Filter products based on the search term
-  const searchedProducts = filteredProducts.filter((product) =>
-    Object.values(product).some((value) =>
-      String(value).toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
+    // Check if auth token is available
+    const authToken = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+    if (!authToken) {
+      console.log("No auth token available, skipping refresh...");
+      return;
+    }
 
-  const totalResults = searchedProducts.length;
+    console.log("=== MANUAL REFRESH PRODUCTS ===");
+    isFetchingRef.current = true;
+    setIsLoadingProducts(true);
+    try {
+      const data = await getMyProducts(currentPage, resultsPerPage);
+      console.log("Products refreshed successfully:", data);
+      setProducts(data);
+    } catch (error) {
+      console.error("Error refreshing my products:", error);
+      setProducts([]);
+    } finally {
+      setIsLoadingProducts(false);
+      isFetchingRef.current = false;
+    }
+  }, [getMyProducts, currentPage, resultsPerPage]);
+
+  // Filter products based on search term
+  const searchedProducts = (products || []).filter((product) => {
+    if (!product) return false;
+    return Object.values(product).some((value) => {
+      if (value === null || value === undefined) return false;
+      return String(value).toLowerCase().includes(searchTerm.toLowerCase());
+    });
+  });
+
+  // Filter out any invalid products
+  const validProducts = searchedProducts.filter(product => product && product.id);
+  const totalResults = validProducts.length;
   const startIndex = (currentPage - 1) * resultsPerPage;
   const endIndex = startIndex + resultsPerPage;
-  const currentProducts = searchedProducts.slice(startIndex, endIndex);
+  const currentProducts = validProducts.slice(startIndex, endIndex);
   const totalPages = Math.ceil(totalResults / resultsPerPage);
 
-  const handleTabChange = (value: string) => {
-    setActiveTab(value);
-    setCurrentPage(1); // Reset page on tab change
-  };
+  // Removed tab change handler - only products now
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -172,11 +218,7 @@ const Page = () => {
       setDeleteDialogOpen(false);
       setSelectedProduct(null);
       // Refresh product list
-      if (sellerId) {
-        getProductsBySellerId(sellerId)
-          .then((data) => setProducts(data))
-          .catch(() => setProducts([]));
-      }
+      refreshProducts();
     } catch (err) {
       toast.error("Failed to delete product");
     }
@@ -205,11 +247,7 @@ const Page = () => {
       setEditDialogOpen(false);
       setSelectedProduct(null);
       // Refresh product list
-      if (sellerId) {
-        getProductsBySellerId(sellerId)
-          .then((data) => setProducts(data))
-          .catch(() => setProducts([]));
-      }
+      refreshProducts();
     } catch (err) {
       toast.error("Failed to update product");
     }
@@ -225,13 +263,7 @@ const Page = () => {
             {t('dashboard.productsManagementDesc')}
           </p>
         </div>
-        <div className="space-x-2">
-          <Link href="/dashboard/create-service">
-            <GenericButton className="gap-2">
-              <Plus className="h-4 w-4" />
-              {t('dashboard.addService')}
-            </GenericButton>
-          </Link>
+        <div>
           <Link href="/dashboard/my-store/create">
             <GenericButton className="gap-2">
               <Plus className="h-4 w-4" />
@@ -243,25 +275,13 @@ const Page = () => {
 
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <GenericButton variant="outline" size="sm">
-                <Funnel className="h-4 w-4 mr-2" />
-                {activeTab === "products" ? "Products" : "Services"} <ChevronDown className="h-4 w-4 ml-2" />
-              </GenericButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[200px]">
-              <DropdownMenuItem onClick={() => handleTabChange("products")}>
-                Products
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleTabChange("services")}>
-                Services
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex items-center gap-2">
+            <Funnel className="h-4 w-4" />
+            <span className="text-sm font-medium">Products</span>
+          </div>
           <Input
             type="search"
-            placeholder={`Search by any ${activeTab} details...`}
+            placeholder="Search by product details..."
             className="w-[300px] sm:w-[400px]"
             value={searchTerm}
             onChange={handleSearchChange}
@@ -269,8 +289,7 @@ const Page = () => {
         </div>
       </div>
 
-      {activeTab === "products" ? (
-        <div className="rounded-md border">
+      <div className="rounded-md border">
           <Table>
             <TableHeader>
               <TableRow>
@@ -283,39 +302,57 @@ const Page = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {currentProducts.map((product) => (
-                <TableRow key={product.id}>
+              {isLoadingProducts ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={6}
+                    className="text-center py-8"
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Loading products...
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                currentProducts.map((product) => (
+                <TableRow key={product?.id || Math.random()}>
                   <TableCell className="font-medium py-4">
-                    {product.thumbnailUrl ? (
-                      <img src={product.thumbnailUrl} alt={product.name} className="w-12 h-12 object-cover rounded" />
+                    {product?.thumbnailUrl ? (
+                      <img src={product.thumbnailUrl} alt={product?.name || 'Product'} className="w-12 h-12 object-cover rounded" />
                     ) : (
                       <span>No Image</span>
                     )}
                   </TableCell>
-                  <TableCell className="py-2">{product.name}</TableCell>
-                  <TableCell className="py-2 md:py-5 max-auto overflo">{product.category.name}</TableCell>
-                  <TableCell className="py-2">{product.createdAt ? new Date(product.createdAt).toLocaleDateString() : "-"}</TableCell>
-                  <TableCell className="">{product.price ? `${product.price} Rfw` : "-"}</TableCell>
+                  <TableCell className="py-2">{product?.name || 'Unnamed Product'}</TableCell>
+                  <TableCell className="py-2 md:py-5 max-auto overflo">{product?.category?.name || 'No Category'}</TableCell>
+                  <TableCell className="py-2">{product?.createdAt ? new Date(product.createdAt).toLocaleDateString() : "-"}</TableCell>
+                  <TableCell className="">{product?.price ? `${product.price} Rfw` : "-"}</TableCell>
                   <TableCell className="flex gap-3 my-5">
                     <Trash2
                       className="cursor-pointer hover:text-red-500 w-[20px]"
                       onClick={() => {
-                        setSelectedProduct(product);
-                        setDeleteDialogOpen(true);
+                        if (product?.id) {
+                          setSelectedProduct(product);
+                          setDeleteDialogOpen(true);
+                        }
                       }}
                     />
                     <Pencil
                       className="cursor-pointer hover:text-green-400 w-[20px]"
                       onClick={() => {
-                        setSelectedProduct(product);
-                        setEditForm({ ...product });
-                        setEditDialogOpen(true);
+                        if (product?.id) {
+                          setSelectedProduct(product);
+                          setEditForm({ ...product });
+                          setEditDialogOpen(true);
+                        }
                       }}
                     />
                   </TableCell>
                 </TableRow>
-              ))}
-              {currentProducts.length === 0 && (
+                ))
+              )}
+              {!isLoadingProducts && currentProducts.length === 0 && (
                 <TableRow>
                   <TableCell
                     colSpan={6}
@@ -328,11 +365,8 @@ const Page = () => {
             </TableBody>
           </Table>
         </div>
-      ) : (
-        <MyService searchTerm={searchTerm} />
-      )}
 
-      {activeTab === "products" && totalResults > 0 && (
+      {totalResults > 0 && (
         <div className="flex items-center justify-between mt-4">
           <p className="text-sm text-muted-foreground">
             {t('dashboard.showingResults', { start: startIndex + 1, end: Math.min(endIndex, totalResults), total: totalResults })}
