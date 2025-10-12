@@ -124,9 +124,9 @@ export default function ArchitectDesignRequests() {
         </Badge>
       </div>
 
-      <div className="grid gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {designRequests.map((request) => (
-          <Card key={request.id} className="hover:shadow-lg transition-shadow">
+          <Card key={request.id} className="hover:shadow-lg transition-shadow max-w-6xl">
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div>

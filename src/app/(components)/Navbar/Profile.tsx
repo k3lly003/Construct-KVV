@@ -71,9 +71,9 @@ const Profile = ({ NK, userEmail, userName, profilePic }: profileProps) => {
           <Link href={
             userData?.role === 'SELLER' ? '/dashboard' :
             userData?.role === 'ADMIN' ? '/dashboard' :
-            userData?.role === 'CONTRACTOR' ? '/dashboard/bids' :
+            userData?.role === 'CONTRACTOR' ? '/dashboard/' :
             userData?.role === 'TECHNICIAN' ? '/dashboard/service-requests' :
-            userData?.role === 'ARCHITECT' ? '/dashboard/design-requests' :
+            userData?.role === 'ARCHITECT' ? '/dashboard/' :
             '/dashboard'
           }>
             <DropdownMenuItem className="my-2">

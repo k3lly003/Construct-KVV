@@ -1,9 +1,15 @@
 import { useState, useEffect } from 'react';
-import { requestService, ServiceRequest, CreateServiceRequestData, ServiceRequestFilters } from '../services/requestService';
+import { requestService, ServiceRequest, CreateServiceRequestData, ServiceRequestFilters, ServiceRequestResponse } from '../services/requestService';
 import { toast } from 'sonner';
 
 export const useRequests = () => {
   const [requests, setRequests] = useState<ServiceRequest[]>([]);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 0
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -33,9 +39,10 @@ export const useRequests = () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await requestService.getTechnicianRequests(filters);
-      setRequests(data);
-      return data;
+      const response = await requestService.getTechnicianRequests(filters);
+      setRequests(response.data);
+      setPagination(response.pagination);
+      return response;
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch technician requests';
       setError(errorMessage);
@@ -51,9 +58,10 @@ export const useRequests = () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await requestService.getCustomerRequests(filters);
-      setRequests(data);
-      return data;
+      const response = await requestService.getCustomerRequests(filters);
+      setRequests(response.data);
+      setPagination(response.pagination);
+      return response;
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch customer requests';
       setError(errorMessage);
@@ -69,9 +77,10 @@ export const useRequests = () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await requestService.getAllServiceRequests(filters);
-      setRequests(data);
-      return data;
+      const response = await requestService.getAllServiceRequests(filters);
+      setRequests(response.data);
+      setPagination(response.pagination);
+      return response;
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch all requests';
       setError(errorMessage);
@@ -138,6 +147,7 @@ export const useRequests = () => {
 
   return {
     requests,
+    pagination,
     loading,
     error,
     clearError,

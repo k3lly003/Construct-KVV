@@ -40,6 +40,16 @@ export interface ServiceRequestFilters {
   limit?: number;
 }
 
+export interface ServiceRequestResponse {
+  data: ServiceRequest[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
 export const requestService = {
   // Create a new service request
   async createServiceRequest(data: CreateServiceRequestData): Promise<ServiceRequest> {
@@ -54,7 +64,7 @@ export const requestService = {
   },
 
   // Get service requests for logged-in technician
-  async getTechnicianRequests(filters?: ServiceRequestFilters): Promise<ServiceRequest[]> {
+  async getTechnicianRequests(filters?: ServiceRequestFilters): Promise<ServiceRequestResponse> {
     const params = new URLSearchParams();
     if (filters?.status) params.append('status', filters.status);
     if (filters?.category) params.append('category', filters.category);
@@ -63,11 +73,11 @@ export const requestService = {
     if (filters?.limit) params.append('limit', filters.limit.toString());
 
     const response = await api.get(`/api/v1/service-requests/technician/my-requests?${params.toString()}`);
-    return response.data as ServiceRequest[];
+    return response.data as ServiceRequestResponse;
   },
 
   // Get service requests for logged-in customer
-  async getCustomerRequests(filters?: ServiceRequestFilters): Promise<ServiceRequest[]> {
+  async getCustomerRequests(filters?: ServiceRequestFilters): Promise<ServiceRequestResponse> {
     const params = new URLSearchParams();
     if (filters?.status) params.append('status', filters.status);
     if (filters?.category) params.append('category', filters.category);
@@ -76,11 +86,11 @@ export const requestService = {
     if (filters?.limit) params.append('limit', filters.limit.toString());
 
     const response = await api.get(`/api/v1/service-requests/customer/my-requests?${params.toString()}`);
-    return response.data as ServiceRequest[];
+    return response.data as ServiceRequestResponse;
   },
 
   // Get all service requests (admin only)
-  async getAllServiceRequests(filters?: ServiceRequestFilters): Promise<ServiceRequest[]> {
+  async getAllServiceRequests(filters?: ServiceRequestFilters): Promise<ServiceRequestResponse> {
     const params = new URLSearchParams();
     if (filters?.status) params.append('status', filters.status);
     if (filters?.category) params.append('category', filters.category);
@@ -89,7 +99,7 @@ export const requestService = {
     if (filters?.limit) params.append('limit', filters.limit.toString());
 
     const response = await api.get(`/api/v1/service-requests/admin/all?${params.toString()}`);
-    return response.data as ServiceRequest[];
+    return response.data as ServiceRequestResponse;
   },
 
   // Update service request status
