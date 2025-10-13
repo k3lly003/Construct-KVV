@@ -4,12 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { useRequests } from '@/app/hooks/useRequestService';
 import { ServiceRequest } from '@/app/services/requestService';
 import { useUserStore } from '@/store/userStore';
-import { 
-  MapPin, 
-  Calendar, 
-  Clock, 
-  Star, 
-  Eye, 
+import {
+  MapPin,
+  Calendar,
+  Clock,
+  Star,
+  Eye,
   Filter,
   Search,
   RefreshCw,
@@ -22,11 +22,16 @@ import {
 } from 'lucide-react';
 
 const ServiceRequestsPage = () => {
-  const { 
-    requests, 
-    pagination,
-    loading, 
-    error, 
+  const {
+    requests,
+    pagination = {
+      page: 1,
+      limit: 10,
+      total: 0,
+      totalPages: 0
+    },
+    loading,
+    error,
     fetchAllRequests,
     fetchTechnicianRequests,
     fetchCustomerRequests,
@@ -59,28 +64,31 @@ const ServiceRequestsPage = () => {
     try {
       const currentFilters = newFilters || filters;
       // Load requests based on user role
+      let response;
       switch (role) {
         case 'ADMIN':
-          await fetchAllRequests(currentFilters);
+          response = await fetchAllRequests(currentFilters);
           break;
         case 'TECHNICIAN':
         case 'CONTRACTOR':
         case 'ARCHITECT':
-          await fetchTechnicianRequests(currentFilters);
+          response = await fetchTechnicianRequests(currentFilters);
           break;
         case 'CUSTOMER':
-          await fetchCustomerRequests(currentFilters);
+          response = await fetchCustomerRequests(currentFilters);
           break;
         default:
           // For other roles, try to fetch all requests
-          await fetchAllRequests(currentFilters);
+          response = await fetchAllRequests(currentFilters);
       }
+      console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', role, { filters: currentFilters, data: response?.data });
     } catch (error) {
       console.error('Failed to load requests:', error);
     }
   };
 
   const handlePageChange = (newPage: number) => {
+    if (!pagination || newPage < 1 || newPage > pagination.totalPages) return;
     const newFilters = { ...filters, page: newPage };
     setFilters(newFilters);
     loadRequests(newFilters);
@@ -156,33 +164,33 @@ const ServiceRequestsPage = () => {
 
   const getStatusConfig = (status: ServiceRequest['status']) => {
     const configs = {
-      PENDING: { 
-        color: 'bg-yellow-100 text-yellow-800 border-yellow-200', 
-        icon: Clock, 
-        label: 'Pending' 
+      PENDING: {
+        color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+        icon: Clock,
+        label: 'Pending'
       },
-      ACCEPTED: { 
-        color: 'bg-blue-100 text-blue-800 border-blue-200', 
-        icon: CheckCircle, 
-        label: 'Accepted' 
+      ACCEPTED: {
+        color: 'bg-blue-100 text-blue-800 border-blue-200',
+        icon: CheckCircle,
+        label: 'Accepted'
       },
-      IN_PROGRESS: { 
-        color: 'bg-purple-100 text-purple-800 border-purple-200', 
-        icon: Clock, 
-        label: 'In Progress' 
+      IN_PROGRESS: {
+        color: 'bg-purple-100 text-purple-800 border-purple-200',
+        icon: Clock,
+        label: 'In Progress'
       },
-      COMPLETED: { 
-        color: 'bg-green-100 text-green-800 border-green-200', 
-        icon: CheckCircle, 
-        label: 'Completed' 
+      COMPLETED: {
+        color: 'bg-green-100 text-green-800 border-green-200',
+        icon: CheckCircle,
+        label: 'Completed'
       },
-      CANCELLED: { 
-        color: 'bg-red-100 text-red-800 border-red-200', 
-        icon: XCircle, 
-        label: 'Cancelled' 
+      CANCELLED: {
+        color: 'bg-red-100 text-red-800 border-red-200',
+        icon: XCircle,
+        label: 'Cancelled'
       }
     };
-    
+
     return configs[status];
   };
 
@@ -192,35 +200,73 @@ const ServiceRequestsPage = () => {
       MEDIUM: { color: 'bg-yellow-100 text-yellow-800', label: 'Medium Priority' },
       HIGH: { color: 'bg-red-100 text-red-800', label: 'HIGH Priority' }
     };
-    
+
     return configs[urgency];
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return '-';
+    return date.toLocaleDateString('en-US', {
       month: 'numeric',
       day: 'numeric',
       year: 'numeric'
     });
   };
 
-  const filteredRequests = requests.filter(request => {
-    if (filters.searchTerm && !request.description.toLowerCase().includes(filters.searchTerm.toLowerCase())) {
+  const viewRequests = (Array.isArray(requests) ? requests : []).map((req) => {
+    const portfolio = (req as any)?.['portfolio'];
+    const displayTitle = portfolio?.title || (req as any)?.description || 'No description provided';
+    const displayDescription = portfolio?.description || (req as any)?.description || '';
+    const displayBudget = typeof (req as any).budget === 'number' ? (req as any).budget : undefined;
+    const displayCategory = (req as any).category || portfolio?.category || 'Unknown';
+    const displayLocation = (req as any).location || portfolio?.location || '-';
+    const displayUrgency = (req as any).urgency || 'LOW';
+    const customer = (req as any)?.customer || {};
+    const displayCustomerName = customer.name || [customer.firstName, customer.lastName].filter(Boolean).join(' ') || 'Unknown User';
+    const displayCustomerInitial = (displayCustomerName || 'U').charAt(0) || 'U';
+    return {
+      ...req,
+      displayTitle,
+      displayDescription,
+      displayBudget,
+      displayCategory,
+      displayLocation,
+      displayUrgency,
+      displayCustomerName,
+      displayCustomerInitial
+    } as ServiceRequest & {
+      displayTitle: string;
+      displayDescription: string;
+      displayBudget?: number;
+      displayCategory: string;
+      displayLocation: string;
+      displayUrgency: ServiceRequest['urgency'];
+      displayCustomerName: string;
+      displayCustomerInitial: string;
+    };
+  });
+
+  const filteredRequests = viewRequests.filter(request => {
+    const descriptionText = (request?.displayTitle || request?.displayDescription || '').toLowerCase();
+    if (filters.searchTerm && !descriptionText.includes(filters.searchTerm.toLowerCase())) {
       return false;
     }
-    if (filters.status && request.status !== filters.status) {
+    if (filters.status && request?.status !== filters.status) {
       return false;
     }
-    if (filters.category && request.category !== filters.category) {
+    if (filters.category && request?.displayCategory !== filters.category) {
       return false;
     }
-    if (filters.urgency && request.urgency !== filters.urgency) {
+    if (filters.urgency && request?.displayUrgency !== filters.urgency) {
       return false;
     }
     return true;
   });
+  console.log('[ServiceRequests] Current requests', requests);
 
-  if (loading && requests.length === 0) {
+  if (loading && (requests.length ?? 0) === 0) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="flex items-center space-x-2">
@@ -359,43 +405,61 @@ const ServiceRequestsPage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {filteredRequests.map((request) => {
               const statusConfig = getStatusConfig(request.status);
-              const urgencyConfig = getUrgencyConfig(request.urgency);
-              const StatusIcon = statusConfig.icon;
-
+              const urgencyConfig = getUrgencyConfig(request.displayUrgency);
+              const StatusIcon = statusConfig?.icon; // ✅ This is safe, will be undefined if missing
+              
               return (
                 <div key={request.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+                  {statusConfig ? (
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${statusConfig.color}`}>
+                      {StatusIcon && <StatusIcon className="w-3 h-3 mr-1" />}
+                      {statusConfig.label}
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border bg-gray-100 text-gray-800 border-gray-200">
+                      <AlertCircle className="w-3 h-3 mr-1" />
+                      Unknown
+                    </span>
+                  )}
                   <div className="p-6">
                     {/* Card Header with Title and Price */}
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
                         <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-                          {request.description.length > 50 
-                            ? `${request.description.substring(0, 50)}...` 
-                            : request.description
+                          {(request.displayTitle || '').length > 50
+                            ? `${(request.displayTitle || '').substring(0, 50)}...`
+                            : (request.displayTitle || 'No description provided')
                           }
                         </h3>
                         <div className="flex items-center space-x-3 mb-3">
                           <span className="text-2xl font-bold text-blue-600">
-                            {request.budget.toLocaleString()} RWF
+                            {typeof request.displayBudget === 'number' ? request.displayBudget.toLocaleString() : '—'} RWF
                           </span>
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${statusConfig.color}`}>
-                            <StatusIcon className="w-3 h-3 mr-1" />
-                            {statusConfig.label}
-                          </span>
+                          {statusConfig ? (
+                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${statusConfig.color}`}>
+                              {StatusIcon && <StatusIcon className="w-3 h-3 mr-1" />}
+                              {statusConfig.label}
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border bg-gray-100 text-gray-800 border-gray-200">
+                              <AlertCircle className="w-3 h-3 mr-1" />
+                              Unknown
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
 
                     {/* Description */}
                     <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                      {request.description}
+                      {request.displayDescription}
                     </p>
 
                     {/* Key Details */}
                     <div className="space-y-2 mb-4">
                       <div className="flex items-center text-gray-600">
                         <MapPin className="w-4 h-4 mr-2 text-gray-400" />
-                        <span className="text-sm">{request.location}</span>
+                        <span className="text-sm">{request.displayLocation}</span>
                       </div>
                       <div className="flex items-center text-gray-600">
                         <Calendar className="w-4 h-4 mr-2 text-gray-400" />
@@ -403,8 +467,8 @@ const ServiceRequestsPage = () => {
                       </div>
                       <div className="flex items-center text-gray-600">
                         <Clock className="w-4 h-4 mr-2 text-gray-400" />
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${urgencyConfig.color}`}>
-                          {urgencyConfig.label}
+                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${(urgencyConfig?.color) || 'bg-gray-100 text-gray-800'}`}>
+                          {(urgencyConfig?.label) || 'Unknown Priority'}
                         </span>
                       </div>
                     </div>
@@ -412,7 +476,7 @@ const ServiceRequestsPage = () => {
                     {/* Service Tags */}
                     <div className="flex flex-wrap gap-2 mb-4">
                       <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
-                        {request.category}
+                        {request.displayCategory}
                       </span>
                       <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
                         Service Request
@@ -427,12 +491,15 @@ const ServiceRequestsPage = () => {
                       <div className="flex items-center space-x-3">
                         <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
                           <span className="text-sm font-medium text-gray-600">
-                            {request.customer?.name?.charAt(0) || 'U'}
+                            {request.displayCustomerInitial}
                           </span>
                         </div>
                         <div>
                           <p className="text-sm font-medium text-gray-900">
-                            {request.customer?.name || 'Unknown User'}
+                            {request.displayCustomerName}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {request.customer?.phone || 'Not provided'}
                           </p>
                           <div className="flex items-center space-x-1">
                             <Star className="w-3 h-3 text-yellow-400 fill-current" />
@@ -440,14 +507,7 @@ const ServiceRequestsPage = () => {
                           </div>
                         </div>
                       </div>
-
-                      <button 
-                        onClick={() => handleViewDetails(request.id)}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1"
-                      >
-                        <Eye className="w-4 h-4" />
-                        <span>View Details</span>
-                      </button>
+                      {/* Removed View Details button to match design requests UI */}
                     </div>
 
                     {/* Action Buttons */}
@@ -516,7 +576,7 @@ const ServiceRequestsPage = () => {
         )}
 
         {/* Pagination */}
-        {pagination.totalPages > 1 && (
+        {pagination && pagination.totalPages > 1 && (
           <div className="mt-8 flex items-center justify-between">
             <div className="text-sm text-gray-700">
               Showing {((pagination.page - 1) * pagination.limit) + 1} to {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total} results
@@ -524,35 +584,34 @@ const ServiceRequestsPage = () => {
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => handlePageChange(pagination.page - 1)}
-                disabled={pagination.page === 1}
+                disabled={!pagination || pagination.page === 1}
                 className="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Previous
               </button>
-              
+
               {/* Page numbers */}
               {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
                 const pageNum = Math.max(1, pagination.page - 2) + i;
                 if (pageNum > pagination.totalPages) return null;
-                
+
                 return (
                   <button
                     key={pageNum}
                     onClick={() => handlePageChange(pageNum)}
-                    className={`px-3 py-2 border rounded-lg text-sm font-medium ${
-                      pageNum === pagination.page
+                    className={`px-3 py-2 border rounded-lg text-sm font-medium ${pageNum === pagination.page
                         ? 'bg-blue-600 text-white border-blue-600'
                         : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-                    }`}
+                      }`}
                   >
                     {pageNum}
                   </button>
                 );
               })}
-              
+
               <button
                 onClick={() => handlePageChange(pagination.page + 1)}
-                disabled={pagination.page === pagination.totalPages}
+                disabled={!pagination || pagination.page === pagination.totalPages}
                 className="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next
@@ -621,7 +680,7 @@ const ServiceRequestsPage = () => {
                       <h4 className="font-medium text-gray-900 mb-2">Location</h4>
                       <div className="flex items-center text-gray-600">
                         <MapPin className="w-4 h-4 mr-2" />
-                        <span>{selectedRequest.location}</span>
+                        <span>{selectedRequest.location || '-'}</span>
                       </div>
                     </div>
                     <div>
@@ -648,11 +707,20 @@ const ServiceRequestsPage = () => {
                         <div className="flex items-center space-x-3">
                           <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
                             <span className="text-lg font-medium text-gray-600">
-                              {selectedRequest.customer.name?.charAt(0) || 'U'}
+                              {(
+                                (selectedRequest.customer.name ||
+                                  [
+                                    (selectedRequest.customer as any)?.firstName,
+                                    (selectedRequest.customer as any)?.lastName
+                                  ].filter(Boolean).join(' ')) || 'U'
+                              ).charAt(0) || 'U'}
                             </span>
                           </div>
                           <div>
-                            <p className="font-medium text-gray-900">{selectedRequest.customer.name}</p>
+                            <p className="font-medium text-gray-900">{selectedRequest.customer.name || [
+                              (selectedRequest.customer as any)?.firstName,
+                              (selectedRequest.customer as any)?.lastName
+                            ].filter(Boolean).join(' ')}</p>
                             <p className="text-sm text-gray-600">{selectedRequest.customer.email}</p>
                             <p className="text-sm text-gray-600">{selectedRequest.customer.phone}</p>
                           </div>

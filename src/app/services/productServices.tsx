@@ -31,6 +31,14 @@ interface AIRecommendationResponse {
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const RECOMMENDATION_API_URL = process.env.NEXT_PUBLIC_RECOMMENDATION_API_URL;
 
+// Check if required environment variables are set
+if (!API_URL) {
+  console.warn('NEXT_PUBLIC_API_URL is not set');
+}
+if (!RECOMMENDATION_API_URL) {
+  console.warn('NEXT_PUBLIC_RECOMMENDATION_API_URL is not set - AI recommendations will be disabled');
+}
+
 export const productService = {
   async getAllProducts(): Promise<Product[]> {
     try {
@@ -369,6 +377,14 @@ export const productService = {
       return [];
     }
     try {
+      // Check if recommendation API URL is available
+      if (!RECOMMENDATION_API_URL) {
+        console.warn(
+          "[fetchRecommendedProducts] RECOMMENDATION_API_URL not configured, returning empty array"
+        );
+        return [];
+      }
+
       // 1. Fetch recommendations from AI API
       console.log("[NEXT_AI_RECOMMENDATION_URL] ", RECOMMENDATION_API_URL);
       const aiUrl = `${RECOMMENDATION_API_URL}/api/v1/users/${id}/recommendations?top_n=8`;
@@ -376,10 +392,22 @@ export const productService = {
         "[fetchRecommendedProducts] Fetching AI recommendations from:",
         aiUrl
       );
-      const aiRes = await axios.get<AIRecommendationResponse>(aiUrl, {
-        headers: { accept: "application/json" },
-      });
-      console.log("[fetchRecommendedProducts] AI API response:", aiRes.data);
+      let aiRes;
+      try {
+        aiRes = await axios.get<AIRecommendationResponse>(aiUrl, {
+          headers: { accept: "application/json" },
+        });
+        console.log("[fetchRecommendedProducts] AI API response:", aiRes.data);
+      } catch (apiError: any) {
+        console.warn(
+          "[fetchRecommendedProducts] AI API call failed:",
+          apiError.response?.status,
+          apiError.message
+        );
+        // If AI API fails, return empty array instead of throwing
+        return [];
+      }
+
       // Fix: recommendations are inside aiRes.data.data.recommendations
       let recommendationsRaw: RecommendationItem[] = [];
       if (

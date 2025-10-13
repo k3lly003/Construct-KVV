@@ -40,8 +40,13 @@ export const useRequests = () => {
       setLoading(true);
       setError(null);
       const response = await requestService.getTechnicianRequests(filters);
-      setRequests(response.data);
-      setPagination(response.pagination);
+      setRequests(response.data || []);
+      setPagination(response.pagination || {
+        page: 1,
+        limit: 10,
+        total: response.data?.length || 0,
+        totalPages: 1
+      });
       return response;
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch technician requests';
@@ -59,8 +64,13 @@ export const useRequests = () => {
       setLoading(true);
       setError(null);
       const response = await requestService.getCustomerRequests(filters);
-      setRequests(response.data);
-      setPagination(response.pagination);
+      setRequests(response.data || []);
+      setPagination(response.pagination || {
+        page: 1,
+        limit: 10,
+        total: response.data?.length || 0,
+        totalPages: 1
+      });
       return response;
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch customer requests';
@@ -78,8 +88,13 @@ export const useRequests = () => {
       setLoading(true);
       setError(null);
       const response = await requestService.getAllServiceRequests(filters);
-      setRequests(response.data);
-      setPagination(response.pagination);
+      setRequests(response.data || []);
+      setPagination(response.pagination || {
+        page: 1,
+        limit: 10,
+        total: response.data?.length || 0,
+        totalPages: 1
+      });
       return response;
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to fetch all requests';
