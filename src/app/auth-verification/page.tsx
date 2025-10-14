@@ -10,13 +10,13 @@ const GoogleCallbackClient = () => {
 
   useEffect(() => {
     // Parse the token from the URL query parameters
-    const token = searchParams.get("token");
+    const authToken = searchParams.get("token");
     const user = searchParams.get("userData");
 
-    if (token && user) {
+    if (authToken && user) {
       try {
         // Store the token and user data in localStorage
-        localStorage.setItem("token", token);
+        localStorage.setItem("token", authToken);
         localStorage.setItem("user", user);
 
         // Redirect to dashboard
