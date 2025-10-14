@@ -11,16 +11,16 @@ const GoogleCallbackClient = () => {
   useEffect(() => {
     // Parse the token from the URL query parameters
     const token = searchParams.get("token");
-    const userData = searchParams.get("userData");
+    const user = searchParams.get("userData");
 
-    if (token && userData) {
+    if (token && user) {
       try {
         // Store the token and user data in localStorage
         localStorage.setItem("token", token);
-        localStorage.setItem("user", userData);
+        localStorage.setItem("user", user);
 
         // Redirect to dashboard
-        router.push("/dashboard");
+        router.push("/");
       } catch (err) {
         setError("Failed to process authentication data");
         console.error(err);
