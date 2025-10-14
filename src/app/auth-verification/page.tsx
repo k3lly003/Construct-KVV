@@ -16,7 +16,7 @@ const GoogleCallbackClient = () => {
     if (authToken && user) {
       try {
         // Store the token and user data in localStorage
-        localStorage.setItem("token", authToken);
+        localStorage.setItem("authToken", authToken);
         localStorage.setItem("user", user);
 
         // Redirect to dashboard
