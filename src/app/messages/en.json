@@ -902,7 +902,7 @@
     "button": "Start Visualizing"
   },
   "RecommendationsSection": {
-    "title": "Recommended for you",
+    "title": "Top Picks We Recommend",
     "loading": "Loading recommendations...",
     "error": "Failed to load recommendations",
     "noRecommendations": "No recommendations yet.",
