@@ -15,6 +15,7 @@ import { ChatDialogProps } from "@/app/utils/dtos/chat.dtos";
 import { quickActions } from "@/app/utils/fakes/ChatFakes";
 import { useHandleSendMessages } from "@/app/utils/middlewares/handleMessages";
 import { easeInOut } from "framer-motion";
+import TypingIndicator from "@/components/ui/TypingIndicator";
 
 const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
   const {
@@ -23,6 +24,7 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
     setInputValue,
     handleQuickAction,
     handleSendMessage,
+    isLoading,
   } = useHandleSendMessages();
   // Dialog-specific useEffect for Escape key
   useEffect(() => {
@@ -140,6 +142,9 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
             ))}
+            
+            {/* Typing Indicator */}
+            {isLoading && <TypingIndicator />}
             {/* Quick Actions */}
             {/* Display quick actions only if there's only the initial message */}
             {messages.length === 1 && (
@@ -170,10 +175,12 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Choose an option or type your message..."
                 className="flex-1"
-                onKeyPress={(e) => e.key === "Enter" && handleSendMessage()} // Call the returned handleSendMessage
+                disabled={isLoading}
+                onKeyPress={(e) => e.key === "Enter" && !isLoading && handleSendMessage()} // Call the returned handleSendMessage
               />
               <button
                 onClick={handleSendMessage} // Call the returned handleSendMessage
+                disabled={isLoading}
                 className="w-10 flex justify-center items-center bg-amber-500 hover:bg-amber-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send className="w-4 h-4" />

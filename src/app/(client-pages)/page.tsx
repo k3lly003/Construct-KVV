@@ -51,7 +51,7 @@ function RecommendedProductsSection() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-7 py-12">
       <h2 className="text-3xl font-bold mb-8 text-center">
         {t(dashboardFakes.RecommendationsSection.title) ||
-          "Recommended for you"}
+          "Top Picks We Recommend"}
       </h2>
       {loading ? (
         <div className="flex flex-wrap px-4 gap-7 justify-center lg:flex lg:justify-start">

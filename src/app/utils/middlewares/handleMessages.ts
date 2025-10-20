@@ -13,6 +13,7 @@ export function useHandleSendMessages() {
     },
   ]);
   const [inputValue, setInputValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleQuickAction = (action: string) => {
     const newMessage: Message = {
@@ -22,6 +23,7 @@ export function useHandleSendMessages() {
       timestamp: new Date(),
     };
     setMessages((prev) => [...prev, newMessage]);
+    setIsLoading(true);
 
     // Simulate assistant response
     setTimeout(() => {
@@ -32,6 +34,7 @@ export function useHandleSendMessages() {
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, response]);
+      setIsLoading(false);
     }, 1000);
   };
 
@@ -47,6 +50,7 @@ export function useHandleSendMessages() {
     };
     setMessages((prev) => [...prev, newMessage]);
     setInputValue(""); // Clear input after sending
+    setIsLoading(true);
 
     // Call FAQ API
     try {
@@ -78,6 +82,8 @@ export function useHandleSendMessages() {
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMsg]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -88,5 +94,6 @@ export function useHandleSendMessages() {
     setInputValue,
     handleQuickAction,
     handleSendMessage,
+    isLoading,
   };
 }
