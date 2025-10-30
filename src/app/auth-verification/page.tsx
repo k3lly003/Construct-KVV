@@ -11,16 +11,20 @@ const GoogleCallbackClient = () => {
   useEffect(() => {
     // Parse the token from the URL query parameters
     const token = searchParams.get("token");
-    const userData = searchParams.get("userData");
+    const user = searchParams.get("userData");
 
-    if (token && userData) {
+    if (token && user) {
       try {
+        console.log("AAAAAAAAAAAAAAAAAAAAAAA", token);
         // Store the token and user data in localStorage
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", userData);
+        localStorage.setItem("authToken", token);
+        localStorage.setItem("user", user);
 
-        // Redirect to dashboard
-        router.push("/dashboard");
+        // Add a small delay to ensure the token is properly stored and processed
+        // This helps prevent race conditions with profile API calls
+        setTimeout(() => {
+          router.push("/");
+        }, 500); // 500ms delay
       } catch (err) {
         setError("Failed to process authentication data");
         console.error(err);
@@ -48,7 +52,7 @@ const GoogleCallbackClient = () => {
   );
 };
 
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
 const GoogleCallback = dynamic(() => Promise.resolve(GoogleCallbackClient), {
   ssr: false,

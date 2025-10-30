@@ -43,7 +43,8 @@ export default function SupplierRegistration() {
     resolver: zodResolver(supplierRegistrationSchema),
   });
 
-  const { mutateAsync: registerSellerMutation, isPending } = useRegisterSeller();
+  const { mutateAsync: registerSellerMutation, isPending } =
+    useRegisterSeller();
 
   // Debug form validation errors
   useEffect(() => {
@@ -74,7 +75,9 @@ export default function SupplierRegistration() {
         taxId: data.taxId,
       });
       console.log("Registration successful:", result);
-      toast.success("Registration successful! Your application has been submitted.");
+      toast.success(
+        "Registration successful! Your application has been submitted."
+      );
       setIsSubmitted(true);
     } catch (error) {
       console.error("Error registering seller:", error);
@@ -87,25 +90,9 @@ export default function SupplierRegistration() {
   };
 
   if (isSubmitted) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md mx-auto text-center">
-          <CardContent className="pt-6">
-            <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">
-              Registration Complete!
-            </h2>
-            <p className="text-slate-600 mb-6">
-              Thank you for registering as a Supplier! Your application has been submitted successfully. 
-              We&apos;ll review your information and get back to you soon. Please wait for a moment to be approved and log in later.
-            </p>
-            <Button onClick={() => router.push("/")} className="w-full">
-              Return Home
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
+    // Redirect to OTP verification page instead of showing completion message
+    router.push('/auth-verification');
+    return null;
   }
 
   return (
@@ -132,23 +119,38 @@ export default function SupplierRegistration() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={(e) => {
-              console.log("Form submit event triggered");
-              handleSubmit(onSubmit)(e);
-            }} className="space-y-6">
+            <form
+              onSubmit={(e) => {
+                console.log("Form submit event triggered");
+                handleSubmit(onSubmit)(e);
+              }}
+              className="space-y-6"
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="firstName">First Name *</Label>
-                  <Input id="firstName" {...register("firstName")} placeholder="Robs" />
+                  <Input
+                    id="firstName"
+                    {...register("firstName")}
+                    placeholder="Robs"
+                  />
                   {errors.firstName && (
-                    <p className="text-sm text-destructive">{errors.firstName.message}</p>
+                    <p className="text-sm text-destructive">
+                      {errors.firstName.message}
+                    </p>
                   )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="lastName">Last Name *</Label>
-                  <Input id="lastName" {...register("lastName")} placeholder="Smith" />
+                  <Input
+                    id="lastName"
+                    {...register("lastName")}
+                    placeholder="Smith"
+                  />
                   {errors.lastName && (
-                    <p className="text-sm text-destructive">{errors.lastName.message}</p>
+                    <p className="text-sm text-destructive">
+                      {errors.lastName.message}
+                    </p>
                   )}
                 </div>
               </div>
@@ -156,16 +158,30 @@ export default function SupplierRegistration() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email Address *</Label>
-                  <Input id="email" type="email" {...register("email")} placeholder="user@example.com" />
+                  <Input
+                    id="email"
+                    type="email"
+                    {...register("email")}
+                    placeholder="user@example.com"
+                  />
                   {errors.email && (
-                    <p className="text-sm text-destructive">{errors.email.message}</p>
+                    <p className="text-sm text-destructive">
+                      {errors.email.message}
+                    </p>
                   )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password">Password *</Label>
-                  <Input id="password" type="password" {...register("password")} placeholder="••••••••" />
+                  <Input
+                    id="password"
+                    type="password"
+                    {...register("password")}
+                    placeholder="••••••••"
+                  />
                   {errors.password && (
-                    <p className="text-sm text-destructive">{errors.password.message}</p>
+                    <p className="text-sm text-destructive">
+                      {errors.password.message}
+                    </p>
                   )}
                 </div>
               </div>
@@ -173,16 +189,28 @@ export default function SupplierRegistration() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="phone">Personal Phone *</Label>
-                  <Input id="phone" {...register("phone")} placeholder="1234567890" />
+                  <Input
+                    id="phone"
+                    {...register("phone")}
+                    placeholder="1234567890"
+                  />
                   {errors.phone && (
-                    <p className="text-sm text-destructive">{errors.phone.message}</p>
+                    <p className="text-sm text-destructive">
+                      {errors.phone.message}
+                    </p>
                   )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="ownerName">Owner Name *</Label>
-                  <Input id="ownerName" {...register("ownerName")} placeholder="Robert Smith" />
+                  <Input
+                    id="ownerName"
+                    {...register("ownerName")}
+                    placeholder="Robert Smith"
+                  />
                   {errors.ownerName && (
-                    <p className="text-sm text-destructive">{errors.ownerName.message}</p>
+                    <p className="text-sm text-destructive">
+                      {errors.ownerName.message}
+                    </p>
                   )}
                 </div>
               </div>
@@ -206,9 +234,15 @@ export default function SupplierRegistration() {
 
               <div className="space-y-2">
                 <Label htmlFor="location">Location *</Label>
-                <Input id="location" {...register("location")} placeholder="123 Main Street, Kigali, Rwanda" />
+                <Input
+                  id="location"
+                  {...register("location")}
+                  placeholder="123 Main Street, Kigali, Rwanda"
+                />
                 {errors.location && (
-                  <p className="text-sm text-destructive">{errors.location.message}</p>
+                  <p className="text-sm text-destructive">
+                    {errors.location.message}
+                  </p>
                 )}
               </div>
 
@@ -224,7 +258,10 @@ export default function SupplierRegistration() {
                     <div className="relative">
                       <Avatar className="size-24">
                         {shopImagePreview ? (
-                          <AvatarImage src={shopImagePreview} alt="Shop image" />
+                          <AvatarImage
+                            src={shopImagePreview}
+                            alt="Shop image"
+                          />
                         ) : (
                           <AvatarFallback className="bg-blue-50 text-blue-400">
                             <User className="h-8 w-8" />
@@ -259,43 +296,76 @@ export default function SupplierRegistration() {
                         }
                       }}
                     />
-                    <p className="text-xs text-muted-foreground">You can either paste an image URL or pick a file from your computer.</p>
+                    <p className="text-xs text-muted-foreground">
+                      You can either paste an image URL or pick a file from your
+                      computer.
+                    </p>
                   </div>
                 </div>
                 {errors.shopImage && (
-                  <p className="text-sm text-destructive">{errors.shopImage.message}</p>
+                  <p className="text-sm text-destructive">
+                    {typeof errors.shopImage === "object" &&
+                    "message" in errors.shopImage
+                      ? String((errors.shopImage as any).message)
+                      : String(errors.shopImage)}
+                  </p>
                 )}
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="shopDescription">Shop Description *</Label>
-                <Textarea id="shopDescription" {...register("shopDescription")} placeholder="We offer quality building supplies..." rows={4} />
+                <Textarea
+                  id="shopDescription"
+                  {...register("shopDescription")}
+                  placeholder="We offer quality building supplies..."
+                  rows={4}
+                />
                 {errors.shopDescription && (
-                  <p className="text-sm text-destructive">{errors.shopDescription.message}</p>
+                  <p className="text-sm text-destructive">
+                    {errors.shopDescription.message}
+                  </p>
                 )}
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="businessName">Business Name *</Label>
-                <Input id="businessName" {...register("businessName")} placeholder="Rob's Store" />
+                <Input
+                  id="businessName"
+                  {...register("businessName")}
+                  placeholder="Rob's Store"
+                />
                 {errors.businessName && (
-                  <p className="text-sm text-destructive">{errors.businessName.message}</p>
+                  <p className="text-sm text-destructive">
+                    {errors.businessName.message}
+                  </p>
                 )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="businessAddress">Business Address *</Label>
-                  <Input id="businessAddress" {...register("businessAddress")} placeholder="123 Business St, City, Country" />
+                  <Input
+                    id="businessAddress"
+                    {...register("businessAddress")}
+                    placeholder="123 Business St, City, Country"
+                  />
                   {errors.businessAddress && (
-                    <p className="text-sm text-destructive">{errors.businessAddress.message}</p>
+                    <p className="text-sm text-destructive">
+                      {errors.businessAddress.message}
+                    </p>
                   )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="businessPhone">Business Phone *</Label>
-                  <Input id="businessPhone" {...register("businessPhone")} placeholder="0987654321" />
+                  <Input
+                    id="businessPhone"
+                    {...register("businessPhone")}
+                    placeholder="0987654321"
+                  />
                   {errors.businessPhone && (
-                    <p className="text-sm text-destructive">{errors.businessPhone.message}</p>
+                    <p className="text-sm text-destructive">
+                      {errors.businessPhone.message}
+                    </p>
                   )}
                 </div>
               </div>
@@ -303,35 +373,50 @@ export default function SupplierRegistration() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="businessEmail">Business Email *</Label>
-                  <Input id="businessEmail" type="email" {...register("businessEmail")} placeholder="business@robsstore.com" />
+                  <Input
+                    id="businessEmail"
+                    type="email"
+                    {...register("businessEmail")}
+                    placeholder="business@robsstore.com"
+                  />
                   {errors.businessEmail && (
-                    <p className="text-sm text-destructive">{errors.businessEmail.message}</p>
+                    <p className="text-sm text-destructive">
+                      {errors.businessEmail.message}
+                    </p>
                   )}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="taxId">Tax ID *</Label>
-                  <Input id="taxId" {...register("taxId")} placeholder="TAX123456" />
+                  <Input
+                    id="taxId"
+                    {...register("taxId")}
+                    placeholder="TAX123456"
+                  />
                   {errors.taxId && (
-                    <p className="text-sm text-destructive">{errors.taxId.message}</p>
+                    <p className="text-sm text-destructive">
+                      {errors.taxId.message}
+                    </p>
                   )}
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="documents">Documents (PDF, JPG, PNG files) *</Label>
+                <Label htmlFor="documents">
+                  Documents (PDF, JPG, PNG files) *
+                </Label>
                 <div className="space-y-2">
-                    <input
-                      type="file"
-                      multiple
-                      accept=".pdf,.jpg,.jpeg,.png"
-                      className="hidden"
-                      ref={documentsInputRef}
-                      onChange={(e) => {
-                        const files = Array.from(e.target.files || []);
-                        setDocumentsPreview(files);
-                        setValue("documents", files, { shouldValidate: true });
-                      }}
-                    />
+                  <input
+                    type="file"
+                    multiple
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    className="hidden"
+                    ref={documentsInputRef}
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files || []);
+                      setDocumentsPreview(files);
+                      setValue("documents", files, { shouldValidate: true });
+                    }}
+                  />
                   <Button
                     type="button"
                     variant="outline"
@@ -342,22 +427,33 @@ export default function SupplierRegistration() {
                   </Button>
                   {documentsPreview.length > 0 && (
                     <div className="space-y-1">
-                      <p className="text-sm text-muted-foreground">Selected files:</p>
+                      <p className="text-sm text-muted-foreground">
+                        Selected files:
+                      </p>
                       {documentsPreview.map((file, index) => (
                         <div key={index} className="text-sm text-green-600">
-                          ✓ {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                          ✓ {file.name} ({(file.size / 1024 / 1024).toFixed(2)}{" "}
+                          MB)
                         </div>
                       ))}
                     </div>
                   )}
                 </div>
                 {errors.documents && (
-                  <p className="text-sm text-destructive">{(errors.documents as unknown as any)?.message}</p>
+                  <p className="text-sm text-destructive">
+                    {(errors.documents as unknown as any)?.message}
+                  </p>
                 )}
               </div>
 
-              <Button type="submit" className="w-full" disabled={isSubmitting || isPending}>
-                {isPending || isSubmitting ? "Submitting..." : "Complete Registration"}
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={isSubmitting || isPending}
+              >
+                {isPending || isSubmitting
+                  ? "Submitting..."
+                  : "Complete Registration"}
               </Button>
             </form>
           </CardContent>

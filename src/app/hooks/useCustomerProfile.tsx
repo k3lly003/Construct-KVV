@@ -1,15 +1,47 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { customerProfileService } from '@/app/services/customerProfileServices';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { customerProfileService } from "@/app/services/customerProfileServices";
+import { useEffect, useState } from "react";
 
 export const useCustomerProfile = () => {
   const queryClient = useQueryClient();
-  const authToken = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+  const authToken =
+    typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+  const [isTokenReady, setIsTokenReady] = useState(false);
 
-  // Fetch current user profile (only if authenticated)
-  const { data: profile, isLoading, error } = useQuery({
-    queryKey: ['customerProfile'],
-    queryFn: () => authToken ? customerProfileService.getMyProfile(authToken) : Promise.resolve(null),
-    enabled: !!authToken,
+  // Add a small delay to ensure the token is fully processed
+  useEffect(() => {
+    if (authToken) {
+      // Add a small delay to allow the backend to process the Google auth token
+      const timer = setTimeout(() => {
+        setIsTokenReady(true);
+      }, 1000); // 1 second delay
+
+      return () => clearTimeout(timer);
+    } else {
+      setIsTokenReady(false);
+    }
+  }, [authToken]);
+
+  // Fetch current user profile (only if authenticated and token is ready)
+  const {
+    data: profile,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["customerProfile"],
+    queryFn: () =>
+      authToken
+        ? customerProfileService.getMyProfile(authToken)
+        : Promise.resolve(null),
+    enabled: !!authToken && isTokenReady,
+    retry: (failureCount, error) => {
+      // Retry up to 3 times with exponential backoff for auth-related errors
+      if (failureCount < 3 && error?.message?.includes("credentials")) {
+        return true;
+      }
+      return false;
+    },
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
   });
 
   // Update profile (with FormData for image upload)
@@ -19,7 +51,7 @@ export const useCustomerProfile = () => {
       return customerProfileService.updateMyProfile(data, authToken);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['customerProfile'] });
+      queryClient.invalidateQueries({ queryKey: ["customerProfile"] });
     },
   });
 
@@ -30,4 +62,4 @@ export const useCustomerProfile = () => {
     updateProfile: updateProfileMutation.mutate,
     isUpdating: updateProfileMutation.isPending,
   };
-}; 
+};

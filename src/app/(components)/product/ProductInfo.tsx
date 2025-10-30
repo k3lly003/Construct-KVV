@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Minus, Plus, Heart, Share2, Star, ShoppingCart } from "lucide-react";
 import { GenericButton } from "@/components/ui/generic-button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,6 +10,7 @@ import { dashboardFakes } from "@/app/utils/fakes/DashboardFakes";
 import { getUserDataFromLocalStorage } from "@/app/utils/middlewares/UserCredentions";
 import { productService } from "@/app/services/productServices";
 import { useCartStore } from "@/store/cartStore";
+import { getFallbackImage } from "@/app/utils/imageUtils";
 
 interface Product {
   id: string;
@@ -38,6 +39,65 @@ interface ProductInfoProps {
 const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const { t } = useTranslations();
+  const API_URL =
+    "https://ai-product-recommender-rc4q.onrender.com/api/v1/products";
+
+  type InteractionType = "view" | "click" | "add_to_cart";
+  const postInteraction = (
+    interactionType: InteractionType,
+    interactionWeight: number
+  ) => {
+    try {
+      const user = getUserDataFromLocalStorage();
+      const payload = {
+        product_id: (product as any).id,
+        name: (product as any).name ?? "",
+        description: (product as any).description ?? "",
+        price: (product as any).discountedPrice ?? (product as any).price ?? 0,
+        stock: (product as any).stock ?? (product as any).quantity ?? 0,
+        category:
+          (product as any).category ??
+          (product as any).categoryName ??
+          (product as any).category_title ??
+          (product as any)?.category?.name ??
+          "General",
+        user_id: user?.id,
+        interaction_weight: interactionWeight,
+        interaction_type: interactionType,
+      } as const;
+
+      // eslint-disable-next-line no-console
+      console.log(`[ProductInfo] ${interactionType} payload:`, payload);
+
+      fetch(API_URL, {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        keepalive: true,
+      })
+        .then(async (res) => {
+          const data = await res.json().catch(() => ({}));
+          // eslint-disable-next-line no-console
+          console.log(
+            `[ProductInfo] ${interactionType} interaction response:`,
+            data
+          );
+        })
+        .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.log(
+            `[ProductInfo] ${interactionType} interaction error:`,
+            error
+          );
+        });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(`[ProductInfo] ${interactionType} interaction error:`, error);
+    }
+  };
 
   const incrementQuantity = () => {
     setQuantity(quantity + 1);
@@ -51,28 +111,15 @@ const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
 
   const addToCart = useCartStore((state) => state.addToCart);
 
-  const handleAddToCart = () => {
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      quantity: quantity,
-      image:
-        product.thumbnailUrl ||
-        product.imageUrl ||
-        (Array.isArray(product.image) && product.image.length > 0
-          ? product.image[0]
-          : undefined) ||
-        "/products/placeholder.jpg",
-      category: product.categoryId || "",
-      weight: product.weight || 0,
-      dimensions: product.dimensions || "",
-    });
-    toast.success(`Added ${quantity} ${product.name} to your cart`);
-    console.log(
-      "[ProductInfo] Cart after add:",
-      JSON.parse(localStorage.getItem("kvv_cart_items") || "[]")
-    );
+  const handleAddToCart = async () => {
+    try {
+      await addToCart(product.id, quantity);
+      toast.success(`Added ${quantity} ${product.name} to your cart`);
+      // Send external interaction (non-blocking)
+      postInteraction("add_to_cart", 5);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to add item to cart");
+    }
   };
 
   const toggleWishlist = async () => {
@@ -172,7 +219,7 @@ const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
         </div>
       </div>
       {/* Quantity and Add to Cart */}
-      <div className="flex gap-4 items-center">
+      <div className="flex gap-4 items-center flex-wrap">
         <div className="flex items-center border rounded-md">
           <GenericButton
             onClick={decrementQuantity}

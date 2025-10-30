@@ -16,7 +16,7 @@ import { useSession } from "@/app/hooks/useSession";
 // Zod validation
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  password: z.string().min(8, "Password must be at least 8 characters long"),
 });
 
 const Page = () => {
@@ -56,33 +56,33 @@ const Page = () => {
   }, [refresh, router]);
 
   const handleSignIn = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setErrors({});
-  // Validate with zod
-  const result = loginSchema.safeParse({ email, password });
-  if (!result.success) {
-    const fieldErrors: { email?: string; password?: string } = {};
-    result.error.errors.forEach((err) => {
-      if (err.path[0] === "email") fieldErrors.email = err.message;
-      if (err.path[0] === "password") fieldErrors.password = err.message;
-    });
-    setErrors(fieldErrors);
-    toast.error("Please fix the requirements and try again.");
-    return;
-  }
+    e.preventDefault();
+    setErrors({});
+    // Validate with zod
+    const result = loginSchema.safeParse({ email, password });
+    if (!result.success) {
+      const fieldErrors: { email?: string; password?: string } = {};
+      result.error.errors.forEach((err) => {
+        if (err.path[0] === "email") fieldErrors.email = err.message;
+        if (err.path[0] === "password") fieldErrors.password = err.message;
+      });
+      setErrors(fieldErrors);
+      toast.error("Please fix the requirements and try again.");
+      return;
+    }
 
-  setLoading(true);
-  try {
-    const response = await fetch(
-      "https://construct-kvv-bn-fork.onrender.com/api/v1/user/login",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" }, 
-        body: JSON.stringify({ email, password }),
-      }
-    );
+    setLoading(true);
+    try {
+      const response = await fetch(
+        "https://construct-kvv-bn-fork.onrender.com/api/v1/user/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
-    const responseData = await response.json();
+      const responseData = await response.json();
 
     if (!response.ok) {
       throw new Error(responseData.message || "Login failed");
@@ -102,17 +102,17 @@ const Page = () => {
       localStorage.setItem("user", JSON.stringify(user));
     }
 
-    toast.success("Login successful!");
-    router.push("/");
+      toast.success("Login successful!");
+      router.push("/");
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (err: any) {
-    toast.error(err.message || "An unexpected error occurred during login.");
-    console.error("Login error:", err);
-  } finally {
-    setLoading(false);
-  }
-};
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      toast.error(err.message || "An unexpected error occurred during login.");
+      console.error("Login error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const togglePasswordVisibility = () => setShowPassword((v) => !v);
 
@@ -123,28 +123,26 @@ const Page = () => {
 
   return (
     <>
-      <Toaster richColors position="top-right"/>
+      <Toaster richColors position="top-right" />
       <div className="min-h-screen bg-black flex justify-center items-center">
         <div className="z-20 bg-black shadow-2xl rounded-sx overflow-hidden flex w-full max-w-5xl">
           {/* Left Side: Sign Up Form */}
           <div className="p-8 mx-10  w-full md:mx-0 md:w-1/2 ">
             <Link href="/" className="block mb-4">
-          <GenericButton
-            variant="ghost"
-            size="sm"
-            className="mb-8 text-gray-600 hover:text-gray-900 hover:bg-amber-200"
-          >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back
-        </GenericButton>
-        </Link>
+              <GenericButton
+                variant="ghost"
+                size="sm"
+                className="mb-8 text-gray-600 hover:text-gray-900 hover:bg-amber-200"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back
+              </GenericButton>
+            </Link>
             <div className="mb-6">
               <h2 className="text-lg font-semibold text-gray-800 my-2">
-                {t('auth.signin.title')}
+                {t("auth.signin.title")}
               </h2>
-              <p className="text-gray-600">
-                {t('auth.signin.subtitle')}
-              </p>
+              <p className="text-gray-600">{t("auth.signin.subtitle")}</p>
             </div>
             <form onSubmit={handleSignIn}>
               <div className="mb-4">
@@ -152,7 +150,7 @@ const Page = () => {
                   htmlFor="email"
                   className="block text-gray-700 text-sm font-bold mb-2"
                 >
-                  {t('auth.signin.email')}
+                  {t("auth.signin.email")}
                 </label>
                 <div className="relative">
                   <input
@@ -179,7 +177,7 @@ const Page = () => {
                   htmlFor="password"
                   className="block text-gray-700 text-sm font-bold mb-2"
                 >
-                  {t('auth.signin.password')}
+                  {t("auth.signin.password")}
                 </label>
                 <div className="relative">
                   <input
@@ -218,7 +216,7 @@ const Page = () => {
                   href="#"
                   className="inline-block align-baseline font-semibold text-sm text-amber-300 hover:text-amber-500"
                 >
-                  {t('auth.signin.forgotPassword')}
+                  {t("auth.signin.forgotPassword")}
                 </a>
               </div>
               <button
@@ -226,7 +224,7 @@ const Page = () => {
                 type="submit"
                 disabled={loading}
               >
-                {loading ? "Signing In..." : t('auth.signin.signInButton')}
+                {loading ? "Signing In..." : t("auth.signin.signInButton")}
               </button>
             </form>
             <div className="mt-6 border-t pt-6">

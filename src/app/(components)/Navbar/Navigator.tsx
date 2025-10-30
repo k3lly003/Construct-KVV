@@ -34,6 +34,7 @@ import { useTranslation } from "react-i18next";
 import { useCartStore } from "@/store/cartStore";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
 
 function useIsClient() {
   const [isClient, setIsClient] = useState(false);
@@ -71,6 +72,7 @@ const Navbar: React.FC = () => {
     useState(false);
   const { t } = useTranslation();
   const { getCartCount } = useCartStore();
+  const { isAuthenticated } = useAuth();
   const isClient = useIsClient();
   const isMobile = useIsMobile();
   const router = useRouter();
@@ -84,6 +86,7 @@ const Navbar: React.FC = () => {
     markAllAsRead,
     getUnreadCount,
     fetchNotifications,
+    clearNotifications,
     isLoading: notificationsLoading,
     error: notificationsError,
   } = useNotificationStore();
@@ -98,7 +101,20 @@ const Navbar: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isClient, localUserData]);
 
+  // Clear notifications when user logs out
+  useEffect(() => {
+    if (isClient && !isAuthenticated) {
+      clearNotifications();
+    }
+  }, [isClient, isAuthenticated, clearNotifications]);
+
   const handleNotificationClick = async () => {
+    // Check if user is authenticated
+    if (!isAuthenticated) {
+      toast.error("Please log in to view notifications");
+      return;
+    }
+
     // Refresh notifications when opening the modal
     await fetchNotifications();
     setIsNotificationModalOpen(true);
@@ -190,12 +206,13 @@ const Navbar: React.FC = () => {
                 {t("navigation.join-as-a-pro")}
                 <BriefcaseBusiness className="mx-2 w-5 h-5" />
               </Link>
-              {/* Notification Icon (client only) */}
-              {isClient && (
+              {/* Notification Icon (authenticated users only) */}
+              {isClient && isAuthenticated && (
                 <NotificationIcon
                   count={getUnreadCount()}
                   onClick={handleNotificationClick}
                   className="text-amber-600 hover:text-amber-700"
+                  isLoading={notificationsLoading}
                 />
               )}
               <Link
@@ -342,13 +359,15 @@ const Navbar: React.FC = () => {
                     )}
                   </div>
                   {/* Build House link (mobile) */}
-                  <button
+                  {/* <button
                     type="button"
                     className="py-2 text-gray-900 hover:text-amber-500 border-b bg-transparent w-full text-left"
                     onClick={() => {
                       setMobileMenuOpen(false);
                       if (!localUserData) {
-                        toast.error("Please sign in first to access build house");
+                        toast.error(
+                          "Please sign in first to access build house"
+                        );
                         router.push("/signin");
                       } else {
                         router.push("/build-house");
@@ -356,7 +375,7 @@ const Navbar: React.FC = () => {
                     }}
                   >
                     Build your house
-                  </button>
+                  </button> */}
                   {/* Projects link (mobile) */}
                   <button
                     type="button"
@@ -364,9 +383,7 @@ const Navbar: React.FC = () => {
                     onClick={() => {
                       setMobileMenuOpen(false);
                       if (!localUserData) {
-                        toast.error(
-                          "Please sign in first to access projects"
-                        );
+                        toast.error("Please sign in first to access projects");
                         // router.push("/signin");
                       } else {
                         router.push("/projects");
@@ -397,6 +414,13 @@ const Navbar: React.FC = () => {
                     Help
                   </Link>
                   <Link
+                    href="/design-marketplace"
+                    className="py-2 text-gray-900 hover:text-amber-500 border-b"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Design Marketplace
+                  </Link>
+                  <Link
                     href="/cart"
                     className="py-2 text-gray-900 hover:text-amber-500 border-b flex items-center gap-2 relative"
                     onClick={() => setMobileMenuOpen(false)}
@@ -409,8 +433,8 @@ const Navbar: React.FC = () => {
                     )}
                     Cart
                   </Link>
-                  {/* Notification Icon (client only) */}
-                  {isClient && (
+                  {/* Notification Icon (authenticated users only) */}
+                  {isClient && isAuthenticated && (
                     <div className="py-2 border-b">
                       <NotificationIcon
                         count={getUnreadCount()}
@@ -419,6 +443,7 @@ const Navbar: React.FC = () => {
                           setMobileMenuOpen(false);
                         }}
                         className="text-amber-600 hover:text-amber-700"
+                        isLoading={notificationsLoading}
                       />
                     </div>
                   )}
@@ -602,7 +627,7 @@ const Navbar: React.FC = () => {
               </AnimatePresence>
             </div>
             {/* Build House link (desktop) */}
-            <button
+            {/* <button
               type="button"
               className="inline-flex items-center px-1 pt-1 mb-2 hover:text-amber-500 text-sm font-medium text-gray-900"
               onClick={() => {
@@ -620,7 +645,7 @@ const Navbar: React.FC = () => {
               }}
             >
               {t("navigation.buildHouse")}
-            </button>
+            </button> */}
             {/* Projects link (desktop) */}
             <button
               type="button"
@@ -642,16 +667,22 @@ const Navbar: React.FC = () => {
               {t("navigation.projects")}
             </button>
             <Link
-              href="/shops"
+              href="/portfolios"
               className="inline-flex items-center px-1 pt-1 mb-2 text-sm font-medium text-gray-900 hover:text-amber-500"
             >
-              {t("navigation.shops")}
+              {t("navigation.portfolio")}
             </Link>
             <Link
               href="/pricing"
               className="inline-flex items-center px-1 pt-1 mb-2 text-sm font-medium text-gray-900 hover:text-amber-500"
             >
               {t("navigation.pricing")}
+            </Link>
+            <Link
+              href="/design-marketplace"
+              className="inline-flex items-center px-1 pt-1 mb-2 text-sm font-medium text-gray-900 hover:text-amber-500"
+            >
+              Design Marketplace
             </Link>
           </div>
         </div>

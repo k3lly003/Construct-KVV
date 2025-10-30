@@ -1,1045 +1,456 @@
 "use client";
 
-import React from "react";
-import DefaultPageBanner from "@/app/(components)/DefaultPageBanner";
-import { useProject } from "@/app/hooks/useProjects";
-import { Card } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { GenericButton } from "@/components/ui/generic-button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { useFloorplanProject } from "@/app/hooks/useFloorplanProject";
+import { ProjectDetails } from "@/app/services/floorplanProjectService";
+import { useUserStore } from "@/store/userStore";
+import {
+  Building,
+  Calendar,
+  DollarSign,
+  Clock,
+  Users,
+  FileText,
+  Sparkles,
+  ArrowLeft,
+  ToggleLeft,
+  ToggleRight,
+} from "lucide-react";
 import { toast } from "sonner";
-import Link from "next/link";
-import {
-  projectService,
-  ProjectStatus,
-  ProjectUpdateData,
-} from "@/app/services/projectServices";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { NegotiationChat } from "@/app/dashboard/(components)/negotiation/NegotiationChat";
-import { BidStatus } from "@/types/project";
-import ProgressTracker from "@/app/(components)/projects/ProgressTracker";
-import Head from 'next/head';
+import Head from "next/head";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+export default function ProjectDetailsPage() {
+  const params = useParams();
+  const router = useRouter();
+  const { role } = useUserStore();
+  const { getProjectById, updateProjectStatus, loading } =
+    useFloorplanProject();
 
-interface ProjectPageProps {
-  params: Promise<{ id: string }>;
-}
+  const [project, setProject] = useState<ProjectDetails | null>(null);
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
-function ProjectPage({ params }: ProjectPageProps) {
-  const resolvedParams = React.use(params);
-  const { project, isLoading, refetch } = useProject(resolvedParams.id);
-  const [isUpdatingStatus, setIsUpdatingStatus] = React.useState(false);
-  const [isUpdatingProject, setIsUpdatingProject] = React.useState(false);
+  const projectId = params.id as string;
 
-  // State for update form
-  const [updateFormData, setUpdateFormData] = React.useState<ProjectUpdateData>(
-    {
-      roomsCount: 0,
-      bathroomsCount: 0,
-      kitchensCount: 1,
-      conversationRoomsCount: 0,
-      extras: [],
-      description: "",
-      estimatedCost: 0,
+  useEffect(() => {
+    const loadProject = async () => {
+      try {
+        const projectData = await getProjectById(projectId);
+        console.log("🔍 Full project response:", projectData);
+        console.log("📊 Analysis data:", {
+          partialSummaries: projectData.partialSummaries,
+          summary: projectData.summary,
+          text: projectData.text,
+          estimationSource: projectData.estimationSource,
+        });
+        setProject(projectData);
+      } catch (err) {
+        console.error("Failed to load project:", err);
+        toast.error("Failed to load project details");
+        router.push("/projects");
+      }
+    };
+
+    if (projectId) {
+      loadProject();
     }
-  );
+  }, [projectId, getProjectById, router]);
 
-  // Initialize form data when project loads
-  React.useEffect(() => {
-    if (project) {
-      setUpdateFormData({
-        roomsCount: project.choosenEstimation.roomsCount,
-        bathroomsCount: project.choosenEstimation.bathroomsCount,
-        kitchensCount: project.choosenEstimation.kitchensCount,
-        conversationRoomsCount:
-          project.choosenEstimation.conversationRoomsCount,
-        extras: project.choosenEstimation.extras,
-        description: project.choosenEstimation.description,
-        estimatedCost: project.choosenEstimation.estimatedCost,
-      });
-    }
-  }, [project]);
-
-  console.log("🏠 Project Page Rendered for ID:", resolvedParams.id);
-  console.log("📊 Project Data:", project);
-  console.log("🔄 Loading:", isLoading);
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "Rwf",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
-
-  const handleStatusUpdate = async (newStatus: ProjectStatus) => {
+  const handleStatusUpdate = async (
+    newStatus: "DRAFT" | "OPEN" | "CLOSED" | "COMPLETED"
+  ) => {
     if (!project) return;
 
     setIsUpdatingStatus(true);
     try {
-      // Use the direct PATCH endpoint as requested
-      const token = localStorage.getItem("authToken");
-      if (!token) {
-        toast.error("No authentication token found. Please login first.");
-        setIsUpdatingStatus(false);
-        return;
-      }
-      await fetch(`${API_URL}/api/v1/final-project/${project.id}/status`, {
-        method: "PATCH",
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
-      // Refetch the project data to get the updated status
-      await refetch();
-      toast.success(`Project status updated to ${newStatus} successfully! 🎉`);
-    } catch (error: unknown) {
-      let errorMessage = "Failed to update project status. Please try again.";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      toast.error(errorMessage);
+      await updateProjectStatus(project.id, newStatus);
+      setProject({ ...project, status: newStatus });
+      toast.success(`Project status updated to ${newStatus} successfully!`);
+    } catch (err) {
+      console.error("Failed to update project status:", err);
+      toast.error("Failed to update project status");
     } finally {
       setIsUpdatingStatus(false);
     }
   };
 
-  const handleUpdateProject = async () => {
-    console.log("🔘 STEP 1: Update button clicked");
-
-    if (!project) {
-      console.log("❌ STEP 1 FAILED: No project data available");
-      return;
-    }
-    console.log("✅ STEP 1 PASSED: Project data available");
-
-    console.log("🔘 STEP 2: Setting loading state");
-    setIsUpdatingProject(true);
-    console.log("✅ STEP 2 PASSED: Loading state set to true");
-
-    try {
-      console.log("🔘 STEP 3: Starting project update process");
-      console.log("🆔 Project ID being sent:", project.id);
-      console.log("🆔 Project ID type:", typeof project.id);
-      console.log("🆔 Project ID length:", project.id.length);
-      console.log("🆔 Full project object:", project);
-      console.log("📝 Form data being used:", updateFormData);
-      console.log("✅ STEP 3 PASSED: Logged all project and form data");
-
-      console.log("🔘 STEP 4: Using update form data directly");
-      // Use update form data directly since it's already in the correct format
-      const projectUpdateData = updateFormData;
-      console.log("✅ STEP 4 PASSED: Update form data ready");
-      console.log("📝 Project update data:", projectUpdateData);
-
-      console.log("🔘 STEP 5: Calling projectService.updateProject");
-      console.log("🆔 Project ID for API call:", project.id);
-
-      // Update the project
-      await projectService.updateProject(project.id, projectUpdateData);
-      console.log(
-        "✅ STEP 5 PASSED: projectService.updateProject completed successfully"
-      );
-
-      console.log("🔘 STEP 6: Refetching project data");
-      // Refetch the project data to get the updated information
-      await refetch();
-      console.log("✅ STEP 6 PASSED: Project data refetched successfully");
-
-      console.log("🔘 STEP 7: Showing success message");
-      console.log("✅ Project updated successfully");
-      toast.success("Project updated successfully! 🎉", {
-        style: {
-          background: "white",
-          color: "#92400e",
-          border: "1px solid #f59e0b",
-        },
-      });
-      console.log("✅ STEP 7 PASSED: Success message shown");
-    } catch (error: unknown) {
-      let errorMessage = "Failed to update project. Please try again.";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      console.log("❌ ERROR CAUGHT: Update process failed");
-      console.error("❌ Error updating project:", error);
-      toast.error(errorMessage, {
-        style: {
-          background: "white",
-          color: "#dc2626",
-          border: "1px solid #ef4444",
-        },
-      });
-      console.log("✅ STEP ERROR PASSED: Error toast shown");
-    } finally {
-      console.log("🔘 STEP 8: Cleaning up loading state");
-      setIsUpdatingProject(false);
-      console.log("✅ STEP 8 PASSED: Loading state set to false");
-    }
+  const formatCurrency = (amount?: number, currency = "RWF") => {
+    if (!amount) return "Not specified";
+    return new Intl.NumberFormat("en-RW", {
+      style: "currency",
+      currency: currency,
+      minimumFractionDigits: 0,
+    }).format(amount);
   };
 
-  const getStatusColor = (status: ProjectStatus) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case "DRAFT":
-        return "bg-amber-100 text-amber-800 border-amber-300";
+        return "bg-gray-100 text-gray-800";
       case "OPEN":
-        return "bg-green-100 text-green-800 border-green-300";
+        return "bg-green-100 text-green-800";
       case "CLOSED":
-        return "bg-red-100 text-red-800 border-red-300";
+        return "bg-yellow-100 text-yellow-800";
       case "COMPLETED":
-        return "bg-blue-100 text-blue-800 border-blue-300";
+        return "bg-blue-100 text-blue-800";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-300";
+        return "bg-gray-100 text-gray-800";
     }
   };
 
-  const getStatusIcon = (status: ProjectStatus) => {
-    switch (status) {
-      case "DRAFT":
-        return "📝";
-      case "OPEN":
-        return "🔓";
-      case "CLOSED":
-        return "🔒";
-      case "COMPLETED":
-        return "✅";
-      default:
-        return "📋";
-    }
-  };
-
-  if (isLoading) {
+  if (loading && !project) {
     return (
-      <>
-        <DefaultPageBanner
-          title="Project Details & Bidding"
-          backgroundImage="/building.jpg"
-        />
-        <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 py-8">
           <div className="flex items-center justify-center min-h-[400px]">
-            <div className="flex items-center space-x-2">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-amber-500"></div>
-              <span className="text-amber-800">Loading project details...</span>
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900 mx-auto"></div>
+              <p className="mt-4 text-gray-600">Loading project details...</p>
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 
   if (!project) {
     return (
-      <>
-        <DefaultPageBanner
-          title="Project Details & Bidding"
-          backgroundImage="/building.jpg"
-        />
-        <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 py-8">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-red-600 mb-2">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">
               Project Not Found
-            </h3>
-            <p className="text-amber-800 mb-6">
-              The project you&apos;re looking for doesn&apos;t exist or you
-              don&apos;t have access to it.
+            </h1>
+            <p className="text-gray-600 mb-4">
+              The project you're looking for doesn't exist or has been removed.
             </p>
-            <Link href="/projects">
-              <GenericButton
-                variant="outline"
-                className="border-amber-500 text-amber-700 hover:bg-amber-50 bg-white"
-              >
-                ← Back to Projects
-              </GenericButton>
-            </Link>
+            <Button onClick={() => router.push("/projects")}>
+              Back to Projects
+            </Button>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 
+  // Filter out empty AI partial summaries so we only render meaningful content
+  const nonEmptySummaries =
+    project?.partialSummaries?.filter(
+      (s) => typeof s === "string" && s.trim().length > 0
+    ) || [];
+
   return (
-    <>
-      {project && (
-        <Head>
-          <title>{project.name ? `${project.name} | Project | Construct KVV` : 'Project | Construct KVV'}</title>
-          <meta name="description" content={project.description || 'View construction project details at KVV Construction.'} />
-          <meta property="og:title" content={project.name ? `${project.name} | Project | Construct KVV` : 'Project | Construct KVV'} />
-          <meta property="og:description" content={project.description || 'View construction project details at KVV Construction.'} />
-          <meta property="og:type" content="website" />
-          <meta property="og:url" content={`https://www.constructkvv.com/projects/${project.id}`} />
-          <meta property="og:image" content={project.image || '/kvv-logo.png'} />
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content={project.name ? `${project.name} | Project | Construct KVV` : 'Project | Construct KVV'} />
-          <meta name="twitter:description" content={project.description || 'View construction project details at KVV Construction.'} />
-          <meta name="twitter:image" content={project.image || '/kvv-logo.png'} />
-          <link rel="canonical" href={`https://www.constructkvv.com/projects/${project.id}`} />
-          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'WebPage',
-            name: project.name,
-            description: project.description,
-            url: `https://www.constructkvv.com/projects/${project.id}`,
-            image: project.image || undefined
-          }) }} />
-        </Head>
-      )}
-      <DefaultPageBanner
-        title="Project Details & Bidding"
-        backgroundImage="/building.jpg"
-      />
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="mb-6">
-          <Link href="/projects">
-            <GenericButton
-              variant="outline"
-              size="sm"
-              className="border-amber-500 text-amber-700 hover:bg-amber-50 bg-white"
-            >
-              ← Back to Projects
-            </GenericButton>
-          </Link>
+    <div className="min-h-screen bg-gray-50">
+      <Head>
+        <title>Project Details | Construct KVV</title>
+        <meta
+          name="description"
+          content="View detailed information about your construction project"
+        />
+      </Head>
+
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <Button
+            variant="outline"
+            onClick={() => router.push("/projects")}
+            className="mb-4"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Projects
+          </Button>
+
+          <div className="flex items-start justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                Project #{project.id.slice(-8)}
+              </h1>
+              <div className="flex items-center gap-3">
+                <Badge className="bg-blue-100 text-blue-800">
+                  AI Generated
+                </Badge>
+                <Badge className={getStatusColor(project.status)}>
+                  {project.status}
+                </Badge>
+                <span className="text-sm text-gray-500">
+                  Created {new Date(project.createdAt).toLocaleDateString()}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {role !== "CONTRACTOR" && (
+                <Button
+                  variant="outline"
+                  className="border-amber-400 text-amber-700 hover:bg-amber-50"
+                  onClick={() => router.push(`/projects/${project.id}/bids`)}
+                >
+                  View Bids
+                </Button>
+              )}
+              <Button
+                className="bg-gradient-to-r from-amber-500 to-amber-600 text-white hover:from-amber-600 hover:to-amber-700"
+                onClick={() =>
+                  router.push(`/projects/${project.id}/management`)
+                }
+              >
+                Open Project Workspace
+              </Button>
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Project Info */}
-          <div className="lg:col-span-2 space-y-6">
-            <Card className="p-6 border-amber-200 bg-white shadow-lg">
-              <div className="flex justify-between items-start mb-4">
+        <div className="grid gap-6">
+          {/* Project Overview */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Building className="h-5 w-5" />
+                Project Overview
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {project.summary && (
                 <div>
-                  <h1 className="text-2xl font-bold text-amber-900 mb-2">
-                    House Project
-                  </h1>
-                  <div className="flex items-center gap-2">
-                    <Badge
-                      variant="outline"
-                      className={`text-sm ${getStatusColor(project.status)}`}
-                    >
-                      {getStatusIcon(project.status)} {project.status}
-                    </Badge>
-                  </div>
+                  <h4 className="font-semibold text-gray-900 mb-2">
+                    AI Summary
+                  </h4>
+                  <p className="text-gray-600">{project.summary}</p>
                 </div>
-                <div className="text-right">
-                  <p className="text-sm text-amber-700">Project ID</p>
-                  <p className="text-xs text-amber-600 font-mono">
-                    {project.id}
-                  </p>
-                </div>
-              </div>
+              )}
 
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-lg font-semibold text-amber-900 mb-2">
-                    Project Description
-                  </h3>
-                  <p className="text-amber-800 leading-relaxed">
-                    {project.choosenEstimation.description}
-                  </p>
-                </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {project.totalEstimatedCost && (
+                  <div className="text-center p-4 bg-green-50 rounded-lg">
+                    <DollarSign className="h-8 w-8 text-green-600 mx-auto mb-2" />
+                    <h4 className="font-semibold text-gray-900">Total Cost</h4>
+                    <p className="text-lg font-bold text-green-600">
+                      {formatCurrency(
+                        project.totalEstimatedCost,
+                        project.currency
+                      )}
+                    </p>
+                  </div>
+                )}
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="text-center p-4 bg-amber-50 rounded-lg border border-amber-200">
-                    <div className="text-2xl mb-1">🛏️</div>
-                    <div className="text-sm font-medium text-amber-900">
-                      {project.choosenEstimation.roomsCount}
-                    </div>
-                    <div className="text-xs text-amber-700">Bedrooms</div>
+                {project.estimatedDuration && (
+                  <div className="text-center p-4 bg-blue-50 rounded-lg">
+                    <Clock className="h-8 w-8 text-blue-600 mx-auto mb-2" />
+                    <h4 className="font-semibold text-gray-900">Duration</h4>
+                    <p className="text-lg font-bold text-blue-600">
+                      {project.estimatedDuration} months
+                    </p>
                   </div>
-                  <div className="text-center p-4 bg-amber-50 rounded-lg border border-amber-200">
-                    <div className="text-2xl mb-1">🚿</div>
-                    <div className="text-sm font-medium text-amber-900">
-                      {project.choosenEstimation.bathroomsCount}
-                    </div>
-                    <div className="text-xs text-amber-700">Bathrooms</div>
-                  </div>
-                  <div className="text-center p-4 bg-amber-50 rounded-lg border border-amber-200">
-                    <div className="text-2xl mb-1">🍳</div>
-                    <div className="text-sm font-medium text-amber-900">
-                      {project.choosenEstimation.kitchensCount}
-                    </div>
-                    <div className="text-xs text-amber-700">Kitchens</div>
-                  </div>
-                  <div className="text-center p-4 bg-amber-50 rounded-lg border border-amber-200">
-                    <div className="text-2xl mb-1">👥</div>
-                    <div className="text-sm font-medium text-amber-900">
-                      {project.choosenEstimation.conversationRoomsCount}
-                    </div>
-                    <div className="text-xs text-amber-700">Living Rooms</div>
-                  </div>
-                </div>
+                )}
 
-                {project.choosenEstimation.extras.length > 0 && (
-                  <div>
-                    <h3 className="text-lg font-semibold text-amber-900 mb-2">
-                      Additional Features
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {project.choosenEstimation.extras.map((extra, index) => (
-                        <Badge
-                          key={index}
-                          variant="outline"
-                          className="text-sm border-amber-500 text-amber-700 bg-white"
-                        >
-                          {extra.name.replace(/_/g, " ")} ({extra.detail.count})
-                        </Badge>
-                      ))}
-                    </div>
+                {project.numberOfWorkers && (
+                  <div className="text-center p-4 bg-purple-50 rounded-lg">
+                    <Users className="h-8 w-8 text-purple-600 mx-auto mb-2" />
+                    <h4 className="font-semibold text-gray-900">Workers</h4>
+                    <p className="text-lg font-bold text-purple-600">
+                      {project.numberOfWorkers} people
+                    </p>
                   </div>
                 )}
               </div>
-            </Card>
+            </CardContent>
+          </Card>
 
-            {/* Bids Section */}
-            <Card className="p-6 border-amber-200 bg-white shadow-lg">
-              <h3 className="text-lg font-semibold text-amber-900 mb-4">
-                Bids & Offers
-              </h3>
-              {project.bids.length === 0 ? (
-                <div className="text-center py-8">
-                  <div className="text-4xl mb-4">📋</div>
-                  <p className="text-amber-800">
-                    No bids have been submitted yet.
-                  </p>
-                  <p className="text-sm text-amber-700 mt-2">
-                    Suppliers will be able to submit bids once the project is
-                    published.
-                  </p>
-
-                  {/* Call to Action for Professionals */}
-                  <div className="mt-6 p-4 bg-amber-500 rounded-lg border border-amber-600">
-                    <h4 className="font-semibold text-white mb-2">
-                      Ready to Submit Your Bid?
-                    </h4>
-                    <p className="text-white/90 text-sm mb-3">
-                      Are you a qualified professional? Submit your competitive
-                      bid for this project.
-                    </p>
-                    <div className="flex flex-wrap gap-2 justify-center">
-                      <Badge
-                        variant="outline"
-                        className="text-xs border-white text-white bg-transparent"
-                      >
-                        🏗️ Architects
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="text-xs border-white text-white bg-transparent"
-                      >
-                        🔧 Plumbers
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="text-xs border-white text-white bg-transparent"
-                      >
-                        🎨 Painters
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="text-xs border-white text-white bg-transparent"
-                      >
-                        ⚡ Electricians
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="text-xs border-white text-white bg-transparent"
-                      >
-                        🧱 Contractors
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="text-xs border-white text-white bg-transparent"
-                      >
-                        🌳 Landscapers
-                      </Badge>
-                    </div>
-                    <div className="mt-4">
-                      <GenericButton className="bg-white hover:bg-gray-100 text-amber-600 shadow-md font-semibold">
-                        💼 Submit Your Bid
-                      </GenericButton>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {project.bids.map((bid, index) => (
-                    <div
-                      key={index}
-                      className="p-4 border border-amber-200 rounded-lg bg-amber-50 mb-6"
-                    >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <p className="font-medium text-amber-900">
-                            Bid #{index + 1}
-                          </p>
-                          <p className="text-sm text-amber-800">
-                            {bid.description}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold text-amber-600">
-                            {formatCurrency(bid.amount || 0)}
-                          </p>
-                          <p className="text-xs text-amber-600">
-                            {formatDate(bid.createdAt || "")}
-                          </p>
-                        </div>
-                      </div>
-                      {/* Negotiation Chat for this bid */}
-                      <div className="mt-4">
-                        <NegotiationChat
-                          bidId={String(bid.id)}
-                          initialBidData={bid}
-                        />
-                      </div>
-                      {/* Per-bid Accept/Update Bid Status section */}
-                      <div className="mt-4 p-4 bg-amber-500 rounded-lg border border-amber-600">
-                        <h4 className="font-semibold text-white mb-2">
-                          Handle Your Project to Our Professionals?
-                        </h4>
-                        <p className="text-white/90 text-sm mb-3">
-                          Accept or Reject the bids from our professionals.
-                        </p>
-                        {/* Show current status before dropdown */}
-                        <div className="mb-2">
-                          <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-white text-amber-700 border border-amber-300">
-                            Current Status:{" "}
-                            {bid.status ? bid.status : "Unknown"}
-                          </span>
-                        </div>
-                        <BidStatusDropdown bidId={bid.id} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </Card>
-            <ProgressTracker projectId={project.id} />
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Status Update Section */}
-            <Card className="p-6 border-amber-200 bg-white shadow-lg">
-              <h3 className="text-lg font-semibold text-amber-900 mb-4">
-                Project Status
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-amber-800">Current Status:</span>
-                  <Badge
-                    variant="outline"
-                    className={`text-sm ${getStatusColor(project.status)}`}
-                  >
-                    {getStatusIcon(project.status)} {project.status}
-                  </Badge>
-                </div>
-
-                <div className="pt-3 border-t border-amber-200">
-                  <p className="text-sm text-amber-700 mb-3">Update Status:</p>
-                  <Select
-                    value={project.status}
-                    onValueChange={(value: ProjectStatus) =>
-                      handleStatusUpdate(value)
-                    }
-                    disabled={isUpdatingStatus}
-                  >
-                    <SelectTrigger className="w-full border-amber-300">
-                      <SelectValue placeholder="Select status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="DRAFT">📝 Draft</SelectItem>
-                      <SelectItem value="OPEN">🔓 Open for Bidding</SelectItem>
-                      <SelectItem value="CLOSED">🔒 Closed</SelectItem>
-                      <SelectItem value="COMPLETED">✅ Completed</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {isUpdatingStatus && (
-                    <div className="flex items-center justify-center mt-2">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-amber-500"></div>
-                      <span className="text-sm text-amber-600 ml-2">
-                        Updating...
-                      </span>
+          {/* Cost Breakdown */}
+          {(project.laborCost ||
+            project.materialCost ||
+            project.otherExpenses) && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <DollarSign className="h-5 w-5" />
+                  Cost Breakdown
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {project.laborCost && (
+                    <div className="text-center">
+                      <h4 className="font-semibold text-gray-900">
+                        Labor Cost
+                      </h4>
+                      <p className="text-lg font-bold text-blue-600">
+                        {formatCurrency(project.laborCost, project.currency)}
+                      </p>
                     </div>
                   )}
-                </div>
-              </div>
-            </Card>
-
-            {/* Update Project Section */}
-            <Card className="p-6 border-amber-200 bg-white shadow-lg">
-              <h3 className="text-lg font-semibold text-amber-900 mb-4">
-                Update Project
-              </h3>
-              <div className="space-y-4">
-                <p className="text-sm text-amber-700 mb-3">
-                  Update project details with new values
-                </p>
-
-                {/* Project Details Form */}
-                <div className="space-y-4">
-                  {/* Description */}
-                  <div>
-                    <Label
-                      htmlFor="description"
-                      className="text-sm font-medium text-amber-900"
-                    >
-                      Project Description
-                    </Label>
-                    <Textarea
-                      id="description"
-                      value={updateFormData.description}
-                      onChange={(e) =>
-                        setUpdateFormData((prev) => ({
-                          ...prev,
-                          description: e.target.value,
-                        }))
-                      }
-                      className="mt-1 border-amber-300 focus:border-amber-500"
-                      rows={3}
-                      placeholder="Enter project description..."
-                    />
-                  </div>
-
-                  {/* Room Counts */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label
-                        htmlFor="roomsCount"
-                        className="text-sm font-medium text-amber-900"
-                      >
-                        Bedrooms
-                      </Label>
-                      <Input
-                        id="roomsCount"
-                        type="number"
-                        min="0"
-                        max="20"
-                        value={updateFormData.roomsCount}
-                        onChange={(e) =>
-                          setUpdateFormData((prev) => ({
-                            ...prev,
-                            roomsCount: parseInt(e.target.value) || 0,
-                          }))
-                        }
-                        className="mt-1 border-amber-300 focus:border-amber-500"
-                      />
+                  {project.materialCost && (
+                    <div className="text-center">
+                      <h4 className="font-semibold text-gray-900">
+                        Material Cost
+                      </h4>
+                      <p className="text-lg font-bold text-green-600">
+                        {formatCurrency(project.materialCost, project.currency)}
+                      </p>
                     </div>
-                    <div>
-                      <Label
-                        htmlFor="bathroomsCount"
-                        className="text-sm font-medium text-amber-900"
-                      >
-                        Bathrooms
-                      </Label>
-                      <Input
-                        id="bathroomsCount"
-                        type="number"
-                        min="0"
-                        max="20"
-                        step="0.5"
-                        value={updateFormData.bathroomsCount}
-                        onChange={(e) =>
-                          setUpdateFormData((prev) => ({
-                            ...prev,
-                            bathroomsCount: parseFloat(e.target.value) || 0,
-                          }))
-                        }
-                        className="mt-1 border-amber-300 focus:border-amber-500"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label
-                        htmlFor="kitchensCount"
-                        className="text-sm font-medium text-amber-900"
-                      >
-                        Kitchens
-                      </Label>
-                      <Input
-                        id="kitchensCount"
-                        type="number"
-                        min="1"
-                        max="10"
-                        value={updateFormData.kitchensCount}
-                        onChange={(e) =>
-                          setUpdateFormData((prev) => ({
-                            ...prev,
-                            kitchensCount: parseInt(e.target.value) || 1,
-                          }))
-                        }
-                        className="mt-1 border-amber-300 focus:border-amber-500"
-                      />
-                    </div>
-                    <div>
-                      <Label
-                        htmlFor="conversationRoomsCount"
-                        className="text-sm font-medium text-amber-900"
-                      >
-                        Living Rooms
-                      </Label>
-                      <Input
-                        id="conversationRoomsCount"
-                        type="number"
-                        min="0"
-                        max="10"
-                        value={updateFormData.conversationRoomsCount}
-                        onChange={(e) =>
-                          setUpdateFormData((prev) => ({
-                            ...prev,
-                            conversationRoomsCount:
-                              parseInt(e.target.value) || 0,
-                          }))
-                        }
-                        className="mt-1 border-amber-300 focus:border-amber-500"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Estimated Cost */}
-                  <div>
-                    <Label
-                      htmlFor="estimatedCost"
-                      className="text-sm font-medium text-amber-900"
-                    >
-                      Estimated Cost (Rwf)
-                    </Label>
-                    <Input
-                      id="estimatedCost"
-                      type="number"
-                      min="0"
-                      step="1000"
-                      value={updateFormData.estimatedCost}
-                      onChange={(e) =>
-                        setUpdateFormData((prev) => ({
-                          ...prev,
-                          estimatedCost: parseInt(e.target.value) || 0,
-                        }))
-                      }
-                      className="mt-1 border-amber-300 focus:border-amber-500"
-                      placeholder="Enter estimated cost..."
-                    />
-                  </div>
-
-                  {/* Extras Display (Read-only for now) */}
-                  {updateFormData.extras.length > 0 && (
-                    <div>
-                      <Label className="text-sm font-medium text-amber-900">
-                        Additional Features (Current)
-                      </Label>
-                      <div className="mt-1 flex flex-wrap gap-2">
-                        {updateFormData.extras.map((extra, index) => (
-                          <Badge
-                            key={index}
-                            variant="outline"
-                            className="text-xs border-amber-500 text-amber-700 bg-white"
-                          >
-                            {extra.name.replace(/_/g, " ")} (
-                            {extra.detail.count})
-                          </Badge>
-                        ))}
-                      </div>
-                      <p className="text-xs text-amber-600 mt-1">
-                        Features can be updated through the build house form
+                  )}
+                  {project.otherExpenses && (
+                    <div className="text-center">
+                      <h4 className="font-semibold text-gray-900">
+                        Other Expenses
+                      </h4>
+                      <p className="text-lg font-bold text-purple-600">
+                        {formatCurrency(
+                          project.otherExpenses,
+                          project.currency
+                        )}
                       </p>
                     </div>
                   )}
                 </div>
+              </CardContent>
+            </Card>
+          )}
 
-                {/* Update Button */}
-                <GenericButton
-                  onClick={handleUpdateProject}
-                  disabled={isUpdatingProject}
-                  fullWidth
-                  className="bg-amber-600 hover:bg-amber-700 text-white border-amber-600 mt-4"
-                >
-                  {isUpdatingProject ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Updating Project...
-                    </>
-                  ) : (
-                    <>🔄 Update Project</>
+          {/* OCR Text */}
+          {project.text && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5" />
+                  Extracted Floorplan Text
+                </CardTitle>
+                <CardDescription>
+                  Text extracted from your floorplan using OCR technology
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="bg-gray-50 p-4 rounded-lg max-h-96 overflow-y-auto">
+                  <pre className="text-sm text-gray-700 whitespace-pre-wrap">
+                    {project.text}
+                  </pre>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* AI Analysis - only render if we actually have non-empty summaries */}
+          {nonEmptySummaries.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Sparkles className="h-5 w-5" />
+                  AI Analysis Details
+                </CardTitle>
+                <CardDescription>
+                  Detailed analysis generated by our AI system
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {nonEmptySummaries.map((summary, index) => (
+                    <div key={index} className="bg-blue-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-blue-900 mb-2">
+                        Analysis Part {index + 1}
+                      </h4>
+                      <p className="text-blue-800">{summary}</p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Project Management (Only for project owners) */}
+          {role !== "CONTRACTOR" && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <ToggleLeft className="h-5 w-5" />
+                  Project Management
+                </CardTitle>
+                <CardDescription>
+                  Control the bidding status of your project
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div>
+                      <h4 className="font-semibold text-gray-900">
+                        Current Status
+                      </h4>
+                      <p className="text-sm text-gray-600">
+                        {project.status === "DRAFT" &&
+                          "Project is in draft mode - contractors cannot bid yet"}
+                        {project.status === "OPEN" &&
+                          "Project is open for contractor bidding"}
+                        {project.status === "CLOSED" &&
+                          "Bidding is closed - no new bids accepted"}
+                        {project.status === "COMPLETED" &&
+                          "Project is completed"}
+                      </p>
+                    </div>
+                    <Badge className={getStatusColor(project.status)}>
+                      {project.status}
+                    </Badge>
+                  </div>
+
+                  <div className="flex gap-3">
+                    {project.status === "DRAFT" && (
+                      <Button
+                        onClick={() => handleStatusUpdate("OPEN")}
+                        disabled={isUpdatingStatus}
+                        className="bg-green-600 hover:bg-green-700"
+                      >
+                        {isUpdatingStatus ? "Opening..." : "Open for Bidding"}
+                      </Button>
+                    )}
+
+                    {project.status === "OPEN" && (
+                      <Button
+                        onClick={() => handleStatusUpdate("CLOSED")}
+                        disabled={isUpdatingStatus}
+                        variant="outline"
+                      >
+                        {isUpdatingStatus ? "Closing..." : "Close Bidding"}
+                      </Button>
+                    )}
+
+                    {project.status === "CLOSED" && (
+                      <Button
+                        onClick={() => handleStatusUpdate("COMPLETED")}
+                        disabled={isUpdatingStatus}
+                        className="bg-blue-600 hover:bg-blue-700"
+                      >
+                        {isUpdatingStatus
+                          ? "Completing..."
+                          : "Mark as Completed"}
+                      </Button>
+                    )}
+                  </div>
+
+                  {project.status === "OPEN" && (
+                    <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                      <h4 className="font-semibold text-green-900 mb-2">
+                        ✅ Project is Open for Bidding
+                      </h4>
+                      <p className="text-green-800 text-sm">
+                        Contractors can now place bids on your project. You'll
+                        receive notifications when new bids are submitted.
+                      </p>
+                    </div>
                   )}
-                </GenericButton>
-                {isUpdatingProject && (
-                  <div className="flex items-center justify-center mt-2">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-amber-500"></div>
-                    <span className="text-sm text-amber-600 ml-2">
-                      Updating project data...
-                    </span>
-                  </div>
-                )}
-              </div>
+                </div>
+              </CardContent>
             </Card>
-
-            {/* Cost Information */}
-            <Card className="p-6 border-amber-200 bg-white shadow-lg">
-              <h3 className="text-lg font-semibold text-amber-900 mb-4">
-                Cost Information
-              </h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-amber-800">Estimated Cost:</span>
-                  <span className="font-semibold text-amber-600 text-lg">
-                    {formatCurrency(project.choosenEstimation.estimatedCost)}
-                  </span>
-                </div>
-              </div>
-            </Card>
-
-            {/* Project Timeline */}
-            <Card className="p-6 border-amber-200 bg-white shadow-lg">
-              <h3 className="text-lg font-semibold text-amber-900 mb-4">
-                Project Timeline
-              </h3>
-              <div className="space-y-3">
-                <div>
-                  <p className="text-sm text-amber-700">Created</p>
-                  <p className="font-medium text-amber-900">
-                    {formatDate(project.createdAt)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-amber-700">Estimation Created</p>
-                  <p className="font-medium text-amber-900">
-                    {formatDate(project.choosenEstimation.createdAt)}
-                  </p>
-                </div>
-              </div>
-            </Card>
-
-            {/* Owner Information */}
-            <Card className="p-6 border-amber-200 bg-white shadow-lg">
-              <h3 className="text-lg font-semibold text-amber-900 mb-4">
-                Project Owner
-              </h3>
-              <div className="space-y-3">
-                <div>
-                  <p className="text-sm text-amber-700">Name</p>
-                  <p className="font-medium text-amber-900">
-                    {project.owner.firstName} {project.owner.lastName}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-amber-700">Email</p>
-                  <p className="font-medium text-amber-900">
-                    {project.owner.email}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-amber-700">Phone</p>
-                  <p className="font-medium text-amber-900">
-                    {project.owner.phone}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-amber-700">Role</p>
-                  <Badge
-                    variant="outline"
-                    className="border-amber-500 text-amber-700 bg-white"
-                  >
-                    {project.owner.role}
-                  </Badge>
-                </div>
-              </div>
-            </Card>
-
-            {/* Professional Opportunities */}
-            <Card className="p-6 border-amber-200 bg-white shadow-lg">
-              <h3 className="text-lg font-semibold text-amber-900 mb-4">
-                Professional Opportunities
-              </h3>
-              <div className="space-y-3">
-                <div>
-                  <p className="text-sm text-amber-700 mb-2">
-                    This project needs:
-                  </p>
-                  <div className="flex flex-wrap gap-1">
-                    <Badge
-                      variant="outline"
-                      className="text-xs border-amber-500 text-amber-700 bg-white"
-                    >
-                      🏗️ Architecture
-                    </Badge>
-                    <Badge
-                      variant="outline"
-                      className="text-xs border-amber-500 text-amber-700 bg-white"
-                    >
-                      🔧 Plumbing
-                    </Badge>
-                    <Badge
-                      variant="outline"
-                      className="text-xs border-amber-500 text-amber-700 bg-white"
-                    >
-                      ⚡ Electrical
-                    </Badge>
-                    <Badge
-                      variant="outline"
-                      className="text-xs border-amber-500 text-amber-700 bg-white"
-                    >
-                      🎨 Painting
-                    </Badge>
-                    <Badge
-                      variant="outline"
-                      className="text-xs border-amber-500 text-amber-700 bg-white"
-                    >
-                      🧱 Construction
-                    </Badge>
-                    <Badge
-                      variant="outline"
-                      className="text-xs border-amber-500 text-amber-700 bg-white"
-                    >
-                      🌳 Landscaping
-                    </Badge>
-                    <Badge
-                      variant="outline"
-                      className="text-xs border-amber-500 text-amber-700 bg-white"
-                    >
-                      🏠 Interior Design
-                    </Badge>
-                  </div>
-                </div>
-                <div className="pt-3 border-t border-amber-200">
-                  <p className="text-sm text-amber-700 mb-2">Current Bids:</p>
-                  <p className="font-semibold text-lg text-amber-600">
-                    {project.bids.length}{" "}
-                    {project.bids.length === 1 ? "bid" : "bids"}
-                  </p>
-                </div>
-                {/* <div className="pt-3 border-t border-amber-200">
-                  <GenericButton
-                    variant="outline"
-                    fullWidth
-                    className="text-amber-600 border-amber-500 hover:bg-amber-50 bg-white"
-                  >
-                    💼 Your Bids
-                  </GenericButton>
-                </div> */}
-              </div>
-            </Card>
-          </div>
+          )}
         </div>
       </div>
-    </>
-  );
-}
-
-const BidStatusDropdown: React.FC<{ bidId: string }> = ({ bidId }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [selectedStatus, setSelectedStatus] = React.useState<BidStatus | null>(
-    null
-  );
-
-  const handleStatusChange = async (status: BidStatus) => {
-    setIsLoading(true);
-    setSelectedStatus(status);
-    try {
-      const token = localStorage.getItem("authToken");
-      if (!token) {
-        toast.error("No authentication token found. Please login first.");
-        setIsLoading(false);
-        return;
-      }
-      const res = await fetch(`${API_URL}/api/v1/bids/${bidId}/status`, {
-        method: "PATCH",
-        headers: {
-          accept: "*/*",
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status }),
-      });
-      if (!res.ok) throw new Error("Failed to update bid status");
-      toast.success(`Bid status updated to ${status}!`);
-    } catch (e: unknown) {
-      let errorMessage = "Failed to update bid status";
-      if (e instanceof Error) {
-        errorMessage = e.message;
-      }
-      toast.error(errorMessage);
-    } finally {
-      setIsLoading(false);
-      setIsOpen(false);
-    }
-  };
-
-  return (
-    <div className="relative inline-block text-left w-full">
-      <button
-        type="button"
-        className="inline-flex justify-center w-full rounded-md border border-white shadow-sm px-4 py-2 bg-white text-amber-600 font-semibold hover:bg-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
-        onClick={() => setIsOpen((v) => !v)}
-        disabled={isLoading}
-      >
-        {isLoading ? (
-          <span className="flex items-center justify-center">
-            <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-amber-500 mr-2"></span>
-            Processing...
-          </span>
-        ) : (
-          <>
-            💼{" "}
-            {selectedStatus
-              ? `Status: ${selectedStatus}`
-              : "Accept/Update Bid Status"}
-            <svg
-              className="ml-2 h-5 w-5"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fillRule="evenodd"
-                d="M5.23 7.21a.75.75 0 011.06.02L10 10.584l3.71-3.354a.75.75 0 111.02 1.1l-4.25 3.846a.75.75 0 01-1.02 0l-4.25-3.846a.75.75 0 01.02-1.06z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </>
-        )}
-      </button>
-      {isOpen && !isLoading && (
-        <div className="origin-top-right absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
-          <div className="py-1">
-            {Object.values(BidStatus).map((status) => (
-              <button
-                key={status}
-                onClick={() => handleStatusChange(status)}
-                className="block w-full text-left px-4 py-2 text-sm text-amber-700 hover:bg-amber-100 hover:text-amber-900"
-              >
-                {status.charAt(0) + status.slice(1).toLowerCase()}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
-};
-
-export default ProjectPage;
+}

@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { architectService, ArchitectRegistrationData, ArchitectProfileData, ArchitectStatusUpdate, Architect } from '@/app/services/architectService'
+import { architectService, ArchitectRegistrationData, ArchitectProfileData, ArchitectStatusUpdate, Architect, CreateDesignRequestDTO, Portfolio } from '@/app/services/architectService'
 
 export const useArchitect = () => {
   const [loading, setLoading] = useState(false)
@@ -137,6 +137,66 @@ export const useArchitect = () => {
     }
   }, [])
 
+  const getArchitectPortfolios = useCallback(async (architectId: string) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const result = await architectService.getArchitectPortfolios(architectId)
+      return result
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to fetch portfolios'
+      setError(errorMessage)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const getProfessionalPortfolios = useCallback(async (professionalType: 'architect' | 'contractor' | 'technician' | 'seller', professionalId: string) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const result = await architectService.getProfessionalPortfolios(professionalType, professionalId)
+      return result
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to fetch professional portfolios'
+      setError(errorMessage)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const createDesignrequest = useCallback(async ( data: CreateDesignRequestDTO) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const result = await architectService.createDesignRequest( data)
+      return result
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to create design request'
+      setError(errorMessage)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const getDesignRequests = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const result = await architectService.getDesignRequests()
+      return result
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to fetch design requests'
+      setError(errorMessage)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
   return {
     loading,
     error,
@@ -148,7 +208,11 @@ export const useArchitect = () => {
     updateProfile,
     getAllArchitects,
     getPendingArchitects,
-    updateArchitectStatus
+    updateArchitectStatus,
+    getArchitectPortfolios,
+    getProfessionalPortfolios,
+    createDesignrequest,
+    getDesignRequests
   }
 }
 

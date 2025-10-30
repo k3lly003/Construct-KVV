@@ -287,27 +287,12 @@ const Page = () => {
     return (
       <div className="flex items-center justify-center h-full p-8">
         <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
-        <p className="ml-4 text-lg">Loading your shop...</p>
+        <p className="ml-4 text-lg">Loading your profile...</p>
       </div>
     );
   }
 
-  if (!myShop) {
-    return (
-      <div className="p-8">
-        <Alert>
-          <Terminal className="h-4 w-4" />
-          <AlertTitle>Shop Required!</AlertTitle>
-          <AlertDescription>
-            You need to create a shop before you can add a service.
-            <Link href="/dashboard/profile" className="font-bold text-amber-600 hover:underline ml-1">
-              Go to your profile to create one.
-            </Link>
-          </AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
+  // Shop requirement removed - sellers can now add services directly
 
   return (
     <div className="flex flex-col md:flex-row gap-5 p-8 w-full">
