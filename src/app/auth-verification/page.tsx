@@ -15,21 +15,27 @@ const GoogleCallbackClient = () => {
 
     if (token && user) {
       try {
-        console.log("AAAAAAAAAAAAAAAAAAAAAAA", token);
+        console.log("🔍 Google Auth Token:", token.substring(0, 20) + "...");
+        console.log("🔍 User Data:", user);
+
         // Store the token and user data in localStorage
         localStorage.setItem("authToken", token);
         localStorage.setItem("user", user);
 
+        console.log("✅ Token stored in localStorage");
+
         // Add a small delay to ensure the token is properly stored and processed
         // This helps prevent race conditions with profile API calls
         setTimeout(() => {
+          console.log("🚀 Redirecting to homepage...");
           router.push("/");
         }, 500); // 500ms delay
       } catch (err) {
         setError("Failed to process authentication data");
-        console.error(err);
+        console.error("❌ Auth processing error:", err);
       }
     } else {
+      console.error("❌ Missing auth data - Token:", !!token, "User:", !!user);
       setError("Authentication failed - missing token or user data");
     }
   }, [router, searchParams]);
