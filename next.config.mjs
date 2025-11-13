@@ -68,6 +68,12 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "image2url.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
     domains: [
       // other allowed domains...
@@ -78,6 +84,7 @@ const nextConfig = {
       "tse2.mm.bing.net",
       "tse3.mm.bing.net",
       "tse4.mm.bing.net",
+      "image2url.com",
     ],
   },
   eslint: {
