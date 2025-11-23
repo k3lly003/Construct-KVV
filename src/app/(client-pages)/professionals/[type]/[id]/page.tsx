@@ -11,7 +11,7 @@ import { getAllSellers, SellerProfile } from "@/app/services/sellerService";
 import { useArchitect } from "@/app/hooks/useArchitect";
 import { useUserStore } from "@/store/userStore";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork.onrender.com';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork-production.up.railway.app';
 
 interface ProfessionalData {
   id: string;
@@ -341,7 +341,7 @@ export default function ProfessionalDetailPage() {
   const isValidImageUrl = (src?: string) => !!src && (src.startsWith('/') || src.startsWith('http://') || src.startsWith('https://'))
   const contactBusinessPhone: string | undefined = raw.businessPhone || userInfo.phone || professional.phone
   const contactBusinessEmail: string | undefined = raw.businessEmail || userInfo.email || professional.email
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || ''
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork-production.up.railway.app'
   const normalizeDocUrl = (name?: string) => {
     if (!name) return undefined
     if (isValidImageUrl(name)) return name

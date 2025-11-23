@@ -1,6 +1,9 @@
 import axiosInstance from '@/lib/axios'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork.onrender.com'
+import { RENDER_API_URL, RAILWAY_API_URL } from '@/lib/apiConfig';
+
+const API_BASE_URL = RENDER_API_URL;
+const RAILWAY_BASE_URL = RAILWAY_API_URL;
 
 // Technician Registration Data Interface
 export interface TechnicianRegistrationData {
@@ -63,9 +66,9 @@ export interface Technician {
 
 // Technician Service
 export const technicianService = {
-  // Register a new technician
+  // Register a new technician (uses Railway for email)
   async register(data: TechnicianRegistrationData): Promise<{ message: string; technician: Technician }> {
-    const response = await axiosInstance.post<{ message: string; technician: Technician }>(`${API_BASE_URL}/api/v1/technicians/register`, data)
+    const response = await axiosInstance.post<{ message: string; technician: Technician }>(`${RAILWAY_BASE_URL}/api/v1/technicians/register`, data)
     return response.data
   },
 

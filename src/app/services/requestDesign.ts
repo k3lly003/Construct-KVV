@@ -1,4 +1,6 @@
 import api from '@/lib/axios';
+import axios from 'axios';
+import { RAILWAY_API_URL } from '@/lib/apiConfig';
 
 export interface DesignRequest {
   id: string;
@@ -34,9 +36,14 @@ export interface DesignRequestFilters {
 }
 
 export const requestDesign = {
-  // Create a new design request
+  // Create a new design request (uses Railway for email notifications)
   async createDesignRequest(data: CreateDesignRequestData): Promise<DesignRequest> {
-    const response = await api.post('/api/v1/design-requests', data);
+    // Use Railway for email-sending endpoint
+    const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    
+    const response = await axios.post(`${RAILWAY_API_URL}/api/v1/design-requests`, data, { headers });
     return response.data as DesignRequest;
   },
 

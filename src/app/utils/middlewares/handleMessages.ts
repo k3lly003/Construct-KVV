@@ -55,7 +55,7 @@ export function useHandleSendMessages() {
     // Call FAQ API
     try {
       const res = await fetch(
-        "https://construct-kvv-bn-fork.onrender.com/api/v1/faqs/ask",
+        `${process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork-production.up.railway.app'}/api/v1/faqs/ask`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
