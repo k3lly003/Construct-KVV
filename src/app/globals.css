@@ -131,23 +131,23 @@ body {
   }
 }
 
-/* In globals.css or a dedicated CSS file */
+/* Custom scrollbar styles using design tokens */
 .custom-scrollbar::-webkit-scrollbar {
   width: 8px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: hsl(var(--muted));
   border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #888;
+  background: hsl(var(--muted-foreground) / 0.5);
   border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: hsl(var(--muted-foreground) / 0.7);
 }
 
 .overflow {

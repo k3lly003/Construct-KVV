@@ -1,8 +1,9 @@
 import axiosInstance from "@/lib/axios";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  "https://construct-kvv-bn-fork.onrender.com";
+import { RENDER_API_URL, RAILWAY_API_URL } from '@/lib/apiConfig';
+
+const API_BASE_URL = RENDER_API_URL;
+const RAILWAY_BASE_URL = RAILWAY_API_URL;
 
 export interface ContractorProject {
   id: string;

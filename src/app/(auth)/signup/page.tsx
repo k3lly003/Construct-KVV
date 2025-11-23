@@ -75,8 +75,10 @@ const Page = () => {
 
     setLoading(true);
     try {
+      // Use Railway for registration (sends welcome email + OTP)
+      const RAILWAY_API_URL = process.env.NEXT_PUBLIC_RAILWAY_API_URL || 'https://construct-kvv-bn-fork-production.up.railway.app';
       const response = await axios.post(
-        "https://construct-kvv-bn-fork.onrender.com/api/v1/user/register",
+        `${RAILWAY_API_URL}/api/v1/user/register`,
         {
           firstName: first_name,
           lastName: second_name,
@@ -118,8 +120,9 @@ const Page = () => {
   const togglePasswordVisibility = () => setShowPassword((v) => !v);
 
   const handleGoogleLogin = () => {
-    window.location.href =
-      "https://construct-kvv-bn-fork.onrender.com/api/v1/auth/google";
+    // Google OAuth registration also sends emails, so use Railway
+    const RAILWAY_API_URL = process.env.NEXT_PUBLIC_RAILWAY_API_URL || 'https://construct-kvv-bn-fork-production.up.railway.app';
+    window.location.href = `${RAILWAY_API_URL}/api/v1/auth/google`;
   };
 
   return (

@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://construct-kvv-bn-fork.onrender.com/api/v1";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL 
+  ? `${process.env.NEXT_PUBLIC_API_URL}/api/v1`
+  : "https://construct-kvv-bn-fork.onrender.com/api/v1";
 
 export async function initiateSplitPayment({
   sellerId,

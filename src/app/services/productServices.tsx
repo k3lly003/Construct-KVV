@@ -39,7 +39,68 @@ if (!RECOMMENDATION_API_URL) {
   console.warn('NEXT_PUBLIC_RECOMMENDATION_API_URL is not set - AI recommendations will be disabled');
 }
 
+// Search interfaces
+interface ProductSearchParams {
+  search?: string;
+  category?: string;
+  sellerId?: string;
+  active?: boolean;
+  page?: number;
+  limit?: number;
+  sort?: string;
+  order?: 'asc' | 'desc';
+  includeInactive?: boolean;
+}
+
+interface ProductSearchResponse {
+  success: boolean;
+  data: Product[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
 export const productService = {
+  /**
+   * Search products with server-side filtering
+   * @param params - Search parameters
+   * @param authToken - Optional authentication token
+   * @returns Product search response with pagination
+   */
+  async searchProducts(
+    params: ProductSearchParams,
+    authToken?: string
+  ): Promise<ProductSearchResponse> {
+    try {
+      let url = `${API_URL}/api/v1/products?page=${params.page || 1}&limit=${params.limit || 10}`;
+
+      if (params.search) url += `&search=${encodeURIComponent(params.search)}`;
+      if (params.category) url += `&category=${encodeURIComponent(params.category)}`;
+      if (params.sellerId) url += `&sellerId=${encodeURIComponent(params.sellerId)}`;
+      if (params.active !== undefined) url += `&active=${params.active}`;
+      if (params.sort) url += `&sort=${params.sort}`;
+      if (params.order) url += `&order=${params.order}`;
+      if (params.includeInactive) url += `&includeInactive=true`;
+
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+
+      if (authToken) {
+        headers['Authorization'] = `Bearer ${authToken}`;
+      }
+
+      const response = await axios.get<ProductSearchResponse>(url, { headers });
+      return response.data;
+    } catch (error: any) {
+      console.error('Product search error:', error);
+      throw new Error(error.response?.data?.message || 'Failed to search products');
+    }
+  },
+
   async getAllProducts(): Promise<Product[]> {
     try {
       const response = await axios.get<{ data: Product[] }>(

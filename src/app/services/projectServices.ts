@@ -2,6 +2,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { FormData } from "@/app/utils/fakes/formData";
 import { Project } from "@/types/project";
+import { toastColors } from "@/lib/design-tokens";
 
 // Define ProjectUpdateData locally if not exported from types
 export interface ProjectUpdateData {
@@ -23,7 +24,10 @@ interface StatusUpdateRequest {
   status: ProjectStatus;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+import { RENDER_API_URL, RAILWAY_API_URL } from '@/lib/apiConfig';
+
+const API_URL = RENDER_API_URL;
+const RAILWAY_API_URL = RAILWAY_API_URL;
 
 // Utility to safely get token from localStorage (browser-only)
 function getAuthToken(): string | null {
@@ -135,25 +139,25 @@ export const projectService = {
       if (err.response?.status === 404) {
         toast.error("Project not found.", {
           style: {
-            background: "white",
-            color: "#dc2626",
-            border: "1px solid #ef4444",
+            background: toastColors.error.bg,
+            color: toastColors.error.text,
+            border: `1px solid ${toastColors.error.border}`,
           },
         });
       } else if (err.response?.status === 401) {
         toast.error("Authentication failed. Please login again.", {
           style: {
-            background: "white",
-            color: "#dc2626",
-            border: "1px solid #ef4444",
+            background: toastColors.error.bg,
+            color: toastColors.error.text,
+            border: `1px solid ${toastColors.error.border}`,
           },
         });
       } else {
         toast.error("Unable to fetch project details. Please try again.", {
           style: {
-            background: "white",
-            color: "#dc2626",
-            border: "1px solid #ef4444",
+            background: toastColors.error.bg,
+            color: toastColors.error.text,
+            border: `1px solid ${toastColors.error.border}`,
           },
         });
       }
@@ -234,9 +238,9 @@ export const projectService = {
       );
       toast.success(`Project status updated to ${status} successfully! 🎉`, {
         style: {
-          background: "white",
-          color: "#92400e",
-          border: "1px solid #f59e0b",
+          background: toastColors.default.bg,
+          color: toastColors.default.text,
+          border: `1px solid ${toastColors.default.border}`,
         },
       });
     } catch (error) {
@@ -245,33 +249,33 @@ export const projectService = {
       if (err.response?.status === 401) {
         toast.error("Authentication failed. Please login again.", {
           style: {
-            background: "white",
-            color: "#dc2626",
-            border: "1px solid #ef4444",
+            background: toastColors.error.bg,
+            color: toastColors.error.text,
+            border: `1px solid ${toastColors.error.border}`,
           },
         });
       } else if (err.response?.status === 404) {
         toast.error("Project not found.", {
           style: {
-            background: "white",
-            color: "#dc2626",
-            border: "1px solid #ef4444",
+            background: toastColors.error.bg,
+            color: toastColors.error.text,
+            border: `1px solid ${toastColors.error.border}`,
           },
         });
       } else if (err.response?.status === 400) {
         toast.error("Invalid status value. Please try again.", {
           style: {
-            background: "white",
-            color: "#dc2626",
-            border: "1px solid #ef4444",
+            background: toastColors.error.bg,
+            color: toastColors.error.text,
+            border: `1px solid ${toastColors.error.border}`,
           },
         });
       } else {
         toast.error("Unable to update project status. Please try again.", {
           style: {
-            background: "white",
-            color: "#dc2626",
-            border: "1px solid #ef4444",
+            background: toastColors.error.bg,
+            color: toastColors.error.text,
+            border: `1px solid ${toastColors.error.border}`,
           },
         });
       }
@@ -304,9 +308,9 @@ export const projectService = {
       console.log("[projectService] deleteProject response:", response);
       toast.success("Project deleted successfully", {
         style: {
-          background: "white",
-          color: "#059669",
-          border: "1px solid #10b981",
+          background: toastColors.success.bg,
+          color: toastColors.success.text,
+          border: `1px solid ${toastColors.success.border}`,
         },
       });
     } catch (error) {
@@ -315,17 +319,17 @@ export const projectService = {
       if (err.response?.status === 401) {
         toast.error("Authentication failed. Please login again.", {
           style: {
-            background: "white",
-            color: "#dc2626",
-            border: "1px solid #ef4444",
+            background: toastColors.error.bg,
+            color: toastColors.error.text,
+            border: `1px solid ${toastColors.error.border}`,
           },
         });
       } else {
         toast.error("Unable to delete project. Please try again.", {
           style: {
-            background: "white",
-            color: "#dc2626",
-            border: "1px solid #ef4444",
+            background: toastColors.error.bg,
+            color: toastColors.error.text,
+            border: `1px solid ${toastColors.error.border}`,
           },
         });
       }

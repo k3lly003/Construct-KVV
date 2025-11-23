@@ -1,6 +1,7 @@
 import axios from "axios";
+import { getApiUrl, RENDER_API_URL, RAILWAY_API_URL } from '@/lib/apiConfig';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork.onrender.com';
+const API_URL = RENDER_API_URL;
 
 export interface SellerRegistrationData {
   email: string;
@@ -104,10 +105,14 @@ export const registerSeller = async (data: SellerRegistrationData) => {
       console.log(key, value);
     }
     
+    // Use Railway for registration (email-sending endpoint)
+    const registerUrl = `${RAILWAY_API_URL}/api/v1/sellers/register`;
+    console.log("Using Railway for registration:", registerUrl);
+    
     // Try the plural endpoint first
     let response;
     try {
-      response = await axios.post(`${API_URL}/api/v1/sellers/register`, formData, {
+      response = await axios.post(registerUrl, formData, {
         headers: {
           // Let axios set the Content-Type automatically for FormData
           // 'Content-Type': 'multipart/form-data',
@@ -117,7 +122,7 @@ export const registerSeller = async (data: SellerRegistrationData) => {
       // If 404, try the singular endpoint
       if (error.response?.status === 404) {
         console.log("Trying singular endpoint: /api/v1/seller/register");
-        response = await axios.post(`${API_URL}/api/v1/seller/register`, formData, {
+        response = await axios.post(`${RAILWAY_API_URL}/api/v1/seller/register`, formData, {
           headers: {
             // Let axios set the Content-Type automatically for FormData
             // 'Content-Type': 'multipart/form-data',
