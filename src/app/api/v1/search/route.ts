@@ -3,19 +3,38 @@ import { NextRequest, NextResponse } from 'next/server';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || 'https://construct-kvv-bn-fork.onrender.com';
 
 /**
- * Designs Search API Route
- * Proxies search requests to the backend API
- * GET /api/v1/design/public/all?search=term&category=RESIDENTIAL&minPrice=1000&maxPrice=5000&page=1&limit=20
+ * Global Search API Route
+ * Proxies global search requests to the backend API
+ * GET /api/v1/search?q=query&types=products,services,designs,portfolios&page=1&limit=10
  */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     
+    const query = searchParams.get('q');
+    if (!query || query.trim().length < 2) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          message: 'Search query is required and must be at least 2 characters' 
+        },
+        { status: 400 }
+      );
+    }
+
     // Build query string from search params
     const queryParams = new URLSearchParams();
-    searchParams.forEach((value, key) => {
-      queryParams.append(key, value);
-    });
+    queryParams.append('q', query);
+    
+    if (searchParams.get('types')) {
+      queryParams.append('types', searchParams.get('types')!);
+    }
+    if (searchParams.get('page')) {
+      queryParams.append('page', searchParams.get('page')!);
+    }
+    if (searchParams.get('limit')) {
+      queryParams.append('limit', searchParams.get('limit')!);
+    }
 
     // Get auth token from request headers if available
     const authHeader = request.headers.get('authorization');
@@ -27,7 +46,7 @@ export async function GET(request: NextRequest) {
       headers['Authorization'] = authHeader;
     }
 
-    const response = await fetch(`${API_URL}/api/v1/design?${queryParams.toString()}`, {
+    const response = await fetch(`${API_URL}/api/v1/search?${queryParams.toString()}`, {
       method: 'GET',
       headers,
     });
@@ -48,13 +67,14 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(data);
 
   } catch (error: any) {
-    console.error('Design API route error:', error);
+    console.error('Global search API route error:', error);
     return NextResponse.json(
       { 
         success: false, 
-        message: error.message || 'Failed to fetch designs from backend' 
+        message: error.message || 'Failed to perform global search' 
       },
       { status: 500 }
     );
   }
 }
+

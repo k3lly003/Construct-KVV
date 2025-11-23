@@ -12,6 +12,8 @@ import { useUserStore } from "@/store/userStore";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
+import { designService } from "@/app/services/designService";
+import { useDebounce } from "@/hooks/useDebounce";
 
 // Design interface based on the backend API
 interface Design {
@@ -93,33 +95,47 @@ const DesignMarketplace: React.FC = () => {
   const [purchaseModalOpen, setPurchaseModalOpen] = useState(false);
   const [purchasing, setPurchasing] = useState(false);
 
-  // Fetch designs from API
+  // Debounce search term to reduce API calls
+  const debouncedSearch = useDebounce(filters.search, 500);
+
+  // Fetch designs from API using the new search service
   const fetchDesigns = async () => {
     setLoading(true);
     setError(null);
     
     try {
-      const queryParams = new URLSearchParams({
-        page: pagination.page.toString(),
-        limit: pagination.limit.toString(),
-        ...Object.fromEntries(Object.entries(filters).filter(([_, value]) => value !== '' && value !== 'all' && value !== 'any'))
+      // Get auth token if available
+      const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') || undefined : undefined;
+
+      // Prepare search parameters
+      const searchParams = {
+        search: debouncedSearch || undefined,
+        category: filters.category !== 'all' ? filters.category : undefined,
+        minPrice: filters.minPrice ? Number(filters.minPrice) : undefined,
+        maxPrice: filters.maxPrice ? Number(filters.maxPrice) : undefined,
+        bedrooms: filters.bedrooms !== 'any' ? Number(filters.bedrooms) : undefined,
+        bathrooms: filters.bathrooms !== 'any' ? Number(filters.bathrooms) : undefined,
+        sortBy: filters.sortBy,
+        sortOrder: filters.sortOrder as 'asc' | 'desc',
+        page: pagination.page,
+        limit: pagination.limit,
+      };
+
+      // Remove undefined values
+      Object.keys(searchParams).forEach(key => {
+        if (searchParams[key as keyof typeof searchParams] === undefined) {
+          delete searchParams[key as keyof typeof searchParams];
+        }
       });
 
-      // Fetch from our Next.js API route which will handle backend communication
-      const response = await fetch(`/api/v1/design/public/all?${queryParams}`);
+      const response = await designService.searchDesigns(searchParams, token);
       
-      if (!response.ok) {
-        throw new Error(`Failed to fetch designs: ${response.status}`);
-      }
-
-      const data: DesignListResponse = await response.json();
-      
-      if (data.success) {
-        setDesigns(data.data);
+      if (response.success) {
+        setDesigns(response.data);
         setPagination(prev => ({
           ...prev,
-          total: data.pagination.total,
-          pages: data.pagination.pages
+          total: response.pagination.total,
+          pages: response.pagination.pages
         }));
       } else {
         throw new Error('Failed to load designs');
@@ -194,8 +210,10 @@ const DesignMarketplace: React.FC = () => {
     setPagination(prev => ({ ...prev, page: 1 })); // Reset to first page
   };
 
-  // Apply filters
+  // Apply filters (now handled automatically via useEffect)
   const applyFilters = () => {
+    // Filters are applied automatically via useEffect
+    // This function kept for backward compatibility with UI
     fetchDesigns();
   };
 
@@ -214,10 +232,11 @@ const DesignMarketplace: React.FC = () => {
     setPagination(prev => ({ ...prev, page: 1 }));
   };
 
-  // Load designs on component mount and when filters change
+  // Load designs on component mount and when filters/pagination change
   useEffect(() => {
     fetchDesigns();
-  }, [pagination.page, filters]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pagination.page, debouncedSearch, filters.category, filters.minPrice, filters.maxPrice, filters.bedrooms, filters.bathrooms, filters.sortBy, filters.sortOrder]);
 
   const categoryOptions = [
     { value: 'all', label: 'All Categories' },

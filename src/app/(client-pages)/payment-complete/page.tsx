@@ -30,8 +30,9 @@ const PaymentCompletePage: React.FC = () => {
         typeof window !== "undefined"
           ? localStorage.getItem("authToken")
           : null;
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork-production.up.railway.app';
       fetch(
-        `https://construct-kvv-bn-fork.onrender.com/api/v1/orders/${orderId}/status`,
+        `${API_URL}/api/v1/orders/${orderId}/status`,
         {
           method: "PATCH",
           headers: {
@@ -104,7 +105,7 @@ const PaymentCompletePage: React.FC = () => {
     }
     console.log("[PaymentComplete] Fetching order details", { orderId, token });
     fetch(
-      `https://construct-kvv-bn-fork.onrender.com/api/v1/orders/${orderId}`,
+      `${API_URL}/api/v1/orders/${orderId}`,
       {
         headers: token
           ? {
@@ -199,54 +200,28 @@ const PaymentCompletePage: React.FC = () => {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        background: "#f9fafb",
-      }}
-    >
-      <div
-        style={{
-          background: "#fff",
-          padding: 32,
-          borderRadius: 12,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.07)",
-          minWidth: 340,
-          maxWidth: 400,
-          textAlign: "center",
-        }}
-      >
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="bg-white p-8 rounded-xl shadow-sm min-w-[340px] max-w-[400px] text-center">
         {loading ? (
           <div>Loading order details...</div>
         ) : error ? (
-          <div style={{ color: "#e53e3e" }}>❌ {error}</div>
+          <div className="text-error-600">❌ {error}</div>
         ) : status === "successful" ? (
           <>
-            <div style={{ fontSize: 32, color: "#22c55e" }}>
+            <div className="text-3xl text-success-600">
               ✅ Payment Successful
             </div>
-            <div style={{ margin: "16px 0 8px", fontWeight: 600 }}>
+            <div className="my-4 font-semibold">
               Order ID: {orderId}
             </div>
-            <div style={{ marginBottom: 16 }}>
+            <div className="mb-4">
               Transaction ID: {transaction_id}
             </div>
-            <div
-              style={{
-                textAlign: "left",
-                margin: "0 auto 16px",
-                background: "#f3f4f6",
-                borderRadius: 8,
-                padding: 12,
-              }}
-            >
-              <div style={{ fontWeight: 600, marginBottom: 6 }}>
+            <div className="text-left mx-auto mb-4 bg-gray-100 rounded-lg p-3">
+              <div className="font-semibold mb-2">
                 Order Items:
               </div>
-              <ul style={{ paddingLeft: 18 }}>
+              <ul className="pl-5">
                 {order.items.map((item: any) => (
                   <li key={item.id}>
                     {item.product?.name || "Product"} x{item.quantity} (RWF{" "}
@@ -255,27 +230,18 @@ const PaymentCompletePage: React.FC = () => {
                 ))}
               </ul>
             </div>
-            <div style={{ fontWeight: 600, marginBottom: 16 }}>
+            <div className="font-semibold mb-4">
               Total: RWF {order.total.toLocaleString()}
             </div>
             <button
               onClick={handleDownloadReceipt}
-              style={{
-                background: "#2563eb",
-                color: "#fff",
-                padding: "10px 20px",
-                borderRadius: 6,
-                fontWeight: 600,
-                border: "none",
-                cursor: "pointer",
-                marginTop: 8,
-              }}
+              className="bg-info-600 text-white px-5 py-2.5 rounded-md font-semibold border-none cursor-pointer mt-2 hover:bg-info-700 transition-colors"
             >
               Download Receipt (PDF)
             </button>
           </>
         ) : (
-          <div style={{ color: "#e53e3e", fontSize: 24 }}>
+          <div className="text-error-600 text-2xl">
             ❌ Payment Failed or Cancelled
           </div>
         )}

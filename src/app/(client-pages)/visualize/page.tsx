@@ -22,8 +22,9 @@ export default function VisualizePage() {
     try {
       const formData = new FormData();
       formData.append("file", file);
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork-production.up.railway.app';
       const response = await fetch(
-        "https://construct-kvv-bn-fork.onrender.com/api/v1/floorplan/ocr",
+        `${API_URL}/api/v1/floorplan/ocr`,
         {
           method: "POST",
           body: formData,

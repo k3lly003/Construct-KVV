@@ -17,34 +17,89 @@ import { useTranslations } from "@/app/hooks/useTranslations";
 import { getFallbackImage } from "@/app/utils/imageUtils";
 import { useCartStore } from "@/store/cartStore";
 import { toast } from "sonner";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export const Products: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [servicesLoading, setServicesLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Product");
   const [sortBy, setSortBy] = useState("featured");
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+    totalPages: 0,
+  });
   const availableCategories: string[] = ["Product", "Service"];
   const router = useRouter();
   const { t } = useTranslations();
 
-  // Fetch all products on mount
+  // Debounce search term to reduce API calls
+  const debouncedSearch = useDebounce(searchTerm, 500);
+
+  // Map sortBy to API sort parameter
+  const getSortParam = (sort: string): string => {
+    const sortMap: Record<string, string> = {
+      featured: "createdAt",
+      "price-low": "price",
+      "price-high": "price",
+      "name-asc": "name",
+      "name-desc": "name",
+    };
+    return sortMap[sort] || "createdAt";
+  };
+
+  // Map sortBy to API order parameter
+  const getOrderParam = (sort: string): "asc" | "desc" => {
+    if (sort === "price-low" || sort === "name-asc") return "asc";
+    return "desc";
+  };
+
+  // Fetch products with server-side search
   useEffect(() => {
+    if (selectedCategory !== "Product") return;
+
     const fetchProducts = async () => {
       setLoading(true);
+      setError(null);
       try {
-        const data = await productService.getAllProducts();
-        setProducts(data);
-      } catch (err) {
+        const response = await productService.searchProducts({
+          search: debouncedSearch || undefined,
+          page: pagination.page,
+          limit: pagination.limit,
+          sort: getSortParam(sortBy),
+          order: getOrderParam(sortBy),
+          active: true,
+        });
+
+        setProducts(response.data);
+        setPagination((prev) => ({
+          ...prev,
+          total: response.meta.total,
+          totalPages: response.meta.totalPages,
+        }));
+      } catch (err: any) {
         console.error("Error fetching products:", err);
+        setError(err.message || "Failed to load products");
+        setProducts([]);
       } finally {
         setLoading(false);
       }
     };
+
     fetchProducts();
-  }, []);
+  }, [debouncedSearch, pagination.page, pagination.limit, sortBy, selectedCategory]);
+
+  // Reset to page 1 when search term changes
+  useEffect(() => {
+    if (searchTerm !== debouncedSearch) {
+      setPagination((prev) => ({ ...prev, page: 1 }));
+    }
+  }, [searchTerm, debouncedSearch]);
 
   // Fetch services when category changes to "Service"
   useEffect(() => {
@@ -68,13 +123,20 @@ export const Products: React.FC = () => {
     }
   }, [selectedCategory, services.length]);
 
-  // Filter products
-  const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    return matchesSearch;
-  });
+  // Handle pagination
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= pagination.totalPages) {
+      setPagination((prev) => ({ ...prev, page: newPage }));
+      // Scroll to top of products section
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  // Handle search term change and reset pagination
+  const handleSearchChange = (term: string) => {
+    setSearchTerm(term);
+    setPagination((prev) => ({ ...prev, page: 1 }));
+  };
 
   // Filter services
   // const filteredServices = Array.isArray(services)
@@ -95,7 +157,7 @@ export const Products: React.FC = () => {
           {/* Filters */}
           <ProductFilters
             searchTerm={searchTerm}
-            onSearchTermChange={setSearchTerm}
+            onSearchTermChange={handleSearchChange}
             initialProducts={[]}
             selectedCategory={selectedCategory}
             onSelectedCategoryChange={setSelectedCategory}
@@ -103,6 +165,14 @@ export const Products: React.FC = () => {
             onSortByChange={setSortBy}
             availableCategories={availableCategories}
           />
+
+          {/* Error State */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+              <p className="font-medium">Error loading products</p>
+              <p className="text-sm">{error}</p>
+            </div>
+          )}
 
           {/* Conditional Content */}
           {selectedCategory === "Product" ? (
@@ -123,9 +193,25 @@ export const Products: React.FC = () => {
                   </div>
                 ))}
               </div>
+            ) : products.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-gray-500 text-lg mb-2">
+                  {searchTerm
+                    ? `No products found for "${searchTerm}"`
+                    : "No products available"}
+                </p>
+                {searchTerm && (
+                  <button
+                    onClick={() => handleSearchChange("")}
+                    className="text-amber-500 hover:text-amber-600 underline"
+                  >
+                    Clear search
+                  </button>
+                )}
+              </div>
             ) : (
               <div className="flex flex-wrap px-4 gap-7 justify-center lg:flex lg:justify-start">
-                {filteredProducts.map((product, index) => (
+                {products.map((product, index) => (
                   <div
                     key={`${product.id}-${index}`}
                     className="bg-white overflow-hidden w-64 m-2 hover:shadow-lg cursor-pointer hover:rounded-xl transition-shadow"
@@ -203,21 +289,55 @@ export const Products: React.FC = () => {
               searchQuery={searchTerm}
             />
           )}
-          {/* PAGINATION BUTTONS */}
-          <div className="mt-6 flex justify-center space-x-2">
-            <button className="border border-amber-300 hover:bg-amber-500 hover:text-white text-amber-300 font-semibold py-2 px-2 rounded focus:outline-none focus:shadow-outline">
-              <ChevronLeft className="h-5 w-5 text-amber-300" />
-            </button>
-            <div className="flex justify-center items-center gap-3">
-              <Link href={""}>01</Link>
-              <Link href={""}>02</Link>
-              <Link href={""}>03</Link>
-              <Link href={""}>04</Link>
+          {/* PAGINATION */}
+          {selectedCategory === "Product" && pagination.totalPages > 1 && (
+            <div className="mt-6 flex justify-center items-center space-x-2">
+              <button
+                onClick={() => handlePageChange(pagination.page - 1)}
+                disabled={pagination.page === 1}
+                className="border border-amber-300 hover:bg-amber-500 hover:text-white text-amber-300 font-semibold py-2 px-2 rounded focus:outline-none focus:shadow-outline disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronLeft className="h-5 w-5 text-amber-300" />
+              </button>
+              <div className="flex justify-center items-center gap-2">
+                {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                  let pageNum: number;
+                  if (pagination.totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (pagination.page <= 3) {
+                    pageNum = i + 1;
+                  } else if (pagination.page >= pagination.totalPages - 2) {
+                    pageNum = pagination.totalPages - 4 + i;
+                  } else {
+                    pageNum = pagination.page - 2 + i;
+                  }
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => handlePageChange(pageNum)}
+                      className={`px-3 py-1 rounded ${
+                        pagination.page === pageNum
+                          ? "bg-amber-500 text-white"
+                          : "border border-amber-300 text-amber-300 hover:bg-amber-50"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+              </div>
+              <button
+                onClick={() => handlePageChange(pagination.page + 1)}
+                disabled={pagination.page === pagination.totalPages}
+                className="border border-amber-300 hover:bg-amber-500 hover:text-white text-amber-300 font-semibold py-2 px-2 rounded focus:outline-none focus:shadow-outline disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+              <span className="text-sm text-gray-500 ml-4">
+                Page {pagination.page} of {pagination.totalPages} ({pagination.total} total)
+              </span>
             </div>
-            <button className="border border-amber-300 hover:bg-amber-500 hover:text-white text-amber-300 font-semibold py-2 px-2 rounded focus:outline-none focus:shadow-outline">
-              <ChevronRight className="h-5 w-5" />
-            </button>
-          </div>
+          )}
         </div>
       </div>
     </div>
