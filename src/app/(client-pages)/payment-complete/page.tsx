@@ -104,6 +104,7 @@ const PaymentCompletePage: React.FC = () => {
       token = localStorage.getItem("authToken");
     }
     console.log("[PaymentComplete] Fetching order details", { orderId, token });
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork-production.up.railway.app';
     fetch(
       `${API_URL}/api/v1/orders/${orderId}`,
       {

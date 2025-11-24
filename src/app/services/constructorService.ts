@@ -1,9 +1,9 @@
 import axiosInstance from '@/lib/axios'
 
-import { RENDER_API_URL, RAILWAY_API_URL } from '@/lib/apiConfig';
+import { RENDER_API_URL, NEXT_PUBLIC_API_URL_2 } from '@/lib/apiConfig';
 
 const API_BASE_URL = RENDER_API_URL;
-const RAILWAY_BASE_URL = RAILWAY_API_URL;
+const RAILWAY_BASE_URL = NEXT_PUBLIC_API_URL_2;
 
 // Types for constructor data
 export interface ConstructorRegistrationData {

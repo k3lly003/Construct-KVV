@@ -9,7 +9,7 @@
 export const RENDER_API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork.onrender.com';
 
 // Railway URL (ONLY for email-sending endpoints)
-export const RAILWAY_API_URL = process.env.NEXT_PUBLIC_RAILWAY_API_URL || 'https://construct-kvv-bn-fork-production.up.railway.app';
+export const NEXT_PUBLIC_API_URL_2 = process.env.NEXT_PUBLIC_NEXT_PUBLIC_API_URL_2 || 'https://construct-kvv-bn-fork-production.up.railway.app';
 
 /**
  * Get the appropriate API URL based on endpoint
@@ -39,7 +39,7 @@ export function getApiUrl(endpoint: string): string {
     endpoint.includes(emailEndpoint)
   );
 
-  return isEmailEndpoint ? RAILWAY_API_URL : RENDER_API_URL;
+  return isEmailEndpoint ? NEXT_PUBLIC_API_URL_2 : RENDER_API_URL;
 }
 
 /**

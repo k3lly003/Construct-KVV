@@ -24,10 +24,9 @@ interface StatusUpdateRequest {
   status: ProjectStatus;
 }
 
-import { RENDER_API_URL, RAILWAY_API_URL } from '@/lib/apiConfig';
+import { RENDER_API_URL } from '@/lib/apiConfig';
 
 const API_URL = RENDER_API_URL;
-const RAILWAY_API_URL = RAILWAY_API_URL;
 
 // Utility to safely get token from localStorage (browser-only)
 function getAuthToken(): string | null {
