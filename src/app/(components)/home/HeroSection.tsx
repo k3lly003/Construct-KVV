@@ -47,30 +47,35 @@ const HeroSection = () => {
   const slide = HomeBannerSlides[currentSlide]
 
   return (
-    <section className="relative h-screen w-full overflow-visible mb-2">
+    <section className="relative h-screen w-full overflow-hidden mb-2">
       {/* Background Image with transition */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
+      <div className="absolute inset-0 z-0">
         {HomeBannerSlides.map((slideItem, index) => (
           <div
             key={slideItem.id}
-            className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? "opacity-100" : "opacity-0"
-              } relative`}
+            className={`absolute inset-0 transition-opacity duration-1000 ${
+              index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
+            }`}
           >
-            <Image
-              src={slideItem.image}
-              alt={t(slideItem.titleKey)}
-              fill
-              priority={index === currentSlide}
-              className="object-cover"
-              sizes="100vw"
-            />
+            <div className="relative w-full h-full">
+              <Image
+                src={slideItem.image}
+                alt={t(slideItem.titleKey)}
+                fill
+                priority={index === currentSlide}
+                quality={90}
+                className="object-cover"
+                sizes="100vw"
+                style={{ objectFit: 'cover' }}
+              />
+            </div>
           </div>
         ))}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/50 to-black/40 z-20" />
       </div>
 
       {/* Content */}
-      <div className="relative z-20 flex h-full flex-col justify-end px-4 py-6 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+      <div className="relative z-30 flex h-full flex-col justify-end px-4 py-6 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         {/* Main Content Section */}
         <div className="flex flex-col lg:flex-row justify-between items-end gap-6 lg:gap-10 pb-8 lg:pb-16 w-full lg:w-[90%] xl:w-[80%] mx-auto">
           {/* left Content */}
@@ -110,7 +115,6 @@ const HeroSection = () => {
                   <option value="all">All Categories</option>
                   <option value="product">Products</option>
                   <option value="service">Services</option>
-                  <option value="portfolio">Portfolios</option>
                 </select>
                 {/* Custom dropdown arrow */}
                 <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
@@ -192,7 +196,7 @@ const HeroSection = () => {
       </div>
 
         {/* Get in Touch Circular Badge - Repositioned for mobile */}
-        <Link href="/contact" className="absolute bottom-0 right-4 lg:right-8 transform translate-y-1/2 z-30 block scale-75 lg:scale-100">
+      <Link href="/contact" className="absolute bottom-0 right-4 lg:right-8 transform translate-y-1/2 z-30 block scale-75 lg:scale-100">
         <button className="flex items-center justify-center w-32 h-32 rounded-full border-5 border-white bg-gray-900 text-white hover:bg-gray-800 shadow-2xl transition-all hover:scale-105 group">
           <div className="relative w-full h-full flex items-center justify-center">
             <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 128 128">

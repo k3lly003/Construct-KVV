@@ -30,7 +30,7 @@ export const ProductFilters: React.FC<FilteredProductsProps> = ({
   
   const shopName = shop?.name || shop?.seller?.businessName || 'this shop';
   return (
-    <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
+    <div className="bg-white rounded-xl shadow-sm p-4 mb-6 max-w-5xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex gap-2 items-center w-full">
           {/* Search Input */}
@@ -45,7 +45,7 @@ export const ProductFilters: React.FC<FilteredProductsProps> = ({
             />
           </div>
            {/* Category Dropdown */}
-           <div className="relative">
+           {/* <div className="relative">
             <button
               type="button"
               className="flex items-center border border-gray-300 rounded-lg px-3 py-2 bg-white text-gray-800 font-medium shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-yellow-500"
@@ -62,7 +62,7 @@ export const ProductFilters: React.FC<FilteredProductsProps> = ({
               <option value="Product">Product</option>
               <option value="Service">Service</option>
             </select>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

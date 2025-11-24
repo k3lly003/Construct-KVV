@@ -28,6 +28,10 @@ export const Products: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState(initialSearchQuery);
   const [selectedCategory, setSelectedCategory] = useState("Product");
   const [sortBy, setSortBy] = useState("featured");
+  // PAGINATION STATE
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 8; // PRODUCTS PER PAGE
+  // END OF PAGINATION STATE
   const availableCategories: string[] = ["Product", "Service"];
   const router = useRouter();
   const { t } = useTranslations();
@@ -86,6 +90,17 @@ export const Products: React.FC = () => {
     return matchesSearch;
   });
 
+  // PAGINATION CALCULATIONS
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+  const startIndex = (currentPage - 1) * productsPerPage;
+  const endIndex = startIndex + productsPerPage;
+  const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+
+  // RESET TO PAGE 1 WHEN SEARCH TERM OR CATEGORY CHANGES
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedCategory]);
+
   // Filter services
   // const filteredServices = Array.isArray(services)
   //   ? services.filter((service) => {
@@ -135,75 +150,83 @@ export const Products: React.FC = () => {
               </div>
             ) : (
               <div className="flex flex-wrap px-4 gap-7 justify-center lg:flex lg:justify-start">
-                {filteredProducts.map((product, index) => (
-                  <div
-                    key={`${product.id}-${index}`}
-                    className="bg-white overflow-hidden w-64 m-2 hover:shadow-lg cursor-pointer hover:rounded-xl transition-shadow"
-                    onClick={() => router.push(`/product/${product.id}`)}
-                  >
-                    <div className="relative">
-                      {product.thumbnailUrl ? (
-                        <Image
-                          src={getFallbackImage(
-                            product.thumbnailUrl,
-                            "product"
-                          )}
-                          alt={product.name}
-                          width={100}
-                          height={100}
-                          className="w-full h-56 object-cover rounded-xl"
-                        />
-                      ) : (
-                        <div className="w-full h-56 flex items-center justify-center bg-gray-100 rounded-xl text-gray-400">
-                          No Image
+                {/* SHOW PAGINATED PRODUCTS */}
+                {paginatedProducts.length > 0 ? (
+                  paginatedProducts.map((product, index) => (
+                    <div
+                      key={`${product.id}-${index}`}
+                      className="bg-white overflow-hidden w-64 m-2 hover:shadow-lg cursor-pointer hover:rounded-xl transition-shadow"
+                      onClick={() => router.push(`/product/${product.id}`)}
+                    >
+                      <div className="relative">
+                        {product.thumbnailUrl ? (
+                          <Image
+                            src={getFallbackImage(
+                              product.thumbnailUrl,
+                              "product"
+                            )}
+                            alt={product.name}
+                            width={100}
+                            height={100}
+                            className="w-full h-56 object-cover rounded-xl"
+                          />
+                        ) : (
+                          <div className="w-full h-56 flex items-center justify-center bg-gray-100 rounded-xl text-gray-400">
+                            No Image
+                          </div>
+                        )}
+                        <div className="absolute top-2 right-2 border text-gray-100 rounded-full p-3 flex items-center justify-center cursor-pointer shadow-sm hover:bg-yellow-400 hover:border-yellow-400 transition-colors">
+                          <Heart className="text-gray-100" />
                         </div>
-                      )}
-                      <div className="absolute top-2 right-2 border text-gray-100 rounded-full p-3 flex items-center justify-center cursor-pointer shadow-sm hover:bg-yellow-400 hover:border-yellow-400 transition-colors">
-                        <Heart className="text-gray-100" />
                       </div>
-                    </div>
-                    <div className="p-4">
-                      <div className="flex justify-between">
-                        <h3 className="text-md font-semibold text-gray-900 w-[60%] mb-1">
-                          {product.name}
-                        </h3>
-                      </div>
-                      <p className="text-sm text-gray-500 mb-2 overflow">
-                        {product.description}
-                      </p>
-                      <div className="flex items-center justify-between mb-3">
-                        <p className="font-semibold text-md text-yellow-400">
-                          {product.price}
-                          <span className="text-sm text-yellow-400"> Rwf</span>
+                      <div className="p-4">
+                        <div className="flex justify-between">
+                          <h3 className="text-md font-semibold text-gray-900 w-[60%] mb-1">
+                            {product.name}
+                          </h3>
+                        </div>
+                        <p className="text-sm text-gray-500 mb-2 overflow">
+                          {product.description}
                         </p>
+                        <div className="flex items-center justify-between mb-3">
+                          <p className="font-semibold text-md text-yellow-400">
+                            {product.price}
+                            <span className="text-sm text-yellow-400"> Rwf</span>
+                          </p>
+                        </div>
+                        <Button
+                          text={t(dashboardFakes.common.addToCart)}
+                          texSize={"text-sm"}
+                          hoverBg={"hover:bg-yellow-400"}
+                          borderCol={"border-yellow-300"}
+                          bgCol={"white"}
+                          textCol={"text-gray-800"}
+                          border={"border-1"}
+                          handleButton={async (e) => {
+                            try {
+                              const { addToCart } = useCartStore.getState();
+                              await addToCart(product.id, 1);
+                              toast.success(`Added ${product.name} to cart`);
+                              return true;
+                            } catch (error: any) {
+                              toast.error(
+                                error.message || "Failed to add item to cart"
+                              );
+                              return false;
+                            }
+                          }}
+                          padding={"p-3"}
+                          round={"rounded-full"}
+                        />
                       </div>
-                      <Button
-                        text={t(dashboardFakes.common.addToCart)}
-                        texSize={"text-sm"}
-                        hoverBg={"hover:bg-yellow-400"}
-                        borderCol={"border-yellow-300"}
-                        bgCol={"white"}
-                        textCol={"text-gray-800"}
-                        border={"border-1"}
-                        handleButton={async (e) => {
-                          try {
-                            const { addToCart } = useCartStore.getState();
-                            await addToCart(product.id, 1);
-                            toast.success(`Added ${product.name} to cart`);
-                            return true;
-                          } catch (error: any) {
-                            toast.error(
-                              error.message || "Failed to add item to cart"
-                            );
-                            return false;
-                          }
-                        }}
-                        padding={"p-3"}
-                        round={"rounded-full"}
-                      />
                     </div>
+                  ))
+                ) : (
+                  <div className="w-full text-center py-12">
+                    <p className="text-gray-500 text-lg">No products found matching your search.</p>
                   </div>
-                ))}
+                )}
+                {/* END OF PAGINATED PRODUCTS */}
               </div>
             )
           ) : (
@@ -214,20 +237,68 @@ export const Products: React.FC = () => {
             />
           )}
           {/* PAGINATION BUTTONS */}
-          <div className="mt-6 flex justify-center space-x-2">
-            <button className="border border-amber-300 hover:bg-amber-500 hover:text-white text-amber-300 font-semibold py-2 px-2 rounded focus:outline-none focus:shadow-outline">
-              <ChevronLeft className="h-5 w-5 text-amber-300" />
-            </button>
-            <div className="flex justify-center items-center gap-3">
-              <Link href={""}>01</Link>
-              <Link href={""}>02</Link>
-              <Link href={""}>03</Link>
-              <Link href={""}>04</Link>
+          {/* SHOW PAGINATION BUTTONS IF THERE ARE MORE THAN 1 PAGE AND PRODUCTS ARE FOUND */}
+          {selectedCategory === "Product" && filteredProducts.length > 0 && totalPages > 1 && (
+            <div className="mt-6 flex justify-center items-center space-x-2">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                className={`border border-amber-300 font-semibold py-2 px-2 rounded focus:outline-none focus:shadow-outline transition-colors ${
+                  currentPage === 1
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-amber-500 hover:text-white text-amber-300 cursor-pointer"
+                }`}
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <div className="flex justify-center items-center gap-2">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => {
+                  // Show first page, last page, current page, and pages around current
+                  if (
+                    pageNum === 1 ||
+                    pageNum === totalPages ||
+                    (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+                  ) {
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => setCurrentPage(pageNum)}
+                        className={`px-3 py-1 rounded font-semibold transition-colors ${
+                          currentPage === pageNum
+                            ? "bg-amber-500 text-white"
+                            : "text-amber-300 hover:bg-amber-100 hover:text-amber-600"
+                        }`}
+                      >
+                        {String(pageNum).padStart(2, "0")}
+                      </button>
+                    );
+                  } else if (
+                    pageNum === currentPage - 2 ||
+                    pageNum === currentPage + 2
+                  ) {
+                    return (
+                      <span key={pageNum} className="text-amber-300 px-1">
+                        ...
+                      </span>
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+              <button
+                onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+                className={`border border-amber-300 font-semibold py-2 px-2 rounded focus:outline-none focus:shadow-outline transition-colors ${
+                  currentPage === totalPages
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-amber-500 hover:text-white text-amber-300 cursor-pointer"
+                }`}
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
             </div>
-            <button className="border border-amber-300 hover:bg-amber-500 hover:text-white text-amber-300 font-semibold py-2 px-2 rounded focus:outline-none focus:shadow-outline">
-              <ChevronRight className="h-5 w-5" />
-            </button>
-          </div>
+          )}
+          {/* END OF PAGINATION BUTTONS */}
         </div>
       </div>
     </div>

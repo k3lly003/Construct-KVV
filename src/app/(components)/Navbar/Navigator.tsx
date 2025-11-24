@@ -547,7 +547,7 @@ const Navbar: React.FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2, ease: "easeInOut" }}
-                    className="absolute left-0 z-10 mt-2 w-screen max-w-[800px] bg-white border border-gray-200 rounded-lg shadow-lg"
+                    className="absolute left-0 z-20 mt-2 w-screen max-w-[800px] bg-white border border-gray-200 rounded-lg shadow-lg"
                   >
                     <div className="p-6">
                       <div className="grid grid-cols-3 gap-6">
@@ -720,7 +720,7 @@ const Navbar: React.FC = () => {
               {t("navigation.projects")}
             </button>
             <Link
-              href="/portfolios"
+              href="/services"
               className={`inline-flex items-center px-1 pt-1 mb-2 text-sm font-medium transition-colors ${
                 isHomePage && !scrolled 
                   ? 'text-white hover:text-amber-300' 
