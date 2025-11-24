@@ -1,15 +1,12 @@
+import { Construction, Home, MessageCircle } from "lucide-react"
+import Link from "next/link"
 
-"use client";
 
-import Link from 'next/link';
-import { Home, MessageCircle, Construction } from 'lucide-react';
-import Navbar from '@/app/(components)/Navbar/Navigator';
-import { Footer } from '@/app/(components)/footer/Footer';
-
-export default function NotFoundPage() {
-  return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-amber-400 to-amber-600">
-      <Navbar />
+export default function NotFound(){
+    return(
+        <div>
+            <div className="flex flex-col min-h-screen bg-gradient-to-br from-amber-400 to-amber-600">
+      {/* <Navbar /> */}
       
       <main className="flex-grow flex items-center justify-center px-4 py-12">
         <div className="max-w-4xl mx-auto text-center">
@@ -22,7 +19,7 @@ export default function NotFoundPage() {
           
           {/* 404 Error */}
           <h1 className="text-6xl md:text-8xl font-black text-white mb-4 tracking-tight">
-            404 IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+            404
           </h1>
           
           {/* Error Message */}
@@ -62,7 +59,8 @@ export default function NotFoundPage() {
         </div>
       </main>
       
-      <Footer />
+      {/* <Footer /> */}
     </div>
-  );
+        </div>
+    )
 }

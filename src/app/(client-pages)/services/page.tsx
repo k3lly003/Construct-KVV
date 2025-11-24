@@ -13,6 +13,7 @@ import { technicianService, Technician } from '@/app/services/technicianService'
 import { serviceService } from '@/app/services/serviceServices';
 import ServiceBanner from '@/components/features/service/Banner-HIW';
 import TrustSecurity from '@/components/features/service/TrustSecurity';
+import { useSearchParams } from 'next/navigation';
 
 // interface Service {
 //   id: string;
@@ -32,7 +33,9 @@ import TrustSecurity from '@/components/features/service/TrustSecurity';
 // Filter services by title
 
 export default function ServicesPage() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const searchParams = useSearchParams();
+  const initialSearchQuery = searchParams.get("q") || "";
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState<any[]>([]);
   const [showLocationForm, setShowLocationForm] = useState(false);
@@ -66,6 +69,14 @@ export default function ServicesPage() {
     });
     setShowLocationForm(false);
   };
+
+  // Update search query when URL params change
+  useEffect(() => {
+    const query = searchParams.get("q");
+    if (query) {
+      setSearchQuery(query);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const load = async () => {

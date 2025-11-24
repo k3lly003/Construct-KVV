@@ -15,6 +15,7 @@ import { dashboardFakes } from "@/app/utils/fakes/DashboardFakes";
 import { MdLocationPin } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import { ProductViewSkeleton } from "@/app/utils/skeleton/ProductSkeletons";
+import HeroSection from "../(components)/home/HeroSection";
 
 function RecommendedProductsSection() {
   const { t } = useTranslations();
@@ -301,7 +302,8 @@ export default function Home() {
           }}
         />
       </Head>
-      <Banner />
+      {/* <Banner /> */}
+      <HeroSection />
       <ProjectShowcase />
 
       {/* hire a professional section */}

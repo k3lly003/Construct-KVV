@@ -27,7 +27,7 @@ import {
 import { Label } from "@/components/ui/label";
 import Head from "next/head";
 import DefaultPageBanner from "@/app/(components)/DefaultPageBanner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "@/app/hooks/useTranslations";
 // SpecialistLocator not used on this page currently
 import { usePortfolio } from "@/app/hooks/usePortfolio";
@@ -39,14 +39,24 @@ export default function Home() {
   const { t } = useTranslations();
   const { searchPublic, loading, error } = usePortfolio();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const initialSearchQuery = searchParams.get("q") || "";
 
   const [items, setItems] = useState<Portfolio[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(initialSearchQuery);
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [locationFilter, setLocationFilter] = useState("");
   const [professionalType, setProfessionalType] = useState<string | undefined>(undefined);
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
+
+  // Update search term when URL params change
+  useEffect(() => {
+    const query = searchParams.get("q");
+    if (query) {
+      setSearchTerm(query);
+    }
+  }, [searchParams]);
 
   const filteredItems = useMemo(() => {
     return items.filter((p) => {

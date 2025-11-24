@@ -32,7 +32,7 @@ import { NotificationModal } from "@/components/ui/notification-modal";
 import { useNotificationStore } from "@/store/notificationStore";
 import { useTranslation } from "react-i18next";
 import { useCartStore } from "@/store/cartStore";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -70,12 +70,17 @@ const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileExploreServicesOpen, setMobileExploreServicesOpen] =
     useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { t } = useTranslation();
   const { getCartCount } = useCartStore();
   const { isAuthenticated } = useAuth();
   const isClient = useIsClient();
   const isMobile = useIsMobile();
   const router = useRouter();
+  const pathname = usePathname();
+  
+  // Check if we're on the home page
+  const isHomePage = pathname === '/home' || pathname === '/';
 
   // Get user data from Zustand store
   const { role: userRole, name: userName, email: userEmail } = useUserStore();
@@ -165,8 +170,17 @@ const Navbar: React.FC = () => {
       }
     };
 
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+
     document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
+    window.addEventListener("scroll", handleScroll);
+    
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   const handleMenuClick = (label: string, event: React.MouseEvent) => {
@@ -175,7 +189,15 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className=" border-b px-10">
+    <nav className={`transition-all duration-300 ${
+      isHomePage 
+        ? `fixed top-0 left-0 right-0 z-50 ${
+            scrolled 
+              ? 'bg-white/95 backdrop-blur-md shadow-md' 
+              : 'bg-transparent'
+          }` 
+        : 'bg-white border-b'
+    }`}>
       <div className="max-w-7xl mx-auto flex-flex-col gap-3 px-4 sm:px-6 lg:px-10">
         <div className="flex justify-between py-2 items-center">
           <div className="flex items-center">
@@ -187,8 +209,13 @@ const Navbar: React.FC = () => {
                   alt="KVV Pro"
                   width={42}
                   height={42}
+                  className={`transition-all ${
+                    isHomePage && !scrolled ? 'drop-shadow-lg' : ''
+                  }`}
                 />
-                <span className="ml-2 text-xl text-amber-500 font-semibold">
+                <span className={`ml-2 text-xl font-semibold transition-colors ${
+                  isHomePage && !scrolled ? 'text-white' : 'text-amber-500'
+                }`}>
                   kvv
                 </span>
               </div>
@@ -201,7 +228,11 @@ const Navbar: React.FC = () => {
             <div className="hidden md:flex items-center space-x-5">
               <Link
                 href="/join-as-pro"
-                className="inline-flex items-center px-1 pt-1 text-md font-medium text-gray-900 hover:text-amber-500"
+                className={`inline-flex items-center px-1 pt-1 text-md font-medium transition-colors ${
+                  isHomePage && !scrolled 
+                    ? 'text-white hover:text-amber-300' 
+                    : 'text-gray-900 hover:text-amber-500'
+                }`}
               >
                 {t("navigation.join-as-a-pro")}
                 <BriefcaseBusiness className="mx-2 w-5 h-5" />
@@ -211,13 +242,21 @@ const Navbar: React.FC = () => {
                 <NotificationIcon
                   count={getUnreadCount()}
                   onClick={handleNotificationClick}
-                  className="text-amber-600 hover:text-amber-700"
+                  className={`transition-colors ${
+                    isHomePage && !scrolled
+                      ? 'text-white hover:text-amber-300'
+                      : 'text-amber-600 hover:text-amber-700'
+                  }`}
                   isLoading={notificationsLoading}
                 />
               )}
               <Link
                 href="/cart"
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 hover:border-gray-300 relative"
+                className={`inline-flex items-center px-1 pt-1 text-sm font-medium relative transition-colors ${
+                  isHomePage && !scrolled
+                    ? 'text-white hover:text-amber-300'
+                    : 'text-gray-900 hover:text-amber-600'
+                }`}
               >
                 <ShoppingCart />
                 {isClient && getCartCount() > 0 && (
@@ -241,7 +280,11 @@ const Navbar: React.FC = () => {
                   )
                 ) : (
                   <Link href="/signin" className="border-l-1">
-                    <p className="pl-5 px-4 py-2 hover:text-yellow-400 font-medium">
+                    <p className={`pl-5 px-4 py-2 font-medium transition-colors ${
+                      isHomePage && !scrolled
+                        ? 'text-white hover:text-amber-300'
+                        : 'text-gray-900 hover:text-yellow-400'
+                    }`}>
                       {t("navigation.login")}
                     </p>
                   </Link>
@@ -254,7 +297,9 @@ const Navbar: React.FC = () => {
               aria-label="Open menu"
               onClick={() => setMobileMenuOpen(true)}
             >
-              <Menu className="h-7 w-7 text-amber-500" />
+              <Menu className={`h-7 w-7 transition-colors ${
+                isHomePage && !scrolled ? 'text-white' : 'text-amber-500'
+              }`} />
             </button>
           </div>
 
@@ -481,7 +526,11 @@ const Navbar: React.FC = () => {
           <div className="hidden md:ml-6 md:flex md:space-x-8">
             <div className="relative nav-menu">
               <button
-                className="inline-flex items-center cursor-pointer py-3 text-sm font-medium text-gray-900 hover:text-amber-500"
+                className={`inline-flex items-center cursor-pointer py-3 text-sm font-medium transition-colors ${
+                  isHomePage && !scrolled 
+                    ? 'text-white hover:text-amber-300' 
+                    : 'text-gray-900 hover:text-amber-500'
+                }`}
                 onClick={(e) => handleMenuClick("Explore Services", e)}
               >
                 {t("navigation.explore-services", "Explore Services")}
@@ -649,7 +698,11 @@ const Navbar: React.FC = () => {
             {/* Projects link (desktop) */}
             <button
               type="button"
-              className="inline-flex items-center px-1 pt-1 mb-2 hover:text-amber-500 text-sm font-medium text-gray-900"
+              className={`inline-flex items-center px-1 pt-1 mb-2 text-sm font-medium transition-colors ${
+                isHomePage && !scrolled 
+                  ? 'text-white hover:text-amber-300' 
+                  : 'text-gray-900 hover:text-amber-500'
+              }`}
               onClick={() => {
                 if (!localUserData) {
                   toast.error("Please sign in first to access projects");
@@ -668,19 +721,31 @@ const Navbar: React.FC = () => {
             </button>
             <Link
               href="/portfolios"
-              className="inline-flex items-center px-1 pt-1 mb-2 text-sm font-medium text-gray-900 hover:text-amber-500"
+              className={`inline-flex items-center px-1 pt-1 mb-2 text-sm font-medium transition-colors ${
+                isHomePage && !scrolled 
+                  ? 'text-white hover:text-amber-300' 
+                  : 'text-gray-900 hover:text-amber-500'
+              }`}
             >
               {t("navigation.portfolio")}
             </Link>
             <Link
               href="/pricing"
-              className="inline-flex items-center px-1 pt-1 mb-2 text-sm font-medium text-gray-900 hover:text-amber-500"
+              className={`inline-flex items-center px-1 pt-1 mb-2 text-sm font-medium transition-colors ${
+                isHomePage && !scrolled 
+                  ? 'text-white hover:text-amber-300' 
+                  : 'text-gray-900 hover:text-amber-500'
+              }`}
             >
               {t("navigation.pricing")}
             </Link>
             <Link
               href="/design-marketplace"
-              className="inline-flex items-center px-1 pt-1 mb-2 text-sm font-medium text-gray-900 hover:text-amber-500"
+              className={`inline-flex items-center px-1 pt-1 mb-2 text-sm font-medium transition-colors ${
+                isHomePage && !scrolled 
+                  ? 'text-white hover:text-amber-300' 
+                  : 'text-gray-900 hover:text-amber-500'
+              }`}
             >
               Design Marketplace
             </Link>

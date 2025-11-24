@@ -11,7 +11,7 @@ import { productService } from "@/app/services/productServices";
 import { serviceService } from "@/app/services/serviceServices";
 import { Product } from "@/types/product";
 import { Service } from "@/types/service";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { dashboardFakes } from "@/app/utils/fakes/DashboardFakes";
 import { useTranslations } from "@/app/hooks/useTranslations";
 import { getFallbackImage } from "@/app/utils/imageUtils";
@@ -23,12 +23,22 @@ export const Products: React.FC = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [servicesLoading, setServicesLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const searchParams = useSearchParams();
+  const initialSearchQuery = searchParams.get("q") || "";
+  const [searchTerm, setSearchTerm] = useState(initialSearchQuery);
   const [selectedCategory, setSelectedCategory] = useState("Product");
   const [sortBy, setSortBy] = useState("featured");
   const availableCategories: string[] = ["Product", "Service"];
   const router = useRouter();
   const { t } = useTranslations();
+
+  // Update search term when URL params change
+  useEffect(() => {
+    const query = searchParams.get("q");
+    if (query) {
+      setSearchTerm(query);
+    }
+  }, [searchParams]);
 
   // Fetch all products on mount
   useEffect(() => {

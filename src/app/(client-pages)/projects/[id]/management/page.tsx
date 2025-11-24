@@ -190,7 +190,7 @@ export default function ProjectManagementPage() {
                               {budget.remaining.toLocaleString()}
                             </span>
                             {budget.remaining < 0 ? (
-                              <Badge variant="destructive">Overspent</Badge>
+                              <Badge variant="secondary">Overspent</Badge>
                             ) : null}
                           </div>
                         </div>
