@@ -240,9 +240,12 @@ const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
             <Plus size={16} />
           </GenericButton>
         </div>
-        <GenericButton className="flex-1 h-10 gap-2" onClick={handleAddToCart}>
+        <GenericButton
+          className="w-full sm:flex-1 h-11 gap-2 flex items-center justify-center text-sm sm:text-base"
+          onClick={handleAddToCart}
+        >
           <ShoppingCart size={16} />
-          Add to Cart
+          <span className="truncate">Add to Cart</span>
         </GenericButton>
         <GenericButton
           variant="outline"

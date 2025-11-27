@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45c26da0-05b1-4931-a985-f1594c175e45" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/app/(client-pages)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(client-pages)/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(client-pages)/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(client-pages)/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(components)/Navbar/Navigator.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(components)/Navbar/Navigator.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(components)/home/ProjectShowcase.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(components)/home/ProjectShowcase.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/404.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/404.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/utils/fakes/HomeFakes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/utils/fakes/HomeFakes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ui/badge.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ui/badge.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="0f1a5189-ce28-4589-b8c2-d65ddc0b504a" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -64,7 +56,7 @@
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "ml.llm.LLMConfigurable",
     "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "C:\\Users\\PC\\Desktop\\KVV\\Construct-KVV\\node_modules\\typescript\\lib",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2025.2.5\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -104,5 +96,17 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/app/(components)/Product.tsx</url>
+          <line>48</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

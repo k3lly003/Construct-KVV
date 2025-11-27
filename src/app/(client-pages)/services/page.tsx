@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,6 +14,8 @@ import { technicianService, Technician } from '@/app/services/technicianService'
 import { serviceService } from '@/app/services/serviceServices';
 import ServiceBanner from '@/components/features/service/Banner-HIW';
 import TrustSecurity from '@/components/features/service/TrustSecurity';
+import { useSearchParams } from 'next/navigation';
+import ServicePage from '@/app/(components)/service/servicePage';
 
 // interface Service {
 //   id: string;
@@ -31,8 +34,10 @@ import TrustSecurity from '@/components/features/service/TrustSecurity';
 // }
 // Filter services by title
 
-export default function ServicesPage() {
-  const [searchQuery, setSearchQuery] = useState("");
+const Page = () => {
+  const searchParams = useSearchParams();
+  const initialSearchQuery = searchParams.get("q") || "";
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState<any[]>([]);
   const [showLocationForm, setShowLocationForm] = useState(false);
@@ -43,15 +48,6 @@ export default function ServicesPage() {
     email: '',
     phone: ''
   });
-  // const [services, setServices] = useState<any[]>([]);
-  // const [loading, setLoading] = useState(true);
-  // const filteredServices = services.filter((service) =>
-  //   service.title?.toLowerCase().includes(searchQuery.toLowerCase())
-  // );
-
-  // const handleSearch = () => {
-  //   console.log('Searching for services in:', searchQuery);
-  // };
 
   const handleLocationRequest = (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,6 +62,14 @@ export default function ServicesPage() {
     });
     setShowLocationForm(false);
   };
+
+  // Update search query when URL params change
+  useEffect(() => {
+    const query = searchParams.get("q");
+    if (query) {
+      setSearchQuery(query);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const load = async () => {
@@ -149,31 +153,7 @@ export default function ServicesPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <ServiceBanner/>
-      {/* Services Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Top Construction Services for You
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Discover expert professionals ready to bring your vision to life
-            </p>
-          </div>
-          
-          <div className="">
-           <input
-            type="text"
-            placeholder="Search for a service"
-            className="w-1/2 p-2 mx-5 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-          />
-          <ServiceGrid searchQuery={searchQuery} />
-          </div>
-        </div>
-      </section>
-
+      <ServicePage/>
       {/* Location Request Modal/Section */}
       {showLocationForm && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -289,3 +269,4 @@ export default function ServicesPage() {
     </div>
   );
 }
+export default Page;

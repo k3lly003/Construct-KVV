@@ -552,9 +552,9 @@ export default function ArchitectRegistration() {
             </CardContent>
           </Card>
         </div>
-        <div className="w-[45%]">
+        {/* <div className="w-[45%]">
           <ArchitectHero />
-        </div>
+        </div> */}
       </div>
       <Toaster position="top-right" />
     </>

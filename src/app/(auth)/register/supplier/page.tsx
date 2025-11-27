@@ -459,9 +459,9 @@ export default function SupplierRegistration() {
           </CardContent>
         </Card>
       </div>
-      <div className="w-[45%]">
+      {/* <div className="w-[45%]">
         <SupplierHero />
-      </div>
+      </div> */}
     </div>
   );
 }

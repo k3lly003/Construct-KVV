@@ -20,6 +20,7 @@ import { getFallbackImage } from "@/app/utils/imageUtils";
 import { orderService } from "@/app/services/orderService";
 import { useUserStore } from "@/store/userStore";
 import { getCheckoutDetails } from "@/app/services/cartService";
+import { useTranslations } from "@/app/hooks/useTranslations";
 
 export const CartPage: React.FC = () => {
   const {
@@ -34,6 +35,8 @@ export const CartPage: React.FC = () => {
   } = useCartStore();
 
   const { isAuthenticated } = useAuth();
+  const { t } = useTranslations();
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<
     "mobilemoney" | "card" | "bank"
@@ -297,7 +300,7 @@ export const CartPage: React.FC = () => {
     return (
       <div className="min-h-screen py-12 flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-600" />
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-amber-600" />
           <p className="text-gray-600">Loading your cart...</p>
         </div>
       </div>
@@ -312,7 +315,7 @@ export const CartPage: React.FC = () => {
           <p className="text-red-600 mb-4">{error}</p>
           <button
             onClick={fetchCart}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+            className="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700"
           >
             Retry
           </button>
@@ -327,19 +330,21 @@ export const CartPage: React.FC = () => {
       <div className="min-h-screen py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-8">
-            Shopping Cart
+            {t("cart.title")}
           </h1>
           <div className="text-center py-12">
             <PackageCheck className="h-16 w-16 text-gray-400 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              Your cart is empty
+              {t("cart.empty")}
             </h2>
-            <p className="text-gray-600 mb-6">Add some items to get started!</p>
+            <p className="text-gray-600 mb-6">
+              {t("cart.emptySubtitle")}
+            </p>
             <button
               onClick={() => router.push("/")}
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
+              className="bg-amber-600 text-white px-6 py-3 rounded-lg hover:bg-amber-700"
             >
-              Continue Shopping
+              {t("cart.continueShopping")}
             </button>
           </div>
         </div>
@@ -357,40 +362,50 @@ export const CartPage: React.FC = () => {
           {/* Cart Items */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-xl shadow-lg overflow-hidden divide-y divide-gray-200">
-              {cartItems.map((items) => (
-                <div
-                  key={items.cartItemId || items.id}
-                  className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6"
-                >
-                  <Image
-                    src={getFallbackImage(
-                      (Array.isArray(items.image)
-                        ? typeof items.image[0] === "string"
-                          ? items.image[0]
-                          : items.image.find((img: any) => img?.isDefault)
-                              ?.url || items.image[0]?.url
-                        : undefined) ||
-                        (Array.isArray((items as any).images)
-                          ? typeof (items as any).images[0] === "string"
-                            ? (items as any).images[0]
-                            : (items as any).images.find(
-                                (img: any) => img?.isDefault
-                              )?.url || (items as any).images[0]?.url
-                          : undefined) ||
-                        (Array.isArray((items as any).product?.images)
-                          ? (items as any).product.images.find(
-                              (img: any) => img?.isDefault
-                            )?.url || (items as any).product.images[0]?.url
-                          : undefined) ||
-                        "",
-                      "product"
-                    )}
-                    width={100}
-                    height={100}
-                    alt={items.name}
-                    className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-lg flex-shrink-0"
-                  />
-                  <div className="flex-1 w-full">
+              {cartItems.map((items) => {
+                const imageUrl = getFallbackImage(
+                  (Array.isArray(items.image)
+                    ? typeof items.image[0] === "string"
+                      ? items.image[0]
+                      : items.image.find((img: any) => img?.isDefault)?.url ||
+                        items.image[0]?.url
+                    : undefined) ||
+                    (Array.isArray((items as any).images)
+                      ? typeof (items as any).images[0] === "string"
+                        ? (items as any).images[0]
+                        : (items as any).images.find(
+                            (img: any) => img?.isDefault
+                          )?.url || (items as any).images[0]?.url
+                      : undefined) ||
+                    (Array.isArray((items as any).product?.images)
+                      ? (items as any).product.images.find(
+                          (img: any) => img?.isDefault
+                        )?.url || (items as any).product.images[0]?.url
+                      : undefined) ||
+                    "",
+                  "product"
+                );
+
+                return (
+                  <div
+                    key={items.cartItemId || items.id}
+                    className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setPreviewImage(imageUrl)}
+                      className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden flex-shrink-0 group focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    >
+                      <Image
+                        src={imageUrl}
+                        width={100}
+                        height={100}
+                        alt={items.name}
+                        className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </button>
+                    <div className="flex-1 w-full">
                     <h3 className="text-base sm:text-lg font-semibold text-gray-900">
                       {items.name}
                     </h3>
@@ -406,7 +421,7 @@ export const CartPage: React.FC = () => {
                       Weight: {items.weight}kg
                     </p>
                   </div>
-                  <div className="flex flex-col items-end gap-2 w-full sm:w-auto">
+                    <div className="flex flex-col items-end gap-2 w-full sm:w-auto">
                     <p className="text-base sm:text-lg font-semibold text-gray-900">
                       {`RWF ${(items.price * items.quantity).toLocaleString()}`}
                     </p>
@@ -467,9 +482,10 @@ export const CartPage: React.FC = () => {
                       <Trash2 className="h-4 w-4" />
                       Remove
                     </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
@@ -504,8 +520,8 @@ export const CartPage: React.FC = () => {
               <button
                 onClick={handlePlaceOrder}
                 disabled={loading || isLoading || cartItems.length === 0}
-                className={`w-full bg-blue-600 text-white py-3 rounded-lg font-semibold text-sm sm:text-base
-                  hover:bg-blue-700 transition-colors ${
+                className={`w-full bg-amber-600 text-white py-3 rounded-lg font-semibold text-sm sm:text-base
+                  hover:bg-amber-700 transition-colors ${
                     loading || isLoading || cartItems.length === 0
                       ? "opacity-75 cursor-not-allowed"
                       : ""
@@ -631,6 +647,32 @@ export const CartPage: React.FC = () => {
           </div>
         )}
       </div>
+      {previewImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+          onClick={() => setPreviewImage(null)}
+        >
+          <div
+            className="relative max-w-3xl w-full max-h-[90vh] bg-black/40 rounded-lg overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Image
+              src={previewImage}
+              alt="Product preview"
+              width={1200}
+              height={800}
+              className="w-full h-full object-contain bg-black"
+            />
+            <button
+              type="button"
+              className="absolute top-3 right-3 px-3 py-1 rounded-full bg-black/70 text-amber-500 text-sm hover:bg-black"
+              onClick={() => setPreviewImage(null)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

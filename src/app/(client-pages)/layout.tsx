@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
+import { usePathname } from "next/navigation";
 import ProgressBarProvider from "@/app/(components)/ProressBarProvider";
 import { UserStoreInitializer } from "@/store/userStore";
 import Navbar from "@/app/(components)/Navbar/Navigator";
@@ -15,6 +16,9 @@ export default function ClientLayout({
   children: React.ReactNode;
 }) {
   useCartHydration();
+  const pathname = usePathname();
+  const isHomePage = pathname === '/home' || pathname === '/';
+  
   return (
     <>
       <UserStoreInitializer />
@@ -22,7 +26,7 @@ export default function ClientLayout({
         <ProgressBarProvider>
           <div className="flex flex-col min-h-screen bg-gradient-to-b from-slate-50">
             <Navbar />
-            <main className="flex-grow">{children}</main>
+            <main className={`flex-grow ${isHomePage ? '' : ''}`}>{children}</main>
             <Footer />
             <ChatWidget />
           </div>
