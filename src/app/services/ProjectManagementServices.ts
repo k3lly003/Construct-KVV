@@ -2,7 +2,7 @@ import axiosInstance from "@/lib/axios";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
-  "https://construct-kvv-bn-fork.onrender.com";
+  "https://construct-kvv-bn-fork-production.up.railway.app";
 
 export interface PMBudgetExpense {
   id: string;

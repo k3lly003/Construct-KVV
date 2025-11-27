@@ -270,8 +270,9 @@ export const CartPage: React.FC = () => {
     if (!token) return;
     setOrderLoading(orderId);
     try {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork-production.up.railway.app';
       const res = await fetch(
-        `https://construct-kvv-bn-fork.onrender.com/api/v1/orders/${orderId}`,
+        `${API_URL}/api/v1/orders/${orderId}`,
         {
           method: "DELETE",
           headers: {

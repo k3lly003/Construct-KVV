@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import ApprovedArchitects from "@/app/(components)/professionals/ApprovedArchtects";
 import ApprovedConstructors from "@/app/(components)/professionals/ApprovedConstructors";
 import ApprovedTechnicians from "@/app/(components)/professionals/ApprovedTechnicians";
@@ -7,9 +8,18 @@ import ApprovedSellers from "@/app/(components)/professionals/ApprovedSellers";
 import Image from "next/image";
 
 export default function ProfessionalsPage() {
+  const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
-  const [roleFilter, setRoleFilter] = useState<'ALL' | 'ARCHITECT' | 'CONTRACTOR' | 'SELLER' | 'TECHNICIAN'>('ALL');
+  
+  // Get role from URL query parameter, default to 'ALL'
+  const roleFromUrl = searchParams.get('role')?.toUpperCase();
+  const validRoles = ['ALL', 'ARCHITECT', 'CONTRACTOR', 'SELLER', 'TECHNICIAN'];
+  const initialRole = roleFromUrl && validRoles.includes(roleFromUrl) 
+    ? (roleFromUrl as 'ALL' | 'ARCHITECT' | 'CONTRACTOR' | 'SELLER' | 'TECHNICIAN')
+    : 'ALL';
+  
+  const [roleFilter, setRoleFilter] = useState<'ALL' | 'ARCHITECT' | 'CONTRACTOR' | 'SELLER' | 'TECHNICIAN'>(initialRole);
 
   useEffect(() => {
     setLoading(false);

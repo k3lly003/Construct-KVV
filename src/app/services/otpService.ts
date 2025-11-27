@@ -28,7 +28,7 @@ export interface VerificationStatusResponse {
 }
 
 class OtpService {
-  private baseUrl = `https://construct-kvv-bn-fork.onrender.com/api/v1/email-verification`;
+  private baseUrl = `${process.env.NEXT_PUBLIC_NEXT_PUBLIC_API_URL_2 || 'https://construct-kvv-bn-fork-production.up.railway.app'}/api/v1/email-verification`;
 
   /**
    * Verify email OTP

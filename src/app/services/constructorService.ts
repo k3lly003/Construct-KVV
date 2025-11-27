@@ -1,6 +1,9 @@
 import axiosInstance from '@/lib/axios'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork.onrender.com'
+import { RENDER_API_URL, NEXT_PUBLIC_API_URL_2 } from '@/lib/apiConfig';
+
+const API_BASE_URL = RENDER_API_URL;
+const RAILWAY_BASE_URL = NEXT_PUBLIC_API_URL_2;
 
 // Types for constructor data
 export interface ConstructorRegistrationData {
@@ -112,9 +115,9 @@ export interface Constructor {
 
 // Constructor Service
 export const constructorService = {
-         // Register a new constructor
+         // Register a new constructor (uses Railway for email)
        async register(data: ConstructorRegistrationData): Promise<{ message: string; constructor: Constructor }> {
-         const response = await axiosInstance.post<{ message: string; constructor: Constructor }>(`${API_BASE_URL}/api/v1/contractors/register`, data)
+         const response = await axiosInstance.post<{ message: string; constructor: Constructor }>(`${RAILWAY_BASE_URL}/api/v1/contractors/register`, data)
          return response.data
        },
 

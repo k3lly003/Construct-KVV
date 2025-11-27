@@ -73,8 +73,10 @@ const Page = () => {
 
     setLoading(true);
     try {
+      // Login doesn't send emails, use Render
+      const RENDER_API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork.onrender.com';
       const response = await fetch(
-        "https://construct-kvv-bn-fork.onrender.com/api/v1/user/login",
+        `${RENDER_API_URL}/api/v1/user/login`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -117,8 +119,10 @@ const Page = () => {
   const togglePasswordVisibility = () => setShowPassword((v) => !v);
 
   const handleGoogleLogin = () => {
-    window.location.href =
-      "https://construct-kvv-bn-fork.onrender.com/api/v1/auth/google";
+    // Google OAuth login - check if it sends emails, if yes use Railway, else Render
+    // For now, using Render as login typically doesn't send emails
+    const RENDER_API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork.onrender.com';
+    window.location.href = `${RENDER_API_URL}/api/v1/auth/google`;
   };
 
   return (

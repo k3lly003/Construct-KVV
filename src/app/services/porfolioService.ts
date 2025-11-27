@@ -47,6 +47,7 @@ export interface ApiEnvelope<T> {
 }
 
 export interface PublicPortfolioFilters {
+  search?: string;
   category?: string;
   location?: string;
   professionalType?: ProfessionalType;
@@ -109,17 +110,25 @@ export const PortfolioService = {
   },
 
   async getPublicAll(filters: PublicPortfolioFilters = {}): Promise<{ items: Portfolio[]; page: number; limit: number; total?: number }> {
-    const url = `${API_URL}/api/v1/portfolio/public/all`;
+    // Use the new search endpoint if search is provided, otherwise use the public/all endpoint
+    const url = filters.search 
+      ? `${API_URL}/api/v1/portfolio` 
+      : `${API_URL}/api/v1/portfolio/public/all`;
+    
     const response = await api.get(url, { params: filters });
     const data: any = response.data;
+    
+    // Handle different response formats
     const items: Portfolio[] =
       (data?.data as Portfolio[] | undefined) ??
       (data?.items as Portfolio[] | undefined) ??
       (data?.portfolios as Portfolio[] | undefined) ??
       (Array.isArray(data) ? (data as Portfolio[]) : []);
-    const page: number = data?.page ?? filters.page ?? 1;
-    const limit: number = data?.limit ?? filters.limit ?? 10;
-    const total: number | undefined = data?.total;
+    
+    const page: number = data?.pagination?.page ?? data?.page ?? filters.page ?? 1;
+    const limit: number = data?.pagination?.limit ?? data?.limit ?? filters.limit ?? 10;
+    const total: number | undefined = data?.pagination?.total ?? data?.total;
+    
     return { items, page, limit, total };
   },
 };

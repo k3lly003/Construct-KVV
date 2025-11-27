@@ -9,7 +9,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useTranslation } from "react-i18next"
 import { constructorService } from "@/app/services/constructorService"
-import router from "next/router"
+import { useRouter } from "next/navigation"
 
 interface ServiceCard {
   id: string
@@ -168,6 +168,7 @@ export default function ServicesShowCaseSection() {
   const [error, setError] = useState<string | null>(null)
   const currentContent = tabContent[activeTab]
   const { t } = useTranslation()
+  const router = useRouter()
 
   // Fetch approved contractors when switching to hire-professional
   useEffect(() => {
@@ -203,8 +204,26 @@ export default function ServicesShowCaseSection() {
     return title.startsWith("home.") ? t(title) : title
   }
 
-  const handleSeeProsNearYou = (id: string) => {
-    router.push(`/services`);
+  const handleSeeProsNearYou = (serviceId: string) => {
+    // Map service IDs to professional roles for filtering
+    const roleMap: Record<string, string> = {
+      'house-cleaning': 'TECHNICIAN',
+      'interior-painting': 'TECHNICIAN',
+      'handyman': 'TECHNICIAN',
+      'kitchen-remodel': 'CONTRACTOR',
+      'bathroom-renovation': 'CONTRACTOR',
+      'home-addition': 'CONTRACTOR',
+      'bulk-materials': 'SELLER',
+      'contractor-bids': 'CONTRACTOR',
+      'wholesale-pricing': 'SELLER',
+      'certified-contractors': 'CONTRACTOR',
+      'design-specialists': 'ARCHITECT',
+      'project-managers': 'CONTRACTOR',
+    };
+    
+    const role = roleMap[serviceId] || 'ALL';
+    // Navigate to professionals page with role filter
+    router.push(`/professionals${role !== 'ALL' ? `?role=${role}` : ''}`);
   }
 
   return (
@@ -273,8 +292,12 @@ export default function ServicesShowCaseSection() {
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">{renderTitle(service.title)}</h3>
                 <Button
                   variant="link"
-                  onClick={() => handleSeeProsNearYou(service.id)}
-                  className="text-amber-600 hover:text-amber-700 p-0 h-auto font-medium flex items-center gap-2"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleSeeProsNearYou(service.id);
+                  }}
+                  className="text-primary hover:text-primary/80 p-0 h-auto font-medium flex items-center gap-2"
                 >
                   <MapPin className="w-4 h-4" />
                   {t("home.seeProsNearYou")}

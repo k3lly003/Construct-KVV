@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { Button } from "@/app/(components)/Button";
 import { ProductFilters } from "@/app/(components)/product/ProductFilters";
 import { ServiceGrid } from "@/app/(components)/service/service-grid";
@@ -17,12 +16,14 @@ import { useTranslations } from "@/app/hooks/useTranslations";
 import { getFallbackImage } from "@/app/utils/imageUtils";
 import { useCartStore } from "@/store/cartStore";
 import { toast } from "sonner";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export const Products: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [servicesLoading, setServicesLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const searchParams = useSearchParams();
   const initialSearchQuery = searchParams.get("q") || "";
   const [searchTerm, setSearchTerm] = useState(initialSearchQuery);
@@ -35,7 +36,8 @@ export const Products: React.FC = () => {
   const availableCategories: string[] = ["Product", "Service"];
   const router = useRouter();
   const { t } = useTranslations();
-
+  // Debounce search term to reduce rapid re-renders
+  const debouncedSearch = useDebounce(searchTerm, 250);
   // Update search term when URL params change
   useEffect(() => {
     const query = searchParams.get("q");
@@ -44,21 +46,28 @@ export const Products: React.FC = () => {
     }
   }, [searchParams]);
 
-  // Fetch all products on mount
+  // Fetch all products once for the Product tab
   useEffect(() => {
+    if (selectedCategory !== "Product") return;
+
     const fetchProducts = async () => {
       setLoading(true);
+      setError(null);
       try {
-        const data = await productService.getAllProducts();
-        setProducts(data);
-      } catch (err) {
+        const response = await productService.getAllProducts();
+        setProducts(response);
+        console.log("Fetched products:", response); // TODO remove when API is stable
+      } catch (err: any) {
         console.error("Error fetching products:", err);
+        setError(err.message || "Failed to load products");
+        setProducts([]);
       } finally {
         setLoading(false);
       }
     };
+
     fetchProducts();
-  }, []);
+  }, [selectedCategory]);
 
   // Fetch services when category changes to "Service"
   useEffect(() => {
@@ -82,19 +91,55 @@ export const Products: React.FC = () => {
     }
   }, [selectedCategory, services.length]);
 
-  // Filter products
-  const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    return matchesSearch;
-  });
+  // Handle search term change and reset pagination
+  const handleSearchChange = (term: string) => {
+    setSearchTerm(term);
+    setCurrentPage(1);
+  };
+
+  const filteredProducts = useMemo(() => {
+    if (!debouncedSearch.trim()) {
+      return products;
+    }
+
+    const normalizedSearch = debouncedSearch.toLowerCase();
+
+    return products.filter((product) => {
+      const nameMatch = product.name?.toLowerCase().includes(normalizedSearch);
+      const descriptionMatch = product.description?.toLowerCase().includes(normalizedSearch);
+
+      return nameMatch || descriptionMatch;
+    });
+  }, [products, debouncedSearch]);
+
+  const sortedProducts = useMemo(() => {
+    const nextProducts = [...filteredProducts];
+
+    // switch (sortBy) {
+    //   case "price-low":
+    //     nextProducts.sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
+    //     break;
+    //   case "price-high":
+    //     nextProducts.sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
+    //     break;
+    //   case "newest":
+    //     nextProducts.sort(
+    //       (a, b) =>
+    //         new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime()
+    //     );
+    //     break;
+    //   default:
+    //     nextProducts.sort((a, b) => Number(b.isFeatured) - Number(a.isFeatured));
+    // }
+
+    return nextProducts;
+  }, [filteredProducts, sortBy]);
 
   // PAGINATION CALCULATIONS
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+  const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
   const startIndex = (currentPage - 1) * productsPerPage;
   const endIndex = startIndex + productsPerPage;
-  const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+  const paginatedProducts = sortedProducts.slice(startIndex, endIndex);
 
   // RESET TO PAGE 1 WHEN SEARCH TERM OR CATEGORY CHANGES
   useEffect(() => {
@@ -120,7 +165,7 @@ export const Products: React.FC = () => {
           {/* Filters */}
           <ProductFilters
             searchTerm={searchTerm}
-            onSearchTermChange={setSearchTerm}
+            onSearchTermChange={handleSearchChange}
             initialProducts={[]}
             selectedCategory={selectedCategory}
             onSelectedCategoryChange={setSelectedCategory}
@@ -128,6 +173,14 @@ export const Products: React.FC = () => {
             onSortByChange={setSortBy}
             availableCategories={availableCategories}
           />
+
+          {/* Error State */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+              <p className="font-medium">Error loading products</p>
+              <p className="text-sm">{error}</p>
+            </div>
+          )}
 
           {/* Conditional Content */}
           {selectedCategory === "Product" ? (
@@ -147,6 +200,22 @@ export const Products: React.FC = () => {
                     </div>
                   </div>
                 ))}
+              </div>
+            ) : products.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-gray-500 text-lg mb-2">
+                  {searchTerm
+                    ? `No products found for "${searchTerm}"`
+                    : "No products available"}
+                </p>
+                {searchTerm && (
+                  <button
+                    onClick={() => handleSearchChange("")}
+                    className="text-amber-500 hover:text-amber-600 underline"
+                  >
+                    Clear search
+                  </button>
+                )}
               </div>
             ) : (
               <div className="flex flex-wrap px-4 gap-7 justify-center lg:flex lg:justify-start">
@@ -238,7 +307,7 @@ export const Products: React.FC = () => {
           )}
           {/* PAGINATION BUTTONS */}
           {/* SHOW PAGINATION BUTTONS IF THERE ARE MORE THAN 1 PAGE AND PRODUCTS ARE FOUND */}
-          {selectedCategory === "Product" && filteredProducts.length > 0 && totalPages > 1 && (
+          {selectedCategory === "Product" && sortedProducts.length > 0 && totalPages > 1 && (
             <div className="mt-6 flex justify-center items-center space-x-2">
               <button
                 onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}

@@ -1,4 +1,6 @@
 import api from '@/lib/axios';
+import axios from 'axios';
+import { NEXT_PUBLIC_API_URL_2 } from '@/lib/apiConfig';
 
 export interface ServiceRequest {
   id: string;
@@ -51,9 +53,14 @@ export interface ServiceRequestResponse {
 }
 
 export const requestService = {
-  // Create a new service request
+  // Create a new service request (uses Railway for email notifications)
   async createServiceRequest(data: CreateServiceRequestData): Promise<ServiceRequest> {
-    const response = await api.post('/api/v1/service-requests', data);
+    // Use Railway for email-sending endpoint
+    const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    
+    const response = await axios.post(`${NEXT_PUBLIC_API_URL_2}/api/v1/service-requests`, data, { headers });
     return response.data as ServiceRequest;
   },
 
