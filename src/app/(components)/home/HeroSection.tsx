@@ -196,7 +196,7 @@ const HeroSection = () => {
       </div>
 
         {/* Get in Touch Circular Badge - Repositioned for mobile */}
-      <Link href="/contact" className="absolute bottom-0 right-4 lg:right-8 transform translate-y-1/2 z-30 block scale-75 lg:scale-100">
+      {/* <Link href="/contact" className="absolute bottom-0 right-4 lg:right-8 transform translate-y-1/2 z-30 block scale-75 lg:scale-100">
         <button className="flex items-center justify-center w-32 h-32 rounded-full border-5 border-white bg-gray-900 text-white hover:bg-gray-800 shadow-2xl transition-all hover:scale-105 group">
           <div className="relative w-full h-full flex items-center justify-center">
             <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 128 128">
@@ -210,7 +210,7 @@ const HeroSection = () => {
             <ArrowDown className="h-6 w-6 group-hover:translate-y-1 transition-transform" />
           </div>
         </button>
-      </Link>
+      </Link> */}
     </section>
   )
 }

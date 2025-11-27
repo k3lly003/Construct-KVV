@@ -1,4 +1,13 @@
-export const HomeBannerSlides = [
+export interface HomeBannerSlide {
+  id: number;
+  image: string;
+  titleKey: string;
+  subtitleKey: string;
+  descriptionKey: string;
+  buttonTextKey?: string;
+}
+
+export const HomeBannerSlides: HomeBannerSlide[] = [
   {
     id: 1,
     image: "/comp-1.webp",
