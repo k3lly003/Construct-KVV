@@ -92,6 +92,26 @@
     "hireProfessional": "Engager un Professionnel",
     "viewMore": "Voir Plus",
     "seeProsNearYou": "Voir les pros près de chez vous",
+    "banner": {
+      "title": {
+        "design": "Concevez Votre Rêve",
+        "build": "Construisez avec Excellence",
+        "renovate": "Rénovez et Transformez",
+        "plan": "Planifiez Votre Avenir"
+      },
+      "subtitle": {
+        "innovative": "Solutions Innovantes",
+        "precision": "Artisanat de Précision",
+        "transform": "Transformez Votre Espace",
+        "dream": "Rêvez Grand"
+      },
+      "description": {
+        "design_solutions": "Solutions de conception de pointe qui allient esthétique et fonctionnalité. Visualisation 3D et services de planification personnalisée.",
+        "construction_excellence": "Transformez votre vision en réalité avec nos solutions de construction complètes. Équipes expertes, matériaux de qualité et livraison ponctuelle.",
+        "modern_upgrades": "Rénovations modernes qui améliorent votre espace. Du concept à la réalisation, nous donnons vie à vos idées.",
+        "custom_designs": "Conceptions personnalisées adaptées à vos besoins. Services de planification et d'architecture professionnels pour votre prochain projet."
+      }
+    },
     "maintenance": {
       "hero": {
         "title": "Ces tâches ennuyeuses prenaient tout votre week-end. Plus maintenant.",

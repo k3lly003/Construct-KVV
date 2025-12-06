@@ -23,10 +23,10 @@ import { Input } from "@/components/ui/input";
 import { convertFormDataToProjectUpdate } from "@/app/services/projectServices";
 import type { FormData as AppFormData } from "@/app/utils/fakes/formData";
 
-import { RENDER_API_URL, RAILWAY_API_URL } from '@/lib/apiConfig';
+import { RENDER_API_URL, NEXT_PUBLIC_API_URL_2 } from '@/lib/apiConfig';
 
 const API_URL = RENDER_API_URL;
-const RAILWAY_API_URL_FOR_EMAILS = RAILWAY_API_URL;
+const NEXT_PUBLIC_API_URL_2_FOR_EMAILS = NEXT_PUBLIC_API_URL_2;
 
 // --- BudgetRadioSection Component ---
 function BudgetRadioSection({
@@ -181,7 +181,7 @@ export function StepSixContact() {
 
       // 2. Create final project with the chosen estimation ID (uses Railway for email notifications)
       await axios.post(
-        `${RAILWAY_API_URL_FOR_EMAILS}/api/v1/final-project`,
+        `${NEXT_PUBLIC_API_URL_2_FOR_EMAILS}/api/v1/final-project`,
         { choosenEstimationId: selectedBudgetId },
         {
           headers: {

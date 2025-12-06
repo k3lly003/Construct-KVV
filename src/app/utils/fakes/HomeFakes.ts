@@ -4,35 +4,45 @@ import user2 from "../../../../public/user2.jpeg"
 import user3 from "../../../../public/user3.jpeg"
 import user4 from "../../../../public/user4.jpeg"
 
+export interface HomeBannerSlide {
+  id: number;
+  image: string;
+  titleKey: string;
+  subtitleKey: string;
+  descriptionKey: string;
+  buttonTextKey?: string;
+}
 
-// Banner Data
-export const HomeBannerSlides = [
+export const HomeBannerSlides: HomeBannerSlide[] = [
   {
     id: 1,
-    titleKey: "banner.slide1.title",
-    subtitleKey: "banner.slide1.subtitle",
-    descriptionKey: "banner.slide1.description",
-    buttonTextKey: "banner.slide1.buttonText",
-    image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80",
+    image: "/comp-1.webp",
+    titleKey: "home.banner.title.design",
+    subtitleKey: "home.banner.subtitle.innovative",
+    descriptionKey: "home.banner.description.design_solutions"
   },
   {
     id: 2,
-    titleKey: "banner.slide2.title",
-    subtitleKey: "banner.slide2.subtitle",
-    descriptionKey: "banner.slide2.description",
-    buttonTextKey: "banner.slide2.buttonText",
-    image: "/project-management.avif",
+    image: "/comp-2.jpg",
+    titleKey: "home.banner.title.build",
+    subtitleKey: "home.banner.subtitle.precision",
+    descriptionKey: "home.banner.description.construction_excellence"
   },
   {
     id: 3,
-    titleKey: "banner.slide3.title",
-    subtitleKey: "banner.slide3.subtitle",
-    descriptionKey: "banner.slide3.description",
-    buttonTextKey: "banner.slide3.buttonText",
-    image: "/design-agree.jpg",
+    image: "/comp3.webp",
+    titleKey: "home.banner.title.renovate",
+    subtitleKey: "home.banner.subtitle.transform",
+    descriptionKey: "home.banner.description.modern_upgrades"
   },
-];
-
+  {
+    id: 4,
+    image: "/planB.jpg",
+    titleKey: "home.banner.title.plan",
+    subtitleKey: "home.banner.subtitle.dream",
+    descriptionKey: "home.banner.description.custom_designs"
+  }
+]
 
 export interface Review {
   id: number;

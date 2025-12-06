@@ -98,6 +98,26 @@
     "hireProfessional": "Hire a Professional",
     "viewMore": "View More",
     "seeProsNearYou": "See pros near you",
+    "banner": {
+      "title": {
+        "design": "Design Your Dream",
+        "build": "Build with Excellence",
+        "renovate": "Renovate & Transform",
+        "plan": "Plan Your Future"
+      },
+      "subtitle": {
+        "innovative": "Innovative Solutions",
+        "precision": "Precision Craftsmanship",
+        "transform": "Transform Your Space",
+        "dream": "Dream Big"
+      },
+      "description": {
+        "design_solutions": "Cutting-edge design solutions that blend aesthetics with functionality. 3D visualization and custom planning services.",
+        "construction_excellence": "Transform your vision into reality with our comprehensive construction solutions. Expert teams, quality materials, and timely delivery.",
+        "modern_upgrades": "Modern upgrades and renovations that enhance your space. From concept to completion, we bring your ideas to life.",
+        "custom_designs": "Custom designs tailored to your needs. Professional planning and architectural services for your next project."
+      }
+    },
     "maintenance": {
       "hero": {
         "title": "These annoying chores used to eat up your entire weekend. Not anymore.",

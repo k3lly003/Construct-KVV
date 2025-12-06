@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getApiUrl, RENDER_API_URL, RAILWAY_API_URL } from '@/lib/apiConfig';
+import { getApiUrl, RENDER_API_URL, NEXT_PUBLIC_API_URL_2 } from '@/lib/apiConfig';
 
 const API_URL = RENDER_API_URL;
 
@@ -106,7 +106,7 @@ export const registerSeller = async (data: SellerRegistrationData) => {
     }
     
     // Use Railway for registration (email-sending endpoint)
-    const registerUrl = `${RAILWAY_API_URL}/api/v1/sellers/register`;
+    const registerUrl = `${NEXT_PUBLIC_API_URL_2}/api/v1/sellers/register`;
     console.log("Using Railway for registration:", registerUrl);
     
     // Try the plural endpoint first
@@ -122,7 +122,7 @@ export const registerSeller = async (data: SellerRegistrationData) => {
       // If 404, try the singular endpoint
       if (error.response?.status === 404) {
         console.log("Trying singular endpoint: /api/v1/seller/register");
-        response = await axios.post(`${RAILWAY_API_URL}/api/v1/seller/register`, formData, {
+        response = await axios.post(`${NEXT_PUBLIC_API_URL_2}/api/v1/seller/register`, formData, {
           headers: {
             // Let axios set the Content-Type automatically for FormData
             // 'Content-Type': 'multipart/form-data',

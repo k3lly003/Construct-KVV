@@ -1,6 +1,6 @@
 import api from '@/lib/axios';
 import axios from 'axios';
-import { RAILWAY_API_URL } from '@/lib/apiConfig';
+import { NEXT_PUBLIC_API_URL_2 } from '@/lib/apiConfig';
 
 export interface DesignRequest {
   id: string;
@@ -43,7 +43,7 @@ export const requestDesign = {
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
     if (token) headers['Authorization'] = `Bearer ${token}`;
     
-    const response = await axios.post(`${RAILWAY_API_URL}/api/v1/design-requests`, data, { headers });
+    const response = await axios.post(`${NEXT_PUBLIC_API_URL_2}/api/v1/design-requests`, data, { headers });
     return response.data as DesignRequest;
   },
 

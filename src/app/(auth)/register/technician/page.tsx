@@ -449,9 +449,9 @@ export default function TechnicianRegistration() {
           </CardContent>
         </Card>
       </div>
-      <div className="w-[45%]">
+      {/* <div className="w-[45%]">
         <SpecialistHero />
-      </div>
+      </div> */}
     </div>
     <Toaster position="top-right" />
     </>

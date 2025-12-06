@@ -28,7 +28,7 @@ export interface VerificationStatusResponse {
 }
 
 class OtpService {
-  private baseUrl = `${process.env.NEXT_PUBLIC_RAILWAY_API_URL || 'https://construct-kvv-bn-fork-production.up.railway.app'}/api/v1/email-verification`;
+  private baseUrl = `${process.env.NEXT_PUBLIC_NEXT_PUBLIC_API_URL_2 || 'https://construct-kvv-bn-fork-production.up.railway.app'}/api/v1/email-verification`;
 
   /**
    * Verify email OTP

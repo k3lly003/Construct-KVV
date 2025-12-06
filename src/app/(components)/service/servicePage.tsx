@@ -1,6 +1,3 @@
-
-
-
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
@@ -12,8 +9,6 @@ import {
   DollarSign,
   Users,
   Calendar,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -27,16 +22,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import Head from "next/head";
 import DefaultPageBanner from "@/app/(components)/DefaultPageBanner";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "@/app/hooks/useTranslations";
+// SpecialistLocator not used on this page currently
 import { usePortfolio } from "@/app/hooks/usePortfolio";
 import { Portfolio } from "@/app/services/porfolioService";
-import { formatPortfolioDate } from '@/lib/dateUtils';
-import { useDebounce } from "@/hooks/useDebounce";
+import { formatPortfolioDate, formatDetailedDate } from '@/lib/dateUtils';
+ 
 
-export default function Home() {
+const ServicePage = () => {
   const { t } = useTranslations();
   const { searchPublic, loading, error } = usePortfolio();
   const router = useRouter();
@@ -50,8 +45,6 @@ export default function Home() {
   const [professionalType, setProfessionalType] = useState<string | undefined>(undefined);
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
-  const [total, setTotal] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
 
   // Update search term when URL params change
   useEffect(() => {
@@ -80,66 +73,13 @@ export default function Home() {
     });
   }, [items, searchTerm, categoryFilter, locationFilter]);
 
-    // Debounce search term to reduce API calls
-    const debouncedSearch = useDebounce(searchTerm, 500);
-    
-  // Fetch portfolios with server-side search
   useEffect(() => {
-    const fetchPortfolios = async () => {
-      try {
-        const category = categoryFilter === "all" ? undefined : categoryFilter;
-        const result = await searchPublic({
-          search: debouncedSearch || undefined,
-          category,
-          location: locationFilter || undefined,
-          professionalType: professionalType as any,
-          page,
-          limit,
-        });
-        
-        setItems(result.items);
-        setTotal(result.total || 0);
-        setTotalPages(Math.ceil((result.total || 0) / limit));
-      } catch (err) {
-        console.error("Error fetching portfolios:", err);
-        setItems([]);
-        setTotal(0);
-        setTotalPages(0);
-      }
-    };
-
-    fetchPortfolios();
+    const category = categoryFilter === "all" ? undefined : categoryFilter;
+    searchPublic({ category, location: locationFilter || undefined, professionalType: professionalType as any, page, limit })
+      .then(({ items }) => setItems(items))
+      .catch(() => setItems([]));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, categoryFilter, locationFilter, professionalType, page, limit]);
-
-  // Reset to page 1 when filters change
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedSearch, categoryFilter, locationFilter, professionalType]);
-
-  // Handle pagination
-  const handlePageChange = (newPage: number) => {
-    if (newPage >= 1 && newPage <= totalPages) {
-      setPage(newPage);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
-
-  // Handle filter changes
-  const handleCategoryChange = (value: string) => {
-    setCategoryFilter(value);
-    setPage(1);
-  };
-
-  const handleLocationChange = (value: string) => {
-    setLocationFilter(value);
-    setPage(1);
-  };
-
-  const handleSearchChange = (value: string) => {
-    setSearchTerm(value);
-    setPage(1);
-  };
+  }, [categoryFilter, locationFilter, professionalType, page, limit]);
 
   // Unused UI pieces removed from original mock: status filter, budget slider, bidding modal
 
@@ -194,51 +134,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <Head>
-        <title>Projects | Construct KVV</title>
-        <meta
-          name="description"
-          content="Explore construction projects, find inspiration, and connect with professionals at KVV Construction."
-        />
-        <meta property="og:title" content="Projects | Construct KVV" />
-        <meta
-          property="og:description"
-          content="Explore construction projects, find inspiration, and connect with professionals at KVV Construction."
-        />
-        <meta property="og:type" content="website" />
-        <meta
-          property="og:url"
-          content="https://www.constructkvv.com/projects"
-        />
-        <meta property="og:image" content="/kvv-logo.png" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Projects | Construct KVV" />
-        <meta
-          name="twitter:description"
-          content="Explore construction projects, find inspiration, and connect with professionals at KVV Construction."
-        />
-        <meta name="twitter:image" content="/kvv-logo.png" />
-        <link rel="canonical" href="https://www.constructkvv.com/projects" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebPage",
-              name: "Projects",
-              url: "https://www.constructkvv.com/projects",
-              description:
-                "Explore construction projects, find inspiration, and connect with professionals at KVV Construction.",
-            }),
-          }}
-        />
-      </Head>
-      <DefaultPageBanner
-        title={t("", "Services Marketplace")}
-        backgroundImage="/store-img.jpg"
-      />
-
       <div className="max-w-7xl mx-auto flex gap-6 p-6">
         {/* Sidebar Filters */}
         <div className="w-80 space-y-6">
@@ -253,10 +148,10 @@ export default function Home() {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
-                  placeholder="Search portfolios..."
+                  placeholder="Search within filters..."
                   className="pl-10"
                   value={searchTerm}
-                  onChange={(e) => handleSearchChange(e.target.value)}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
 
@@ -264,7 +159,7 @@ export default function Home() {
                 <Label className="text-sm font-medium">Category</Label>
                 <Select
                   value={categoryFilter}
-                  onValueChange={handleCategoryChange}
+                  onValueChange={setCategoryFilter}
                 >
                   <SelectTrigger className="mt-2">
                     <SelectValue placeholder="All Categories" />
@@ -298,7 +193,7 @@ export default function Home() {
                 <Input
                   placeholder="Enter location..."
                   value={locationFilter}
-                  onChange={(e) => handleLocationChange(e.target.value)}
+                  onChange={(e) => setLocationFilter(e.target.value)}
                 />
               </div>
 
@@ -309,50 +204,7 @@ export default function Home() {
 
         {/* Main Content */}
         <div className="flex-1 space-y-6">
-          {/* Results Summary */}
-          {!loading && (
-            <div className="text-sm text-gray-600 mb-4">
-              {total > 0 ? (
-                <span>
-                  Showing {((page - 1) * limit) + 1} - {Math.min(page * limit, total)} of {total} portfolios
-                </span>
-              ) : (
-                <span>No portfolios found</span>
-              )}
-            </div>
-          )}
-
-          {/* Empty State */}
-          {!loading && items.length === 0 && (
-            <Card>
-              <CardContent className="py-12 text-center">
-                <Search className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                  No portfolios found
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  {searchTerm || categoryFilter !== "all" || locationFilter
-                    ? "Try adjusting your search or filters"
-                    : "No portfolios are available at the moment"}
-                </p>
-                {(searchTerm || categoryFilter !== "all" || locationFilter) && (
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      handleSearchChange("");
-                      handleCategoryChange("all");
-                      handleLocationChange("");
-                    }}
-                  >
-                    Clear Filters
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Portfolio Cards */}
-          {items.map((p) => (
+          {filteredItems.map((p) => (
             <Card
               key={p.id}
               className="hover:shadow-lg transition-shadow duration-200"
@@ -423,61 +275,11 @@ export default function Home() {
               </CardContent>
             </Card>
           ))}
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex justify-center items-center space-x-2 mt-8">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handlePageChange(page - 1)}
-                disabled={page === 1}
-                className="disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ChevronLeft className="h-4 w-4 mr-1" />
-                Previous
-              </Button>
-              
-              <div className="flex items-center gap-1">
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  let pageNum: number;
-                  if (totalPages <= 5) {
-                    pageNum = i + 1;
-                  } else if (page <= 3) {
-                    pageNum = i + 1;
-                  } else if (page >= totalPages - 2) {
-                    pageNum = totalPages - 4 + i;
-                  } else {
-                    pageNum = page - 2 + i;
-                  }
-                  return (
-                    <Button
-                      key={pageNum}
-                      variant={page === pageNum ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => handlePageChange(pageNum)}
-                      className={page === pageNum ? "bg-amber-500 hover:bg-amber-600" : ""}
-                    >
-                      {pageNum}
-                    </Button>
-                  );
-                })}
-              </div>
-
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handlePageChange(page + 1)}
-                disabled={page === totalPages}
-                className="disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Next
-                <ChevronRight className="h-4 w-4 ml-1" />
-              </Button>
-            </div>
-          )}
         </div>
       </div>
+
+      {/* Project-related modals removed in portfolio view */}
     </div>
   );
 }
+export default ServicePage;
