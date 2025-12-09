@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { ArrowRight, Play, ArrowDown, Search } from "lucide-react"
+import { ArrowRight, Play, ArrowDown, Search, ChevronDown } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { HomeBannerSlides } from "@/app/utils/fakes/HomeFakes"
 import { useTranslation } from "react-i18next"
@@ -77,7 +77,7 @@ const HeroSection = () => {
       {/* Content */}
       <div className="relative z-30 flex h-full flex-col justify-end px-4 py-6 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         {/* Main Content Section */}
-        <div className="flex flex-col lg:flex-row justify-between items-end gap-6 lg:gap-10 pb-8 lg:pb-16 w-full lg:w-[90%] xl:w-[80%] mx-auto">
+        <div className="flex flex-col lg:flex-row justify-between items:center lg:items-end gap-6 lg:gap-10 pb-8 lg:pb-16 w-full lg:w-[90%] xl:w-[80%] mx-auto">
           {/* left Content */}
           <div className="flex flex-col gap-8 max-w-3xl">
             {/* Badge */}
@@ -106,21 +106,18 @@ const HeroSection = () => {
             {/* Search Bar */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full">
               {/* Category Selector */}
-              <div className="relative w-full sm:w-auto">
+              <div className="relative w-[45%] sm:w-auto">
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="appearance-none px-6 py-3 bg-white text-gray-900 rounded-full border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm font-semibold shadow-lg cursor-pointer hover:border-primary/50 transition-all pr-10"
+                  className="appearance-none w-full px-6 py-3 bg-white text-gray-900 rounded-full border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm font-semibold shadow-lg cursor-pointer hover:border-primary/50 transition-all pr-12"
                 >
                   <option value="all">All Categories</option>
                   <option value="product">Products</option>
                   <option value="service">Services</option>
                 </select>
-                {/* Custom dropdown arrow */}
-                <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-                  <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
+                <div className="pointer-events-none absolute inset-y-0 right-5 flex items-center">
+                  <ChevronDown className="h-4 w-4 text-gray-600" />
                 </div>
               </div>
 
@@ -137,7 +134,7 @@ const HeroSection = () => {
                 />
                 <button
                   onClick={handleSearch}
-                  className="px-6 py-3 bg-primary text-white font-semibold hover:bg-primary/90 transition-all flex items-center gap-2 rounded-full mx-1"
+                  className="hidden md:block px-6 py-3 bg-primary text-white font-semibold hover:bg-primary/90 transition-all flex items-center gap-2 rounded-full mx-1"
                 >
                   Search
                   <ArrowRight className="h-4 w-4" />
@@ -194,23 +191,6 @@ const HeroSection = () => {
           ))}
         </div>
       </div>
-
-        {/* Get in Touch Circular Badge - Repositioned for mobile */}
-      {/* <Link href="/contact" className="absolute bottom-0 right-4 lg:right-8 transform translate-y-1/2 z-30 block scale-75 lg:scale-100">
-        <button className="flex items-center justify-center w-32 h-32 rounded-full border-5 border-white bg-gray-900 text-white hover:bg-gray-800 shadow-2xl transition-all hover:scale-105 group">
-          <div className="relative w-full h-full flex items-center justify-center">
-            <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 128 128">
-              <path id="circlePath" d="M 64, 64 m -50, 0 a 50,50 0 1,1 100,0 a 50,50 0 1,1 -100,0" fill="none" />
-              <text className="text-[11px] fill-white font-medium tracking-wider">
-                <textPath href="#circlePath" startOffset="0%">
-                  GET IN TOUCH • GET IN TOUCH •
-                </textPath>
-              </text>
-            </svg>
-            <ArrowDown className="h-6 w-6 group-hover:translate-y-1 transition-transform" />
-          </div>
-        </button>
-      </Link> */}
     </section>
   )
 }

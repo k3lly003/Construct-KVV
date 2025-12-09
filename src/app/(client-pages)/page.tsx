@@ -315,7 +315,7 @@ export default function Home() {
           </h2>
 
           {/* Search Bar */}
-          <div className="flex flex-col md:flex-row items-center bg-white rounded-full shadow-md max-w-3xl mx-auto relative">
+          <div className="flex flex-col md:flex-row items-center bg-white rounded md:rounded-full md:shadow-md max-w-3xl mx-auto relative">
             {" "}
             {/* removed overflow-hidden */}
             {/* Service Input with Dropdown */}
@@ -408,7 +408,7 @@ export default function Home() {
             </div>
             {/* Button */}
             <button
-              className="w-full md:w-auto px-6 py-3 bg-black text-white font-medium rounded-full hover:bg-gray-900 transition mx-1 my-2 flex items-center justify-center"
+              className="w-full md:w-auto px-6 py-3 bg-black text-white font-medium rounded-full hover:bg-gray-900 transition mx-1 my-4 flex items-center justify-center"
               onClick={() => router.push("/proMatch")}
             >
               <span className="inline-block align-middle">

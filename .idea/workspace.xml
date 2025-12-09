@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0f1a5189-ce28-4589-b8c2-d65ddc0b504a" name="Changes" comment="" />
+    <list default="true" id="0f1a5189-ce28-4589-b8c2-d65ddc0b504a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CONTIBUTION.md" beforeDir="false" afterPath="$PROJECT_DIR$/documents/CONTIBUTION.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/I18N_IMPLEMENTATION.md" beforeDir="false" afterPath="$PROJECT_DIR$/documents/I18N_IMPLEMENTATION.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/STRUCTURE.md" beforeDir="false" afterPath="$PROJECT_DIR$/documents/STRUCTURE.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(components)/home/ProjectShowcase.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(components)/home/ProjectShowcase.tsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -44,7 +50,7 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "fix/resdesign-home",
+    "git-widget-placeholder": "main",
     "js.debugger.nextJs.config.created.client": "true",
     "js.debugger.nextJs.config.created.server": "true",
     "junie.onboarding.icon.badge.shown": "true",
@@ -56,10 +62,15 @@
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "ml.llm.LLMConfigurable",
     "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2025.2.5\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "ts.external.directory.path": "C:\\Users\\PC\\Desktop\\KVV\\Construct-KVV\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\PC\Desktop\KVV\Construct-KVV\documents" />
+    </key>
+  </component>
   <component name="RunManager" selected="npm.Next.js: server-side">
     <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3001/">
       <method v="2" />
@@ -84,13 +95,15 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="45c26da0-05b1-4931-a985-f1594c175e45" name="Changes" comment="" />
+      <changelist id="0f1a5189-ce28-4589-b8c2-d65ddc0b504a" name="Changes" comment="" />
       <created>1763888726559</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1763888726559</updated>
       <workItem from="1763888728836" duration="1287000" />
       <workItem from="1763890060871" duration="1642000" />
+      <workItem from="1765180237288" duration="1683000" />
+      <workItem from="1765263197593" duration="3501000" />
     </task>
     <servers />
   </component>
@@ -103,7 +116,6 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/app/(components)/Product.tsx</url>
           <line>48</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
