@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { render as customRender } from '../test-uitls';
+import { render as customRender } from '../test-utils';
 import ProductCard from '@/app/(components)/ProductCard';
 
 // Mock dependencies

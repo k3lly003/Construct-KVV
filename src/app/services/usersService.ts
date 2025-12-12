@@ -1,6 +1,7 @@
 import { User } from '@/types/user';
 import api from '@/lib/axios';
 import dotenv from 'dotenv';
+import axios from 'axios';
 dotenv.config();
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;

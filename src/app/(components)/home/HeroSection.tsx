@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { ArrowRight, Play, ArrowDown, Search, ChevronDown } from "lucide-react"
+import { useState, useEffect, useRef } from "react"
+import { ArrowRight, Play, ArrowDown, Search, ChevronDown, Volume2, VolumeX } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { HomeBannerSlides } from "@/app/utils/fakes/HomeFakes"
 import { useTranslation } from "react-i18next"
@@ -25,6 +25,29 @@ const HeroSection = () => {
 
     return () => clearInterval(interval)
   }, [totalSlides])
+
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [isMuted, setIsMuted] = useState(true)
+
+  const handleVideoPlay = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause()
+        setIsPlaying(false)
+      } else {
+        videoRef.current.play()
+        setIsPlaying(true)
+      }
+    }
+  }
+
+  const handleMuteToggle = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted
+      setIsMuted(!isMuted)
+    }
+  }
 
   const handleSearch = () => {
     if (!searchQuery.trim()) return
@@ -88,7 +111,7 @@ const HeroSection = () => {
               {t(slide.subtitleKey)}
               <Link href="/about">
                 <button className="flex items-center gap-1 font-medium hover:gap-2 transition-all">
-                  Read more
+                  {t("common.readMore")}
                   <ArrowRight className="h-3 w-3" />
                 </button>
               </Link>
@@ -126,7 +149,7 @@ const HeroSection = () => {
                 <Search className="ml-4 w-5 h-5 text-gray-400 flex-shrink-0" />
                 <input
                   type="text"
-                  placeholder="Search products or services..."
+                  placeholder={t("common.searchProductsPlaceholder")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
@@ -134,9 +157,9 @@ const HeroSection = () => {
                 />
                 <button
                   onClick={handleSearch}
-                  className="hidden md:block px-6 py-3 bg-primary text-white font-semibold hover:bg-primary/90 transition-all flex items-center gap-2 rounded-full mx-1"
+                  className="px-6 py-3 bg-primary text-white font-semibold hover:bg-primary/90 transition-all flex items-center gap-2 rounded-full mx-1"
                 >
-                  Search
+                  {t("common.search")}
                   <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
@@ -145,33 +168,91 @@ const HeroSection = () => {
 
           {/* right Content Video Card - Hidden on mobile */}
           <div className="hidden lg:flex flex-col items-end gap-6">
-            {/* Video Preview Card */}
-            <div className="bg-white/95 backdrop-blur-sm rounded-lg p-4 shadow-lg max-w-sm">
-              <div className="flex items-start gap-4">
-                <div className="flex-1 space-y-2">
-                  <div className="text-2xl font-bold text-foreground">
-                    /{String(currentSlide + 1).padStart(2, '0')}
-                    <span className="text-muted-foreground text-lg">/{String(totalSlides).padStart(2, '0')}</span>
+            <div className="max-w-md w-full">
+              {/* z-index-0 */}
+              <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-primary/10 group">
+                <video
+                  ref={videoRef}
+                  src="/video-1.mp4"
+                  className="w-full h-full object-cover"
+                  loop
+                  muted={isMuted}
+                  playsInline
+                  onPlay={() => setIsPlaying(true)}
+                  onPause={() => setIsPlaying(false)}
+                />
+                {/* Play/Pause Button */}
+                <button
+                  onClick={handleVideoPlay}
+                  className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors group-hover:bg-black/25"
+                  aria-label={isPlaying ? "Pause video" : "Play video"}
+                >
+                  <div className="rounded-full bg-white/90 backdrop-blur-sm p-3 shadow-lg">
+                    {isPlaying ? (
+                      <div className="flex items-center gap-1">
+                        <div className="w-1 h-4 bg-gray-900 rounded"></div>
+                        <div className="w-1 h-4 bg-gray-900 rounded"></div>
+                      </div>
+                    ) : (
+                      <Play className="h-5 w-5 text-gray-900 fill-gray-900 ml-0.5" />
+                    )}
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {t(slide.descriptionKey)}
-                  </p>
-                </div>
-                <div className="relative flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden bg-primary/10">
-                  <Image
-                    src={slide.image}
-                    fill
-                    alt="Video thumbnail"
-                    className="object-cover"
-                    sizes="96px"
-                  />
-                  <button className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors">
-                    <div className="rounded-full bg-white p-2">
-                      <Play className="h-4 w-4 text-primary fill-primary" />
-                    </div>
-                  </button>
-                </div>
+                </button>
+                {/* Mute/Unmute Button */}
+                <button
+                  onClick={handleMuteToggle}
+                  className="absolute bottom-4 right-4 rounded-full bg-white/90 backdrop-blur-sm p-2 shadow-lg hover:bg-white transition-colors"
+                  aria-label={isMuted ? "Unmute video" : "Mute video"}
+                >
+                  {isMuted ? (
+                    <VolumeX className="h-4 w-4 text-gray-900" />
+                  ) : (
+                    <Volume2 className="h-4 w-4 text-gray-900" />
+                  )}
+                </button>
               </div>
+              {/* z-index-10 */}
+              {/* <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-primary/10 group">
+                <video
+                  ref={videoRef}
+                  src="/video-2.mp4"
+                  className="w-full h-full object-cover"
+                  loop
+                  muted={isMuted}
+                  playsInline
+                  onPlay={() => setIsPlaying(true)}
+                  onPause={() => setIsPlaying(false)}
+                />
+                
+                <button
+                  onClick={handleVideoPlay}
+                  className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors group-hover:bg-black/25"
+                  aria-label={isPlaying ? "Pause video" : "Play video"}
+                >
+                  <div className="rounded-full bg-white/90 backdrop-blur-sm p-3 shadow-lg">
+                    {isPlaying ? (
+                      <div className="flex items-center gap-1">
+                        <div className="w-1 h-4 bg-gray-900 rounded"></div>
+                        <div className="w-1 h-4 bg-gray-900 rounded"></div>
+                      </div>
+                    ) : (
+                      <Play className="h-5 w-5 text-gray-900 fill-gray-900 ml-0.5" />
+                    )}
+                  </div>
+                </button>
+                
+                <button
+                  onClick={handleMuteToggle}
+                  className="absolute bottom-4 right-4 rounded-full bg-white/90 backdrop-blur-sm p-2 shadow-lg hover:bg-white transition-colors"
+                  aria-label={isMuted ? "Unmute video" : "Mute video"}
+                >
+                  {isMuted ? (
+                    <VolumeX className="h-4 w-4 text-gray-900" />
+                  ) : (
+                    <Volume2 className="h-4 w-4 text-gray-900" />
+                  )}
+                </button>
+              </div> */}
             </div>
           </div>
         </div>

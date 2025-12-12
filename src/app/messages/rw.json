@@ -14,7 +14,7 @@
     "submit": "Emeza",
     "search": "Ishakiro",
     "filter": "Cagura",
-    "sort": "Sort",
+    "sort": "Toranya",
     "view": "Reba",
     "add": "Ongeraho",
     "remove": "Siba",
@@ -28,7 +28,9 @@
     "kinyarwanda": "Kinyarwanda",
     "addToCart": "Ongeraho kuri karti",
     "contactUs": "Twandikire",
-    "viewShop": "Reba Iduka"
+    "viewShop": "Reba Iduka",
+    "readMore": "ibindi",
+    "searchProductsPlaceholder": "Shakisha ibicuruzwa cyangwa serivise z'ubwubatsi..."
   },
   "navigation": {
     "home": "Ahatangira",
@@ -53,7 +55,8 @@
     "login": "Injira",
     "signup": "Fungura konti",
     "buildHouse": "ubaka inzu",
-    "explore-services": "Reba Serivise dutanga"
+    "explore-services": "Reba Serivise dutanga",
+    "designMarketplace": "Reba Designs"
   },
   "banner": {
     "slide1": {
@@ -97,6 +100,13 @@
     "hireProfessional": "Abanyamwuga",
     "viewMore": "Reba Ibindi",
     "seeProsNearYou": "Reba abakozi b'umwuga hafi yawe",
+    "hirePros": {
+      "titleItalic": "koresha abakozi b'umwuga",
+      "titleRegular": "mubwubatsi bwawe",
+      "servicePlaceholder": "Ni izihe serivise ukeneye?",
+      "districtPlaceholder": "Akarere",
+      "matchButton": "Reba umukozi"
+    },
     "banner": {
       "title": {
         "design": "Shushanya inzozi zawe",

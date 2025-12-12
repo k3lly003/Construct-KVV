@@ -28,7 +28,9 @@
     "kinyarwanda": "Kinyarwanda",
     "addToCart": "Add to cart",
     "contactUs": "Contact us",
-    "viewShop": "View Shop"
+    "viewShop": "View Shop",
+    "readMore": "Read more",
+    "searchProductsPlaceholder": "Search products or services..."
   },
   "navigation": {
     "home": "Home",
@@ -98,6 +100,13 @@
     "hireProfessional": "Hire a Professional",
     "viewMore": "View More",
     "seeProsNearYou": "See pros near you",
+    "hirePros": {
+      "titleItalic": "Hire Pros",
+      "titleRegular": "for Your Renovation",
+      "servicePlaceholder": "What service do you need?",
+      "districtPlaceholder": "District",
+      "matchButton": "Match With a Pro"
+    },
     "banner": {
       "title": {
         "design": "Design Your Dream",

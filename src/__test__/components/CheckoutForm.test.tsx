@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { render as customRender } from '../test-uitls';
+import { render as customRender } from '../test-utils';
 
 // Mock the Cart component's checkout functionality
 jest.mock('@/app/(components)/product/Cart', () => ({

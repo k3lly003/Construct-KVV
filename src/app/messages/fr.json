@@ -27,7 +27,9 @@
     "french": "Français",
     "addToCart": "Ajouter au panier",
     "contactUs": "Écrivez-nous",
-    "viewShop": "Découvrir"
+    "viewShop": "Découvrir",
+    "readMore": "En savoir plus",
+    "searchProductsPlaceholder": "Rechercher des produits ou services..."
   },
   "navigation": {
     "home": "Accueil",
@@ -47,7 +49,8 @@
     "signup": "S'inscrire",
     "buildHouse": "Construire une maison",
     "features": "Fonctionnalités",
-    "join-as-a-pro": "Rejoindre en tant que pro"
+    "join-as-a-pro": "Rejoindre en tant que pro",
+    "designMarketplace": "Marché de la conception"
   },
   "banner": {
       "slide1": {
@@ -92,6 +95,13 @@
     "hireProfessional": "Engager un Professionnel",
     "viewMore": "Voir Plus",
     "seeProsNearYou": "Voir les pros près de chez vous",
+    "hirePros": {
+      "titleItalic": "Engagez des Pros",
+      "titleRegular": "pour Votre Rénovation",
+      "servicePlaceholder": "De quel service avez-vous besoin ?",
+      "districtPlaceholder": "District",
+      "matchButton": "Trouver un Pro"
+    },
     "banner": {
       "title": {
         "design": "Concevez Votre Rêve",
