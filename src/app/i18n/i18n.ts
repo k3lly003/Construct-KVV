@@ -5,6 +5,7 @@ import { defaultLocale, locales } from './config';
 // Import translation files
 import enTranslations from '../messages/en.json';
 import frTranslations from '../messages/fr.json';
+import rwTranslations from '../messages/rw.json';
 
 const resources = {
   en: {
@@ -12,6 +13,9 @@ const resources = {
   },
   fr: {
     translation: frTranslations,
+  },
+  rw: {
+    translation: rwTranslations,
   },
 };
 

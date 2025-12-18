@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '../test-uitls'
+import { render, screen, fireEvent, waitFor } from '../test-utils'
 import OTPVerification from '@/app/(auth)/otp/page'
 
 // Prepare jest fns we can assert on

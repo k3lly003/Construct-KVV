@@ -246,7 +246,7 @@ export default function ServicesShowCaseSection() {
       {/* Dynamic Hero Section */}
       <div className="relative mb-8 rounded-lg overflow-hidden">
         <div
-          className="h-64 bg-cover bg-center relative"
+          className="h-36 md:h-64 bg-cover bg-center relative"
           style={{
             backgroundImage: `url('${currentContent.hero.backgroundImage}')`,
           }}
@@ -255,12 +255,12 @@ export default function ServicesShowCaseSection() {
           <div className="absolute inset-0 bg-gradient-to-b from-gray-900" />
 
           {/* Content */}
-          <div className="relative z-10 p-8 h-full flex flex-col justify-center">
-            <div className="mb-4">{currentContent.hero.icon}</div>
-            <h1 className="text-white text-2xl md:text-3xl font-bold mb-4 max-w-md">{t(currentContent.hero.title)}</h1>
+          <div className="relative z-6 p-8 h-full flex flex-col justify-center">
+            <div className="mb-10 w-3 h-3 md:w-10 md:h-10">{currentContent.hero.icon}</div>
+            <h1 className="text-white text-sm sm:text-lg md:text-3xl font-bold mb-4 max-w-md">{t(currentContent.hero.title)}</h1>
             <Button
               variant="link"
-              className="text-white hover:text-gray-200 p-0 h-auto font-medium text-left justify-start"
+              className="text-white hover:text-gray-200 p-0 h-auto text-sm dm:text-md font-medium text-left justify-start"
             >
               {t(currentContent.hero.subtitle)}
             </Button>

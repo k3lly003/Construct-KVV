@@ -193,9 +193,9 @@ const PaymentCompletePage: React.FC = () => {
     // Highlight total
     doc.setFontSize(13);
     doc.setTextColor(34, 197, 94); // green
-    doc.setFont(undefined, "bold");
+    doc.setFont("helvetica", "bold");
     doc.text(`Total: RWF ${order.total.toLocaleString()}`, 14, y);
-    doc.setFont(undefined, "normal");
+    doc.setFont("helvetica", "normal");
     doc.setTextColor(0, 0, 0);
     doc.save(`receipt-${orderId}.pdf`);
   };

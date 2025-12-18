@@ -21,11 +21,11 @@ export const ProjectShowcase: React.FC = () => {
           {t("ProjectShowcase.subtitle")}
         </p>
 
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
           {projectItems.map((item, index) => (
             <div
               key={item.titleKey}
-              className="group relative h-[300px] overflow-hidden cursor-pointer rounded-2xl"
+              className="group relative h-[300px] overflow-hidden cursor-pointer rounded-lg"
               onMouseEnter={() => setActiveIndex(index)}
               onMouseLeave={() => setActiveIndex(null)}
             >

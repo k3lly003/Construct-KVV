@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { ArrowRight, Play, ArrowDown, Search } from "lucide-react"
+import { useState, useEffect, useRef } from "react"
+import { ArrowRight, Play, ArrowDown, Search, ChevronDown, Volume2, VolumeX } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { HomeBannerSlides } from "@/app/utils/fakes/HomeFakes"
 import { useTranslation } from "react-i18next"
@@ -25,6 +25,29 @@ const HeroSection = () => {
 
     return () => clearInterval(interval)
   }, [totalSlides])
+
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [isMuted, setIsMuted] = useState(true)
+
+  const handleVideoPlay = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause()
+        setIsPlaying(false)
+      } else {
+        videoRef.current.play()
+        setIsPlaying(true)
+      }
+    }
+  }
+
+  const handleMuteToggle = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted
+      setIsMuted(!isMuted)
+    }
+  }
 
   const handleSearch = () => {
     if (!searchQuery.trim()) return
@@ -77,7 +100,7 @@ const HeroSection = () => {
       {/* Content */}
       <div className="relative z-30 flex h-full flex-col justify-end px-4 py-6 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         {/* Main Content Section */}
-        <div className="flex flex-col lg:flex-row justify-between items-end gap-6 lg:gap-10 pb-8 lg:pb-16 w-full lg:w-[90%] xl:w-[80%] mx-auto">
+        <div className="flex flex-col lg:flex-row justify-between items:center lg:items-end gap-6 lg:gap-10 pb-8 lg:pb-16 w-full lg:w-[90%] xl:w-[80%] mx-auto">
           {/* left Content */}
           <div className="flex flex-col gap-8 max-w-3xl">
             {/* Badge */}
@@ -88,7 +111,7 @@ const HeroSection = () => {
               {t(slide.subtitleKey)}
               <Link href="/about">
                 <button className="flex items-center gap-1 font-medium hover:gap-2 transition-all">
-                  Read more
+                  {t("common.readMore")}
                   <ArrowRight className="h-3 w-3" />
                 </button>
               </Link>
@@ -106,21 +129,18 @@ const HeroSection = () => {
             {/* Search Bar */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full">
               {/* Category Selector */}
-              <div className="relative w-full sm:w-auto">
+              <div className="relative w-[45%] sm:w-auto">
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="appearance-none px-6 py-3 bg-white text-gray-900 rounded-full border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm font-semibold shadow-lg cursor-pointer hover:border-primary/50 transition-all pr-10"
+                  className="appearance-none w-full px-6 py-3 bg-white text-gray-900 rounded-full border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm font-semibold shadow-lg cursor-pointer hover:border-primary/50 transition-all pr-12"
                 >
                   <option value="all">All Categories</option>
                   <option value="product">Products</option>
                   <option value="service">Services</option>
                 </select>
-                {/* Custom dropdown arrow */}
-                <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-                  <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
+                <div className="pointer-events-none absolute inset-y-0 right-5 flex items-center">
+                  <ChevronDown className="h-4 w-4 text-gray-600" />
                 </div>
               </div>
 
@@ -129,7 +149,7 @@ const HeroSection = () => {
                 <Search className="ml-4 w-5 h-5 text-gray-400 flex-shrink-0" />
                 <input
                   type="text"
-                  placeholder="Search products or services..."
+                  placeholder={t("common.searchProductsPlaceholder")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
@@ -139,7 +159,7 @@ const HeroSection = () => {
                   onClick={handleSearch}
                   className="px-6 py-3 bg-primary text-white font-semibold hover:bg-primary/90 transition-all flex items-center gap-2 rounded-full mx-1"
                 >
-                  Search
+                  {t("common.search")}
                   <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
@@ -148,33 +168,91 @@ const HeroSection = () => {
 
           {/* right Content Video Card - Hidden on mobile */}
           <div className="hidden lg:flex flex-col items-end gap-6">
-            {/* Video Preview Card */}
-            <div className="bg-white/95 backdrop-blur-sm rounded-lg p-4 shadow-lg max-w-sm">
-              <div className="flex items-start gap-4">
-                <div className="flex-1 space-y-2">
-                  <div className="text-2xl font-bold text-foreground">
-                    /{String(currentSlide + 1).padStart(2, '0')}
-                    <span className="text-muted-foreground text-lg">/{String(totalSlides).padStart(2, '0')}</span>
+            <div className="max-w-md w-full">
+              {/* z-index-0 */}
+              <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-primary/10 group">
+                <video
+                  ref={videoRef}
+                  src="/video-1.mp4"
+                  className="w-full h-full object-cover"
+                  loop
+                  muted={isMuted}
+                  playsInline
+                  onPlay={() => setIsPlaying(true)}
+                  onPause={() => setIsPlaying(false)}
+                />
+                {/* Play/Pause Button */}
+                <button
+                  onClick={handleVideoPlay}
+                  className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors group-hover:bg-black/25"
+                  aria-label={isPlaying ? "Pause video" : "Play video"}
+                >
+                  <div className="rounded-full bg-white/90 backdrop-blur-sm p-3 shadow-lg">
+                    {isPlaying ? (
+                      <div className="flex items-center gap-1">
+                        <div className="w-1 h-4 bg-gray-900 rounded"></div>
+                        <div className="w-1 h-4 bg-gray-900 rounded"></div>
+                      </div>
+                    ) : (
+                      <Play className="h-5 w-5 text-gray-900 fill-gray-900 ml-0.5" />
+                    )}
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {t(slide.descriptionKey)}
-                  </p>
-                </div>
-                <div className="relative flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden bg-primary/10">
-                  <Image
-                    src={slide.image}
-                    fill
-                    alt="Video thumbnail"
-                    className="object-cover"
-                    sizes="96px"
-                  />
-                  <button className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors">
-                    <div className="rounded-full bg-white p-2">
-                      <Play className="h-4 w-4 text-primary fill-primary" />
-                    </div>
-                  </button>
-                </div>
+                </button>
+                {/* Mute/Unmute Button */}
+                <button
+                  onClick={handleMuteToggle}
+                  className="absolute bottom-4 right-4 rounded-full bg-white/90 backdrop-blur-sm p-2 shadow-lg hover:bg-white transition-colors"
+                  aria-label={isMuted ? "Unmute video" : "Mute video"}
+                >
+                  {isMuted ? (
+                    <VolumeX className="h-4 w-4 text-gray-900" />
+                  ) : (
+                    <Volume2 className="h-4 w-4 text-gray-900" />
+                  )}
+                </button>
               </div>
+              {/* z-index-10 */}
+              {/* <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-primary/10 group">
+                <video
+                  ref={videoRef}
+                  src="/video-2.mp4"
+                  className="w-full h-full object-cover"
+                  loop
+                  muted={isMuted}
+                  playsInline
+                  onPlay={() => setIsPlaying(true)}
+                  onPause={() => setIsPlaying(false)}
+                />
+                
+                <button
+                  onClick={handleVideoPlay}
+                  className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors group-hover:bg-black/25"
+                  aria-label={isPlaying ? "Pause video" : "Play video"}
+                >
+                  <div className="rounded-full bg-white/90 backdrop-blur-sm p-3 shadow-lg">
+                    {isPlaying ? (
+                      <div className="flex items-center gap-1">
+                        <div className="w-1 h-4 bg-gray-900 rounded"></div>
+                        <div className="w-1 h-4 bg-gray-900 rounded"></div>
+                      </div>
+                    ) : (
+                      <Play className="h-5 w-5 text-gray-900 fill-gray-900 ml-0.5" />
+                    )}
+                  </div>
+                </button>
+                
+                <button
+                  onClick={handleMuteToggle}
+                  className="absolute bottom-4 right-4 rounded-full bg-white/90 backdrop-blur-sm p-2 shadow-lg hover:bg-white transition-colors"
+                  aria-label={isMuted ? "Unmute video" : "Mute video"}
+                >
+                  {isMuted ? (
+                    <VolumeX className="h-4 w-4 text-gray-900" />
+                  ) : (
+                    <Volume2 className="h-4 w-4 text-gray-900" />
+                  )}
+                </button>
+              </div> */}
             </div>
           </div>
         </div>
@@ -194,23 +272,6 @@ const HeroSection = () => {
           ))}
         </div>
       </div>
-
-        {/* Get in Touch Circular Badge - Repositioned for mobile */}
-      {/* <Link href="/contact" className="absolute bottom-0 right-4 lg:right-8 transform translate-y-1/2 z-30 block scale-75 lg:scale-100">
-        <button className="flex items-center justify-center w-32 h-32 rounded-full border-5 border-white bg-gray-900 text-white hover:bg-gray-800 shadow-2xl transition-all hover:scale-105 group">
-          <div className="relative w-full h-full flex items-center justify-center">
-            <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 128 128">
-              <path id="circlePath" d="M 64, 64 m -50, 0 a 50,50 0 1,1 100,0 a 50,50 0 1,1 -100,0" fill="none" />
-              <text className="text-[11px] fill-white font-medium tracking-wider">
-                <textPath href="#circlePath" startOffset="0%">
-                  GET IN TOUCH • GET IN TOUCH •
-                </textPath>
-              </text>
-            </svg>
-            <ArrowDown className="h-6 w-6 group-hover:translate-y-1 transition-transform" />
-          </div>
-        </button>
-      </Link> */}
     </section>
   )
 }

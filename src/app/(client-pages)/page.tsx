@@ -311,11 +311,11 @@ export default function Home() {
         <div className="max-w-5xl mx-auto text-center px-4">
           {/* Heading */}
           <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-8">
-            <span className="italic">Hire Pros</span> for Your Renovation
+            <span className="italic">{t("home.hirePros.titleItalic")}</span> {t("home.hirePros.titleRegular")}
           </h2>
 
           {/* Search Bar */}
-          <div className="flex flex-col md:flex-row items-center bg-white rounded-full shadow-md max-w-3xl mx-auto relative">
+          <div className="flex flex-col md:flex-row items-center bg-white rounded md:rounded-full md:shadow-md max-w-3xl mx-auto relative">
             {" "}
             {/* removed overflow-hidden */}
             {/* Service Input with Dropdown */}
@@ -336,7 +336,7 @@ export default function Home() {
               <input
                 ref={inputRef}
                 type="text"
-                placeholder="What service do you need?"
+                placeholder={t("home.hirePros.servicePlaceholder")}
                 className="w-full border-0 focus:ring-0 text-gray-700 placeholder-gray-400 rounded-full px-4 py-2"
                 value={serviceInput}
                 onChange={(e) => {
@@ -373,7 +373,7 @@ export default function Home() {
               <input
                 ref={districtInputRef}
                 type="text"
-                placeholder="District"
+                placeholder={t("home.hirePros.districtPlaceholder")}
                 className="w-full border-0 focus:ring-0 text-gray-700 placeholder-gray-400 rounded-full px-4 py-2"
                 value={districtInput}
                 onChange={(e) => {
@@ -408,11 +408,11 @@ export default function Home() {
             </div>
             {/* Button */}
             <button
-              className="w-full md:w-auto px-6 py-3 bg-black text-white font-medium rounded-full hover:bg-gray-900 transition mx-1 my-2 flex items-center justify-center"
+              className="w-full md:w-auto px-6 py-3 bg-black text-white font-medium rounded-full hover:bg-gray-900 transition mx-1 my-4 flex items-center justify-center"
               onClick={() => router.push("/proMatch")}
             >
               <span className="inline-block align-middle">
-                Match With a Pro
+                {t("home.hirePros.matchButton")}
               </span>
             </button>
           </div>
