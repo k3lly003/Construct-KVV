@@ -5,38 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0f1a5189-ce28-4589-b8c2-d65ddc0b504a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(auth)/forget-password/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(auth)/forget-password/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(auth)/reg/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(auth)/reg/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(auth)/register/architect/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(auth)/register/architect/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(auth)/register/client/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(auth)/register/client/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(auth)/register/constructor/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(auth)/register/constructor/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(auth)/register/supplier/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(auth)/register/supplier/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(auth)/register/technician/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(auth)/register/technician/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(auth)/signup/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(auth)/signup/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(client-pages)/design-marketplace/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(client-pages)/design-marketplace/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(client-pages)/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(client-pages)/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(client-pages)/payment-complete/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(client-pages)/payment-complete/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(client-pages)/professionals/[type]/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(client-pages)/professionals/[type]/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(client-pages)/professionals/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(client-pages)/professionals/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(client-pages)/projects/[id]/management/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(client-pages)/projects/[id]/management/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(client-pages)/search/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(client-pages)/search/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(client-pages)/visualize/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(client-pages)/visualize/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(client-pages)/pricing/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(client-pages)/pricing/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/(components)/Navbar/Navigator.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(components)/Navbar/Navigator.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(components)/cart/emptyCart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(components)/cart/emptyCart.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(components)/home/Banner.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(components)/home/Banner.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(components)/home/HeroSection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(components)/home/HeroSection.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(components)/home/ProjectShowcase.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(components)/home/ProjectShowcase.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(components)/product/Cart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(components)/product/Cart.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(components)/product/ProductInfo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(components)/product/ProductInfo.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/404.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/404.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/globals.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/messages/en.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/messages/en.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/not-found.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/not-found.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/utils/fakes/HomeFakes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/utils/fakes/HomeFakes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/features/home/ReviewCarousel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/features/home/ReviewCarousel.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/messages/fr.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/messages/fr.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,7 +106,7 @@
       <workItem from="1766059869061" duration="5407000" />
       <workItem from="1766325661259" duration="2846000" />
       <workItem from="1766996125610" duration="1990000" />
-      <workItem from="1766998471343" duration="4201000" />
+      <workItem from="1766998471343" duration="4795000" />
     </task>
     <servers />
   </component>

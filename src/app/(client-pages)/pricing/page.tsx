@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,8 +9,9 @@ import { Slider } from "@/components/ui/slider"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Check, Star, Users, Building, Hammer, ShoppingCart, Calculator, Phone, Mail } from "lucide-react"
+import { useTranslations } from "@/app/hooks/useTranslations"
 
-type UserRole = "constructor" | "architect" | "supplier" | "buyer"
+type UserRole = "constructor" | "architect" | "supplier"
 
 interface PricingPlan {
   name: string
@@ -21,223 +22,139 @@ interface PricingPlan {
   cta: string
 }
 
-const pricingPlans: Record<UserRole, PricingPlan[]> = {
-  constructor: [
-    {
-      name: "Starter",
-      price: "$29",
-      description: "Perfect for individual contractors and small teams",
-      features: [
-        "Up to 3 active projects",
-        "Basic supplier directory",
-        "Standard support",
-        "Mobile app access",
-        "Basic analytics",
-      ],
-      cta: "Start Building",
-    },
-    {
-      name: "Professional",
-      price: "$79",
-      description: "Ideal for growing construction companies",
-      features: [
-        "Unlimited projects",
-        "Premium supplier network",
-        "Priority support",
-        "Advanced project management",
-        "Team collaboration tools",
-        "Custom reporting",
-      ],
-      popular: true,
-      cta: "Try Free",
-    },
-    {
-      name: "Enterprise",
-      price: "Custom",
-      description: "For large construction firms with complex needs",
-      features: [
-        "Everything in Professional",
-        "Dedicated account manager",
-        "Custom integrations",
-        "White-label options",
-        "Advanced security",
-        "SLA guarantee",
-      ],
-      cta: "Contact Sales",
-    },
-  ],
-  architect: [
-    {
-      name: "Starter",
-      price: "$39",
-      description: "For independent architects and small studios",
-      features: [
-        "Up to 5 design projects",
-        "Material specification tools",
-        "Basic 3D visualization",
-        "Client collaboration portal",
-        "Standard support",
-      ],
-      cta: "Start Designing",
-    },
-    {
-      name: "Professional",
-      price: "$99",
-      description: "Perfect for established architectural firms",
-      features: [
-        "Unlimited design projects",
-        "Advanced visualization suite",
-        "Supplier integration",
-        "Team collaboration",
-        "Client presentation tools",
-        "Advanced analytics",
-      ],
-      popular: true,
-      cta: "Try Free",
-    },
-    {
-      name: "Enterprise",
-      price: "Custom",
-      description: "For large architectural practices",
-      features: [
-        "Everything in Professional",
-        "Custom workflow automation",
-        "API access",
-        "Dedicated support",
-        "Advanced security",
-        "Multi-office management",
-      ],
-      cta: "Contact Sales",
-    },
-  ],
-  supplier: [
-    {
-      name: "Starter",
-      price: "$49",
-      description: "For small suppliers and local vendors",
-      features: [
-        "Product catalog (up to 100 items)",
-        "Basic storefront",
-        "Order management",
-        "Payment processing",
-        "Standard support",
-      ],
-      cta: "Start Selling",
-    },
-    {
-      name: "Professional",
-      price: "$149",
-      description: "For established suppliers and distributors",
-      features: [
-        "Unlimited product catalog",
-        "Premium storefront",
-        "Bulk order management",
-        "Advanced analytics",
-        "Marketing tools",
-        "Priority listing",
-      ],
-      popular: true,
-      cta: "Try Free",
-    },
-    {
-      name: "Enterprise",
-      price: "Custom",
-      description: "For large suppliers and manufacturers",
-      features: [
-        "Everything in Professional",
-        "Custom pricing tiers",
-        "API integration",
-        "Dedicated account manager",
-        "White-label marketplace",
-        "Advanced reporting",
-      ],
-      cta: "Contact Sales",
-    },
-  ],
-  buyer: [
-    {
-      name: "Starter",
-      price: "$19",
-      description: "For individual buyers and small projects",
-      features: [
-        "Access to supplier network",
-        "Basic price comparison",
-        "Order tracking",
-        "Mobile app",
-        "Standard support",
-      ],
-      cta: "Start Shopping",
-    },
-    {
-      name: "Professional",
-      price: "$59",
-      description: "For procurement managers and large projects",
-      features: [
-        "Advanced supplier search",
-        "Bulk ordering discounts",
-        "Procurement analytics",
-        "Team management",
-        "Priority support",
-        "Custom reporting",
-      ],
-      popular: true,
-      cta: "Try Free",
-    },
-    {
-      name: "Enterprise",
-      price: "Custom",
-      description: "For large organizations with complex procurement",
-      features: [
-        "Everything in Professional",
-        "Custom approval workflows",
-        "ERP integration",
-        "Dedicated support",
-        "Advanced security",
-        "Volume discounts",
-      ],
-      cta: "Contact Sales",
-    },
-  ],
-}
-
-const features = [
-  { name: "File uploads", starter: true, professional: true, enterprise: true },
-  { name: "Supplier ratings", starter: false, professional: true, enterprise: true },
-  { name: "Bulk order deals", starter: false, professional: true, enterprise: true },
-  { name: "Dedicated support", starter: false, professional: false, enterprise: true },
-  { name: "Analytics reports", starter: false, professional: true, enterprise: true },
-  { name: "API access", starter: false, professional: false, enterprise: true },
-  { name: "Custom integrations", starter: false, professional: false, enterprise: true },
-  { name: "White-label options", starter: false, professional: false, enterprise: true },
-]
-
-const testimonials = [
-  {
-    name: "Sarah Johnson",
-    role: "Project Manager, BuildCorp",
-    content: "This platform has streamlined our procurement process by 60%. The supplier network is incredible.",
-    rating: 5,
-  },
-  {
-    name: "Mike Chen",
-    role: "Architect, Design Studio",
-    content: "The visualization tools and material specifications have transformed how we work with clients.",
-    rating: 5,
-  },
-  {
-    name: "Lisa Rodriguez",
-    role: "Supplier, Materials Plus",
-    content: "We've seen a 40% increase in orders since joining the platform. The analytics are game-changing.",
-    rating: 5,
-  },
-]
-
 export default function PricingPage() {
+  const { t } = useTranslations()
   const [selectedRole, setSelectedRole] = useState<UserRole>("constructor")
   const [projectSize, setProjectSize] = useState([50])
   const [orderVolume, setOrderVolume] = useState([100])
   const [teamSize, setTeamSize] = useState([5])
   const [isAnnual, setIsAnnual] = useState(false)
+
+  // Helper function to safely get array from translations
+  const getFeaturesArray = (key: string): string[] => {
+    try {
+      const items = t(key, { returnObjects: true })
+      if (Array.isArray(items)) {
+        return items as string[]
+      }
+      return []
+    } catch (error) {
+      console.error(`Error loading features for ${key}:`, error)
+      return []
+    }
+  }
+
+  // Build pricing plans from translations
+  const pricingPlans: Record<UserRole, PricingPlan[]> = useMemo(() => ({
+    constructor: [
+      {
+        name: t("pricing.plans.constructor.starter.name"),
+        price: t("pricing.plans.constructor.starter.price"),
+        description: t("pricing.plans.constructor.starter.description"),
+        features: getFeaturesArray("pricing.plans.constructor.starter.features"),
+        cta: t("pricing.plans.constructor.starter.cta"),
+      },
+      {
+        name: t("pricing.plans.constructor.professional.name"),
+        price: t("pricing.plans.constructor.professional.price"),
+        description: t("pricing.plans.constructor.professional.description"),
+        features: getFeaturesArray("pricing.plans.constructor.professional.features"),
+        popular: true,
+        cta: t("pricing.plans.constructor.professional.cta"),
+      },
+      {
+        name: t("pricing.plans.constructor.enterprise.name"),
+        price: t("pricing.plans.constructor.enterprise.price"),
+        description: t("pricing.plans.constructor.enterprise.description"),
+        features: getFeaturesArray("pricing.plans.constructor.enterprise.features"),
+        cta: t("pricing.plans.constructor.enterprise.cta"),
+      },
+    ],
+    architect: [
+      {
+        name: t("pricing.plans.architect.starter.name"),
+        price: t("pricing.plans.architect.starter.price"),
+        description: t("pricing.plans.architect.starter.description"),
+        features: getFeaturesArray("pricing.plans.architect.starter.features"),
+        cta: t("pricing.plans.architect.starter.cta"),
+      },
+      {
+        name: t("pricing.plans.architect.professional.name"),
+        price: t("pricing.plans.architect.professional.price"),
+        description: t("pricing.plans.architect.professional.description"),
+        features: getFeaturesArray("pricing.plans.architect.professional.features"),
+        popular: true,
+        cta: t("pricing.plans.architect.professional.cta"),
+      },
+      {
+        name: t("pricing.plans.architect.enterprise.name"),
+        price: t("pricing.plans.architect.enterprise.price"),
+        description: t("pricing.plans.architect.enterprise.description"),
+        features: getFeaturesArray("pricing.plans.architect.enterprise.features"),
+        cta: t("pricing.plans.architect.enterprise.cta"),
+      },
+    ],
+    supplier: [
+      {
+        name: t("pricing.plans.supplier.starter.name"),
+        price: t("pricing.plans.supplier.starter.price"),
+        description: t("pricing.plans.supplier.starter.description"),
+        features: getFeaturesArray("pricing.plans.supplier.starter.features"),
+        cta: t("pricing.plans.supplier.starter.cta"),
+      },
+      {
+        name: t("pricing.plans.supplier.professional.name"),
+        price: t("pricing.plans.supplier.professional.price"),
+        description: t("pricing.plans.supplier.professional.description"),
+        features: getFeaturesArray("pricing.plans.supplier.professional.features"),
+        popular: true,
+        cta: t("pricing.plans.supplier.professional.cta"),
+      },
+      {
+        name: t("pricing.plans.supplier.enterprise.name"),
+        price: t("pricing.plans.supplier.enterprise.price"),
+        description: t("pricing.plans.supplier.enterprise.description"),
+        features: getFeaturesArray("pricing.plans.supplier.enterprise.features"),
+        cta: t("pricing.plans.supplier.enterprise.cta"),
+      },
+    ],
+  }), [t])
+
+  // Build features from translations
+  const features = useMemo(() => [
+    { name: t("pricing.features.list.fileUploads"), starter: true, professional: true, enterprise: true },
+    { name: t("pricing.features.list.supplierRatings"), starter: false, professional: true, enterprise: true },
+    { name: t("pricing.features.list.bulkOrderDeals"), starter: false, professional: true, enterprise: true },
+    { name: t("pricing.features.list.dedicatedSupport"), starter: false, professional: false, enterprise: true },
+    { name: t("pricing.features.list.analyticsReports"), starter: false, professional: true, enterprise: true },
+    { name: t("pricing.features.list.apiAccess"), starter: false, professional: false, enterprise: true },
+    { name: t("pricing.features.list.customIntegrations"), starter: false, professional: false, enterprise: true },
+    { name: t("pricing.features.list.whiteLabelOptions"), starter: false, professional: false, enterprise: true },
+  ], [t])
+
+  // Build testimonials from translations
+  const testimonials = useMemo(() => {
+    try {
+      const items = t("pricing.testimonials.items", { returnObjects: true })
+      // Ensure it's always an array
+      if (Array.isArray(items)) {
+        return items as Array<{
+          name: string
+          role: string
+          content: string
+        }>
+      }
+      // If it's a string (key not found), return empty array
+      if (typeof items === 'string') {
+        return []
+      }
+      // Fallback to empty array
+      return []
+    } catch (error) {
+      console.error('Error loading testimonials:', error)
+      return []
+    }
+  }, [t])
 
   const calculateEstimatedCost = () => {
     const basePrice =
@@ -254,31 +171,36 @@ export default function PricingPage() {
     constructor: Hammer,
     architect: Building,
     supplier: ShoppingCart,
-    buyer: Users,
   }
+
+  // Add rating to testimonials (always set to 5)
+  const testimonialsWithRating = testimonials.map(testimonial => ({ 
+    ...testimonial, 
+    rating: 5 
+  }))
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-16 text-center">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-title font-bold tracking-tight text-slate-900 mb-6">Flexible Pricing For Every Project</h1>
-          <p className="text-mid text-slate-600 mb-4">Transparent. Reliable. Built For Construction.</p>
+          <h1 className="text-title font-bold tracking-tight text-slate-900 mb-6">{t("pricing.hero.title")}</h1>
+          <p className="text-mid text-slate-600 mb-4">{t("pricing.hero.subtitle")}</p>
           <p className="text-mid text-slate-500 mb-8">
-            Whether you&apos;re a supplier, contractor, architect, or project owner, choose a plan tailored to your needs.
+            {t("pricing.hero.description")}
           </p>
           <div className="flex items-center justify-center gap-8 text-small text-slate-600">
             <div className="flex items-center gap-2">
               <Check className="h-4 w-4 text-green-600" />
-              <span>10,000+ Projects Completed</span>
+              <span>{t("pricing.hero.stats.projectsCompleted")}</span>
             </div>
             <div className="flex items-center gap-2">
               <Check className="h-4 w-4 text-green-600" />
-              <span>500+ Verified Suppliers</span>
+              <span>{t("pricing.hero.stats.verifiedSuppliers")}</span>
             </div>
             <div className="flex items-center gap-2">
               <Check className="h-4 w-4 text-green-600" />
-              <span>99.9% Uptime</span>
+              <span>{t("pricing.hero.stats.uptime")}</span>
             </div>
           </div>
         </div>
@@ -288,11 +210,11 @@ export default function PricingPage() {
       <section className="container mx-auto px-4 mb-16">
         <div className="max-w-6xl mx-auto">
           <Tabs value={selectedRole} onValueChange={(value) => setSelectedRole(value as UserRole)} className="w-full">
-            <TabsList className="grid w-full grid-cols-4 mb-12">
+            <TabsList className="grid w-full grid-cols-3 mb-12">
               {Object.entries(roleIcons).map(([role, Icon]) => (
                 <TabsTrigger key={role} value={role} className="flex items-center gap-2 capitalize">
                   <Icon className="h-4 w-4" />
-                  {role}
+                  {t(`pricing.roles.${role}`)}
                 </TabsTrigger>
               ))}
             </TabsList>
@@ -307,14 +229,14 @@ export default function PricingPage() {
                     >
                       {plan.popular && (
                         <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-amber-500">
-                          Most Popular
+                          {t("pricing.plans.mostPopular")}
                         </Badge>
                       )}
                       <CardHeader>
                         <CardTitle className="text-mid">{plan.name}</CardTitle>
                         <CardDescription>{plan.description}</CardDescription>
                         <div className="text-title font-bold">
-                          {plan.price === "Custom" ? plan.price : `${plan.price}/mo`}
+                          {plan.price === t("pricing.plans.custom") ? plan.price : `${plan.price}${t("pricing.plans.perMonth")}`}
                         </div>
                       </CardHeader>
                       <CardContent>
@@ -345,7 +267,7 @@ export default function PricingPage() {
       </section>
 
       {/* Interactive Cost Calculator */}
-      <section className="bg-slate-50 py-16">
+      {/* <section className="bg-slate-50 py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
@@ -431,21 +353,21 @@ export default function PricingPage() {
             </Card>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Feature Comparison Matrix */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-title font-bold text-center mb-12">Compare Features</h2>
+            <h2 className="text-title font-bold text-center mb-12">{t("pricing.features.title")}</h2>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left p-4 font-medium">Feature</th>
-                    <th className="text-center p-4 font-medium">Starter</th>
-                    <th className="text-center p-4 font-medium">Professional</th>
-                    <th className="text-center p-4 font-medium">Enterprise</th>
+                    <th className="text-left p-4 font-medium">{t("pricing.features.table.feature")}</th>
+                    <th className="text-center p-4 font-medium">{t("pricing.features.table.starter")}</th>
+                    <th className="text-center p-4 font-medium">{t("pricing.features.table.professional")}</th>
+                    <th className="text-center p-4 font-medium">{t("pricing.features.table.enterprise")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -486,41 +408,36 @@ export default function PricingPage() {
       <section className="bg-slate-50 py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-title font-bold text-center mb-12">Frequently Asked Questions</h2>
+            <h2 className="text-title font-bold text-center mb-12">{t("pricing.faq.title")}</h2>
             <Accordion type="single" collapsible className="space-y-4">
               <AccordionItem value="item-1">
-                <AccordionTrigger>How do I change plans?</AccordionTrigger>
+                <AccordionTrigger>{t("pricing.faq.items.changePlans.question")}</AccordionTrigger>
                 <AccordionContent>
-                  You can upgrade or downgrade your plan at any time from your account settings. Changes take effect
-                  immediately, and we&apos;ll prorate any billing differences.
+                  {t("pricing.faq.items.changePlans.answer")}
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-2">
-                <AccordionTrigger>How does billing work for e-commerce orders?</AccordionTrigger>
+                <AccordionTrigger>{t("pricing.faq.items.billing.question")}</AccordionTrigger>
                 <AccordionContent>
-                  We charge a small transaction fee (2.9% + $0.30) for each successful order processed through our
-                  platform. This covers payment processing and platform maintenance.
+                  {t("pricing.faq.items.billing.answer")}
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-3">
-                <AccordionTrigger>Are there volume discounts for large projects?</AccordionTrigger>
+                <AccordionTrigger>{t("pricing.faq.items.volumeDiscounts.question")}</AccordionTrigger>
                 <AccordionContent>
-                  Yes! Enterprise customers receive custom pricing based on their volume and specific needs. Contact our
-                  sales team to discuss volume discounts and custom arrangements.
+                  {t("pricing.faq.items.volumeDiscounts.answer")}
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-4">
-                <AccordionTrigger>What payment methods do you accept?</AccordionTrigger>
+                <AccordionTrigger>{t("pricing.faq.items.paymentMethods.question")}</AccordionTrigger>
                 <AccordionContent>
-                  We accept all major credit cards, ACH transfers, and wire transfers for Enterprise customers. All
-                  payments are processed securely through our encrypted payment system.
+                  {t("pricing.faq.items.paymentMethods.answer")}
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-5">
-                <AccordionTrigger>Is there a free trial available?</AccordionTrigger>
+                <AccordionTrigger>{t("pricing.faq.items.freeTrial.question")}</AccordionTrigger>
                 <AccordionContent>
-                  Yes! All Professional plans come with a 14-day free trial. No credit card required to start. You can
-                  explore all features and decide if it&apos;s right for your business.
+                  {t("pricing.faq.items.freeTrial.answer")}
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -532,9 +449,9 @@ export default function PricingPage() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-title font-bold text-center mb-12">What Our Customers Say</h2>
+            <h2 className="text-title font-bold text-center mb-12">{t("pricing.testimonials.title")}</h2>
             <div className="grid md:grid-cols-3 gap-8">
-              {testimonials.map((testimonial, index) => (
+              {testimonialsWithRating.map((testimonial, index) => (
                 <Card key={index}>
                   <CardContent className="p-6">
                     <div className="flex mb-4">
@@ -556,15 +473,15 @@ export default function PricingPage() {
               <div className="flex items-center justify-center gap-8 text-small text-slate-600 mb-8">
                 <div className="flex items-center gap-2">
                   <Building className="h-5 w-5" />
-                  <span>Trusted by 1,000+ Companies</span>
+                  <span>{t("pricing.testimonials.stats.trustedCompanies")}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                  <span>4.9/5 Average Rating</span>
+                  <span>{t("pricing.testimonials.stats.averageRating")}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Users className="h-5 w-5" />
-                  <span>50,000+ Active Users</span>
+                  <span>{t("pricing.testimonials.stats.activeUsers")}</span>
                 </div>
               </div>
             </div>
@@ -576,30 +493,30 @@ export default function PricingPage() {
       <section className="bg-amber-600 text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-title font-bold mb-6">Ready to Transform Your Construction Projects?</h2>
+            <h2 className="text-title font-bold mb-6">{t("pricing.cta.title")}</h2>
             <p className="text-mid mb-8 text-amber-100">
-              Join thousands of construction professionals who trust our platform for their projects.
+              {t("pricing.cta.description")}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button size="lg" className="bg-white text-amber-600 hover:bg-slate-100 px-8">
-                Get Started Free
+                {t("pricing.cta.getStarted")}
               </Button>
               <Button
                 size="lg"
                 variant="outline"
                 className="border-white text-white hover:bg-white hover:text-amber-600 px-8 bg-transparent"
               >
-                Request Demo
+                {t("pricing.cta.requestDemo")}
               </Button>
             </div>
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mt-8 text-amber-100">
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4" />
-                <span>Book a Consultation</span>
+                <span>{t("pricing.cta.bookConsultation")}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4" />
-                <span>See Pricing Details</span>
+                <span>{t("pricing.cta.seePricingDetails")}</span>
               </div>
             </div>
           </div>

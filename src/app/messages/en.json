@@ -259,6 +259,234 @@
       "relatedProducts": "Related Products"
     }
   },
+  "pricing": {
+    "hero": {
+      "title": "Flexible Pricing For Every Project",
+      "subtitle": "Transparent. Reliable. Built For Construction.",
+      "description": "Whether you're a supplier, contractor, architect, or project owner, choose a plan tailored to your needs.",
+      "stats": {
+        "projectsCompleted": "10,000+ Projects Completed",
+        "verifiedSuppliers": "500+ Verified Suppliers",
+        "uptime": "99.9% Uptime"
+      }
+    },
+    "roles": {
+      "constructor": "constructor",
+      "architect": "architect",
+      "supplier": "supplier"
+    },
+    "plans": {
+      "mostPopular": "Most Popular",
+      "perMonth": "/mo",
+      "custom": "Custom",
+      "constructor": {
+        "starter": {
+          "name": "Starter",
+          "price": "RWF 10,000",
+          "description": "Perfect for individual contractors and small teams",
+          "features": [
+            "Up to 3 active projects",
+            "Basic supplier directory",
+            "Standard support",
+            "Mobile app access",
+            "Basic analytics"
+          ],
+          "cta": "Start Building"
+        },
+        "professional": {
+          "name": "Professional",
+          "price": "RWF 27,000",
+          "description": "Ideal for growing construction companies",
+          "features": [
+            "Unlimited projects",
+            "Premium supplier network",
+            "Priority support",
+            "Advanced project management",
+            "Team collaboration tools",
+            "Custom reporting"
+          ],
+          "cta": "Try Free"
+        },
+        "enterprise": {
+          "name": "Enterprise",
+          "price": "Custom",
+          "description": "For large construction firms with complex needs",
+          "features": [
+            "Everything in Professional",
+            "Dedicated account manager",
+            "Custom integrations",
+            "White-label options",
+            "Advanced security",
+            "SLA guarantee"
+          ],
+          "cta": "Contact Sales"
+        }
+      },
+      "architect": {
+        "starter": {
+          "name": "Starter",
+          "price": "RWF 12,000",
+          "description": "For independent architects and small studios",
+          "features": [
+            "Up to 5 design projects",
+            "Material specification tools",
+            "Basic 3D visualization",
+            "Client collaboration portal",
+            "Standard support"
+          ],
+          "cta": "Start Designing"
+        },
+        "professional": {
+          "name": "Professional",
+          "price": "RWF 25,000",
+          "description": "Perfect for established architectural firms",
+          "features": [
+            "Unlimited design projects",
+            "Advanced visualization suite",
+            "Supplier integration",
+            "Team collaboration",
+            "Client presentation tools",
+            "Advanced analytics"
+          ],
+          "cta": "Try Free"
+        },
+        "enterprise": {
+          "name": "Enterprise",
+          "price": "Custom",
+          "description": "For large architectural practices",
+          "features": [
+            "Everything in Professional",
+            "Custom workflow automation",
+            "API access",
+            "Dedicated support",
+            "Advanced security",
+            "Multi-office management"
+          ],
+          "cta": "Contact Sales"
+        }
+      },
+      "supplier": {
+        "starter": {
+          "name": "Starter",
+          "price": "RWF 10,000",
+          "description": "For small suppliers and local vendors",
+          "features": [
+            "Product catalog (up to 100 items)",
+            "Basic storefront",
+            "Order management",
+            "Payment processing",
+            "Standard support"
+          ],
+          "cta": "Start Selling"
+        },
+        "professional": {
+          "name": "Professional",
+          "price": "RWF 30,000",
+          "description": "For established suppliers and distributors",
+          "features": [
+            "Unlimited product catalog",
+            "Premium storefront",
+            "Bulk order management",
+            "Advanced analytics",
+            "Marketing tools",
+            "Priority listing"
+          ],
+          "cta": "Try Free"
+        },
+        "enterprise": {
+          "name": "Enterprise",
+          "price": "Custom",
+          "description": "For large suppliers and manufacturers",
+          "features": [
+            "Everything in Professional",
+            "Custom pricing tiers",
+            "API integration",
+            "Dedicated account manager",
+            "White-label marketplace",
+            "Advanced reporting"
+          ],
+          "cta": "Contact Sales"
+        }
+      }
+    },
+    "features": {
+      "title": "Compare Features",
+      "table": {
+        "feature": "Feature",
+        "starter": "Starter",
+        "professional": "Professional",
+        "enterprise": "Enterprise"
+      },
+      "list": {
+        "fileUploads": "File uploads",
+        "supplierRatings": "Supplier ratings",
+        "bulkOrderDeals": "Bulk order deals",
+        "dedicatedSupport": "Dedicated support",
+        "analyticsReports": "Analytics reports",
+        "apiAccess": "API access",
+        "customIntegrations": "Custom integrations",
+        "whiteLabelOptions": "White-label options"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "items": {
+        "changePlans": {
+          "question": "How do I change plans?",
+          "answer": "You can upgrade or downgrade your plan at any time from your account settings. Changes take effect immediately, and we'll prorate any billing differences."
+        },
+        "billing": {
+          "question": "How does billing work for e-commerce orders?",
+          "answer": "We charge a small transaction fee (2.9% + $0.30) for each successful order processed through our platform. This covers payment processing and platform maintenance."
+        },
+        "volumeDiscounts": {
+          "question": "Are there volume discounts for large projects?",
+          "answer": "Yes! Enterprise customers receive custom pricing based on their volume and specific needs. Contact our sales team to discuss volume discounts and custom arrangements."
+        },
+        "paymentMethods": {
+          "question": "What payment methods do you accept?",
+          "answer": "We accept all major credit cards, ACH transfers, and wire transfers for Enterprise customers. All payments are processed securely through our encrypted payment system."
+        },
+        "freeTrial": {
+          "question": "Is there a free trial available?",
+          "answer": "Yes! All Professional plans come with a 14-day free trial. No credit card required to start. You can explore all features and decide if it's right for your business."
+        }
+      }
+    },
+    "testimonials": {
+      "title": "What Our Customers Say",
+      "items": [
+        {
+          "name": "Sarah Johnson",
+          "role": "Project Manager, BuildCorp",
+          "content": "This platform has streamlined our procurement process by 60%. The supplier network is incredible."
+        },
+        {
+          "name": "Mike Chen",
+          "role": "Architect, Design Studio",
+          "content": "The visualization tools and material specifications have transformed how we work with clients."
+        },
+        {
+          "name": "Lisa Rodriguez",
+          "role": "Supplier, Materials Plus",
+          "content": "We've seen a 40% increase in orders since joining the platform. The analytics are game-changing."
+        }
+      ],
+      "stats": {
+        "trustedCompanies": "Trusted by 1,000+ Companies",
+        "averageRating": "4.9/5 Average Rating",
+        "activeUsers": "50,000+ Active Users"
+      }
+    },
+    "cta": {
+      "title": "Ready to Transform Your Construction Projects?",
+      "description": "Join thousands of construction professionals who trust our platform for their projects.",
+      "getStarted": "Get Started Free",
+      "requestDemo": "Request Demo",
+      "bookConsultation": "Book a Consultation",
+      "seePricingDetails": "See Pricing Details"
+    }
+  },
   "cart": {
     "title": "Shopping Cart",
     "empty": "Your cart is empty",

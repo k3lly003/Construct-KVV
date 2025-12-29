@@ -444,13 +444,13 @@ const Navbar: React.FC = () => {
                   >
                     Shops
                   </Link>
-                  <Link
+                  {/* <Link
                     href="/pricing"
                     className="py-2 text-gray-900 hover:text-amber-500 border-b"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Pricings
-                  </Link>
+                  </Link> */}
                   <Link
                     href="/help"
                     className="py-2 text-gray-900 hover:text-amber-500 border-b"
@@ -729,7 +729,7 @@ const Navbar: React.FC = () => {
             >
               {t("navigation.portfolio")}
             </Link>
-            <Link
+            {/* <Link
               href="/pricing"
               className={`inline-flex items-center px-1 pt-1 mb-2 text-small font-medium transition-colors ${
                 isHomePage && !scrolled 
@@ -738,7 +738,7 @@ const Navbar: React.FC = () => {
               }`}
             >
               {t("navigation.pricing")}
-            </Link>
+            </Link> */}
             <Link
               href="/design-marketplace"
               className={`inline-flex items-center px-1 pt-1 mb-2 text-small font-medium transition-colors ${
