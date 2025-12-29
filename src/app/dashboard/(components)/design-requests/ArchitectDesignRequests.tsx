@@ -45,7 +45,7 @@ export default function ArchitectDesignRequests() {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-gray-900">Design Requests</h1>
+          <h1 className="text-title font-bold text-gray-900">Design Requests</h1>
         </div>
         <div className="grid gap-6">
           {[...Array(3)].map((_, i) => (
@@ -72,7 +72,7 @@ export default function ArchitectDesignRequests() {
     return (
       <div className="space-y-6 bg-blue-400 ">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-gray-900">Design Requests</h1>
+          <h1 className="text-title font-bold text-gray-900">Design Requests</h1>
         </div>
         <Card>
           <CardContent className="pt-6">
@@ -80,7 +80,7 @@ export default function ArchitectDesignRequests() {
               <div className="text-red-500 mb-4">
                 <MessageSquare className="h-12 w-12 mx-auto" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Requests</h3>
+              <h3 className="text-mid font-semibold text-gray-900 mb-2">Error Loading Requests</h3>
               <p className="text-gray-600 mb-4">{error}</p>
               <Button onClick={() => window.location.reload()}>
                 Try Again
@@ -96,7 +96,7 @@ export default function ArchitectDesignRequests() {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-gray-900">Design Requests</h1>
+          <h1 className="text-title font-bold text-gray-900">Design Requests</h1>
         </div>
         <Card>
           <CardContent className="pt-6">
@@ -104,7 +104,7 @@ export default function ArchitectDesignRequests() {
               <div className="text-gray-400 mb-4">
                 <MessageSquare className="h-12 w-12 mx-auto" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No Design Requests Yet</h3>
+              <h3 className="text-mid font-semibold text-gray-900 mb-2">No Design Requests Yet</h3>
               <p className="text-gray-600">
                 You haven't received any design requests yet. When customers request designs from your portfolio, they'll appear here.
               </p>
@@ -118,8 +118,8 @@ export default function ArchitectDesignRequests() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900">Design Requests</h1>
-        <Badge variant="secondary" className="text-sm">
+        <h1 className="text-title font-bold text-gray-900">Design Requests</h1>
+        <Badge variant="secondary" className="text-small">
           {designRequests.length} {designRequests.length === 1 ? 'Request' : 'Requests'}
         </Badge>
       </div>
@@ -139,7 +139,7 @@ export default function ArchitectDesignRequests() {
                     {formatDistanceToNow(new Date(request.createdAt), { addSuffix: true })}
                   </CardDescription>
                 </div>
-                <Badge variant="outline" className="text-xs">
+                <Badge variant="outline" className="text-small">
                   New Request
                 </Badge>
               </div>
@@ -153,7 +153,7 @@ export default function ArchitectDesignRequests() {
                     <Mail className="h-4 w-4 text-gray-500" />
                     Contact Information
                   </h4>
-                  <div className="space-y-1 text-sm">
+                  <div className="space-y-1 text-small">
                     <p className="text-gray-600">
                       <span className="font-medium">Email:</span> {request.customer.email}
                     </p>
@@ -170,7 +170,7 @@ export default function ArchitectDesignRequests() {
                       <Building className="h-4 w-4 text-gray-500" />
                       Portfolio Reference
                     </h4>
-                    <div className="space-y-1 text-sm">
+                    <div className="space-y-1 text-small">
                       <p className="text-gray-600">
                         <span className="font-medium">Project:</span> {request.portfolio.title}
                       </p>

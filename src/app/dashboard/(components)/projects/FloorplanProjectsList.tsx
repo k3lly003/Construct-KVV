@@ -110,7 +110,7 @@ export default function FloorplanProjectsList({ onCreateNew }: FloorplanProjects
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-gray-900">Construction Projects</h1>
+          <h1 className="text-title font-bold text-gray-900">Construction Projects</h1>
           <Button onClick={() => setShowCreateForm(true)} className="flex items-center gap-2">
             <Plus className="h-4 w-4" />
             New Project
@@ -140,7 +140,7 @@ export default function FloorplanProjectsList({ onCreateNew }: FloorplanProjects
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-gray-900">Construction Projects</h1>
+          <h1 className="text-title font-bold text-gray-900">Construction Projects</h1>
           <Button onClick={() => setShowCreateForm(true)} className="flex items-center gap-2">
             <Plus className="h-4 w-4" />
             New Project
@@ -152,7 +152,7 @@ export default function FloorplanProjectsList({ onCreateNew }: FloorplanProjects
               <div className="text-red-500 mb-4">
                 <Building className="h-12 w-12 mx-auto" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Projects</h3>
+              <h3 className="text-mid font-semibold text-gray-900 mb-2">Error Loading Projects</h3>
               <p className="text-gray-600 mb-4">{error}</p>
               <Button onClick={loadProjects}>
                 Try Again
@@ -168,7 +168,7 @@ export default function FloorplanProjectsList({ onCreateNew }: FloorplanProjects
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Construction Projects</h1>
+          <h1 className="text-title font-bold text-gray-900">Construction Projects</h1>
           <p className="text-gray-600 mt-1">Manage your floorplan-based construction projects</p>
         </div>
         <Button onClick={() => setShowCreateForm(true)} className="flex items-center gap-2">
@@ -184,7 +184,7 @@ export default function FloorplanProjectsList({ onCreateNew }: FloorplanProjects
               <div className="text-gray-400 mb-4">
                 <Building className="h-12 w-12 mx-auto" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No Projects Yet</h3>
+              <h3 className="text-mid font-semibold text-gray-900 mb-2">No Projects Yet</h3>
               <p className="text-gray-600 mb-4">
                 Create your first construction project by uploading a floorplan and letting our AI analyze it.
               </p>
@@ -225,7 +225,7 @@ export default function FloorplanProjectsList({ onCreateNew }: FloorplanProjects
                       <FileText className="h-4 w-4 text-gray-500" />
                       AI Summary
                     </h4>
-                    <p className="text-sm text-gray-600 line-clamp-3">
+                    <p className="text-small text-gray-600 line-clamp-3">
                       {project.summary}
                     </p>
                   </div>
@@ -238,7 +238,7 @@ export default function FloorplanProjectsList({ onCreateNew }: FloorplanProjects
                       <DollarSign className="h-4 w-4 text-gray-500" />
                       Cost Estimate
                     </h4>
-                    <p className="text-lg font-semibold text-green-600">
+                    <p className="text-mid font-semibold text-green-600">
                       {formatCurrency(project.totalEstimatedCost, project.currency)}
                     </p>
                   </div>

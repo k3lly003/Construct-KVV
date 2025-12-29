@@ -153,7 +153,7 @@ export default function GlobalSearch({
             <button
               key={id}
               onClick={() => toggleType(id)}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-small font-medium transition-colors ${
                 selectedTypes.includes(id)
                   ? `${color} border-2 border-current`
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -171,7 +171,7 @@ export default function GlobalSearch({
         <Card className="absolute z-50 w-full mt-2 max-h-[600px] overflow-y-auto shadow-lg">
           <CardHeader className="sticky top-0 bg-white z-10 border-b">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">
+              <CardTitle className="text-mid">
                 {loading ? 'Searching...' : results ? `Found ${results.summary.totalResults} results` : 'Search'}
               </CardTitle>
               <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)}>
@@ -190,7 +190,7 @@ export default function GlobalSearch({
             {error && (
               <div className="p-6 text-center text-red-600">
                 <p className="font-medium">Error loading results</p>
-                <p className="text-sm">{error}</p>
+                <p className="text-small">{error}</p>
               </div>
             )}
 
@@ -221,15 +221,15 @@ export default function GlobalSearch({
                           )}
                           <div className="flex-1 min-w-0">
                             <p className="font-medium text-gray-900 truncate">{product.name}</p>
-                            <p className="text-sm text-gray-500 truncate">{product.description}</p>
-                            <p className="text-sm font-semibold text-amber-600 mt-1">{product.price} Rwf</p>
+                            <p className="text-small text-gray-500 truncate">{product.description}</p>
+                            <p className="text-small font-semibold text-amber-600 mt-1">{product.price} Rwf</p>
                           </div>
                         </button>
                       ))}
                       {results.products.total > results.products.data.length && (
                         <Link
                           href={`/product?search=${encodeURIComponent(debouncedQuery)}`}
-                          className="block text-center text-sm text-amber-600 hover:text-amber-700 font-medium py-2"
+                          className="block text-center text-small text-amber-600 hover:text-amber-700 font-medium py-2"
                         >
                           View all {results.products.total} products →
                         </Link>
@@ -253,14 +253,14 @@ export default function GlobalSearch({
                           className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors"
                         >
                           <p className="font-medium text-gray-900">{service.title}</p>
-                          <p className="text-sm text-gray-500">{service.description}</p>
+                          <p className="text-small text-gray-500">{service.description}</p>
                           <Badge variant="outline" className="mt-1">{service.category}</Badge>
                         </button>
                       ))}
                       {results.services.total > results.services.data.length && (
                         <Link
                           href={`/services?search=${encodeURIComponent(debouncedQuery)}`}
-                          className="block text-center text-sm text-amber-600 hover:text-amber-700 font-medium py-2"
+                          className="block text-center text-small text-amber-600 hover:text-amber-700 font-medium py-2"
                         >
                           View all {results.services.total} services →
                         </Link>
@@ -294,10 +294,10 @@ export default function GlobalSearch({
                           )}
                           <div className="flex-1 min-w-0">
                             <p className="font-medium text-gray-900 truncate">{design.title}</p>
-                            <p className="text-sm text-gray-500 truncate">{design.description}</p>
+                            <p className="text-small text-gray-500 truncate">{design.description}</p>
                             <div className="flex items-center gap-2 mt-1">
-                              <Badge variant="outline" className="text-xs">{design.category}</Badge>
-                              <p className="text-sm font-semibold text-purple-600">${design.price.toLocaleString()}</p>
+                              <Badge variant="outline" className="text-small">{design.category}</Badge>
+                              <p className="text-small font-semibold text-purple-600">${design.price.toLocaleString()}</p>
                             </div>
                           </div>
                         </button>
@@ -305,7 +305,7 @@ export default function GlobalSearch({
                       {results.designs.total > results.designs.data.length && (
                         <Link
                           href={`/design-marketplace?search=${encodeURIComponent(debouncedQuery)}`}
-                          className="block text-center text-sm text-amber-600 hover:text-amber-700 font-medium py-2"
+                          className="block text-center text-small text-amber-600 hover:text-amber-700 font-medium py-2"
                         >
                           View all {results.designs.total} designs →
                         </Link>
@@ -329,11 +329,11 @@ export default function GlobalSearch({
                           className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors"
                         >
                           <p className="font-medium text-gray-900">{portfolio.title}</p>
-                          <p className="text-sm text-gray-500">{portfolio.description}</p>
+                          <p className="text-small text-gray-500">{portfolio.description}</p>
                           <div className="flex items-center gap-2 mt-1">
-                            <Badge variant="outline" className="text-xs">{portfolio.category}</Badge>
+                            <Badge variant="outline" className="text-small">{portfolio.category}</Badge>
                             {portfolio.location && (
-                              <span className="text-xs text-gray-500">{portfolio.location}</span>
+                              <span className="text-small text-gray-500">{portfolio.location}</span>
                             )}
                           </div>
                         </button>
@@ -341,7 +341,7 @@ export default function GlobalSearch({
                       {results.portfolios.total > results.portfolios.data.length && (
                         <Link
                           href={`/portfolios?search=${encodeURIComponent(debouncedQuery)}`}
-                          className="block text-center text-sm text-amber-600 hover:text-amber-700 font-medium py-2"
+                          className="block text-center text-small text-amber-600 hover:text-amber-700 font-medium py-2"
                         >
                           View all {results.portfolios.total} portfolios →
                         </Link>
@@ -354,7 +354,7 @@ export default function GlobalSearch({
                 {results.summary.totalResults === 0 && (
                   <div className="p-12 text-center">
                     <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-800 mb-2">No results found</h3>
+                    <h3 className="text-mid font-semibold text-gray-800 mb-2">No results found</h3>
                     <p className="text-gray-600">
                       Try adjusting your search terms or filters
                     </p>

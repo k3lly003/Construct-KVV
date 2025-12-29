@@ -188,7 +188,7 @@ export const TopProducts = () => {
     <div className="p-1">
       <div className="flex justify-between items-center mb-4">
         <div>
-          <h1 className="text-2xl font-semibold">Orders Management</h1>
+          <h1 className="text-mid font-semibold">Orders Management</h1>
         </div>
         <div className="space-x-2">
           <GenericButton variant="outline">
@@ -260,7 +260,7 @@ export const TopProducts = () => {
                 <TableCell className="py-4">{order.dateTime}</TableCell>
                 <TableCell className="py-4">
                   <div
-                    className={`inline-flex items-center rounded-full px-5 py-1 text-xs font-semibold ${
+                    className={`inline-flex items-center rounded-full px-5 py-1 text-small font-semibold ${
                       order.status === "Completed"
                         ? "bg-green-100 text-green-800"
                         : order.status === "In Progress"
@@ -295,7 +295,7 @@ export const TopProducts = () => {
       <div className="flex justify-end my-5">
         <Link
           href="/dashboard/products"
-          className="text-sm text-amber-500 hover:underline"
+          className="text-small text-amber-500 hover:underline"
         >
           view more...
         </Link>

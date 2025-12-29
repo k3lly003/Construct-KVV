@@ -121,7 +121,7 @@ export default function Home() {
       />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-amber-900 mb-2">
+          <h2 className="text-title font-bold text-amber-900 mb-2">
             {t("projects.availableTitle")}
           </h2>
           <p className="text-amber-800 mb-4">
@@ -133,10 +133,10 @@ export default function Home() {
           <div className="bg-amber-500 p-6 rounded-lg border border-amber-600 shadow-md">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-white mb-2">
+                <h3 className="text-mid font-semibold text-white mb-2">
                   {t("projects.readyToCreate", "Ready to create project")}
                 </h3>
-                <p className="text-white/90 text-sm mb-2">
+                <p className="text-white/90 text-small mb-2">
                   {t(
                     "projects.readyToCreateDesc",
                     "Upload your architect's floorplan and our AI will automatically analyze it, generate cost estimates, and create a complete project ready for contractor bidding."
@@ -148,7 +148,7 @@ export default function Home() {
                   onClick={() => setShowCreateForm(true)}
                   className="w-full sm:w-auto bg-white hover:bg-gray-100 text-amber-600 shadow-md font-semibold flex items-center justify-center gap-2 px-4 py-3 text-base"
                 >
-                  <span className="text-xl flex items-center justify-center">
+                  <span className="text-mid flex items-center justify-center">
                     🏠
                   </span>
                   <span className="whitespace-nowrap">
@@ -167,10 +167,10 @@ export default function Home() {
           {/* Floorplan Projects Section */}
           {floorplanProjects.length > 0 && (
             <div className="mb-8">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <span className="text-2xl">🏗️</span>
+              <h3 className="text-mid font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <span className="text-mid">🏗️</span>
                 Construction Projects
-                <span className="text-sm font-normal text-gray-500">
+                <span className="text-small font-normal text-gray-500">
                   ({floorplanProjects.length} projects)
                 </span>
               </h3>
@@ -202,12 +202,12 @@ export default function Home() {
                               {project.status}
                             </Badge>
                           </div>
-                          <h2 className="text-xl font-semibold text-amber-900">
+                          <h2 className="text-mid font-semibold text-amber-900">
                             Project #{project.id.slice(-8)}
                           </h2>
                         </div>
                         <div className="text-right">
-                          <span className="text-sm text-amber-700 bg-amber-100 px-3 py-1 rounded-full border border-amber-200">
+                          <span className="text-small text-amber-700 bg-amber-100 px-3 py-1 rounded-full border border-amber-200">
                             FP
                           </span>
                         </div>
@@ -220,14 +220,14 @@ export default function Home() {
                       )}
 
                       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                        <div className="flex items-center space-x-2 text-sm text-amber-800">
+                        <div className="flex items-center space-x-2 text-small text-amber-800">
                           <Calendar className="h-4 w-4" />
                           <span>
                             {new Date(project.createdAt).toLocaleDateString()}
                           </span>
                         </div>
                         {project.totalEstimatedCost && (
-                          <div className="flex items-center space-x-2 text-sm text-amber-800">
+                          <div className="flex items-center space-x-2 text-small text-amber-800">
                             <DollarSign className="h-4 w-4" />
                             <span className="font-medium text-green-600">
                               {new Intl.NumberFormat("en-RW", {
@@ -238,11 +238,11 @@ export default function Home() {
                             </span>
                           </div>
                         )}
-                        <div className="flex items-center space-x-2 text-sm text-amber-800">
+                        <div className="flex items-center space-x-2 text-small text-amber-800">
                           <Clock className="h-4 w-4" />
                           <span>AI Processed</span>
                         </div>
-                        <div className="flex items-center space-x-2 text-sm text-amber-800">
+                        <div className="flex items-center space-x-2 text-small text-amber-800">
                           <Users className="h-4 w-4" />
                           <span>Ready for Bids</span>
                         </div>
@@ -252,7 +252,7 @@ export default function Home() {
                         <div className="flex items-center space-x-4">
                           <div className="flex items-center space-x-2">
                             <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
-                            <span className="text-sm text-amber-800">Floorplan Based</span>
+                            <span className="text-small text-amber-800">Floorplan Based</span>
                           </div>
                         </div>
                         <div className="flex space-x-3">
@@ -294,7 +294,7 @@ export default function Home() {
               <div className="text-gray-400 mb-4">
                 <span className="text-6xl">🏗️</span>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No Projects Yet</h3>
+              <h3 className="text-mid font-semibold text-gray-900 mb-2">No Projects Yet</h3>
               <p className="text-gray-600 mb-6">
                 Be the first to create a construction project! Simply upload your architect's floorplan and our AI will automatically analyze it, generate cost estimates, and create a complete project ready for contractor bidding.
               </p>
@@ -317,7 +317,7 @@ export default function Home() {
           <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">Create New Project</h2>
+                <h2 className="text-mid font-bold text-gray-900">Create New Project</h2>
                 <Button
                   variant="outline"
                   onClick={() => setShowCreateForm(false)}

@@ -28,7 +28,7 @@ export const FormInput: React.FC<FormInputProps> = ({
 }) => {
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-semibold text-slate-700">
+      <label className="block text-small font-semibold text-slate-700">
         {label} {required && <span className="text-red-500">*</span>}
       </label>
       <div className="relative">
@@ -54,7 +54,7 @@ export const FormInput: React.FC<FormInputProps> = ({
         )}
       </div>
       {error && (
-        <p className="text-sm text-red-600 font-medium animate-in slide-in-from-left duration-300">
+        <p className="text-small text-red-600 font-medium animate-in slide-in-from-left duration-300">
           {error}
         </p>
       )}

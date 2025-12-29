@@ -124,7 +124,7 @@ const EditProfileDialog = ({ isOpen, onClose, userData }: EditProfileDialogProps
             className="sr-only"
           />
           
-          <p className="text-sm text-gray-500">Click to change profile picture</p>
+          <p className="text-small text-gray-500">Click to change profile picture</p>
         </div>
           {/* </div> */}
 

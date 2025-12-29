@@ -35,7 +35,7 @@ export const Button = ({
     <div>
       <button
         onClick={handleButton}
-        className={`${border} ${padding} ${bgCol} ${textCol} cursor-pointer mt-3 w-full ${borderCol} ${round} py-2 text-sm font-semibold ${hoverBg} transition-colors ${texSize}`}
+        className={`${border} ${padding} ${bgCol} ${textCol} cursor-pointer mt-3 w-full ${borderCol} ${round} py-2 text-small font-semibold ${hoverBg} transition-colors ${texSize}`}
       >
         {translatedText}
       </button>

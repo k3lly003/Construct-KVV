@@ -193,7 +193,7 @@ export default function ConstructorRegistration() {
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back
             </Link>
-            <h1 className="text-3xl font-bold text-slate-900">
+            <h1 className="text-title font-bold text-slate-900">
               Constructor Registration
             </h1>
             <p className="text-slate-600 mt-2">
@@ -218,7 +218,7 @@ export default function ConstructorRegistration() {
               <form onSubmit={onSubmit} className="space-y-6">
                 {/* Personal Information */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold border-b pb-2">
+                  <h3 className="text-mid font-semibold border-b pb-2">
                     Personal Information
                   </h3>
 
@@ -286,7 +286,7 @@ export default function ConstructorRegistration() {
 
                 {/* Business Information */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold border-b pb-2">
+                  <h3 className="text-mid font-semibold border-b pb-2">
                     Business Information
                   </h3>
 
@@ -362,7 +362,7 @@ export default function ConstructorRegistration() {
                 {/* Location */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold border-b pb-2">
+                    <h3 className="text-mid font-semibold border-b pb-2">
                       Service Locations
                     </h3>
                   </div>
@@ -371,7 +371,7 @@ export default function ConstructorRegistration() {
                     <div key={location.id} className="space-y-3 p-4 border rounded-lg bg-gray-50">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                         <div>
-                          <Label className="text-sm font-medium text-gray-700">Province *</Label>
+                          <Label className="text-small font-medium text-gray-700">Province *</Label>
                           <Input
                             value={location.province || ""}
                             onChange={(e) => updateLocation(location.id, "province", e.target.value)}
@@ -380,7 +380,7 @@ export default function ConstructorRegistration() {
                           />
                         </div>
                         <div>
-                          <Label className="text-sm font-medium text-gray-700">District *</Label>
+                          <Label className="text-small font-medium text-gray-700">District *</Label>
                           <Input
                             value={location.district || ""}
                             onChange={(e) => updateLocation(location.id, "district", e.target.value)}
@@ -389,7 +389,7 @@ export default function ConstructorRegistration() {
                           />
                         </div>
                         <div>
-                          <Label className="text-sm font-medium text-gray-700">Cell</Label>
+                          <Label className="text-small font-medium text-gray-700">Cell</Label>
                           <Input
                             value={location.cell || ""}
                             onChange={(e) => updateLocation(location.id, "cell", e.target.value)}
@@ -399,7 +399,7 @@ export default function ConstructorRegistration() {
                         </div>
                       </div>
                       <div className="flex justify-between items-center">
-                        <div className="text-xs text-gray-500">
+                        <div className="text-small text-gray-500">
                           {location.province && location.district && location.cell
                             ? `${location.province}, ${location.district}, ${location.cell}`
                             : "Fill in the location details above"
@@ -421,7 +421,7 @@ export default function ConstructorRegistration() {
 
                 {/* Insurance Information */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold border-b pb-2">
+                  <h3 className="text-mid font-semibold border-b pb-2">
                     Insurance Information
                   </h3>
 
@@ -451,7 +451,7 @@ export default function ConstructorRegistration() {
                 {/* Documents */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold border-b pb-2">
+                    <h3 className="text-mid font-semibold border-b pb-2">
                       Documents
                     </h3>
                   </div>
@@ -460,7 +460,7 @@ export default function ConstructorRegistration() {
                     <div key={document.id} className="space-y-3 p-4 border rounded-lg bg-gray-50">
                       <div className="space-y-3">
                         <div>
-                          <Label className="text-sm font-medium text-gray-700">Document Files *</Label>
+                          <Label className="text-small font-medium text-gray-700">Document Files *</Label>
                           <Input
                             type="file"
                             multiple
@@ -477,8 +477,8 @@ export default function ConstructorRegistration() {
                             {document.files.map((file, index) => (
                               <div key={index} className="flex items-center gap-2 p-2 bg-white rounded border">
                                 <div className="flex-1">
-                                  <p className="text-sm font-medium text-gray-900">{document.names[index]}</p>
-                                  <p className="text-xs text-gray-500">{document.types[index]}</p>
+                                  <p className="text-small font-medium text-gray-900">{document.names[index]}</p>
+                                  <p className="text-small text-gray-500">{document.types[index]}</p>
                                 </div>
                                 <Button
                                   type="button"
@@ -496,7 +496,7 @@ export default function ConstructorRegistration() {
                       </div>
 
                       <div className="flex justify-between items-center">
-                        <div className="text-xs text-gray-500">
+                        <div className="text-small text-gray-500">
                           {document.files.length > 0
                             ? `${document.files.length} file(s) attached`
                             : "Please select document files"

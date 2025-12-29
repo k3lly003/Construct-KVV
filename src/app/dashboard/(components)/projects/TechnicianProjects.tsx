@@ -10,7 +10,7 @@ export default function TechnicianProjects() {
         <CardDescription>View and manage your assigned technical projects.</CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-muted-foreground">No projects to display yet.</p>
+        <p className="text-small text-muted-foreground">No projects to display yet.</p>
       </CardContent>
     </Card>
   );

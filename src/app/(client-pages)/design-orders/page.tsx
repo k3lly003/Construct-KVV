@@ -237,13 +237,13 @@ const DesignOrders: React.FC = () => {
         <div className="relative h-full flex items-center justify-center text-center">
           <div className="max-w-7xl mx-auto px-4">
             <div className="max-w-4xl mx-auto">
-              <span className="text-amber-500 text-xl font-semibold mb-4 block">
+              <span className="text-amber-500 text-mid font-semibold mb-4 block">
                 Track Your Design Orders
               </span>
-              <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
+              <h1 className="text-title md:text-6xl font-bold mb-6 text-white">
                 Your Design Orders
               </h1>
-              <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto">
+              <p className="text-mid md:text-mid text-gray-200 mb-8 max-w-3xl mx-auto">
                 Manage and track all your purchased architectural designs. 
                 Download completed designs and leave reviews for architects.
               </p>
@@ -259,8 +259,8 @@ const DesignOrders: React.FC = () => {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-4xl font-bold text-amber-800 mb-2">Your Design Orders</h1>
-              <p className="text-lg text-amber-700">
+              <h1 className="text-title font-bold text-amber-800 mb-2">Your Design Orders</h1>
+              <p className="text-mid text-amber-700">
                 Track and manage your purchased architectural designs
               </p>
             </div>
@@ -287,32 +287,32 @@ const DesignOrders: React.FC = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <Card className="bg-amber-400 text-white">
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold">{orders.length}</div>
-                <div className="text-sm opacity-90">Total Orders</div>
+                <div className="text-mid font-bold">{orders.length}</div>
+                <div className="text-small opacity-90">Total Orders</div>
               </CardContent>
             </Card>
             <Card className="bg-green-100 text-green-800">
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold">
+                <div className="text-mid font-bold">
                   {orders.filter(o => o.status === 'COMPLETED').length}
                 </div>
-                <div className="text-sm">Completed</div>
+                <div className="text-small">Completed</div>
               </CardContent>
             </Card>
             <Card className="bg-blue-100 text-blue-800">
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold">
+                <div className="text-mid font-bold">
                   {orders.filter(o => o.status === 'PROCESSING').length}
                 </div>
-                <div className="text-sm">Processing</div>
+                <div className="text-small">Processing</div>
               </CardContent>
             </Card>
             <Card className="bg-yellow-100 text-yellow-800">
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold">
+                <div className="text-mid font-bold">
                   {orders.filter(o => o.status === 'PENDING').length}
                 </div>
-                <div className="text-sm">Pending</div>
+                <div className="text-small">Pending</div>
               </CardContent>
             </Card>
           </div>
@@ -322,7 +322,7 @@ const DesignOrders: React.FC = () => {
         <Card className="mb-6">
           <CardContent className="p-4">
             <div className="flex items-center gap-4">
-              <label className="text-sm font-medium">Filter by status:</label>
+              <label className="text-small font-medium">Filter by status:</label>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-48">
                   <SelectValue placeholder="All statuses" />
@@ -345,7 +345,7 @@ const DesignOrders: React.FC = () => {
             <CardContent className="pt-6">
               <div className="text-center text-red-600">
                 <p className="font-medium">Error loading orders</p>
-                <p className="text-sm">{error}</p>
+                <p className="text-small">{error}</p>
                 <Button onClick={fetchOrders} className="mt-4">
                   Try Again
                 </Button>
@@ -384,7 +384,7 @@ const DesignOrders: React.FC = () => {
                     <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                       <ShoppingCart className="w-12 h-12 text-gray-400" />
                     </div>
-                    <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                    <h3 className="text-mid font-semibold text-gray-800 mb-2">
                       {statusFilter ? 'No orders found with this status' : 'No design orders yet'}
                     </h3>
                     <p className="text-gray-600 mb-4">
@@ -421,10 +421,10 @@ const DesignOrders: React.FC = () => {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start justify-between mb-2">
                             <div>
-                              <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                              <h3 className="text-mid font-semibold text-gray-900 mb-1">
                                 {order.design.title}
                               </h3>
-                              <p className="text-sm text-gray-600 line-clamp-2">
+                              <p className="text-small text-gray-600 line-clamp-2">
                                 {order.design.description}
                               </p>
                             </div>
@@ -436,27 +436,27 @@ const DesignOrders: React.FC = () => {
                           {/* Architect Info */}
                           <div className="flex items-center gap-2 mb-3">
                             <div className="w-6 h-6 bg-amber-200 rounded-full flex items-center justify-center">
-                              <span className="text-xs font-medium text-amber-800">
+                              <span className="text-small font-medium text-amber-800">
                                 {order.design.architect.user.firstName[0]}
                               </span>
                             </div>
-                            <span className="text-sm text-gray-600">
+                            <span className="text-small text-gray-600">
                               by {order.design.architect.businessName}
                             </span>
                           </div>
 
                           {/* Order Info */}
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                            <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <div className="flex items-center gap-2 text-small text-gray-600">
                               <Calendar className="w-4 h-4" />
                               <span>Ordered: {formatDate(order.orderDate)}</span>
                             </div>
-                            <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <div className="flex items-center gap-2 text-small text-gray-600">
                               <CreditCard className="w-4 h-4" />
                               <span>Amount: ${order.amount.toLocaleString()}</span>
                             </div>
                             {order.paymentMethod && (
-                              <div className="flex items-center gap-2 text-sm text-gray-600">
+                              <div className="flex items-center gap-2 text-small text-gray-600">
                                 <span>Payment: {order.paymentMethod}</span>
                               </div>
                             )}

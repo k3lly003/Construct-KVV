@@ -64,7 +64,7 @@ const Profile = ({ NK, userEmail, userName, profilePic }: profileProps) => {
             </Avatar>
             <div>
               <p>{userName}</p>
-              <p className="text-xs text-gray-500">{userEmail}</p>
+              <p className="text-small text-gray-500">{userEmail}</p>
             </div>
           </DropdownMenuLabel>
           {/* Role-based dashboard link */}

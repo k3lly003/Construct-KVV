@@ -31,7 +31,7 @@ export default function ForgotPasswordPage() {
             <div className="w-full max-w-md space-y-8">
                 <Link
                     href="/login"
-                    className="flex items-center gap-2 text-sm text-zinc-700 hover:text-amber-600 transition-colors"
+                    className="flex items-center gap-2 text-small text-zinc-700 hover:text-amber-600 transition-colors"
                 >
                     <ArrowLeft className="h-4 w-4" />
                     Back
@@ -42,7 +42,7 @@ export default function ForgotPasswordPage() {
                         <>
                             <CardHeader className="space-y-6 items-center text-center pb-6">
                                 <div className="space-y-2">
-                                    <CardTitle className="text-3xl font-bold text-zinc-900">Forgot Password?</CardTitle>
+                                    <CardTitle className="text-title font-bold text-zinc-900">Forgot Password?</CardTitle>
                                     <CardDescription className="text-zinc-600">
                                         Enter your email address and we'll send you a reset link
                                     </CardDescription>
@@ -76,7 +76,7 @@ export default function ForgotPasswordPage() {
                                         {isLoading ? "Sending..." : "Send Reset Link"}
                                     </Button>
 
-                                    <p className="text-sm text-zinc-600 text-center">
+                                    <p className="text-small text-zinc-600 text-center">
                                         Remember your password?{" "}
                                         <Link href="/login" className="text-amber-600 hover:text-amber-700 font-medium">
                                             Sign in
@@ -92,14 +92,14 @@ export default function ForgotPasswordPage() {
                                     <CheckCircle2 className="h-8 w-8 text-amber-600" />
                                 </div>
                                 <div className="space-y-2">
-                                    <CardTitle className="text-3xl font-bold text-zinc-900">Check your email</CardTitle>
+                                    <CardTitle className="text-title font-bold text-zinc-900">Check your email</CardTitle>
                                     <CardDescription className="text-zinc-600">We've sent a password reset link to</CardDescription>
                                 </div>
                             </CardHeader>
 
                             <CardContent className="space-y-6 text-center">
                                 <p className="text-zinc-900 font-medium">{email}</p>
-                                <p className="text-sm text-zinc-600">
+                                <p className="text-small text-zinc-600">
                                     Didn't get the email?{" "}
                                     <button
                                         onClick={() => setIsSubmitted(false)}
@@ -118,7 +118,7 @@ export default function ForgotPasswordPage() {
                                     Try Another Email
                                 </Button>
 
-                                <p className="text-sm text-zinc-600 text-center">
+                                <p className="text-small text-zinc-600 text-center">
                                     Enter your email and you'll be redirected automatically once verified.
                                 </p>
                             </CardFooter>
@@ -126,7 +126,7 @@ export default function ForgotPasswordPage() {
                     )}
                 </Card>
 
-                <p className="text-sm text-zinc-600 text-center">
+                <p className="text-small text-zinc-600 text-center">
                     Having trouble?{" "}
                     <Link href="/support" className="text-amber-600 hover:text-amber-700 font-medium">
                         Contact support

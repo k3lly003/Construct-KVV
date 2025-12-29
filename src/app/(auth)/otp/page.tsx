@@ -212,7 +212,7 @@ export default function OTPVerification() {
 
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-3">
+            <h1 className="text-title font-bold text-gray-900 mb-3">
               Check your email
             </h1>
             <p className="text-gray-600 leading-relaxed">
@@ -222,7 +222,7 @@ export default function OTPVerification() {
               {mounted ? email : "Loading..."}
             </p>
             {mounted && !isValidEmail && (
-              <p className="text-amber-600 text-sm mt-2">
+              <p className="text-amber-600 text-small mt-2">
                 ⚠️ Please ensure you have a valid email address
               </p>
             )}
@@ -235,27 +235,27 @@ export default function OTPVerification() {
                 <InputOTPGroup className="gap-3">
                   <InputOTPSlot
                     index={0}
-                    className="w-12 h-12 text-lg font-semibold border-2 border-gray-200 rounded-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200"
+                    className="w-12 h-12 text-mid font-semibold border-2 border-gray-200 rounded-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200"
                   />
                   <InputOTPSlot
                     index={1}
-                    className="w-12 h-12 text-lg font-semibold border-2 border-gray-200 rounded-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200"
+                    className="w-12 h-12 text-mid font-semibold border-2 border-gray-200 rounded-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200"
                   />
                   <InputOTPSlot
                     index={2}
-                    className="w-12 h-12 text-lg font-semibold border-2 border-gray-200 rounded-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200"
+                    className="w-12 h-12 text-mid font-semibold border-2 border-gray-200 rounded-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200"
                   />
                   <InputOTPSlot
                     index={3}
-                    className="w-12 h-12 text-lg font-semibold border-2 border-gray-200 rounded-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200"
+                    className="w-12 h-12 text-mid font-semibold border-2 border-gray-200 rounded-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200"
                   />
                   <InputOTPSlot
                     index={4}
-                    className="w-12 h-12 text-lg font-semibold border-2 border-gray-200 rounded-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200"
+                    className="w-12 h-12 text-mid font-semibold border-2 border-gray-200 rounded-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200"
                   />
                   <InputOTPSlot
                     index={5}
-                    className="w-12 h-12 text-lg font-semibold border-2 border-gray-200 rounded-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200"
+                    className="w-12 h-12 text-mid font-semibold border-2 border-gray-200 rounded-lg focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition-all duration-200"
                   />
                 </InputOTPGroup>
               </InputOTP>
@@ -263,14 +263,14 @@ export default function OTPVerification() {
 
             {/* Error Message */}
             {error && (
-              <p className="text-red-500 text-sm text-center mb-4">{error}</p>
+              <p className="text-red-500 text-small text-center mb-4">{error}</p>
             )}
 
             {/* Success Message */}
             {isVerified && (
               <div className="flex items-center justify-center mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
                 <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
-                <p className="text-green-700 text-sm font-medium">
+                <p className="text-green-700 text-small font-medium">
                   Email verified successfully! emailVerified set to TRUE. Redirecting...
                 </p>
               </div>
@@ -287,7 +287,7 @@ export default function OTPVerification() {
             >
               {isResending ? "Sending..." : isVerified ? "Verified" : "Resend"}
             </button>
-            <div className="mt-2 text-sm text-gray-500">
+            <div className="mt-2 text-small text-gray-500">
               {timeLeftSeconds > 0 ? (
                 <span className="text-red-500">Code expires in {formatTime(timeLeftSeconds)}</span>
               ) : (
@@ -319,7 +319,7 @@ export default function OTPVerification() {
 
           {/* Security Note */}
           <div className="text-center mt-6">
-            <p className="text-xs text-gray-500 leading-relaxed">
+            <p className="text-small text-gray-500 leading-relaxed">
               Enter the 6-digit code sent to your email. You'll be redirected automatically once verified.
             </p>
           </div>
@@ -327,7 +327,7 @@ export default function OTPVerification() {
 
         {/* Footer */}
         <div className="text-center mt-8">
-          <p className="text-gray-600 text-sm">
+          <p className="text-gray-600 text-small">
             Having trouble?{" "}
             <a
               href="#"

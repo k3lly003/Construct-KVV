@@ -88,12 +88,12 @@ const CategoryServicesFilter: React.FC<CategoryServicesFilterProps> = ({
               <input
                 type="text"
                 placeholder="Search category ..."
-                className="border border-gray-300 rounded-md pl-8 pr-2 py-1 w-full text-sm"
+                className="border border-gray-300 rounded-md pl-8 pr-2 py-1 w-full text-small"
                 value={searchCategory}
                 onChange={(e) => setSearchCategory(e.target.value)}
               />
             </div>
-            <ul className="max-h-48 overflow-y-auto text-sm">
+            <ul className="max-h-48 overflow-y-auto text-small">
               {filteredCategories.map((category) => (
                 <li
                   key={category.value}
@@ -152,14 +152,14 @@ const CategoryServicesFilter: React.FC<CategoryServicesFilterProps> = ({
               onChange={handleSliderChange}
               className="mb-4"
             />
-            <div className="flex justify-between text-sm text-gray-600">
+            <div className="flex justify-between text-small text-gray-600">
               <span>{currentServiceRange[0].toLocaleString('en-US', { style: 'currency', currency: 'SAR' })}</span>
               <span>{currentServiceRange[1].toLocaleString('en-US', { style: 'currency', currency: 'SAR' })}</span>
             </div>
             <div className="flex justify-between mt-2">
               <input
                 type="number"
-                className="border border-gray-300 rounded-md p-1 w-24 text-sm"
+                className="border border-gray-300 rounded-md p-1 w-24 text-small"
                 value={currentServiceRange[0]}
                 onChange={(e) =>
                   onServiceRangeChange([
@@ -171,7 +171,7 @@ const CategoryServicesFilter: React.FC<CategoryServicesFilterProps> = ({
               <span className="mx-2">-</span>
               <input
                 type="number"
-                className="border border-gray-300 rounded-md p-1 w-24 text-sm"
+                className="border border-gray-300 rounded-md p-1 w-24 text-small"
                 value={currentServiceRange[1]}
                 onChange={(e) =>
                   onServiceRangeChange([
@@ -186,7 +186,7 @@ const CategoryServicesFilter: React.FC<CategoryServicesFilterProps> = ({
       </div>
 
       {/* Advanced Link (Optional) */}
-      <div className="text-right text-sm text-indigo-600">
+      <div className="text-right text-small text-indigo-600">
         <a href="#advanced">Advanced</a>
       </div>
     </div>

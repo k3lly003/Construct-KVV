@@ -72,11 +72,11 @@ export function FileUpload({
 
   return (
     <div className="space-y-2">
-      <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+      <label className="text-small font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
         {label}
       </label>
       {description && (
-        <p className="text-sm text-muted-foreground">{description}</p>
+        <p className="text-small text-muted-foreground">{description}</p>
       )}
       
       <div
@@ -91,12 +91,12 @@ export function FileUpload({
         <input {...getInputProps()} />
         <div className="flex flex-col items-center text-center">
           <Upload className="h-8 w-8 mb-2 text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">
+          <p className="text-small text-muted-foreground">
             {isDragActive
               ? "Drop the files here..."
               : `Drag 'n' drop files here, or click to select files`}
           </p>
-          <p className="text-xs text-muted-foreground mt-1">
+          <p className="text-small text-muted-foreground mt-1">
             PDF, JPG, PNG up to 10MB ({maxFiles - files.length} remaining)
           </p>
         </div>
@@ -110,8 +110,8 @@ export function FileUpload({
                 <div className="flex items-center space-x-2">
                   {getFileIcon(filePreview.file)}
                   <div>
-                    <p className="text-sm font-medium">{filePreview.file.name}</p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-small font-medium">{filePreview.file.name}</p>
+                    <p className="text-small text-muted-foreground">
                       {(filePreview.file.size / 1024 / 1024).toFixed(2)} MB
                     </p>
                   </div>
@@ -129,7 +129,7 @@ export function FileUpload({
         </div>
       )}
 
-      {error && <p className="text-sm text-destructive">{error}</p>}
+      {error && <p className="text-small text-destructive">{error}</p>}
     </div>
   );
 }

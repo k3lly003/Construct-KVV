@@ -68,7 +68,7 @@ export const AcceptBidModal = ({ isOpen, onClose }: AcceptBidModalProps) => {
               {...register("finalAmount")}
             />
             {errors.finalAmount && (
-              <p className="text-sm text-red-500">
+              <p className="text-small text-red-500">
                 {errors.finalAmount.message}
               </p>
             )}

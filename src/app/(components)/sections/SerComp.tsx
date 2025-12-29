@@ -26,19 +26,19 @@ function SerComp() {
       </div>
       <div className="p-3">
         <div className="flex justify-between">
-          <h3 className="text-lg font-semibold text-gray-800 mb-1">
+          <h3 className="text-mid font-semibold text-gray-800 mb-1">
             Waterproof Laminate
           </h3>
-          <p className="font-semibold text-lg text-yellow-400">
+          <p className="font-semibold text-mid text-yellow-400">
             {9000}
-            <span className="text-sm text-yellow-400"> Rwf</span>
+            <span className="text-small text-yellow-400"> Rwf</span>
           </p>
         </div>
-        <p className="text-sm text-gray-500 mb-2">
+        <p className="text-small text-gray-500 mb-2">
           Waterproof Laminate Flooring Kona Collection
         </p>
         <div className="flex justify-between mb-3">
-          <div className="text-green-500 w-[30%] text-sm">⭐ 4.0</div>
+          <div className="text-green-500 w-[30%] text-small">⭐ 4.0</div>
           <div className="cursor-pointer rounded-sm bg-gray-200 transition">
             {showDetails ? (
               <ChevronUp
@@ -55,7 +55,7 @@ function SerComp() {
         </div>
         {/* DETAILS DROP DOWN */}
         {showDetails && (
-          <div className="mt-2 text-sm text-gray-700">
+          <div className="mt-2 text-small text-gray-700">
             <p>Detail 1: This flooring is highly durable.</p>
             <p>Detail 2: Easy to install with click-lock system.</p>
             {/* You can add more details here */}
@@ -64,7 +64,7 @@ function SerComp() {
         <div className="flex justify-between w-full">
           <Button
             text={"Order a sample"}
-            texSize={"text-sm"}
+            texSize={"text-small"}
             hoverBg={"hover:bg-yellow-500"}
             borderCol={"border-yellow-500"}
             bgCol={"white"}
@@ -78,7 +78,7 @@ function SerComp() {
           />
           <Button
             text={"Add to cart"}
-            texSize={"text-sm"}
+            texSize={"text-small"}
             hoverBg={"bg-yellow-500"}
             borderCol={"border-0"}
             bgCol={"bg-amber-400"}

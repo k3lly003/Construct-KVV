@@ -31,7 +31,7 @@ export function StepTwoExterior() {
       transition={{ duration: 0.3 }}
     >
       <div className="mb-6">
-        <h2 className="text-3xl font-bold tracking-tight">Exterior Design</h2>
+        <h2 className="text-title font-bold tracking-tight">Exterior Design</h2>
         <p className="text-muted-foreground mt-2">
           Choose the exterior style and features that match your vision.
         </p>
@@ -41,8 +41,8 @@ export function StepTwoExterior() {
         <Card className="p-6">
           <div className="space-y-8">
             <div className="space-y-4">
-              <Label className="text-lg font-medium">House Style</Label>
-              <p className="text-muted-foreground text-sm mb-4">
+              <Label className="text-mid font-medium">House Style</Label>
+              <p className="text-muted-foreground text-small mb-4">
                 Choose the architectural style that best represents your vision.
               </p>
               <ImageSelector 
@@ -53,8 +53,8 @@ export function StepTwoExterior() {
             </div>
 
             <div className="space-y-4">
-              <Label className="text-lg font-medium">Roof Style</Label>
-              <p className="text-muted-foreground text-sm mb-4">
+              <Label className="text-mid font-medium">Roof Style</Label>
+              <p className="text-muted-foreground text-small mb-4">
                 Select the roof design for your building.
               </p>
               <ImageSelector 
@@ -65,8 +65,8 @@ export function StepTwoExterior() {
             </div>
 
             <div className="space-y-4">
-              <Label className="text-lg font-medium">Exterior Material</Label>
-              <p className="text-muted-foreground text-sm mb-4">
+              <Label className="text-mid font-medium">Exterior Material</Label>
+              <p className="text-muted-foreground text-small mb-4">
                 Choose the primary material for your building is exterior.
               </p>
               <ImageSelector 
@@ -77,8 +77,8 @@ export function StepTwoExterior() {
             </div>
 
             <div className="space-y-4">
-              <Label className="text-lg font-medium">Color Palette</Label>
-              <p className="text-muted-foreground text-sm mb-4">
+              <Label className="text-mid font-medium">Color Palette</Label>
+              <p className="text-muted-foreground text-small mb-4">
                 Select a color scheme for your exterior design.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

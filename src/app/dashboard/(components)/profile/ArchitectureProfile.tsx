@@ -225,7 +225,7 @@ const ArchitectureProfile: React.FC = () => {
   return (
     <div className="w-fullbg-gray-50 min-h-screen p-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Architect Profile</h1>
+        <h1 className="text-title font-bold text-gray-900 mb-2">Architect Profile</h1>
         <p className="text-gray-600">Manage your professional information and credentials</p>
       </div>
 
@@ -265,13 +265,13 @@ const ArchitectureProfile: React.FC = () => {
         <div className="pt-20 pb-8 px-8">
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
             <div className="mb-6 lg:mb-0">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              <h2 className="text-mid font-bold text-gray-900 mb-2">
                 {profile.user?.firstName + " " + profile.user?.lastName}
               </h2>
 
               <p className="text-gray-600 mb-4">Professional Architect</p>
 
-              <div className="space-y-2 text-sm">
+              <div className="space-y-2 text-small">
                 <div className="flex items-center text-gray-600">
                   <Mail className="w-4 h-4 mr-3" />
                   <span>{profile.user?.email}</span>
@@ -296,8 +296,8 @@ const ArchitectureProfile: React.FC = () => {
                     <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mx-auto mb-2">
                       <Icon className="w-6 h-6 text-amber-600" />
                     </div>
-                    <p className="text-xl font-bold text-gray-900">{stat.value}</p>
-                    <p className="text-xs text-gray-600">{stat.label}</p>
+                    <p className="text-mid font-bold text-gray-900">{stat.value}</p>
+                    <p className="text-small text-gray-600">{stat.label}</p>
                   </div>
                 );
               })}
@@ -312,7 +312,7 @@ const ArchitectureProfile: React.FC = () => {
           {/* Professional Info */}
           <div className="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100">
             <div className="flex items-center justify-between px-6 py-4">
-              <h1 className="text-xl font-semibold text-gray-900">Professional Info</h1>
+              <h1 className="text-mid font-semibold text-gray-900">Professional Info</h1>
               <button 
                 onClick={handleEditClick}
                 className="text-amber-600 font-medium p-0 h-auto bg-transparent border-none cursor-pointer hover:text-amber-700"
@@ -367,7 +367,7 @@ const ArchitectureProfile: React.FC = () => {
               </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-gray-900 font-medium text-base">{item.label}</p>
-                        <p className="text-gray-500 text-sm mt-1 break-words">{item.value}</p>
+                        <p className="text-gray-500 text-small mt-1 break-words">{item.value}</p>
               </div>
             </div>
           </div>
@@ -381,14 +381,14 @@ const ArchitectureProfile: React.FC = () => {
         <div className="space-y-6">
           {/* Account Status */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+            <h3 className="text-mid font-semibold text-gray-900 mb-4 flex items-center">
               <Star className="w-5 h-5 mr-2" />
               Account Status
             </h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
+                <label className="block text-small font-medium text-gray-700 mb-1">Status</label>
+                <span className={`inline-block px-3 py-1 rounded-full text-small font-medium ${
                   profile.status === 'APPROVED' ? 'bg-green-100 text-green-700' :
                   profile.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' :
                   'bg-red-100 text-red-700'
@@ -397,7 +397,7 @@ const ArchitectureProfile: React.FC = () => {
                 </span>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Member Since</label>
+                <label className="block text-small font-medium text-gray-700 mb-1">Member Since</label>
                 <p className="text-gray-700">{new Date(profile.createdAt).toLocaleDateString()}</p>
               </div>
             </div>
@@ -405,7 +405,7 @@ const ArchitectureProfile: React.FC = () => {
 
           {/* Professional Documents */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+            <h3 className="text-mid font-semibold text-gray-900 mb-4 flex items-center">
               <FileText className="w-5 h-5 mr-2" />
               Professional Documents
             </h3>
@@ -419,14 +419,14 @@ const ArchitectureProfile: React.FC = () => {
                       </div>
                       <div>
                         <h4 className="font-medium text-gray-900">Document {index + 1}</h4>
-                        <p className="text-sm text-gray-600">{doc}</p>
+                        <p className="text-small text-gray-600">{doc}</p>
                       </div>
                     </div>
                     <a 
                       href={doc} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-amber-600 hover:text-amber-700 text-sm font-medium"
+                      className="text-amber-600 hover:text-amber-700 text-small font-medium"
                     >
                       View
                     </a>
@@ -440,7 +440,7 @@ const ArchitectureProfile: React.FC = () => {
 
           {/* My Work */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+              <h3 className="text-mid font-semibold text-gray-900 mb-4 flex items-center">
               <Briefcase className="w-5 h-5 mr-2" />
               My Work
               </h3>
@@ -463,7 +463,7 @@ const ArchitectureProfile: React.FC = () => {
                           </div>
                           <div>
                             <h4 className="font-medium text-gray-900">{title}</h4>
-                            <p className="text-sm text-gray-600 truncate max-w-[50vw]">{url || 'No link provided'}</p>
+                            <p className="text-small text-gray-600 truncate max-w-[50vw]">{url || 'No link provided'}</p>
                           </div>
                         </div>
                         {url ? (
@@ -471,7 +471,7 @@ const ArchitectureProfile: React.FC = () => {
                             href={url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-amber-600 hover:text-amber-700 text-sm font-medium"
+                            className="text-amber-600 hover:text-amber-700 text-small font-medium"
                           >
                             View
                           </a>
@@ -492,7 +492,7 @@ const ArchitectureProfile: React.FC = () => {
           <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             {/* Dialog Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <h3 className="text-xl font-semibold text-gray-900">Edit Profile</h3>
+              <h3 className="text-mid font-semibold text-gray-900">Edit Profile</h3>
               <button
                 onClick={handleCancelEdit}
                 className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -506,7 +506,7 @@ const ArchitectureProfile: React.FC = () => {
               {/* Business Name & License */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-small font-medium text-gray-700 mb-2">
                     Business Name
                   </label>
                   <input
@@ -518,7 +518,7 @@ const ArchitectureProfile: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-small font-medium text-gray-700 mb-2">
                     License Number
                   </label>
                   <input
@@ -533,7 +533,7 @@ const ArchitectureProfile: React.FC = () => {
 
               {/* Years of Experience */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-small font-medium text-gray-700 mb-2">
                   Years of Experience
                 </label>
                 <input
@@ -548,7 +548,7 @@ const ArchitectureProfile: React.FC = () => {
 
               {/* Locations */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-small font-medium text-gray-700 mb-2">
                   Locations
                 </label>
                 <div className="space-y-2">
@@ -587,7 +587,7 @@ const ArchitectureProfile: React.FC = () => {
 
               {/* Documents */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-small font-medium text-gray-700 mb-2">
                   Documents
                 </label>
                 <div className="space-y-2">
@@ -627,7 +627,7 @@ const ArchitectureProfile: React.FC = () => {
               {/* Payout Method */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-small font-medium text-gray-700 mb-2">
                     Payout Method Type
                   </label>
                   <select
@@ -642,7 +642,7 @@ const ArchitectureProfile: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-small font-medium text-gray-700 mb-2">
                     Account Number
                   </label>
                   <input

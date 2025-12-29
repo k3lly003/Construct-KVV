@@ -65,7 +65,7 @@ const ToggleFlag = () => {
         }}
       />
       {error && (
-        <div className="text-red-500 text-xs mt-1">
+        <div className="text-red-500 text-small mt-1">
           {error}
         </div>
       )}

@@ -89,7 +89,7 @@ export default function AdminOverview() {
   };
 
   if (isLoading) {
-    return <div className="p-8 text-lg">Loading analytics...</div>;
+    return <div className="p-8 text-mid">Loading analytics...</div>;
   }
 
   if (hasError) {
@@ -114,7 +114,7 @@ export default function AdminOverview() {
       <div className="px-2">
         {/* Header */}
         <div className="mb-10">
-          <h1 className="text-2xl font-semibold">
+          <h1 className="text-mid font-semibold">
             Welcome Back, {userInfo.fullName || "User"}!
           </h1>
           <p className="text-gray-500">
@@ -125,7 +125,7 @@ export default function AdminOverview() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           {/* Revenue Over Time Line Chart */}
           <div className="bg-white dark:bg-gray-800 rounded shadow p-4">
-            <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
+            <h2 className="text-mid font-semibold mb-2 text-gray-900 dark:text-white">
               Revenue Over Time
             </h2>
             <ResponsiveContainer width="100%" height={250}>
@@ -159,7 +159,7 @@ export default function AdminOverview() {
           </div>
           {/* Projects by Status Pie Chart */}
           <div className="bg-white dark:bg-gray-800 rounded shadow p-4">
-            <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">
+            <h2 className="text-mid font-semibold mb-2 text-gray-900 dark:text-white">
               Projects by Status
             </h2>
             <ResponsiveContainer width="100%" height={250}>
@@ -229,7 +229,7 @@ export default function AdminOverview() {
           <div className="rounded-md w-full">
             {/* Recent Orders Table */}
             <div className="mb-8">
-              <h2 className="text-lg font-semibold mb-2">Recent Orders</h2>
+              <h2 className="text-mid font-semibold mb-2">Recent Orders</h2>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -345,7 +345,7 @@ export default function AdminOverview() {
           {/* <div className="space-y-8 w-full lg:w-[30%]">
             <div className="p-6 bg-white rounded shadow">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">Top Customers</h2>
+                <h2 className="text-mid font-semibold">Top Customers</h2>
               </div>
               <div className="space-y-4">
                 {topCustomers?.length > 0 ? topCustomers.map((customer: any) => (
@@ -354,7 +354,7 @@ export default function AdminOverview() {
                       <img src={customer.avatar || 'https://i.pravatar.cc/150?u=' + customer.id} alt={customer.name} className="w-10 h-10 rounded-full object-cover" />
                       <div>
                         <p className="font-medium">{customer.name}</p>
-                        <p className="text-sm text-gray-500">{customer.purchases} Purchases</p>
+                        <p className="text-small text-gray-500">{customer.purchases} Purchases</p>
                       </div>
                     </div>
                     <span className="font-medium">RWF {customer.amount?.toLocaleString()}</span>

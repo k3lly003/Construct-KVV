@@ -39,9 +39,9 @@ const TestimonialCarousel = () => {
               <AvatarFallback>{reviewsData[currentIndex].name.charAt(0)}</AvatarFallback>
             </Avatar>
             <div>
-              <h3 className="text-lg font-semibold">{reviewsData[currentIndex].name}</h3>
+              <h3 className="text-mid font-semibold">{reviewsData[currentIndex].name}</h3>
               {reviewsData[currentIndex].affiliation && (
-                <p className="text-sm text-gray-500">{reviewsData[currentIndex].affiliation}</p>
+                <p className="text-small text-gray-500">{reviewsData[currentIndex].affiliation}</p>
               )}
             </div>
           </div>

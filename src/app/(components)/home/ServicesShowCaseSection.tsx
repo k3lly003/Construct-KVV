@@ -257,10 +257,10 @@ export default function ServicesShowCaseSection() {
           {/* Content */}
           <div className="relative z-6 p-8 h-full flex flex-col justify-center">
             <div className="mb-10 w-3 h-3 md:w-10 md:h-10">{currentContent.hero.icon}</div>
-            <h1 className="text-white text-sm sm:text-lg md:text-3xl font-bold mb-4 max-w-md">{t(currentContent.hero.title)}</h1>
+            <h1 className="text-white text-small sm:text-mid md:text-title font-bold mb-4 max-w-md">{t(currentContent.hero.title)}</h1>
             <Button
               variant="link"
-              className="text-white hover:text-gray-200 p-0 h-auto text-sm dm:text-md font-medium text-left justify-start"
+              className="text-white hover:text-gray-200 p-0 h-auto text-small dm:text-md font-medium text-left justify-start"
             >
               {t(currentContent.hero.subtitle)}
             </Button>
@@ -289,7 +289,7 @@ export default function ServicesShowCaseSection() {
                 />
               </div>
               <div className="p-4">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{renderTitle(service.title)}</h3>
+                <h3 className="text-mid font-semibold text-gray-900 mb-3">{renderTitle(service.title)}</h3>
                 <Button
                   variant="link"
                   onClick={(e) => {
@@ -333,7 +333,7 @@ export default function ServicesShowCaseSection() {
       {/* Tab-specific additional content */}
       {activeTab === "projects" && (
         <div className="mt-8 p-6 bg-amber-50 rounded-lg">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">{t("home.project-contents.features.title")}</h3>
+          <h3 className="text-mid font-semibold text-gray-900 mb-2">{t("home.project-contents.features.title")}</h3>
           <p className="text-gray-600">
             {t("home.project-contents.features.description")}
           </p>
@@ -342,7 +342,7 @@ export default function ServicesShowCaseSection() {
 
       {activeTab === "bids-bulk" && (
         <div className="mt-8 p-6 bg-green-50 rounded-lg">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">{t("home.bidsBulk-contents.process.title")}</h3>
+          <h3 className="text-mid font-semibold text-gray-900 mb-2">{t("home.bidsBulk-contents.process.title")}</h3>
           <p className="text-gray-600">
             {t("home.bidsBulk-contents.process.description")}
           </p>
@@ -351,7 +351,7 @@ export default function ServicesShowCaseSection() {
 
       {activeTab === "hire-professional" && (
         <div className="mt-8 p-6 bg-purple-50 rounded-lg">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">{t("home.hireProfessional-contents.network.title")}</h3>
+          <h3 className="text-mid font-semibold text-gray-900 mb-2">{t("home.hireProfessional-contents.network.title")}</h3>
           <p className="text-gray-600">
             {t("home.hireProfessional-contents.network.description")}
           </p>

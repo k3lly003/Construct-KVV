@@ -255,7 +255,7 @@ export function StepOneBasics() {
       transition={{ duration: 0.3 }}
     >
       <div className="mb-6">
-        <h2 className="text-3xl font-bold tracking-tight">Project Basics</h2>
+        <h2 className="text-title font-bold tracking-tight">Project Basics</h2>
         <p className="text-muted-foreground mt-2">
           Let us start with the fundamental details of your dream home.
         </p>
@@ -503,7 +503,7 @@ export function StepOneBasics() {
 
             {/* Dynamic Features Section */}
             <div className="space-y-4 pt-4 border-t border-border">
-              <h3 className="text-lg font-semibold">Additional Features</h3>
+              <h3 className="text-mid font-semibold">Additional Features</h3>
 
               <div className="space-y-3">
                 {features.map((feature, index) => (
@@ -529,7 +529,7 @@ export function StepOneBasics() {
                     <div className="flex items-center space-x-2">
                       {feature.enabled && (
                         <>
-                          <Label className="text-sm">Count:</Label>
+                          <Label className="text-small">Count:</Label>
                           <Input
                             type="number"
                             min="1"
@@ -572,7 +572,7 @@ export function StepOneBasics() {
 
               {/* Add New Feature */}
               <div className="p-4 border-2 border-dashed border-muted-foreground/30 rounded-lg">
-                <h4 className="text-sm font-medium mb-3">Add Custom Feature</h4>
+                <h4 className="text-small font-medium mb-3">Add Custom Feature</h4>
                 <div className="flex items-center space-x-3">
                   <div className="flex-1">
                     <Input
@@ -611,11 +611,11 @@ export function StepOneBasics() {
 
             {/* Preview Section */}
             <div className="pt-4 border-t border-border">
-              <h3 className="text-lg font-semibold mb-3">
+              <h3 className="text-mid font-semibold mb-3">
                 Generated Description
               </h3>
               <div className="p-4 bg-muted/50 rounded-lg">
-                <p className="text-sm text-muted-foreground">
+                <p className="text-small text-muted-foreground">
                   {generateDescription()}
                 </p>
               </div>

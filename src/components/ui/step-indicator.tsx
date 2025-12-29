@@ -67,7 +67,7 @@ export function StepIndicator({ className }: StepIndicatorProps) {
               {/* Step label */}
               <span 
                 className={cn(
-                  "text-sm mt-2 font-medium hidden md:block",
+                  "text-small mt-2 font-medium hidden md:block",
                   isActive ? "text-foreground" : isCompleted ? "text-foreground" : "text-muted-foreground"
                 )}
               >

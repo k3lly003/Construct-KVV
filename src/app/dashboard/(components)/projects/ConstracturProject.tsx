@@ -332,10 +332,10 @@ export default function ContractorProjects() {
               <div className="flex items-center gap-3">
                 <span className="h-6 w-2 rounded-full bg-amber-500" />
                 <div>
-                  <h1 className="text-xl sm:text-2xl font-semibold">
+                  <h1 className="text-mid sm:text-mid font-semibold">
                     Your Closed Projects
                   </h1>
-                  <p className="text-muted-foreground text-sm">
+                  <p className="text-muted-foreground text-small">
                     Track agreed budgets, timelines, and milestones for projects
                     you’ve won.
                   </p>
@@ -353,7 +353,7 @@ export default function ContractorProjects() {
             <CardDescription>Fetching your closed projects…</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">Please wait.</p>
+            <p className="text-small text-muted-foreground">Please wait.</p>
           </CardContent>
         </Card>
       )}
@@ -365,7 +365,7 @@ export default function ContractorProjects() {
             <CardDescription>Nothing to manage yet</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-small text-muted-foreground">
               No projects found Yet .
             </p>
           </CardContent>
@@ -379,7 +379,7 @@ export default function ContractorProjects() {
             <CardDescription>Something went wrong</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-destructive">{error}</p>
+            <p className="text-small text-destructive">{error}</p>
           </CardContent>
         </Card>
       )}
@@ -452,14 +452,14 @@ export default function ContractorProjects() {
                   <CardHeader className="md:w-[40%] pb-4 md:pb-6 border-b md:border-b-0 md:border-r">
                     <div className="flex items-start justify-between">
                       <div>
-                        <CardTitle className="text-lg sm:text-xl">
+                        <CardTitle className="text-mid sm:text-mid">
                           Project Owner
                         </CardTitle>
                         <CardDescription className="mt-0.5 text-base">
                           {project.owner.firstName} {project.owner.lastName}
                         </CardDescription>
                       </div>
-                      <div className="rounded-md px-2 py-1 text-xs font-medium bg-gradient-to-r from-amber-500/20 via-amber-400/20 to-amber-600/20 text-amber-700 dark:text-amber-300 border border-amber-500/30">
+                      <div className="rounded-md px-2 py-1 text-small font-medium bg-gradient-to-r from-amber-500/20 via-amber-400/20 to-amber-600/20 text-amber-700 dark:text-amber-300 border border-amber-500/30">
                         CLOSED
                       </div>
                     </div>
@@ -486,7 +486,7 @@ export default function ContractorProjects() {
                             <div className="bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 p-[1px] rounded-lg">
                               <div className="bg-card rounded-lg p-3">
                                 <div className="flex items-center justify-between">
-                                  <span className="text-sm font-medium">
+                                  <span className="text-small font-medium">
                                     Budget
                                   </span>
                                   {(() => {
@@ -494,7 +494,7 @@ export default function ContractorProjects() {
                                     const isLoss = b.totalSpent > b.totalBudget;
                                     return (
                                       <span
-                                        className={`text-xs font-semibold ${
+                                        className={`text-small font-semibold ${
                                           isLoss
                                             ? "text-amber-800"
                                             : "text-amber-700"
@@ -558,7 +558,7 @@ export default function ContractorProjects() {
                                     .map((e) => (
                                       <div
                                         key={e.id}
-                                        className="flex items-center justify-between text-sm"
+                                        className="flex items-center justify-between text-small"
                                       >
                                         <div className="flex items-center gap-2">
                                           <span className="h-2 w-2 rounded-full bg-amber-500" />
@@ -581,7 +581,7 @@ export default function ContractorProjects() {
                                       </div>
                                     ))}
                                 </div>
-                                <div className="mt-2 grid grid-cols-3 gap-2 text-xs">
+                                <div className="mt-2 grid grid-cols-3 gap-2 text-small">
                                   <div className="flex flex-col">
                                     <span className="text-muted-foreground">
                                       Total
@@ -718,7 +718,7 @@ export default function ContractorProjects() {
                       <div className="mt-5">
                         <Card className="border-amber-100">
                           <CardHeader className="pb-2">
-                            <CardTitle className="text-sm">
+                            <CardTitle className="text-small">
                               Milestones
                             </CardTitle>
                             <CardDescription>
@@ -727,7 +727,7 @@ export default function ContractorProjects() {
                           </CardHeader>
                           <CardContent className="space-y-3">
                             <div className="flex items-center gap-2">
-                              <span className="w-20 text-xs text-muted-foreground">
+                              <span className="w-20 text-small text-muted-foreground">
                                 Foundation
                               </span>
                               <div className="h-2 w-full rounded bg-amber-100 overflow-hidden">
@@ -743,12 +743,12 @@ export default function ContractorProjects() {
                                   transition={{ duration: 0.4 }}
                                 />
                               </div>
-                              <span className="w-10 text-right text-xs">
+                              <span className="w-10 text-right text-small">
                                 {milestonesByProject[project.id]?.foundation}%
                               </span>
                             </div>
                             <div className="flex items-center gap-2">
-                              <span className="w-20 text-xs text-muted-foreground">
+                              <span className="w-20 text-small text-muted-foreground">
                                 Roofing
                               </span>
                               <div className="h-2 w-full rounded bg-amber-100 overflow-hidden">
@@ -764,12 +764,12 @@ export default function ContractorProjects() {
                                   transition={{ duration: 0.4 }}
                                 />
                               </div>
-                              <span className="w-10 text-right text-xs">
+                              <span className="w-10 text-right text-small">
                                 {milestonesByProject[project.id]?.roofing}%
                               </span>
                             </div>
                             <div className="flex items-center gap-2">
-                              <span className="w-20 text-xs text-muted-foreground">
+                              <span className="w-20 text-small text-muted-foreground">
                                 Finishing
                               </span>
                               <div className="h-2 w-full rounded bg-amber-100 overflow-hidden">
@@ -785,7 +785,7 @@ export default function ContractorProjects() {
                                   transition={{ duration: 0.4 }}
                                 />
                               </div>
-                              <span className="w-10 text-right text-xs">
+                              <span className="w-10 text-right text-small">
                                 {milestonesByProject[project.id]?.finishing}%
                               </span>
                             </div>
@@ -803,7 +803,7 @@ export default function ContractorProjects() {
                                   ((f + r + fi) / 3).toFixed(2)
                                 );
                                 return (
-                                  <span className="text-sm sm:text-base font-semibold text-amber-700">
+                                  <span className="text-small sm:text-base font-semibold text-amber-700">
                                     Total progress: {avg}%
                                   </span>
                                 );
@@ -819,11 +819,11 @@ export default function ContractorProjects() {
                           <Card className="border-amber-100 rounded-[11px]">
                             <CardHeader className="pb-2">
                               <div className="flex items-center justify-between">
-                                <CardTitle className="text-sm">
+                                <CardTitle className="text-small">
                                   Timeline
                                 </CardTitle>
                                 {progressPercent !== null && (
-                                  <span className="text-xs font-medium text-amber-700 dark:text-amber-300">
+                                  <span className="text-small font-medium text-amber-700 dark:text-amber-300">
                                     {progressPercent}%
                                   </span>
                                 )}
@@ -832,7 +832,7 @@ export default function ContractorProjects() {
                                 Project schedule window
                               </CardDescription>
                             </CardHeader>
-                            <CardContent className="text-xs sm:text-sm text-muted-foreground">
+                            <CardContent className="text-small sm:text-small text-muted-foreground">
                               <div className="flex flex-col gap-3">
                                 <motion.div
                                   initial={{ opacity: 0 }}
@@ -870,7 +870,7 @@ export default function ContractorProjects() {
                       <div className="mt-5">
                         <Card className="border-dashed">
                           <CardHeader className="pb-2">
-                            <CardTitle className="text-sm">Timeline</CardTitle>
+                            <CardTitle className="text-small">Timeline</CardTitle>
                             <CardDescription>
                               No timeline defined yet. Use “Timeline” to set
                               start and end.
@@ -883,7 +883,7 @@ export default function ContractorProjects() {
                       <div className="mt-5">
                         <Card className="border-dashed">
                           <CardHeader className="pb-2">
-                            <CardTitle className="text-sm">
+                            <CardTitle className="text-small">
                               Milestones
                             </CardTitle>
                             <CardDescription>
@@ -1018,7 +1018,7 @@ export default function ContractorProjects() {
                             <Label htmlFor="b-stage">Stage</Label>
                             <select
                               id="b-stage"
-                              className="h-10 rounded-md border bg-background px-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                              className="h-10 rounded-md border bg-background px-3 text-small focus:outline-none focus:ring-2 focus:ring-amber-500"
                               value={budgetStage}
                               onChange={(e) =>
                                 setBudgetStage(e.target.value as any)

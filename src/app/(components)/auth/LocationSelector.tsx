@@ -33,13 +33,13 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
   return (
     <div className="space-y-6">
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-slate-800 mb-2">Location Information</h3>
+        <h3 className="text-mid font-semibold text-slate-800 mb-2">Location Information</h3>
         <p className="text-slate-600">Specify your working area</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="space-y-2">
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-small font-semibold text-slate-700">
             Province <span className="text-red-500">*</span>
           </label>
           <select
@@ -61,7 +61,7 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
         </div>
 
         <div className="space-y-2">
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-small font-semibold text-slate-700">
             District <span className="text-red-500">*</span>
           </label>
           <select
@@ -83,7 +83,7 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({
         </div>
 
         <div className="space-y-2">
-          <label className="block text-sm font-semibold text-slate-700">
+          <label className="block text-small font-semibold text-slate-700">
             Cell <span className="text-red-500">*</span>
           </label>
           <select

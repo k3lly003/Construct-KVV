@@ -47,53 +47,53 @@ export default function CreatePortfolioForm() {
       <CardContent>
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="text-sm font-medium">Title</label>
+            <label className="text-small font-medium">Title</label>
             <Input value={title} onChange={e => setTitle(e.target.value)} required />
           </div>
           <div>
-            <label className="text-sm font-medium">Work Date</label>
+            <label className="text-small font-medium">Work Date</label>
             <Input type="date" value={workDate} onChange={e => setWorkDate(e.target.value)} required />
           </div>
           <div className="md:col-span-2">
-            <label className="text-sm font-medium">Description</label>
+            <label className="text-small font-medium">Description</label>
             <Textarea value={description} onChange={e => setDescription(e.target.value)} required />
           </div>
           <div>
-            <label className="text-sm font-medium">Category</label>
+            <label className="text-small font-medium">Category</label>
             <Input value={category} onChange={e => setCategory(e.target.value)} />
           </div>
           <div>
-            <label className="text-sm font-medium">Location</label>
+            <label className="text-small font-medium">Location</label>
             <Input value={location} onChange={e => setLocation(e.target.value)} />
           </div>
           <div>
-            <label className="text-sm font-medium">Budget</label>
+            <label className="text-small font-medium">Budget</label>
             <Input value={budget} onChange={e => setBudget(e.target.value)} />
           </div>
           <div>
-            <label className="text-sm font-medium">Duration</label>
+            <label className="text-small font-medium">Duration</label>
             <Input value={duration} onChange={e => setDuration(e.target.value)} />
           </div>
           <div>
-            <label className="text-sm font-medium">Images (comma separated URLs)</label>
+            <label className="text-small font-medium">Images (comma separated URLs)</label>
             <Input value={images} onChange={e => setImages(e.target.value)} />
           </div>
           <div>
-            <label className="text-sm font-medium">Skills (comma separated)</label>
+            <label className="text-small font-medium">Skills (comma separated)</label>
             <Input value={skills} onChange={e => setSkills(e.target.value)} />
           </div>
           <div className="md:col-span-2">
-            <label className="text-sm font-medium">Client Feedback</label>
+            <label className="text-small font-medium">Client Feedback</label>
             <Textarea value={clientFeedback} onChange={e => setClientFeedback(e.target.value)} />
           </div>
           <div className="flex items-center gap-2 md:col-span-2">
             <input id="isPublic" type="checkbox" checked={isPublic} onChange={e => setIsPublic(e.target.checked)} />
-            <label htmlFor="isPublic" className="text-sm">Public</label>
+            <label htmlFor="isPublic" className="text-small">Public</label>
           </div>
           <div className="md:col-span-2 flex items-center gap-4">
             <Button type="submit" disabled={loading}>{loading ? 'Saving...' : 'Create Portfolio'}</Button>
-            {error && <span className="text-red-600 text-sm">{error}</span>}
-            {lastMessage && !error && <span className="text-green-700 text-sm">{lastMessage}</span>}
+            {error && <span className="text-red-600 text-small">{error}</span>}
+            {lastMessage && !error && <span className="text-green-700 text-small">{lastMessage}</span>}
           </div>
         </form>
       </CardContent>

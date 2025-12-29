@@ -178,7 +178,7 @@ export const Products: React.FC = () => {
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
               <p className="font-medium">Error loading products</p>
-              <p className="text-sm">{error}</p>
+              <p className="text-small">{error}</p>
             </div>
           )}
 
@@ -203,7 +203,7 @@ export const Products: React.FC = () => {
               </div>
             ) : products.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-gray-500 text-lg mb-2">
+                <p className="text-gray-500 text-mid mb-2">
                   {searchTerm
                     ? `No products found for "${searchTerm}"`
                     : "No products available"}
@@ -254,18 +254,18 @@ export const Products: React.FC = () => {
                             {product.name}
                           </h3>
                         </div>
-                        <p className="text-sm text-gray-500 mb-2 overflow">
+                        <p className="text-small text-gray-500 mb-2 overflow">
                           {product.description}
                         </p>
                         <div className="flex items-center justify-between mb-3">
                           <p className="font-semibold text-md text-yellow-400">
                             {product.price}
-                            <span className="text-sm text-yellow-400"> Rwf</span>
+                            <span className="text-small text-yellow-400"> Rwf</span>
                           </p>
                         </div>
                         <Button
                           text={t(dashboardFakes.common.addToCart)}
-                          texSize={"text-sm"}
+                          texSize={"text-small"}
                           hoverBg={"hover:bg-yellow-400"}
                           borderCol={"border-yellow-300"}
                           bgCol={"white"}
@@ -292,7 +292,7 @@ export const Products: React.FC = () => {
                   ))
                 ) : (
                   <div className="w-full text-center py-12">
-                    <p className="text-gray-500 text-lg">No products found matching your search.</p>
+                    <p className="text-gray-500 text-mid">No products found matching your search.</p>
                   </div>
                 )}
                 {/* END OF PAGINATED PRODUCTS */}

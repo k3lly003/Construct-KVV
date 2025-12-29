@@ -37,7 +37,7 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({ steps, currentStep
                   <Check className="w-6 h-6 text-white" />
                 ) : (
                   <span
-                    className={`text-sm font-bold transition-colors duration-300 ${
+                    className={`text-small font-bold transition-colors duration-300 ${
                       isActive ? 'text-emerald-600' : 'text-slate-400'
                     }`}
                   >
@@ -47,7 +47,7 @@ export const StepIndicator: React.FC<StepIndicatorProps> = ({ steps, currentStep
               </div>
               <div className="mt-3 text-center max-w-24">
                 <p
-                  className={`text-xs font-semibold transition-colors duration-300 ${
+                  className={`text-small font-semibold transition-colors duration-300 ${
                     isActive ? 'text-emerald-600' : isCompleted ? 'text-emerald-700' : 'text-slate-500'
                   }`}
                 >

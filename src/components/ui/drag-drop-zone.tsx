@@ -86,7 +86,7 @@ export function DragDropZone({ onImagesChange, maxFiles = 10, images }: DragDrop
         <input {...getInputProps()} disabled={uploading} />
         <div className="flex flex-col items-center gap-2">
           <Upload className="h-8 w-8 text-muted-foreground" />
-          <div className="text-sm">
+          <div className="text-small">
             {isDragActive ? (
               <p>Drop the images here...</p>
             ) : (
@@ -120,7 +120,7 @@ export function DragDropZone({ onImagesChange, maxFiles = 10, images }: DragDrop
                       size="sm"
                       variant="secondary"
                       onClick={() => setDefaultImage(index)}
-                      className="text-xs"
+                      className="text-small"
                     >
                       Set Default
                     </GenericButton>
@@ -134,12 +134,12 @@ export function DragDropZone({ onImagesChange, maxFiles = 10, images }: DragDrop
                 </div>
               </div>
               {image.isDefault && (
-                <div className="absolute top-2 left-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded">
+                <div className="absolute top-2 left-2 bg-primary text-primary-foreground text-small px-2 py-1 rounded">
                   Default
                 </div>
               )}
               <div className="p-2">
-                <p className="text-xs text-muted-foreground truncate">{image.alt}</p>
+                <p className="text-small text-muted-foreground truncate">{image.alt}</p>
               </div>
             </div>
           ))}

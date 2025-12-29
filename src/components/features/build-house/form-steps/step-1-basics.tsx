@@ -24,7 +24,7 @@ export function StepOneBasics() {
       transition={{ duration: 0.3 }}
     >
       <div className="mb-6">
-        <h2 className="text-3xl font-bold tracking-tight">Project Basics</h2>
+        <h2 className="text-title font-bold tracking-tight">Project Basics</h2>
         <p className="text-muted-foreground mt-2">
           Let us start with the fundamental details of your dream home.
         </p>

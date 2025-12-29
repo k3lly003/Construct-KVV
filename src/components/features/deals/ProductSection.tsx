@@ -46,33 +46,33 @@ const PaginatedProductGrid: React.FC<PaginatedProductGridProps> = ({
                   className="w-full h-56 object-cover rounded-xl"
                 />
               </div>
-              <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-sm font-medium text-gray-700 shadow">
+              <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-small font-medium text-gray-700 shadow">
                 {product.availability}
               </div>
             </div>
             <div className="p-3 flex flex-col gap-2">
               <div className="flex justify-between">
-                <h3 className="text-lg w-[60%] font-semibold text-gray-800 mb-1">
+                <h3 className="text-mid w-[60%] font-semibold text-gray-800 mb-1">
                   {product.name}
                 </h3>
                 <div className="flex flex-col">
-                  <p className="font-semibold text-lg text-yellow-400">
+                  <p className="font-semibold text-mid text-yellow-400">
                     {product.price}
-                    <span className="text-sm text-yellow-400"> Rwf</span>
+                    <span className="text-small text-yellow-400"> Rwf</span>
                   </p>
                 </div>
               </div>
-              <p className="text-sm text-gray-500 mb-2 overflow">
+              <p className="text-small text-gray-500 mb-2 overflow">
                 {product.description}
               </p>
               <div className="mb-3 space-y-1">
-                <div className="flex items-center text-sm text-gray-600">
+                <div className="flex items-center text-small text-gray-600">
                   <Package className="h-4 w-4 mr-2" />
                   <span>
                     Min. Order: {product.minOrder} {product.unit}
                   </span>
                 </div>
-                <div className="flex items-center text-sm text-gray-600">
+                <div className="flex items-center text-small text-gray-600">
                   <Clock className="h-4 w-4 mr-2" />
                   <span>Lead Time: {product.leadTime}</span>
                 </div>
@@ -81,7 +81,7 @@ const PaginatedProductGrid: React.FC<PaginatedProductGridProps> = ({
                 {product.features.map((feature, index) => (
                   <span
                     key={index}
-                    className="bg-blue-50 text-blue-700 px-2 py-1 rounded-full text-xs font-medium"
+                    className="bg-blue-50 text-blue-700 px-2 py-1 rounded-full text-small font-medium"
                   >
                     {feature}
                   </span>
@@ -91,7 +91,7 @@ const PaginatedProductGrid: React.FC<PaginatedProductGridProps> = ({
                 {product.certifications.map((cert, index) => (
                   <div
                     key={index}
-                    className="flex items-center text-xs text-gray-600"
+                    className="flex items-center text-small text-gray-600"
                   >
                     <BadgeCheck className="h-4 w-4 text-green-500 mr-1" />
                     {cert}
@@ -101,7 +101,7 @@ const PaginatedProductGrid: React.FC<PaginatedProductGridProps> = ({
               <div className="flex justify-between">
                 <Button
                   text={"Request quote"}
-                  texSize={"text-sm"}
+                  texSize={"text-small"}
                   hoverBg={"bg-yellow-500"}
                   borderCol={"border-0"}
                   bgCol={"bg-amber-400"}
@@ -113,7 +113,7 @@ const PaginatedProductGrid: React.FC<PaginatedProductGridProps> = ({
                 />
                 <Button
                   text={"View details"}
-                  texSize={"text-sm"}
+                  texSize={"text-small"}
                   hoverBg={""}
                   borderCol={"border-yellow-400"}
                   bgCol={"bg-white"}

@@ -258,8 +258,8 @@ const Page = () => {
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
         <div>
-          <h1 className="text-2xl font-semibold">{t('dashboard.productsManagement')}</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-mid font-semibold">{t('dashboard.productsManagement')}</h1>
+          <p className="text-small text-muted-foreground">
             {t('dashboard.productsManagementDesc')}
           </p>
         </div>
@@ -277,7 +277,7 @@ const Page = () => {
         <div className="flex items-center space-x-2">
           <div className="flex items-center gap-2">
             <Funnel className="h-4 w-4" />
-            <span className="text-sm font-medium">Products</span>
+            <span className="text-small font-medium">Products</span>
           </div>
           <Input
             type="search"
@@ -368,7 +368,7 @@ const Page = () => {
 
       {totalResults > 0 && (
         <div className="flex items-center justify-between mt-4">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-small text-muted-foreground">
             {t('dashboard.showingResults', { start: startIndex + 1, end: Math.min(endIndex, totalResults), total: totalResults })}
           </p>
           <div className="flex items-center space-x-4">
@@ -378,7 +378,7 @@ const Page = () => {
               onPageChange={handlePageChange}
             />
             <div className="flex items-center space-x-2">
-              <p className="text-sm text-muted-foreground">{t('dashboard.resultsPerPage')}</p>
+              <p className="text-small text-muted-foreground">{t('dashboard.resultsPerPage')}</p>
               <Select
                 value={resultsPerPage.toString()}
                 onValueChange={handleResultsPerPageChange}
@@ -436,7 +436,7 @@ const Page = () => {
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium">{t('dashboard.name')}</label>
+                <label className="block text-small font-medium">{t('dashboard.name')}</label>
                 <Input
                   value={editForm.name}
                   onChange={e => setEditForm({ ...editForm, name: e.target.value })}
@@ -444,7 +444,7 @@ const Page = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium">{t('dashboard.description')}</label>
+                <label className="block text-small font-medium">{t('dashboard.description')}</label>
                 <Input
                   value={editForm.description}
                   onChange={e => setEditForm({ ...editForm, description: e.target.value })}
@@ -452,7 +452,7 @@ const Page = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium">{t('dashboard.price')}</label>
+                <label className="block text-small font-medium">{t('dashboard.price')}</label>
                 <Input
                   type="number"
                   value={editForm.price}
@@ -461,7 +461,7 @@ const Page = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium">{t('dashboard.discountedPrice')}</label>
+                <label className="block text-small font-medium">{t('dashboard.discountedPrice')}</label>
                 <Input
                   type="number"
                   value={editForm.discountedPrice}
@@ -470,7 +470,7 @@ const Page = () => {
               </div>
               {/* Category dropdown */}
               <div>
-                <label className="block text-sm font-medium">{t('dashboard.category')}</label>
+                <label className="block text-small font-medium">{t('dashboard.category')}</label>
                 <CategorySelect
                   value={editForm.categoryId || ''}
                   onChange={val => setEditForm({ ...editForm, categoryId: val })}

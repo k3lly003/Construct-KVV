@@ -78,22 +78,22 @@ export function ServiceGrid({ searchQuery = "" }: { searchQuery?: string }) {
                 <div className="px-4 pb-3">
                   <div className="flex items-center gap-2 mb-3">
                     <Store className="w-5 h-5 text-amber-600"/>
-                    <span className="text-sm font-medium text-gray-700">{service.provider?.name || "Unknown"}</span>
+                    <span className="text-small font-medium text-gray-700">{service.provider?.name || "Unknown"}</span>
                   </div>
 
                   {/* Service Title */}
-                  <h1 className="font-bold text-gray-900 text-lg leading-tight mb-4 line-clamp-2">
+                  <h1 className="font-bold text-gray-900 text-mid leading-tight mb-4 line-clamp-2">
                     {service.title}
                   </h1>
 
                   {/* Pricing and Location Info */}
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
-                      <p className="text-xs text-gray-500 mb-1">Starting at</p>
+                      <p className="text-small text-gray-500 mb-1">Starting at</p>
                       <p className="font-semibold text-gray-900">{service.pricing?.basePrice ? `${service.pricing.basePrice} Rwf` : "-"}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-500 mb-1">Location</p>
+                      <p className="text-small text-gray-500 mb-1">Location</p>
                       <p className="font-semibold text-gray-900">{service.location?.city || "-"}</p>
                     </div>
                   </div>
@@ -104,7 +104,7 @@ export function ServiceGrid({ searchQuery = "" }: { searchQuery?: string }) {
                       <Badge
                         key={feature}
                         variant="secondary"
-                        className="text-xs px-2 py-1 bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+                        className="text-small px-2 py-1 bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
                       >
                         {feature}
                       </Badge>

@@ -24,9 +24,9 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
   return (
     <div className="space-y-4">
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-slate-800 mb-2">Select Your Expertise</h3>
+        <h3 className="text-mid font-semibold text-slate-800 mb-2">Select Your Expertise</h3>
         <p className="text-slate-600">Choose one or more categories that match your skills</p>
-        <p className="text-sm text-emerald-600 font-medium mt-1">
+        <p className="text-small text-emerald-600 font-medium mt-1">
           Selected: {selectedCategories.length} categories
         </p>
       </div>
@@ -56,7 +56,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
                   }`}>
                     {category.label}
                   </h4>
-                  <p className={`text-sm mt-1 transition-colors duration-200 ${
+                  <p className={`text-small mt-1 transition-colors duration-200 ${
                     isSelected ? 'text-emerald-700' : 'text-slate-600'
                   }`}>
                     {category.description}

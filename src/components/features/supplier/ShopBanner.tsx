@@ -42,7 +42,7 @@ export const ShopBanner: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold mb-4">{supplierInfo.name}</h1>
+              <h1 className="text-title font-bold mb-4">{supplierInfo.name}</h1>
               <div className="flex items-center space-x-4 mb-2">
                 <div className="flex items-center">
                   <Star className="h-5 w-5 text-yellow-400 fill-current" />
@@ -71,14 +71,14 @@ export const ShopBanner: React.FC = () => {
                     <Shield className="h-5 w-5 mr-2" />
                     <span className="font-semibold">Verified Supplier</span>
                   </div>
-                  <p className="text-sm text-yellow-200">Since {supplierInfo.yearEstablished}</p>
+                  <p className="text-small text-yellow-200">Since {supplierInfo.yearEstablished}</p>
                 </div>
                 <div className="bg-white/10 rounded-lg p-4">
                   <div className="flex items-center mb-2">
                     <Truck className="h-5 w-5 mr-2" />
                     <span className="font-semibold">Fast Delivery</span>
                   </div>
-                  <p className="text-sm text-yellow-200">{supplierInfo.deliveryTime}</p>
+                  <p className="text-small text-yellow-200">{supplierInfo.deliveryTime}</p>
                 </div>
               </div>
             </div>

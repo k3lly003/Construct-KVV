@@ -30,7 +30,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
           className="flex justify-between items-center cursor-pointer"
           onClick={toggleSpecifications}
         >
-          <h2 className="text-lg font-semibold text-yellow-400">Specifications</h2>
+          <h2 className="text-mid font-semibold text-yellow-400">Specifications</h2>
           {showSpecifications ? (
             <ChevronUp className="h-5 w-5 text-gray-500" />
           ) : (
@@ -44,7 +44,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
               <h3 className="text-md font-semibold text-gray-700 mb-2">Dimensions</h3>
               <div className="space-y-3">
                 {dimensions.map((item, index) => (
-                  <div key={index} className="flex justify-between text-sm text-gray-600">
+                  <div key={index} className="flex justify-between text-small text-gray-600">
                     <span>{item.label}</span>
                     <span>{item.value}</span>
                   </div>
@@ -57,7 +57,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
               <h3 className="text-md font-semibold text-gray-700 mb-2">Details</h3>
               <div className="space-y-3">
                 {details.map((item, index) => (
-                  <div key={index} className="flex justify-between text-sm text-gray-600">
+                  <div key={index} className="flex justify-between text-small text-gray-600">
                     <span>{item.label}</span>
                     <span>{item.value}</span>
                   </div>
@@ -70,7 +70,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
               <h3 className="text-md font-semibold text-gray-700 mb-2">Warranty</h3>
               <div className="space-y-3">
                 {warranty.map((item, index) => (
-                  <div key={index} className="flex justify-between text-sm text-gray-600">
+                  <div key={index} className="flex justify-between text-small text-gray-600">
                     <span>{item.label}</span>
                     <span>{item.value}</span>
                   </div>
@@ -86,7 +86,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
           className="flex justify-between items-center cursor-pointer"
           onClick={toggleResources}
         >
-          <h2 className="text-lg font-semibold text-yellow-400">
+          <h2 className="text-mid font-semibold text-yellow-400">
             Warranty, Installation & Other Resources
           </h2>
           {showResources ? (
@@ -96,7 +96,7 @@ const Specifications: React.FC<SpecificationsProps> = ({
           )}
         </div>
         {showResources && (
-          <div className="mt-4 space-y-2 text-sm text-gray-600">
+          <div className="mt-4 space-y-2 text-small text-gray-600">
             {resources.map((item, index) => (
               <div key={index} className="flex items-center">
                 {/* You might want to use an icon here, like a document or PDF */}

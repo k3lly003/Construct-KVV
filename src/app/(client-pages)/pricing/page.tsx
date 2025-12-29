@@ -262,12 +262,12 @@ export default function PricingPage() {
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-16 text-center">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-5xl font-bold tracking-tight text-slate-900 mb-6">Flexible Pricing For Every Project</h1>
-          <p className="text-xl text-slate-600 mb-4">Transparent. Reliable. Built For Construction.</p>
-          <p className="text-lg text-slate-500 mb-8">
+          <h1 className="text-title font-bold tracking-tight text-slate-900 mb-6">Flexible Pricing For Every Project</h1>
+          <p className="text-mid text-slate-600 mb-4">Transparent. Reliable. Built For Construction.</p>
+          <p className="text-mid text-slate-500 mb-8">
             Whether you&apos;re a supplier, contractor, architect, or project owner, choose a plan tailored to your needs.
           </p>
-          <div className="flex items-center justify-center gap-8 text-sm text-slate-600">
+          <div className="flex items-center justify-center gap-8 text-small text-slate-600">
             <div className="flex items-center gap-2">
               <Check className="h-4 w-4 text-green-600" />
               <span>10,000+ Projects Completed</span>
@@ -311,9 +311,9 @@ export default function PricingPage() {
                         </Badge>
                       )}
                       <CardHeader>
-                        <CardTitle className="text-2xl">{plan.name}</CardTitle>
+                        <CardTitle className="text-mid">{plan.name}</CardTitle>
                         <CardDescription>{plan.description}</CardDescription>
-                        <div className="text-4xl font-bold">
+                        <div className="text-title font-bold">
                           {plan.price === "Custom" ? plan.price : `${plan.price}/mo`}
                         </div>
                       </CardHeader>
@@ -322,7 +322,7 @@ export default function PricingPage() {
                           {plan.features.map((feature, featureIndex) => (
                             <li key={featureIndex} className="flex items-center gap-2">
                               <Check className="h-4 w-4 text-green-600 flex-shrink-0" />
-                              <span className="text-sm">{feature}</span>
+                              <span className="text-small">{feature}</span>
                             </li>
                           ))}
                         </ul>
@@ -350,7 +350,7 @@ export default function PricingPage() {
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
               <Calculator className="h-12 w-12 text-amber-600 mx-auto mb-4" />
-              <h2 className="text-3xl font-bold mb-4">Calculate Your Custom Price</h2>
+              <h2 className="text-title font-bold mb-4">Calculate Your Custom Price</h2>
               <p className="text-slate-600">Get an instant estimate based on your specific needs</p>
             </div>
 
@@ -368,7 +368,7 @@ export default function PricingPage() {
                         step={10}
                         className="mb-2"
                       />
-                      <div className="text-sm text-slate-600">{projectSize[0].toLocaleString()} sq ft</div>
+                      <div className="text-small text-slate-600">{projectSize[0].toLocaleString()} sq ft</div>
                     </div>
 
                     <div>
@@ -381,13 +381,13 @@ export default function PricingPage() {
                         step={10}
                         className="mb-2"
                       />
-                      <div className="text-sm text-slate-600">{orderVolume[0]} orders/month</div>
+                      <div className="text-small text-slate-600">{orderVolume[0]} orders/month</div>
                     </div>
 
                     <div>
                       <Label className="text-base font-medium mb-4 block">Team Size</Label>
                       <Slider value={teamSize} onValueChange={setTeamSize} max={50} min={1} step={1} className="mb-2" />
-                      <div className="text-sm text-slate-600">{teamSize[0]} team members</div>
+                      <div className="text-small text-slate-600">{teamSize[0]} team members</div>
                     </div>
 
                     <div className="flex items-center gap-4">
@@ -408,17 +408,17 @@ export default function PricingPage() {
                   </div>
 
                   <div className="bg-amber-50 p-6 rounded-lg">
-                    <h3 className="text-xl font-bold mb-4">Your Estimated Cost</h3>
-                    <div className="text-4xl font-bold text-amber-600 mb-2">
+                    <h3 className="text-mid font-bold mb-4">Your Estimated Cost</h3>
+                    <div className="text-title font-bold text-amber-600 mb-2">
                       ${calculateEstimatedCost()}
                       {isAnnual ? "/year" : "/month"}
                     </div>
                     {isAnnual && (
-                      <div className="text-sm text-green-600 mb-4">
+                      <div className="text-small text-green-600 mb-4">
                         Save ${Math.round(calculateEstimatedCost() * 12 * 0.2)} annually
                       </div>
                     )}
-                    <div className="space-y-2 text-sm text-slate-600 mb-6">
+                    <div className="space-y-2 text-small text-slate-600 mb-6">
                       <div>✓ All Professional features included</div>
                       <div>✓ Priority support</div>
                       <div>✓ Advanced analytics</div>
@@ -437,7 +437,7 @@ export default function PricingPage() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12">Compare Features</h2>
+            <h2 className="text-title font-bold text-center mb-12">Compare Features</h2>
             <div className="overflow-x-auto">
               <table className="w-full border-collapse">
                 <thead>
@@ -486,7 +486,7 @@ export default function PricingPage() {
       <section className="bg-slate-50 py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
+            <h2 className="text-title font-bold text-center mb-12">Frequently Asked Questions</h2>
             <Accordion type="single" collapsible className="space-y-4">
               <AccordionItem value="item-1">
                 <AccordionTrigger>How do I change plans?</AccordionTrigger>
@@ -532,7 +532,7 @@ export default function PricingPage() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12">What Our Customers Say</h2>
+            <h2 className="text-title font-bold text-center mb-12">What Our Customers Say</h2>
             <div className="grid md:grid-cols-3 gap-8">
               {testimonials.map((testimonial, index) => (
                 <Card key={index}>
@@ -545,7 +545,7 @@ export default function PricingPage() {
                     <p className="text-slate-600 mb-4">&quot;{testimonial.content}&quot;</p>
                     <div>
                       <div className="font-medium">{testimonial.name}</div>
-                      <div className="text-sm text-slate-500">{testimonial.role}</div>
+                      <div className="text-small text-slate-500">{testimonial.role}</div>
                     </div>
                   </CardContent>
                 </Card>
@@ -553,7 +553,7 @@ export default function PricingPage() {
             </div>
 
             <div className="text-center mt-12">
-              <div className="flex items-center justify-center gap-8 text-sm text-slate-600 mb-8">
+              <div className="flex items-center justify-center gap-8 text-small text-slate-600 mb-8">
                 <div className="flex items-center gap-2">
                   <Building className="h-5 w-5" />
                   <span>Trusted by 1,000+ Companies</span>
@@ -576,8 +576,8 @@ export default function PricingPage() {
       <section className="bg-amber-600 text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl font-bold mb-6">Ready to Transform Your Construction Projects?</h2>
-            <p className="text-xl mb-8 text-amber-100">
+            <h2 className="text-title font-bold mb-6">Ready to Transform Your Construction Projects?</h2>
+            <p className="text-mid mb-8 text-amber-100">
               Join thousands of construction professionals who trust our platform for their projects.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

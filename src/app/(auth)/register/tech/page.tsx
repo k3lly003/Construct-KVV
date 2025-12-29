@@ -98,7 +98,7 @@ function App() {
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-slate-800 mb-2">Personal Information</h2>
+              <h2 className="text-mid font-bold text-slate-800 mb-2">Personal Information</h2>
               <p className="text-slate-600">Let's start with your basic details</p>
             </div>
             
@@ -178,7 +178,7 @@ function App() {
               onChange={(categories) => updateFormData('categories', categories)}
             />
             {errors.categories && (
-              <p className="text-sm text-red-600 font-medium">
+              <p className="text-small text-red-600 font-medium">
                 {errors.categories}
               </p>
             )}
@@ -198,7 +198,7 @@ function App() {
             />
 
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-slate-700">
+              <label className="block text-small font-semibold text-slate-700">
                 Experience & Skills <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -213,7 +213,7 @@ function App() {
                 }`}
               />
               {errors.experience && (
-                <p className="text-sm text-red-600 font-medium animate-in slide-in-from-left duration-300">
+                <p className="text-small text-red-600 font-medium animate-in slide-in-from-left duration-300">
                   {errors.experience}
                 </p>
               )}
@@ -229,7 +229,7 @@ function App() {
               onChange={(files) => updateFormData('documents', files)}
             />
             {errors.documents && (
-              <p className="text-sm text-red-600 font-medium">
+              <p className="text-small text-red-600 font-medium">
                 {errors.documents}
               </p>
             )}
@@ -251,8 +251,8 @@ function App() {
               <Wrench className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-slate-800">Expert Solutions</h1>
-              <p className="text-sm text-slate-600">Professional Technician Registration</p>
+              <h1 className="text-mid font-bold text-slate-800">Expert Solutions</h1>
+              <p className="text-small text-slate-600">Professional Technician Registration</p>
             </div>
           </div>
         </div>
@@ -268,7 +268,7 @@ function App() {
                   <Shield className="w-6 h-6 text-emerald-600" />
                   <h3 className="font-semibold text-slate-800">Secure & Trusted</h3>
                 </div>
-                <p className="text-sm text-slate-600 leading-relaxed">
+                <p className="text-small text-slate-600 leading-relaxed">
                   Your information is protected with enterprise-grade security and will only be used to connect you with relevant projects.
                 </p>
               </div>
@@ -280,7 +280,7 @@ function App() {
                   <Star className="w-6 h-6 text-amber-500" />
                   <h3 className="font-semibold text-slate-800">Join Elite Network</h3>
                 </div>
-                <p className="text-sm text-slate-600 leading-relaxed">
+                <p className="text-small text-slate-600 leading-relaxed">
                   Connect with premium clients and projects that match your expertise. Build your reputation and grow your business.
                 </p>
               </div>

@@ -57,7 +57,7 @@ export function NotificationDemo() {
 
   return (
     <div className="fixed bottom-4 right-4 z-50 bg-white border border-amber-200 rounded-lg shadow-lg p-4">
-      <h3 className="text-sm font-semibold text-amber-900 mb-3">
+      <h3 className="text-small font-semibold text-amber-900 mb-3">
         Test Notifications
       </h3>
       <div className="flex flex-wrap gap-2">

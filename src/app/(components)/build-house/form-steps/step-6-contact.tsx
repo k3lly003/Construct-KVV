@@ -110,7 +110,7 @@ function BudgetRadioSection({
         >
           <div>
             <div className="font-medium text-amber-900">{option.label}</div>
-            <div className="text-xs text-amber-700 mt-1">
+            <div className="text-small text-amber-700 mt-1">
               {option.description}
             </div>
           </div>
@@ -223,7 +223,7 @@ export function StepSixContact() {
       transition={{ duration: 0.3 }}
     >
       <div className="mb-6">
-        <h2 className="text-3xl font-bold tracking-tight">Project Status</h2>
+        <h2 className="text-title font-bold tracking-tight">Project Status</h2>
         <p className="text-muted-foreground mt-2">
           Review your project details . Your project is ready to be published
           for bidding!
@@ -233,13 +233,13 @@ export function StepSixContact() {
         <div className="space-y-8">
           {/* Project Summary */}
           <Card className="p-6 border-amber-200 bg-white shadow-lg">
-            <h3 className="text-lg font-semibold text-amber-900 mb-4">
+            <h3 className="text-mid font-semibold text-amber-900 mb-4">
               📋 Project Summary
             </h3>
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm text-amber-700">
+                  <span className="text-small text-amber-700">
                     🏠 Project Type
                   </span>
                   <span className="font-bold text-amber-900 capitalize">
@@ -247,7 +247,7 @@ export function StepSixContact() {
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm text-amber-700">
+                  <span className="text-small text-amber-700">
                     📏 Square Footage
                   </span>
                   <span className="font-bold text-amber-900">
@@ -257,19 +257,19 @@ export function StepSixContact() {
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm text-amber-700">🛏️ Bedrooms</span>
+                  <span className="text-small text-amber-700">🛏️ Bedrooms</span>
                   <span className="font-bold text-amber-900">
                     {formData.bedrooms || 0}
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm text-amber-700">🛁 Bathrooms</span>
+                  <span className="text-small text-amber-700">🛁 Bathrooms</span>
                   <span className="font-bold text-amber-900">
                     {formData.bathrooms || 0}
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm text-amber-700">📈 Confidence</span>
+                  <span className="text-small text-amber-700">📈 Confidence</span>
                   <span className="font-bold text-amber-900">
                     {apiResponse?.confidence
                       ? apiResponse.confidence
@@ -278,7 +278,7 @@ export function StepSixContact() {
                 </div>
                 {/* Recommendations */}
                 <div className="md:col-span-2 flex flex-col items-start space-y-1 mt-2">
-                  <span className="text-sm text-amber-700 mb-1">
+                  <span className="text-small text-amber-700 mb-1">
                     💡 Recommendations
                   </span>
                   {(() => {
@@ -308,7 +308,7 @@ export function StepSixContact() {
                             key={idx}
                             className="flex items-start space-x-2 text-amber-900"
                           >
-                            <span className="text-lg">
+                            <span className="text-mid">
                               {idx % 3 === 0
                                 ? "💡"
                                 : idx % 3 === 1
@@ -330,7 +330,7 @@ export function StepSixContact() {
                 </div>
               </div>
               <div>
-                <p className="text-sm text-amber-700">📝 Description</p>
+                <p className="text-small text-amber-700">📝 Description</p>
                 <p className="font-medium text-amber-900">
                   {houseSummary?.fullDescription ||
                     apiResponse?.description ||
@@ -340,10 +340,10 @@ export function StepSixContact() {
             </div>
             {/* --- BUDGET SECTION --- */}
             <div className="mt-8">
-              <h4 className="text-lg font-semibold text-amber-900 mb-2">
+              <h4 className="text-mid font-semibold text-amber-900 mb-2">
                 💰 Select Your Budget Estimate
               </h4>
-              <p className="text-sm text-amber-700 mb-4">
+              <p className="text-small text-amber-700 mb-4">
                 Choose one of the available cost estimates for your project.
                 This will be submitted as your preferred budget.
               </p>

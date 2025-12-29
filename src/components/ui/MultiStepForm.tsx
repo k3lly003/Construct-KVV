@@ -47,7 +47,7 @@ export default function MultiStepForm({
 
   return (
     <div className="w-full max-w-lg mx-auto p-6 bg-white rounded-2xl shadow-lg">
-      <h2 className="text-xl font-semibold mb-4">{step.title}</h2>
+      <h2 className="text-mid font-semibold mb-4">{step.title}</h2>
 
       <div className="space-y-3 mb-6">
         {step.options.map((option) => (

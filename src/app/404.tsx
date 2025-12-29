@@ -21,16 +21,16 @@ export default function NotFoundPage() {
           </div>
           
           {/* 404 Error */}
-          <h1 className="text-6xl md:text-8xl font-black text-white mb-4 tracking-tight">
+          <h1 className="text-large font-black text-white mb-4 tracking-tight">
             404 IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
           </h1>
           
           {/* Error Message */}
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+          <h2 className="text-title font-bold text-white mb-4">
             Page Not Found
           </h2>
           
-          <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-mid text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
             The page you&apos;re looking for doesn&apos;t exist. It might have been moved, deleted, or you entered the wrong URL.
           </p>
           

@@ -118,7 +118,7 @@ const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">Edit Profile</DialogTitle>
+          <DialogTitle className="text-mid font-bold">Edit Profile</DialogTitle>
           <DialogDescription>
             Update your business information and professional credentials
           </DialogDescription>
@@ -127,7 +127,7 @@ const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
         <div className="space-y-6 py-4">
           {/* Business Information */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
+            <h3 className="text-mid font-semibold text-gray-900 border-b pb-2">
               Business Information
             </h3>
             
@@ -198,7 +198,7 @@ const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
 
           {/* Insurance Information */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
+            <h3 className="text-mid font-semibold text-gray-900 border-b pb-2">
               Insurance Information
             </h3>
             
@@ -227,7 +227,7 @@ const ProfileEditDialog: React.FC<ProfileEditDialogProps> = ({
 
           {/* Payment Information */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">
+            <h3 className="text-mid font-semibold text-gray-900 border-b pb-2">
               Payment Information
             </h3>
             

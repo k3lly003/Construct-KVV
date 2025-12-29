@@ -20,7 +20,7 @@ export const AuthPrompt: React.FC<AuthPromptProps> = ({
       className={`flex flex-col items-center justify-center p-6 text-center ${className}`}
     >
       <Lock className="h-12 w-12 text-gray-400 mb-4" />
-      <h3 className="text-lg font-medium text-gray-900 mb-2">{title}</h3>
+      <h3 className="text-mid font-medium text-gray-900 mb-2">{title}</h3>
       <p className="text-gray-600 mb-4">{message}</p>
       {showLoginButton && (
         <Link

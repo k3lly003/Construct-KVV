@@ -45,7 +45,7 @@ export default function ImageUploaderGrid({ files, previews, onChange, max = 8 }
         <button
           type="button"
           onClick={openPicker}
-          className="flex items-center justify-center h-28 rounded border-2 border-dashed border-muted-foreground/30 hover:border-muted-foreground/60 text-sm text-muted-foreground"
+          className="flex items-center justify-center h-28 rounded border-2 border-dashed border-muted-foreground/30 hover:border-muted-foreground/60 text-small text-muted-foreground"
         >
           Click to Upload
         </button>
@@ -57,7 +57,7 @@ export default function ImageUploaderGrid({ files, previews, onChange, max = 8 }
             <button
               type="button"
               onClick={() => removeAt(idx)}
-              className="absolute inset-0 hidden group-hover:flex items-center justify-center bg-black/40 text-white text-xs"
+              className="absolute inset-0 hidden group-hover:flex items-center justify-center bg-black/40 text-white text-small"
             >
               Remove
             </button>

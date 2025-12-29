@@ -36,7 +36,7 @@ const ProductCard = ({
         />
       </div>
       <div className="p-4 h-30 flex flex-col gap-3">
-        <h3 className="text-sm font-medium text-gray-900">
+        <h3 className="text-small font-medium text-gray-900">
           <a href="#">
             <span aria-hidden="true" className="absolute inset-0" />
             {productName}
@@ -44,7 +44,7 @@ const ProductCard = ({
         </h3>
         <div className="mt-1 flex items-center">
           <FaStar className="h-4 w-4 text-yellow-500 flex-shrink-0" />
-          <p className="ml-1 text-sm text-gray-500">{rating}</p>
+          <p className="ml-1 text-small text-gray-500">{rating}</p>
         </div>
         <div className="mt-2 flex items-baseline">
           <p className="font-semibold text-gray-900">

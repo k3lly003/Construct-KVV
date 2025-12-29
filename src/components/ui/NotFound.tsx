@@ -33,11 +33,11 @@ export default function NotFound({
           </h1>
 
           {/* Error Message */}
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+          <h2 className="text-mid md:text-title font-bold text-white mb-4">
             {customTitle}
           </h2>
 
-          <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-mid md:text-mid text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
             {customMessage}
           </p>
 

@@ -9,10 +9,10 @@ export default function TrustSecurity() {
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-title font-bold text-gray-900 mb-4">
               {t('serviceTrustSecurity.whyChoose')}
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-mid text-gray-600">
               {t('serviceTrustSecurity.whyChooseSubtitle')}
             </p>
           </div>
@@ -25,7 +25,7 @@ export default function TrustSecurity() {
               <h3 className="font-semibold text-gray-900 mb-2">
                 {t('serviceTrustSecurity.verifiedProfessionalsTitle')}
               </h3>
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-600 text-small">
                 {t('serviceTrustSecurity.verifiedProfessionalsDesc')}
               </p>
             </div>
@@ -37,7 +37,7 @@ export default function TrustSecurity() {
               <h3 className="font-semibold text-gray-900 mb-2">
                 {t('serviceTrustSecurity.qualityGuaranteedTitle')}
               </h3>
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-600 text-small">
                 {t('serviceTrustSecurity.qualityGuaranteedDesc')}
               </p>
             </div>
@@ -49,7 +49,7 @@ export default function TrustSecurity() {
               <h3 className="font-semibold text-gray-900 mb-2">
                 {t('serviceTrustSecurity.fastMatchingTitle')}
               </h3>
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-600 text-small">
                 {t('serviceTrustSecurity.fastMatchingDesc')}
               </p>
             </div>
@@ -61,7 +61,7 @@ export default function TrustSecurity() {
               <h3 className="font-semibold text-gray-900 mb-2">
                 {t('serviceTrustSecurity.awardWinnersTitle')}
               </h3>
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-600 text-small">
                 {t('serviceTrustSecurity.awardWinnersDesc')}
               </p>
             </div>

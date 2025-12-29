@@ -65,9 +65,9 @@ const TestimonialCarousel = () => {
                 objectFit="cover"
               />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">{review.name}</h3>
-            {review.affiliation && <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{review.affiliation}</p>}
-            <p className="text-gray-700 dark:text-gray-300 text-sm italic">&quot;{review.quote}&quot;</p>
+            <h3 className="text-mid font-semibold text-gray-900 dark:text-gray-100 mb-1">{review.name}</h3>
+            {review.affiliation && <p className="text-small text-gray-500 dark:text-gray-400 mb-1">{review.affiliation}</p>}
+            <p className="text-gray-700 dark:text-gray-300 text-small italic">&quot;{review.quote}&quot;</p>
           </div>
         </div>
       ))}

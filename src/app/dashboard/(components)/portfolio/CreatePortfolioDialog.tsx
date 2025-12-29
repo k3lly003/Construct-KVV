@@ -148,19 +148,19 @@ export default function CreatePortfolioDialog({ onSuccess }: Props) {
         </DialogHeader>
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
           <div>
-            <label className="text-sm font-medium">Title</label>
+            <label className="text-small font-medium">Title</label>
             <Input value={title} onChange={e => setTitle(e.target.value)} required />
           </div>
           <div>
-            <label className="text-sm font-medium">Work Date</label>
+            <label className="text-small font-medium">Work Date</label>
             <Input type="date" value={workDate} onChange={e => setWorkDate(e.target.value)} required />
           </div>
           <div className="md:col-span-2">
-            <label className="text-sm font-medium">Description</label>
+            <label className="text-small font-medium">Description</label>
             <Textarea value={description} onChange={e => setDescription(e.target.value)} required />
           </div>
           <div>
-            <label className="text-sm font-medium">Category</label>
+            <label className="text-small font-medium">Category</label>
             <Select value={category} onValueChange={setCategory}>
               <SelectTrigger>
                 <SelectValue placeholder="Type of work" />
@@ -177,23 +177,23 @@ export default function CreatePortfolioDialog({ onSuccess }: Props) {
             </Select>
           </div>
           <div>
-            <label className="text-sm font-medium">Location</label>
+            <label className="text-small font-medium">Location</label>
             <Input value={location} onChange={e => setLocation(e.target.value)} />
           </div>
           <div>
-            <label className="text-sm font-medium">Budget</label>
+            <label className="text-small font-medium">Budget</label>
             <Input value={budget} onChange={e => setBudget(e.target.value)} />
           </div>
           <div>
-            <label className="text-sm font-medium">Duration</label>
+            <label className="text-small font-medium">Duration</label>
             <Input value={duration} onChange={e => setDuration(e.target.value)} />
           </div>
           <div className="md:col-span-2">
-            <label className="text-sm font-medium">Images</label>
+            <label className="text-small font-medium">Images</label>
             <ImageUploaderGrid files={files} previews={previews} onChange={(f, p) => { setFiles(f); setPreviews(p); }} />
           </div>
           <div>
-            <label className="text-sm font-medium">Skills</label>
+            <label className="text-small font-medium">Skills</label>
             <Select value={skills} onValueChange={setSkills}>
               <SelectTrigger>
                 <SelectValue placeholder="Select a skill" />
@@ -207,16 +207,16 @@ export default function CreatePortfolioDialog({ onSuccess }: Props) {
             </Select>
           </div>
           <div className="md:col-span-2">
-            <label className="text-sm font-medium">Client Feedback</label>
+            <label className="text-small font-medium">Client Feedback</label>
             <Textarea value={clientFeedback} onChange={e => setClientFeedback(e.target.value)} />
           </div>
           <div className="flex items-center gap-2 md:col-span-2">
             <input id="isPublic" type="checkbox" checked={isPublic} onChange={e => setIsPublic(e.target.checked)} />
-            <label htmlFor="isPublic" className="text-sm">Public</label>
+            <label htmlFor="isPublic" className="text-small">Public</label>
           </div>
           <DialogFooter className="md:col-span-2">
             <Button type="submit" disabled={loading}>{loading ? 'Saving...' : 'Save Portfolio'}</Button>
-            {(error || localError) && <span className="text-red-600 text-sm ml-2">{localError ?? error}</span>}
+            {(error || localError) && <span className="text-red-600 text-small ml-2">{localError ?? error}</span>}
           </DialogFooter>
         </form>
       </DialogContent>

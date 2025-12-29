@@ -321,7 +321,7 @@ export default function ProfessionalDetailPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Professional Not Found</h1>
+          <h1 className="text-mid font-bold text-gray-900 mb-4">Professional Not Found</h1>
           <p className="text-gray-600 mb-6">{error || 'The professional you are looking for does not exist.'}</p>
           <Button onClick={() => router.back()}>
             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -409,21 +409,21 @@ export default function ProfessionalDetailPage() {
             {/* Basic Info */}
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
-                <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                <span className="px-3 py-1 rounded-full text-small font-medium bg-blue-100 text-blue-800">
                   {professional.type}
                 </span>
                 {professional.rating && (
                   <div className="flex items-center gap-1">
                     <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                    <span className="text-sm text-gray-600">{professional.rating}</span>
+                    <span className="text-small text-gray-600">{professional.rating}</span>
                   </div>
                 )}
               </div>
               
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{professional.name}</h1>
-              <h2 className="text-xl text-gray-600 mb-4">{professional.title}</h2>
+              <h1 className="text-title font-bold text-gray-900 mb-2">{professional.name}</h1>
+              <h2 className="text-mid text-gray-600 mb-4">{professional.title}</h2>
               
-              <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+              <div className="flex flex-wrap gap-4 text-small text-gray-600">
                 {professional.email && (
                   <div className="flex items-center gap-2">
                     <Mail className="w-4 h-4" />
@@ -456,15 +456,15 @@ export default function ProfessionalDetailPage() {
             {/* About */}
             {professional.description && (
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">About</h3>
+                <h3 className="text-mid font-semibold text-gray-900 mb-4">About</h3>
                 <p className="text-gray-600 leading-relaxed">{professional.description}</p>
               </div>
             )}
 
             {/* Personal Information */}
             <div className="bg-white rounded-lg shadow-sm p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Personal Information</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <h3 className="text-mid font-semibold text-gray-900 mb-4">Personal Information</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-small">
                 {(userInfo.firstName || userInfo.lastName) && (
                   <div className="flex items-center gap-3">
                     <ArrowLeft className="w-4 h-4 text-gray-500 rotate-90" />
@@ -515,7 +515,7 @@ export default function ProfessionalDetailPage() {
 
             {/* Experience & Qualifications */}
             <div className="bg-white rounded-lg shadow-sm p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Experience & Qualifications</h3>
+              <h3 className="text-mid font-semibold text-gray-900 mb-4">Experience & Qualifications</h3>
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <Briefcase className="w-5 h-5 text-blue-600" />
@@ -550,10 +550,10 @@ export default function ProfessionalDetailPage() {
             {/* Skills / Services */}
             {categories.length > 0 && (
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Skills & Services</h3>
+                <h3 className="text-mid font-semibold text-gray-900 mb-4">Skills & Services</h3>
                 <div className="flex flex-wrap gap-2">
                   {categories.map((cat) => (
-                    <span key={cat} className="text-xs px-2 py-1 bg-amber-100 text-amber-700 rounded">
+                    <span key={cat} className="text-small px-2 py-1 bg-amber-100 text-amber-700 rounded">
                       {cat}
                     </span>
                   ))}
@@ -565,10 +565,10 @@ export default function ProfessionalDetailPage() {
             {portfolios.length > 0 && (
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-semibold text-gray-900">Portfolio</h3>
+                  <h3 className="text-mid font-semibold text-gray-900">Portfolio</h3>
                   {professional.type === 'Architect' && (
                     <div className="text-center">
-                      <p className="text-sm text-gray-600 mb-2">You like this work?</p>
+                      <p className="text-small text-gray-600 mb-2">You like this work?</p>
                       {currentUser ? (
                         <Button 
                           onClick={handleDesignRequest}
@@ -609,13 +609,13 @@ export default function ProfessionalDetailPage() {
                   <div key={portfolio.id} className="mb-8 last:mb-0">
                     {/* Portfolio Header */}
                     <div className="mb-4">
-                      <h4 className="text-lg font-semibold text-gray-900 mb-2">{portfolio.title}</h4>
+                      <h4 className="text-mid font-semibold text-gray-900 mb-2">{portfolio.title}</h4>
                       <div className="flex flex-wrap gap-2 mb-3">
-                        <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                        <span className="px-2 py-1 bg-blue-100 text-blue-700 text-small rounded-full">
                           {portfolio.category}
                         </span>
                         {portfolio.location && (
-                          <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full flex items-center">
+                          <span className="px-2 py-1 bg-gray-100 text-gray-700 text-small rounded-full flex items-center">
                             <LocationIcon className="w-3 h-3 mr-1" />
                             {portfolio.location}
                           </span>
@@ -658,7 +658,7 @@ export default function ProfessionalDetailPage() {
                                 </Button>
                                 
                                 {/* Image Counter */}
-                                <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
+                                <div className="absolute bottom-2 right-2 bg-black/50 text-white text-small px-2 py-1 rounded">
                                   {currentImageIndex + 1} / {portfolio.images.length}
                                 </div>
                               </>
@@ -676,7 +676,7 @@ export default function ProfessionalDetailPage() {
                         {/* Description */}
                         <div>
                           <h5 className="font-medium text-gray-900 mb-2">Description</h5>
-                          <p className="text-gray-600 text-sm leading-relaxed">{portfolio.description}</p>
+                          <p className="text-gray-600 text-small leading-relaxed">{portfolio.description}</p>
                         </div>
 
                         {/* Project Details */}
@@ -685,8 +685,8 @@ export default function ProfessionalDetailPage() {
                             <div className="flex items-center gap-2">
                               <DollarSign className="w-4 h-4 text-green-600" />
                               <div>
-                                <p className="text-xs text-gray-500">Budget</p>
-                                <p className="text-sm font-medium text-gray-900">{portfolio.budget}</p>
+                                <p className="text-small text-gray-500">Budget</p>
+                                <p className="text-small font-medium text-gray-900">{portfolio.budget}</p>
                               </div>
                             </div>
                           )}
@@ -694,8 +694,8 @@ export default function ProfessionalDetailPage() {
                             <div className="flex items-center gap-2">
                               <Clock className="w-4 h-4 text-blue-600" />
                               <div>
-                                <p className="text-xs text-gray-500">Duration</p>
-                                <p className="text-sm font-medium text-gray-900">{portfolio.duration}</p>
+                                <p className="text-small text-gray-500">Duration</p>
+                                <p className="text-small font-medium text-gray-900">{portfolio.duration}</p>
                               </div>
                             </div>
                           )}
@@ -707,7 +707,7 @@ export default function ProfessionalDetailPage() {
                             <h5 className="font-medium text-gray-900 mb-2">Skills Used</h5>
                             <div className="flex flex-wrap gap-2">
                               {portfolio.skills.map((skill, index) => (
-                                <span key={index} className="px-2 py-1 bg-amber-100 text-amber-700 text-xs rounded">
+                                <span key={index} className="px-2 py-1 bg-amber-100 text-amber-700 text-small rounded">
                                   {skill}
                                 </span>
                   ))}
@@ -720,7 +720,7 @@ export default function ProfessionalDetailPage() {
                           <div>
                             <h5 className="font-medium text-gray-900 mb-2">Client Feedback</h5>
                             <div className="bg-gray-50 p-3 rounded-lg">
-                              <p className="text-gray-700 text-sm italic">"{portfolio.clientFeedback}"</p>
+                              <p className="text-gray-700 text-small italic">"{portfolio.clientFeedback}"</p>
                             </div>
                           </div>
                         )}
@@ -733,10 +733,10 @@ export default function ProfessionalDetailPage() {
             {portfolios.length === 0 && (
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-semibold text-gray-900">Portfolio</h3>
+                  <h3 className="text-mid font-semibold text-gray-900">Portfolio</h3>
                   {professional.type === 'Architect' && (
                     <div className="text-center">
-                      <p className="text-sm text-gray-600 mb-2">You like this work?</p>
+                      <p className="text-small text-gray-600 mb-2">You like this work?</p>
                       {currentUser ? (
                         <Button 
                           onClick={handleDesignRequest}
@@ -781,9 +781,9 @@ export default function ProfessionalDetailPage() {
           <div className="space-y-6">
             {/* Contact Actions */}
             <div className="bg-white rounded-lg shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact</h3>
+              <h3 className="text-mid font-semibold text-gray-900 mb-4">Contact</h3>
               <div className="space-y-4">
-                <div className="text-sm text-gray-700 space-y-1">
+                <div className="text-small text-gray-700 space-y-1">
                   {contactBusinessPhone && (
                     <div className="flex items-center gap-2">
                       <Phone className="w-4 h-4 text-gray-500" />
@@ -821,10 +821,10 @@ export default function ProfessionalDetailPage() {
 
             {/* Features */}
             <div className="bg-white rounded-lg shadow-sm p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Details</h3>
+              <h3 className="text-mid font-semibold text-gray-900 mb-4">Details</h3>
               <div className="space-y-2">
                 {professional.features.map((feature, index) => (
-                  <div key={index} className="flex items-center gap-2 text-sm text-gray-600">
+                  <div key={index} className="flex items-center gap-2 text-small text-gray-600">
                     <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
                     <span>{feature}</span>
                   </div>
@@ -835,10 +835,10 @@ export default function ProfessionalDetailPage() {
             {/* Locations Served */}
             {locations.length > 0 && (
               <div className="bg-white rounded-lg shadow-sm p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Locations Served</h3>
+                <h3 className="text-mid font-semibold text-gray-900 mb-3">Locations Served</h3>
                 <div className="flex flex-wrap gap-2">
                   {locations.map((loc) => (
-                    <span key={loc} className="text-xs px-2 py-1 bg-gray-100 text-gray-700 rounded-full">
+                    <span key={loc} className="text-small px-2 py-1 bg-gray-100 text-gray-700 rounded-full">
                       {loc}
                     </span>
                   ))}

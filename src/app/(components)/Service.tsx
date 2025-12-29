@@ -211,7 +211,7 @@ export const ShopProducts: React.FC = () => {
                       className="w-full h-48 object-cover"
                     />
                     {product.isVerified && (
-                      <div className="absolute top-4 right-4 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center">
+                      <div className="absolute top-4 right-4 bg-green-500 text-white px-2 py-1 rounded-full text-small font-semibold flex items-center">
                         <BadgeCheck className="h-4 w-4 mr-1" />
                         Sold
                       </div>
@@ -219,19 +219,19 @@ export const ShopProducts: React.FC = () => {
                   </div>
                   <div className="p-6">
                     <div className="flex flex-col justify-between items-start mb-2">
-                      <h3 className="text-sm font-medium text-gray-900">{product.name}</h3>
+                      <h3 className="text-small font-medium text-gray-900">{product.name}</h3>
                       <div className="flex items-center mt-2">
                         <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                        <span className="ml-1 text-sm font-medium">{product.rating}</span>
-                        {/* <span className="ml-1 text-sm text-gray-500">({product.reviews})</span> */}
+                        <span className="ml-1 text-small font-medium">{product.rating}</span>
+                        {/* <span className="ml-1 text-small text-gray-500">({product.reviews})</span> */}
                       </div>
                     </div>
-                    {/* <p className="text-sm text-gray-600 mb-4">{product.description}</p> */}
+                    {/* <p className="text-small text-gray-600 mb-4">{product.description}</p> */}
                     {/* <div className="flex flex-wrap gap-2 mb-4">
                       {product.features.map((feature, index) => (
                         <span
                           key={index}
-                          className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs"
+                          className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-small"
                         >
                           {feature}
                         </span>
@@ -240,7 +240,7 @@ export const ShopProducts: React.FC = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <span className="font-semibold text-gray-900">${product.price}</span>
-                        {/* <span className="ml-2 text-sm text-gray-500">In stock: {product.stock}</span> */}
+                        {/* <span className="ml-2 text-small text-gray-500">In stock: {product.stock}</span> */}
                       </div>
                       <button className="flex items-center text-yellow-400 font-medium hover:text-yellow-700 transition-colors group">
                         View Details

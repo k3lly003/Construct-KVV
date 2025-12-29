@@ -62,7 +62,7 @@ export function NotificationModal({
         >
           <DialogHeader className="border-b border-amber-200 pb-4">
             <div className="flex items-center justify-between">
-              <DialogTitle className="text-lg font-semibold text-amber-900 flex items-center gap-2">
+              <DialogTitle className="text-mid font-semibold text-amber-900 flex items-center gap-2">
                 <Lock className="h-5 w-5 text-amber-600" />
                 Notifications
               </DialogTitle>
@@ -114,11 +114,11 @@ export function NotificationModal({
       >
         <DialogHeader className="border-b border-amber-200 pb-4">
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-lg font-semibold text-amber-900 flex items-center gap-2">
+            <DialogTitle className="text-mid font-semibold text-amber-900 flex items-center gap-2">
               <Bell className="h-5 w-5 text-amber-600" />
               Notifications
               {unreadCount > 0 && (
-                <Badge className="bg-amber-500 text-white text-xs">
+                <Badge className="bg-amber-500 text-white text-small">
                   {unreadCount}
                 </Badge>
               )}
@@ -138,13 +138,13 @@ export function NotificationModal({
               <p className="text-red-700 font-medium">
                 Error loading notifications
               </p>
-              <p className="text-red-600 text-sm mt-1">{error}</p>
+              <p className="text-red-600 text-small mt-1">{error}</p>
             </div>
           ) : notifications.length === 0 ? (
             <div className="text-center py-8">
               <Bell className="h-12 w-12 text-amber-300 mx-auto mb-4" />
               <p className="text-amber-700 font-medium">No Notifications</p>
-              <p className="text-amber-600 text-sm mt-1">
+              <p className="text-amber-600 text-small mt-1">
                 You have no notifications at the moment.
               </p>
             </div>
@@ -155,7 +155,7 @@ export function NotificationModal({
                   variant="outline"
                   size="sm"
                   onClick={onMarkAllAsRead}
-                  className="text-amber-600 border-amber-300 hover:bg-amber-50 text-xs w-full sm:w-auto"
+                  className="text-amber-600 border-amber-300 hover:bg-amber-50 text-small w-full sm:w-auto"
                   disabled={notifications.length === 0}
                 >
                   Mark read all
@@ -178,7 +178,7 @@ export function NotificationModal({
                 >
                   <div className="flex items-start gap-3">
                     <div className="flex-shrink-0 mt-1">
-                      <span className="text-lg">
+                      <span className="text-mid">
                         {getNotificationIcon(notification.type)}
                       </span>
                     </div>
@@ -186,7 +186,7 @@ export function NotificationModal({
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
                         <h4
-                          className={`font-medium text-sm ${
+                          className={`font-medium text-small ${
                             notification.isRead
                               ? "text-gray-700"
                               : "text-amber-900"
@@ -200,7 +200,7 @@ export function NotificationModal({
                       </div>
 
                       <p
-                        className={`text-sm mb-2 ${
+                        className={`text-small mb-2 ${
                           notification.isRead
                             ? "text-gray-600"
                             : "text-amber-800"
@@ -209,7 +209,7 @@ export function NotificationModal({
                         {notification.message}
                       </p>
 
-                      <div className="flex items-center gap-2 text-xs text-amber-600">
+                      <div className="flex items-center gap-2 text-small text-amber-600">
                         <Clock className="h-3 w-3" />
                         <span>
                           {formatNotificationTime(notification.createdAt)}
@@ -224,7 +224,7 @@ export function NotificationModal({
         </div>
 
         <div className="border-t border-amber-200 pt-4 mt-4">
-          <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center justify-between text-small">
             <span className="text-amber-700">
               {unreadCount} unread notification{unreadCount !== 1 ? "s" : ""}
             </span>

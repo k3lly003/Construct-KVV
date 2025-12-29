@@ -147,7 +147,7 @@ const SideBar = () => {
             />
             <h1
               className={`${isSidebarCollapsed ? "hidden" : "block"
-                } font-extrabold text-2xl `}
+                } font-extrabold text-mid `}
             >
               KMS
             </h1>
@@ -381,7 +381,7 @@ const SideBar = () => {
           />
         </div>
 
-        <p className="mt-7 text-center text-xs text-gray-500">
+        <p className="mt-7 text-center text-small text-gray-500">
           &copy; 2024 ntirushwa
         </p>
       </div>

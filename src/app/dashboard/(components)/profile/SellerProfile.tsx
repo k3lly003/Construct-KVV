@@ -420,7 +420,7 @@ const SellerProfile: React.FC = () => {
   return (
     <div className="w-fullbg-gray-50 min-h-screen p-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <h1 className="text-title font-bold text-gray-900 mb-2">
           Seller Profile
         </h1>
         <p className="text-gray-600">
@@ -464,7 +464,7 @@ const SellerProfile: React.FC = () => {
         <div className="pt-20 pb-8 px-8">
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
             <div className="mb-6 lg:mb-0">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              <h2 className="text-mid font-bold text-gray-900 mb-2">
                 {((profile as any)?.ownerName &&
                   (profile as any)?.ownerName.trim()) ||
                   `${(profile as any)?.user?.firstName || ""} ${
@@ -474,7 +474,7 @@ const SellerProfile: React.FC = () => {
 
               <p className="text-gray-600 mb-4">Professional Seller</p>
 
-              <div className="space-y-2 text-sm">
+              <div className="space-y-2 text-small">
                 <div className="flex items-center text-gray-600">
                   <Mail className="w-4 h-4 mr-3" />
                   <span>{(profile as any)?.email}</span>
@@ -502,10 +502,10 @@ const SellerProfile: React.FC = () => {
                     <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mx-auto mb-2">
                       <Icon className="w-6 h-6 text-amber-600" />
                     </div>
-                    <p className="text-xl font-bold text-gray-900">
+                    <p className="text-mid font-bold text-gray-900">
                       {stat.value}
                     </p>
-                    <p className="text-xs text-gray-600">{stat.label}</p>
+                    <p className="text-small text-gray-600">{stat.label}</p>
                   </div>
                 );
               })}
@@ -520,7 +520,7 @@ const SellerProfile: React.FC = () => {
           {/* Professional Info */}
           <div className="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100">
             <div className="flex items-center justify-between px-6 py-4">
-              <h1 className="text-xl font-semibold text-gray-900">
+              <h1 className="text-mid font-semibold text-gray-900">
                 Professional Info
               </h1>
               <button
@@ -614,7 +614,7 @@ const SellerProfile: React.FC = () => {
                         <p className="text-gray-900 font-medium text-base">
                           {item.label}
                         </p>
-                        <p className="text-gray-500 text-sm mt-1 break-words">
+                        <p className="text-gray-500 text-small mt-1 break-words">
                           {item.value}
                         </p>
                       </div>
@@ -628,7 +628,7 @@ const SellerProfile: React.FC = () => {
           {/* Payout Subaccount */}
           <div className="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 py-4">
-              <h1 className="text-xl font-semibold text-gray-900">
+              <h1 className="text-mid font-semibold text-gray-900">
                 Payout Subaccount
               </h1>
               {!subaccount && (
@@ -647,42 +647,42 @@ const SellerProfile: React.FC = () => {
                 <div className="border border-amber-200 rounded-lg p-4 bg-amber-50">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                     <div>
-                      <p className="text-sm text-gray-600">Subaccount ID</p>
+                      <p className="text-small text-gray-600">Subaccount ID</p>
                       <p className="font-semibold text-gray-900">
                         {subaccount.flwSubaccountId}
                       </p>
                     </div>
-                    <span className="px-3 py-1 text-xs rounded-full bg-amber-100 text-amber-700">
+                    <span className="px-3 py-1 text-small rounded-full bg-amber-100 text-amber-700">
                       Active
                     </span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                     <div>
-                      <p className="text-sm text-gray-600">Bank Code</p>
+                      <p className="text-small text-gray-600">Bank Code</p>
                       <p className="font-medium text-gray-900">
                         {subaccount.bankCode}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Account Number</p>
+                      <p className="text-small text-gray-600">Account Number</p>
                       <p className="font-medium text-gray-900">
                         {subaccount.accountNumber}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Payout Method</p>
+                      <p className="text-small text-gray-600">Payout Method</p>
                       <p className="font-medium text-gray-900">
                         {subaccount.payoutMethod}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-600">Split Ratio</p>
+                      <p className="text-small text-gray-600">Split Ratio</p>
                       <p className="font-medium text-gray-900">
                         {subaccount.splitRatio}%
                       </p>
                     </div>
                   </div>
-                  <p className="text-xs text-gray-500 mt-4">
+                  <p className="text-small text-gray-500 mt-4">
                     Created: {new Date(subaccount.createdAt).toLocaleString()}
                   </p>
                 </div>
@@ -699,17 +699,17 @@ const SellerProfile: React.FC = () => {
         <div className="space-y-6">
           {/* Account Status */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+            <h3 className="text-mid font-semibold text-gray-900 mb-4 flex items-center">
               <Star className="w-5 h-5 mr-2" />
               Account Status
             </h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-small font-medium text-gray-700 mb-1">
                   Status
                 </label>
                 <span
-                  className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
+                  className={`inline-block px-3 py-1 rounded-full text-small font-medium ${
                     profile.status === "APPROVED"
                       ? "bg-green-100 text-green-700"
                       : profile.status === "PENDING"
@@ -721,7 +721,7 @@ const SellerProfile: React.FC = () => {
                 </span>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-small font-medium text-gray-700 mb-1">
                   Member Since
                 </label>
                 <p className="text-gray-700">
@@ -735,7 +735,7 @@ const SellerProfile: React.FC = () => {
 
           {/* Professional Documents */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+            <h3 className="text-mid font-semibold text-gray-900 mb-4 flex items-center">
               <FileText className="w-5 h-5 mr-2" />
               Professional Documents
             </h3>
@@ -755,7 +755,7 @@ const SellerProfile: React.FC = () => {
                         <h4 className="font-medium text-gray-900 break-words">
                           Document {index + 1}
                         </h4>
-                        <p className="text-sm text-gray-600 break-words sm:truncate sm:max-w-[50vw]">
+                        <p className="text-small text-gray-600 break-words sm:truncate sm:max-w-[50vw]">
                           {doc}
                         </p>
                       </div>
@@ -764,7 +764,7 @@ const SellerProfile: React.FC = () => {
                       href={doc}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-amber-600 hover:text-amber-700 text-sm font-medium"
+                      className="text-amber-600 hover:text-amber-700 text-small font-medium"
                     >
                       View
                     </a>
@@ -778,7 +778,7 @@ const SellerProfile: React.FC = () => {
 
           {/* My Work */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+            <h3 className="text-mid font-semibold text-gray-900 mb-4 flex items-center">
               <Briefcase className="w-5 h-5 mr-2" />
               My Work
             </h3>
@@ -813,7 +813,7 @@ const SellerProfile: React.FC = () => {
                             <h4 className="font-medium text-gray-900 break-words">
                               {title}
                             </h4>
-                            <p className="text-sm text-gray-600 break-words sm:truncate sm:max-w-[50vw]">
+                            <p className="text-small text-gray-600 break-words sm:truncate sm:max-w-[50vw]">
                               {url || "No link provided"}
                             </p>
                           </div>
@@ -823,7 +823,7 @@ const SellerProfile: React.FC = () => {
                             href={url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-amber-600 hover:text-amber-700 text-sm font-medium"
+                            className="text-amber-600 hover:text-amber-700 text-small font-medium"
                           >
                             View
                           </a>
@@ -843,7 +843,7 @@ const SellerProfile: React.FC = () => {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-lg p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">
+              <h3 className="text-mid font-semibold">
                 Create Payout Subaccount
               </h3>
               <button
@@ -855,7 +855,7 @@ const SellerProfile: React.FC = () => {
             </div>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-small font-medium text-gray-700 mb-1">
                   Account Bank
                 </label>
                 <select
@@ -869,7 +869,7 @@ const SellerProfile: React.FC = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-small font-medium text-gray-700 mb-1">
                   Account Number
                 </label>
                 <input
@@ -884,7 +884,7 @@ const SellerProfile: React.FC = () => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-small font-medium text-gray-700 mb-1">
                     Business Name
                   </label>
                   <input
@@ -897,7 +897,7 @@ const SellerProfile: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-small font-medium text-gray-700 mb-1">
                     Business Email
                   </label>
                   <input
@@ -912,7 +912,7 @@ const SellerProfile: React.FC = () => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-small font-medium text-gray-700 mb-1">
                     Contact Person
                   </label>
                   <input
@@ -928,7 +928,7 @@ const SellerProfile: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-small font-medium text-gray-700 mb-1">
                     Mobile
                   </label>
                   <input
@@ -946,7 +946,7 @@ const SellerProfile: React.FC = () => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-small font-medium text-gray-700 mb-1">
                     Country
                   </label>
                   <input
@@ -959,7 +959,7 @@ const SellerProfile: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-small font-medium text-gray-700 mb-1">
                     Split Value (percentage)
                   </label>
                   <input
@@ -1021,7 +1021,7 @@ const SellerProfile: React.FC = () => {
           <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             {/* Dialog Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <h3 className="text-xl font-semibold text-gray-900">
+              <h3 className="text-mid font-semibold text-gray-900">
                 Edit Profile
               </h3>
               <button
@@ -1038,7 +1038,7 @@ const SellerProfile: React.FC = () => {
               {/* Business Name & License */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-small font-medium text-gray-700 mb-2">
                     Business Name
                   </label>
                   <input
@@ -1052,7 +1052,7 @@ const SellerProfile: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-small font-medium text-gray-700 mb-2">
                     License Number
                   </label>
                   <input
@@ -1069,7 +1069,7 @@ const SellerProfile: React.FC = () => {
 
               {/* Years of Experience */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-small font-medium text-gray-700 mb-2">
                   Years of Experience
                 </label>
                 <input
@@ -1086,7 +1086,7 @@ const SellerProfile: React.FC = () => {
 
               {/* Locations */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-small font-medium text-gray-700 mb-2">
                   Locations
                 </label>
                 <div className="space-y-2">
@@ -1129,7 +1129,7 @@ const SellerProfile: React.FC = () => {
 
               {/* Documents */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-small font-medium text-gray-700 mb-2">
                   Documents
                 </label>
                 <div className="space-y-2">
@@ -1176,7 +1176,7 @@ const SellerProfile: React.FC = () => {
               {/* Payout Method */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-small font-medium text-gray-700 mb-2">
                     Payout Method Type
                   </label>
                   <select
@@ -1196,7 +1196,7 @@ const SellerProfile: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-small font-medium text-gray-700 mb-2">
                     Account Number
                   </label>
                   <input

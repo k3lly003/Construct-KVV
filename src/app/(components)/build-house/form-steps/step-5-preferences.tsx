@@ -279,7 +279,7 @@ export function StepFivePreferences() {
       transition={{ duration: 0.3 }}
     >
       <div className="mb-6">
-        <h2 className="text-3xl font-bold tracking-tight">Project Summary</h2>
+        <h2 className="text-title font-bold tracking-tight">Project Summary</h2>
         <p className="text-muted-foreground mt-2">
           Review your complete house design and confirm your preferences.
         </p>
@@ -290,7 +290,7 @@ export function StepFivePreferences() {
         <Card className="p-6">
           <div className="space-y-6">
             <div className="text-center mb-6">
-              <h3 className="text-2xl font-semibold text-primary mb-2">
+              <h3 className="text-mid font-semibold text-primary mb-2">
                 🏡 Your Dream House Summary
               </h3>
               <p className="text-muted-foreground">
@@ -333,7 +333,7 @@ export function StepFivePreferences() {
                   >
                     I agree to the project specifications
                   </Label>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-small text-gray-600 mt-1">
                     By checking this box, I confirm that I have reviewed all the
                     house specifications above and agree to proceed with this
                     design. I understand that this summary represents my
@@ -349,7 +349,7 @@ export function StepFivePreferences() {
         <Card className="p-6">
           <div className="space-y-8">
             <div className="space-y-4">
-              <Label className="text-lg font-medium">Timeline</Label>
+              <Label className="text-mid font-medium">Timeline</Label>
               <RadioGroup
                 value={formData.timeline}
                 onValueChange={(value) => updateFormData({ timeline: value })}

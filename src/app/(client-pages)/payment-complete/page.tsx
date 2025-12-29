@@ -209,7 +209,7 @@ const PaymentCompletePage: React.FC = () => {
           <div className="text-error-600">❌ {error}</div>
         ) : status === "successful" ? (
           <>
-            <div className="text-3xl text-success-600">
+            <div className="text-mid text-success-600">
               ✅ Payment Successful
             </div>
             <div className="my-4 font-semibold">
@@ -242,7 +242,7 @@ const PaymentCompletePage: React.FC = () => {
             </button>
           </>
         ) : (
-          <div className="text-error-600 text-2xl">
+          <div className="text-mid text-error-600">
             ❌ Payment Failed or Cancelled
           </div>
         )}

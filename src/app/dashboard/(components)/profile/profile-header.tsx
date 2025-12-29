@@ -169,9 +169,9 @@ export function ProfileHeader() {
               <AvatarFallback>AA</AvatarFallback>
             </Avatar>
             <div className="space-y-2">
-              <h1 className="text-3xl font-bold">{fullName}</h1>
-              <p className="text-lg text-white/90">{userRole}</p>
-              <div className="flex items-center space-x-4 text-sm text-white/80">
+              <h1 className="text-title font-bold">{fullName}</h1>
+              <p className="text-mid text-white/90">{userRole}</p>
+              <div className="flex items-center space-x-4 text-small text-white/80">
                 <div className="flex items-center space-x-1">
                   <MapPin className="w-4 h-4" />
                   <span>California, United States</span>
@@ -378,7 +378,7 @@ export function ProfileHeader() {
                           <Label>{t('dashboard.socialMediaLinks')}</Label>
                           <div className="grid grid-cols-2 gap-4 mt-2">
                             <div className="flex flex-col space-y-2">
-                              <Label htmlFor="facebook" className="text-sm">{t('dashboard.facebook')}</Label>
+                              <Label htmlFor="facebook" className="text-small">{t('dashboard.facebook')}</Label>
                               <Input 
                                 id="facebook" 
                                 value={editFormData.socialMedia.facebook} 
@@ -387,7 +387,7 @@ export function ProfileHeader() {
                               />
                             </div>
                             <div className="flex flex-col space-y-2">
-                              <Label htmlFor="instagram" className="text-sm">{t('dashboard.instagram')}</Label>
+                              <Label htmlFor="instagram" className="text-small">{t('dashboard.instagram')}</Label>
                               <Input 
                                 id="instagram" 
                                 value={editFormData.socialMedia.instagram} 
@@ -396,7 +396,7 @@ export function ProfileHeader() {
                               />
                             </div>
                             <div className="flex flex-col space-y-2">
-                              <Label htmlFor="twitter" className="text-sm">{t('dashboard.twitter')}</Label>
+                              <Label htmlFor="twitter" className="text-small">{t('dashboard.twitter')}</Label>
                               <Input 
                                 id="twitter" 
                                 value={editFormData.socialMedia.twitter} 
@@ -405,7 +405,7 @@ export function ProfileHeader() {
                               />
                             </div>
                             <div className="flex flex-col space-y-2">
-                              <Label htmlFor="linkedin" className="text-sm">{t('dashboard.linkedin')}</Label>
+                              <Label htmlFor="linkedin" className="text-small">{t('dashboard.linkedin')}</Label>
                               <Input 
                                 id="linkedin" 
                                 value={editFormData.socialMedia.linkedin} 

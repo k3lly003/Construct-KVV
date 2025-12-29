@@ -161,7 +161,7 @@ const Page = () => {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-xl font-bold text-gray-900">
+                  <CardTitle className="text-mid font-bold text-gray-900">
                     Request Custom Services
                   </CardTitle>
                   <CardDescription className="mt-1">

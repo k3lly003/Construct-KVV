@@ -78,22 +78,22 @@ export default function Home() {
           <div className="flex justify-start max-w-2xl mx-auto">
             <Link
               href="/"
-              className="text-sm text-slate-600 hover:bg-slate-200 hover:text-amber-500 rounded-md p-2 gap-3 flex items-center justify-center"
+              className="text-small text-slate-600 hover:bg-slate-200 hover:text-amber-500 rounded-md p-2 gap-3 flex items-center justify-center"
             >
               <MoveLeft />
             </Link>
             <Image src="/kvv-logo.png" alt="KVV Pro" width={42} height={42} />
           </div>
-          <h1 className="text-3xl font-bold text-slate-900 mb-4">
+          <h1 className="text-title font-bold text-slate-900 mb-4">
             Welcome to ConstructKVV platform
           </h1>
-          <p className="text-lg text-slate-600">
+          <p className="text-mid text-slate-600">
             Join our professional construction network
           </p>
         </div>
         <Card className="w-full max-w-2xl mx-auto shadow-xl bg-white/90 backdrop-blur-lg">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-semibold">
+            <CardTitle className="text-mid font-semibold">
               What name describes you best?
             </CardTitle>
             <CardDescription className="text-base">
@@ -114,10 +114,10 @@ export default function Home() {
                     <IconComponent className="h-8 w-8 text-slate-600 group-hover:text-slate-800" />
                   </div>
                   <div className="flex-1 text-left">
-                    <h3 className="text-lg font-semibold text-slate-900">
+                    <h3 className="text-mid font-semibold text-slate-900">
                       {role.title}
                     </h3>
-                    <p className="text-sm text-slate-600 break-words whitespace-normal">
+                    <p className="text-small text-slate-600 break-words whitespace-normal">
                       {role.description}
                     </p>
                   </div>
@@ -129,11 +129,11 @@ export default function Home() {
       </div>
       <div className="flex flex-col items-center justify-center gap-2">
         <Image src="/kvv-logo.png" alt="KVV Pro" width={42} height={42} />
-        <h1 className="text-xl font-bold">Already have a proffetional  account?</h1>
+        <h1 className="text-mid font-bold">Already have a proffetional  account?</h1>
         <Link href="/signin" className="text-amber-500 hover:text-amber-400">
           Sign in
         </Link>
-        <p className="text-sm text-slate-600">
+        <p className="text-small text-slate-600">
           By signing up, you agree to our{" "}
           <Link href="/terms" className="text-amber-500 hover:text-amber-400">
             Terms of Service

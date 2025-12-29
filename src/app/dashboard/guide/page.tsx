@@ -12,7 +12,7 @@ const Page = () => {
     <div className="min-h-screen py-10">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <header className="text-left mb-10">
-          <h1 className="text-3xl font-semibold ">
+          <h1 className="text-title font-semibold ">
             {t('dashboard.guide.welcome')}
           </h1>
           <p className="mt-2 text-gray-600">
@@ -21,12 +21,12 @@ const Page = () => {
         </header>
         <hr className='border-1'/>
         <section className="my-8">
-          <h2 className="text-xl font-semibold text-amber-500 mb-4">
+          <h2 className="text-mid font-semibold text-amber-500 mb-4">
             {t('dashboard.guide.gettingStarted.title')}
           </h2>
 
           <div className="mb-6">
-            <h3 className="text-lg font-medium text-green-500 mb-2">
+            <h3 className="text-mid font-medium text-green-500 mb-2">
               {t('dashboard.guide.gettingStarted.understandingLayout.title')}
             </h3>
             <div className="rounded-md  overflow-hidden">
@@ -49,7 +49,7 @@ const Page = () => {
                     <span className="font-semibold">{t('dashboard.guide.gettingStarted.understandingLayout.topBar')}</span> {t('dashboard.guide.gettingStarted.understandingLayout.topBarDesc')}
                   </li>
                 </ul>
-                <p className="mt-2 text-sm text-gray-500">
+                <p className="mt-2 text-small text-gray-500">
                   {t('dashboard.guide.gettingStarted.understandingLayout.exploreLayout')}
                 </p>
               </div>
@@ -57,7 +57,7 @@ const Page = () => {
           </div>
 
           <div className="my-6">
-            <h3 className="text-lg font-medium text-green-500 mb-2">{t('dashboard.guide.gettingStarted.userProfile.title')}</h3>
+            <h3 className="text-mid font-medium text-green-500 mb-2">{t('dashboard.guide.gettingStarted.userProfile.title')}</h3>
             <div className="rounded-md  overflow-hidden">
               {/* Replace with a close-up of the user profile section */}
               <div className="relative aspect-w-16 aspect-h-9 ">
@@ -83,12 +83,12 @@ const Page = () => {
         </section>
         <hr className='border-1'/>
         <section className="my-10">
-          <h2 className="text-xl font-semibold text-amber-500 mb-4">
+          <h2 className="text-mid font-semibold text-amber-500 mb-4">
             {t('dashboard.guide.coreFeatures.title')}
           </h2>
 
           <div className="my-6">
-            <h3 className="text-lg font-medium text-green-500 mb-2">{t('dashboard.guide.coreFeatures.overview.title')}</h3>
+            <h3 className="text-mid font-medium text-green-500 mb-2">{t('dashboard.guide.coreFeatures.overview.title')}</h3>
             <div className="rounded-md  p-4 text-gray-600">
               <div className="relative aspect-w-16 aspect-h-9  mb-4 rounded-md overflow-hidden">
                 <div className="absolute inset-0 flex items-center justify-center text-gray-500 italic">
@@ -105,7 +105,7 @@ const Page = () => {
           </div>
          
           <div className="my-6">
-            <h3 className="text-lg font-medium text-green-500 mb-2">{t('dashboard.guide.coreFeatures.managingUsers.title')}</h3>
+            <h3 className="text-mid font-medium text-green-500 mb-2">{t('dashboard.guide.coreFeatures.managingUsers.title')}</h3>
             <div className="rounded-md  p-4 text-gray-600">
               <div className="relative aspect-w-16 aspect-h-9  mb-4 rounded-md overflow-hidden">
                 <div className="absolute inset-0 flex items-center justify-center text-gray-500 italic">
@@ -135,7 +135,7 @@ const Page = () => {
         <hr className='border-1'/>
 
         <section className="my-10">
-          <h2 className="text-xl font-semibold text-amber-500 mb-4">{t('dashboard.guide.settings.title')}</h2>
+          <h2 className="text-mid font-semibold text-amber-500 mb-4">{t('dashboard.guide.settings.title')}</h2>
           <div className="rounded-md  p-4 text-gray-600">
             <div className="relative aspect-w-16 aspect-h-9  mb-4 rounded-md overflow-hidden">
               <div className="absolute inset-0 flex items-center justify-center text-gray-500 italic">
@@ -160,11 +160,11 @@ const Page = () => {
         <hr className='border-1'/>
 
         <section className="my-10">
-          <h2 className="text-xl font-semibold text-amber-500 mb-4">
+          <h2 className="text-mid font-semibold text-amber-500 mb-4">
             {t('dashboard.guide.troubleshooting.title')}
           </h2>
           <div className="rounded-md  p-4 text-gray-600">
-            <h3 className="text-lg font-medium text-green-500 mb-2">{t('dashboard.guide.troubleshooting.commonIssues.title')}</h3>
+            <h3 className="text-mid font-medium text-green-500 mb-2">{t('dashboard.guide.troubleshooting.commonIssues.title')}</h3>
             <ul className="list-disc pl-5 mb-4">
               <li>
                 <span className="font-semibold">{t('dashboard.guide.troubleshooting.commonIssues.cantFindUser.title')}:</span> {t('dashboard.guide.troubleshooting.commonIssues.cantFindUser.solution')}
@@ -174,7 +174,7 @@ const Page = () => {
               </li>
             </ul>
 
-            <h3 className="text-lg font-medium text-green-500 mb-2">{t('dashboard.guide.troubleshooting.faq.title')}</h3>
+            <h3 className="text-mid font-medium text-green-500 mb-2">{t('dashboard.guide.troubleshooting.faq.title')}</h3>
             <ul className="list-disc pl-5">
               <li>
                 <span className="font-semibold">{t('dashboard.guide.troubleshooting.faq.addNewAdminUser.question')}</span> {t('dashboard.guide.troubleshooting.faq.addNewAdminUser.answer')}
@@ -190,7 +190,7 @@ const Page = () => {
         </section>
         <hr className='border-1'/>
         <section className="text-center text-gray-600 my-6">
-          <h2 className="text-xl font-semibold text-amber-500 mb-4">{t('dashboard.guide.needMoreHelp.title')}</h2>
+          <h2 className="text-mid font-semibold text-amber-500 mb-4">{t('dashboard.guide.needMoreHelp.title')}</h2>
           <p className="mb-2">
             {t('dashboard.guide.needMoreHelp.description')}{' '}
             <a href="mailto:ntirukelly@gmail.com" className="text-green-500 hover:underline">

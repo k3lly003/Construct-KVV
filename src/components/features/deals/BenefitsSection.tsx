@@ -28,7 +28,7 @@ const BenefitsSection = () => {
           <div key={index} className="bg-white rounded-xl p-6 shadow-sm">
             <div className="flex items-center mb-4">
               {benefit.icon}
-              <h3 className="ml-3 text-lg font-semibold text-gray-900">
+              <h3 className="ml-3 text-mid font-semibold text-gray-900">
                 {benefit.title}
               </h3>
             </div>

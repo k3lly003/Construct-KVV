@@ -149,7 +149,7 @@ export default function ConstructorRegistrationForm() {
     <div className="max-w-4xl mx-auto p-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">
+          <CardTitle className="text-mid font-bold text-center">
             {t('constructor.registration.title', 'Constructor Registration')}
           </CardTitle>
           <CardDescription className="text-center">
@@ -166,7 +166,7 @@ export default function ConstructorRegistrationForm() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Personal Information */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold border-b pb-2">
+              <h3 className="text-mid font-semibold border-b pb-2">
                 {t('constructor.registration.personalInfo', 'Personal Information')}
               </h3>
               
@@ -230,7 +230,7 @@ export default function ConstructorRegistrationForm() {
 
             {/* Business Information */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold border-b pb-2">
+              <h3 className="text-mid font-semibold border-b pb-2">
                 {t('constructor.registration.businessInfo', 'Business Information')}
               </h3>
               
@@ -300,7 +300,7 @@ export default function ConstructorRegistrationForm() {
             {/* Location */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold border-b pb-2">
+                <h3 className="text-mid font-semibold border-b pb-2">
                   {t('constructor.registration.location', 'Service Locations')}
                 </h3>
                 <Button
@@ -339,7 +339,7 @@ export default function ConstructorRegistrationForm() {
 
             {/* Insurance Information */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold border-b pb-2">
+              <h3 className="text-mid font-semibold border-b pb-2">
                 {t('constructor.registration.insuranceInfo', 'Insurance Information')}
               </h3>
               
@@ -367,7 +367,7 @@ export default function ConstructorRegistrationForm() {
             {/* Documents */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold border-b pb-2">
+                <h3 className="text-mid font-semibold border-b pb-2">
                   {t('constructor.registration.documents', 'Documents')}
                 </h3>
                 <Button

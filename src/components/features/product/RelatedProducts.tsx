@@ -5,7 +5,7 @@ import { fakeProductCards } from '@/app/utils/fakes/ProductFakes';
 const RelatedProducts = () => {
   return (
     <div className="w-[100%] sm:w-[100%] mt-[50px]">
-      <h2 className="font-bold text-2xl">Related products:</h2>
+      <h2 className="font-bold text-mid">Related products:</h2>
       <div className="flex gap-3 mt-5">
         {fakeProductCards.length > 0 ? (
           fakeProductCards.map((product) => (

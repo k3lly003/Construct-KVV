@@ -61,12 +61,12 @@ export default function SupplierHero() {
                 <Store className="w-8 h-8 text-white" />
               </div>
 
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+              <h1 className="text-title md:text-title font-bold text-white mb-4 leading-tight">
                 Grow Your
                 <span className="block text-purple-200">Business</span>
               </h1>
 
-              <p className="text-xl text-purple-100 mb-8 leading-relaxed">
+              <p className="text-mid text-purple-100 mb-8 leading-relaxed">
                 Partner with us to supply quality materials and products to construction professionals
               </p>
             </div>
@@ -82,9 +82,9 @@ export default function SupplierHero() {
                     })}
                   </div>
 
-                  <h3 className="text-2xl font-bold mb-4">{supplierBenefits[currentSlide].title}</h3>
+                  <h3 className="text-mid font-bold mb-4">{supplierBenefits[currentSlide].title}</h3>
 
-                  <p className="text-lg text-white/90 leading-relaxed">{supplierBenefits[currentSlide].description}</p>
+                  <p className="text-mid text-white/90 leading-relaxed">{supplierBenefits[currentSlide].description}</p>
                 </div>
 
                 {/* Navigation Dots */}

@@ -76,7 +76,7 @@ export const ShopProfileAdmin: React.FC = () => {
           <div className="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-4">
             <div className="flex items-center space-x-3">
               <Building2 className="h-8 w-8 text-white" />
-              <h1 className="text-2xl font-bold text-white">Create Shop Profile</h1>
+              <h1 className="text-mid font-bold text-white">Create Shop Profile</h1>
             </div>
           </div>
 
@@ -84,11 +84,11 @@ export const ShopProfileAdmin: React.FC = () => {
           <form onSubmit={handleSubmit} className="p-6 space-y-6">
             {/* Basic Information */}
             <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-gray-900">Basic Information</h2>
+              <h2 className="text-mid font-semibold text-gray-900">Basic Information</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="name" className="block text-small font-medium text-gray-700 mb-1">
                     Shop Name
                   </label>
                   <input
@@ -103,7 +103,7 @@ export const ShopProfileAdmin: React.FC = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="location" className="block text-small font-medium text-gray-700 mb-1">
                     Location
                   </label>
                   <input
@@ -118,7 +118,7 @@ export const ShopProfileAdmin: React.FC = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="phone" className="block text-small font-medium text-gray-700 mb-1">
                     Phone Number
                   </label>
                   <input
@@ -133,7 +133,7 @@ export const ShopProfileAdmin: React.FC = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="email" className="block text-small font-medium text-gray-700 mb-1">
                     Email
                   </label>
                   <input
@@ -148,7 +148,7 @@ export const ShopProfileAdmin: React.FC = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="website" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="website" className="block text-small font-medium text-gray-700 mb-1">
                     Website
                   </label>
                   <input
@@ -162,7 +162,7 @@ export const ShopProfileAdmin: React.FC = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="yearEstablished" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="yearEstablished" className="block text-small font-medium text-gray-700 mb-1">
                     Year Established
                   </label>
                   <input
@@ -182,11 +182,11 @@ export const ShopProfileAdmin: React.FC = () => {
 
             {/* Business Details */}
             <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-gray-900">Business Details</h2>
+              <h2 className="text-mid font-semibold text-gray-900">Business Details</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="responseTime" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="responseTime" className="block text-small font-medium text-gray-700 mb-1">
                     Response Time
                   </label>
                   <input
@@ -201,7 +201,7 @@ export const ShopProfileAdmin: React.FC = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="deliveryTime" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="deliveryTime" className="block text-small font-medium text-gray-700 mb-1">
                     Delivery Time
                   </label>
                   <input
@@ -217,7 +217,7 @@ export const ShopProfileAdmin: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="description" className="block text-small font-medium text-gray-700 mb-1">
                   Business Description
                 </label>
                 <textarea
@@ -234,7 +234,7 @@ export const ShopProfileAdmin: React.FC = () => {
 
             {/* Certifications */}
             <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-gray-900">Certifications</h2>
+              <h2 className="text-mid font-semibold text-gray-900">Certifications</h2>
               
               <div className="flex gap-2">
                 <input
@@ -274,7 +274,7 @@ export const ShopProfileAdmin: React.FC = () => {
 
             {/* Logo Upload */}
             <div className="space-y-4">
-              <h2 className="text-xl font-semibold text-gray-900">Shop Logo</h2>
+              <h2 className="text-mid font-semibold text-gray-900">Shop Logo</h2>
               
               <div className="flex items-center justify-center w-full">
                 <label className="w-64 flex flex-col items-center px-4 py-6 bg-white rounded-lg shadow-lg tracking-wide uppercase border border-blue-600 cursor-pointer hover:bg-blue-50 transition-colors">

@@ -81,7 +81,7 @@ const Page = ({ params }: PageProps) => {
     return (
       <div className="container max-w-7xl mx-auto py-10 flex justify-center items-center min-h-[400px]">
         <div className="text-center">
-          <h3 className="text-xl font-semibold text-red-600 mb-2">Error Loading Shop</h3>
+          <h3 className="text-mid font-semibold text-red-600 mb-2">Error Loading Shop</h3>
           <p className="text-gray-600">{error || 'Shop not found'}</p>
         </div>
       </div>

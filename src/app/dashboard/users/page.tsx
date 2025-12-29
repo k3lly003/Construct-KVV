@@ -322,7 +322,7 @@ export default function AdminUsersPage() {
 
   return (
     <div className="p-6 min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">
+      <h1 className="text-title font-bold mb-6 text-gray-800 dark:text-white">
         {currentRole ? `${currentRole.charAt(0) + currentRole.slice(1).toLowerCase()} Management` : 'User Management'}
       </h1>
       <div className="mb-6 flex flex-col md:flex-row gap-2 md:gap-4 items-start md:items-center">
@@ -397,7 +397,7 @@ export default function AdminUsersPage() {
         ) : error ? (
           <div className="text-center text-red-500 py-8">
             <div className="font-semibold mb-2">Error Loading Contractors</div>
-            <div className="text-sm">{error}</div>
+            <div className="text-small">{error}</div>
             <button 
               onClick={() => fetchContractors(statusFilter)}
               className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -432,7 +432,7 @@ export default function AdminUsersPage() {
                       <div>
                         <span className="font-medium text-gray-800 dark:text-white">{user.firstName} {user.lastName}</span>
                         {user.businessName && (
-                          <div className="text-sm text-gray-500 dark:text-gray-400">{user.businessName}</div>
+                          <div className="text-small text-gray-500 dark:text-gray-400">{user.businessName}</div>
                         )}
                       </div>
                     </TableCell>
@@ -441,14 +441,14 @@ export default function AdminUsersPage() {
                     <TableCell className="text-gray-700 dark:text-gray-300">
                       <div className="font-medium">{user.businessName}</div>
                       {user.licenseNumber && (
-                        <div className="text-xs text-gray-500">License: {user.licenseNumber}</div>
+                        <div className="text-small text-gray-500">License: {user.licenseNumber}</div>
                       )}
                     </TableCell>
                     <TableCell className="text-gray-700 dark:text-gray-300">
                       {user.yearsExperience} years
                     </TableCell>
                     <TableCell>
-                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                      <span className={`px-2 py-1 rounded-full text-small font-semibold ${
                         user.status === "APPROVED" ? "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300" :
                         user.status === "PENDING" ? "bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300" :
                         user.status === "REJECTED" ? "bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300" :
@@ -460,20 +460,20 @@ export default function AdminUsersPage() {
                     <TableCell className="text-gray-500 dark:text-gray-400">{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : ""}</TableCell>
                     <TableCell className="text-center">
                       <div className="flex gap-2 justify-center">
-                        <button onClick={() => handleViewDetails(user)} className="px-3 py-1 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition text-xs font-semibold shadow-sm">
+                        <button onClick={() => handleViewDetails(user)} className="px-3 py-1 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition text-small font-semibold shadow-sm">
                           {t('dashboard.users.viewDetails')}
                         </button>
                         <button 
                           disabled={actionLoading === user.id}
                           onClick={() => openActionDialog(user)}
-                          className="px-3 py-1 rounded-lg bg-orange-600 text-white hover:bg-orange-700 transition text-xs font-semibold shadow-sm disabled:opacity-50"
+                          className="px-3 py-1 rounded-lg bg-orange-600 text-white hover:bg-orange-700 transition text-small font-semibold shadow-sm disabled:opacity-50"
                         >
                           Update Status
                         </button>
                         <button 
                           disabled={actionLoading === user.id}
                           onClick={() => handleDeleteUser(user)}
-                          className="px-3 py-1 rounded-lg bg-red-600 text-white hover:bg-red-700 transition text-xs font-semibold shadow-sm disabled:opacity-50"
+                          className="px-3 py-1 rounded-lg bg-red-600 text-white hover:bg-red-700 transition text-small font-semibold shadow-sm disabled:opacity-50"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -497,7 +497,7 @@ export default function AdminUsersPage() {
             </Table>
             {/* Pagination Controls */}
             <div className="flex flex-col md:flex-row items-center justify-between gap-4 mt-6">
-              <div className="text-gray-500 dark:text-gray-400 text-sm">
+              <div className="text-gray-500 dark:text-gray-400 text-small">
                 {t('dashboard.users.showingPage', { page, totalPages, count: users.length })}
               </div>
               <div className="flex gap-2">
@@ -533,8 +533,8 @@ export default function AdminUsersPage() {
                   <AvatarFallback>{getInitials(`${selectedUser.firstName || ""} ${selectedUser.lastName || ""}`)}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="font-semibold text-lg text-gray-900 dark:text-white">{selectedUser.firstName} {selectedUser.lastName}</div>
-                  <div className="text-gray-500 dark:text-gray-400 text-sm">{selectedUser.email}</div>
+                  <div className="font-semibold text-mid text-gray-900 dark:text-white">{selectedUser.firstName} {selectedUser.lastName}</div>
+                  <div className="text-gray-500 dark:text-gray-400 text-small">{selectedUser.email}</div>
                 </div>
               </div>
               <div className="text-gray-700 dark:text-gray-300"><span className="font-medium">{t('dashboard.users.phone')}:</span> {selectedUser.phone}</div>
@@ -564,9 +564,9 @@ export default function AdminUsersPage() {
                   <AvatarFallback>{getInitials(`${actionUser.firstName || ""} ${actionUser.lastName || ""}`)}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="font-semibold text-lg text-gray-900 dark:text-white">{actionUser.firstName} {actionUser.lastName}</div>
-                  <div className="text-gray-500 dark:text-gray-400 text-sm">{actionUser.email}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Current Status: {actionUser.status}</div>
+                  <div className="font-semibold text-mid text-gray-900 dark:text-white">{actionUser.firstName} {actionUser.lastName}</div>
+                  <div className="text-gray-500 dark:text-gray-400 text-small">{actionUser.email}</div>
+                  <div className="text-small text-gray-600 dark:text-gray-400">Current Status: {actionUser.status}</div>
                 </div>
               </div>
               <p className="text-gray-700 dark:text-gray-300">

@@ -44,7 +44,7 @@ export const Footer: React.FC = () => {
           <div className="space-y-8">
             <div className="flex items-center space-x-3">
               <Image src='/kvv-logo.png' alt='KVV Construction company logo' width={34} height={34} />
-              <h2 className="text-2xl font-bold">kvv Ltd</h2>
+              <h2 className="text-mid font-bold">kvv Ltd</h2>
             </div>
 
             {/* Social Links */}
@@ -86,7 +86,7 @@ export const Footer: React.FC = () => {
 
           {/* Contact Information */}
           <div className="space-y-8">
-            <h3 className="text-xl font-semibold">{t('footer.reachOut')}</h3>
+            <h3 className="text-mid font-semibold">{t('footer.reachOut')}</h3>
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
                 <MapPin className="h-6 w-6 text-yellow-400" />
@@ -114,7 +114,7 @@ export const Footer: React.FC = () => {
 
           {/* Posts/Feeds */}
           <div>
-            <h3 className="text-xl font-semibold mb-6">{t('footer.postsFeeds')}</h3>
+            <h3 className="text-mid font-semibold mb-6">{t('footer.postsFeeds')}</h3>
             <div className="grid grid-cols-2 gap-4">
               {constructionImages.map((image, index) => (
                 <div key={index} className="aspect-square overflow-hidden rounded-lg">
@@ -132,7 +132,7 @@ export const Footer: React.FC = () => {
 
           {/* About Us */}
           <div className="space-y-6 w-[350px]">
-            <h3 className="text-xl font-semibold">{t('footer.aboutUs')}</h3>
+            <h3 className="text-mid font-semibold">{t('footer.aboutUs')}</h3>
             <div className="space-y-4">
               <p className="text-gray-400 text-md leading-relaxed">
                 {t('footer.aboutParagraph', { strong: (chunks: any) => <strong className='text-amber-300'>{chunks}</strong> })}

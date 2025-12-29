@@ -37,7 +37,7 @@ export function LanguageSwitcher() {
         onClick={() => {
           /* your handler */
         }}
-        className="text-sm hover:bg-gray-200 bg-white text-black"
+        className="text-small hover:bg-gray-200 bg-white text-black"
       >
         Language
       </Button>
@@ -50,7 +50,7 @@ export function LanguageSwitcher() {
         <Button
           variant="outline"
           size="default"
-          className="gap-2 text-sm hover:bg-gray-200 bg-white text-black"
+          className="gap-2 text-small hover:bg-gray-200 bg-white text-black"
         >
           {t("common.language")}
           <Globe className="h-4 w-4" />

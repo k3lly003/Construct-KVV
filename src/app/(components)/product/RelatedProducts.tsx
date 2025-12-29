@@ -31,7 +31,7 @@ const RelatedProducts: React.FC<RelatedProductsProps> = ({ category, productId }
 
   return (
     <div className="w-[100%] sm:w-[100%] mt-[50px]">
-      <h2 className="font-bold text-2xl">{t(dashboardFakes.relatedProducts.title)}</h2>
+      <h2 className="font-bold text-mid">{t(dashboardFakes.relatedProducts.title)}</h2>
       <div className="flex gap-3 mt-5 overflow-x-auto flex-nowrap sm:flex-wrap scrollbar-hide">
         {loading ? (
           <p>{t(dashboardFakes.relatedProducts.loading)}</p>

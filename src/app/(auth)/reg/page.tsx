@@ -211,21 +211,21 @@ export default function RegistrationPage() {
         
         <div className="max-w-4xl mx-auto relative z-10">
           <div className="mb-8">
-            <Link href="/" className="inline-flex items-center text-sm font-medium text-white/90 hover:text-white transition-colors mb-4">
+            <Link href="/" className="inline-flex items-center text-small font-medium text-white/90 hover:text-white transition-colors mb-4">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back
             </Link>
-            <h1 className="text-4xl font-bold text-white drop-shadow-lg">
+            <h1 className="text-large font-bold text-white drop-shadow-lg">
               Professional Registration
             </h1>
-            <p className="text-white/90 mt-2 text-lg drop-shadow-md">
+            <p className="text-white/90 mt-2 text-mid drop-shadow-md">
               Join our network of professional service providers
             </p>
           </div>
 
           <Card className="shadow-2xl border-0">
             <CardHeader className="space-y-1 pb-6">
-              <CardTitle className="text-2xl">Create Your Account</CardTitle>
+              <CardTitle className="text-mid">Create Your Account</CardTitle>
               <CardDescription className="text-base">
                 Please provide your details to complete the registration process
               </CardDescription>
@@ -244,14 +244,14 @@ export default function RegistrationPage() {
                     <div className="h-8 w-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-semibold">
                       1
                     </div>
-                    <h3 className="text-xl font-semibold text-slate-900">
+                    <h3 className="text-mid font-semibold text-slate-900">
                       Personal Information
                     </h3>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <Label htmlFor="firstName" className="text-sm font-medium">
+                      <Label htmlFor="firstName" className="text-small font-medium">
                         First Name <span className="text-red-500">*</span>
                       </Label>
                       <Input
@@ -265,7 +265,7 @@ export default function RegistrationPage() {
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="lastName" className="text-sm font-medium">
+                      <Label htmlFor="lastName" className="text-small font-medium">
                         Last Name <span className="text-red-500">*</span>
                       </Label>
                       <Input
@@ -279,7 +279,7 @@ export default function RegistrationPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-sm font-medium">
+                      <Label htmlFor="email" className="text-small font-medium">
                         Email Address <span className="text-red-500">*</span>
                       </Label>
                       <Input
@@ -294,7 +294,7 @@ export default function RegistrationPage() {
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="password" className="text-sm font-medium">
+                      <Label htmlFor="password" className="text-small font-medium">
                         Password <span className="text-red-500">*</span>
                       </Label>
                       <Input
@@ -309,7 +309,7 @@ export default function RegistrationPage() {
                     </div>
 
                     <div className="space-y-2 md:col-span-2">
-                      <Label htmlFor="phone" className="text-sm font-medium">
+                      <Label htmlFor="phone" className="text-small font-medium">
                         Phone Number
                       </Label>
                       <Input
@@ -330,14 +330,14 @@ export default function RegistrationPage() {
                     <div className="h-8 w-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-semibold">
                       2
                     </div>
-                    <h3 className="text-xl font-semibold text-slate-900">
+                    <h3 className="text-mid font-semibold text-slate-900">
                       Business Information
                     </h3>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2 md:col-span-2">
-                      <Label htmlFor="businessName" className="text-sm font-medium">
+                      <Label htmlFor="businessName" className="text-small font-medium">
                         Business Name
                       </Label>
                       <Input
@@ -350,7 +350,7 @@ export default function RegistrationPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="licenseNumber" className="text-sm font-medium">
+                      <Label htmlFor="licenseNumber" className="text-small font-medium">
                         License Number
                       </Label>
                       <Input
@@ -363,7 +363,7 @@ export default function RegistrationPage() {
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="yearsExperience" className="text-sm font-medium">
+                      <Label htmlFor="yearsExperience" className="text-small font-medium">
                         Years of Experience
                       </Label>
                       <Input
@@ -386,7 +386,7 @@ export default function RegistrationPage() {
                       <div className="h-8 w-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-semibold">
                         3
                       </div>
-                      <h3 className="text-xl font-semibold text-slate-900">
+                      <h3 className="text-mid font-semibold text-slate-900">
                         Service Locations
                       </h3>
                     </div>
@@ -405,7 +405,7 @@ export default function RegistrationPage() {
                     {locations.map((location, index) => (
                       <div key={location.id} className="p-5 border-2 rounded-lg bg-gradient-to-br from-white to-slate-50 hover:shadow-md transition-shadow">
                         <div className="flex items-center justify-between mb-4">
-                          <span className="text-sm font-semibold text-slate-700">
+                          <span className="text-small font-semibold text-slate-700">
                             Location {index + 1}
                           </span>
                           {locations.length > 1 && (
@@ -423,7 +423,7 @@ export default function RegistrationPage() {
                         
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div className="space-y-2">
-                            <Label className="text-sm font-medium text-slate-700">
+                            <Label className="text-small font-medium text-slate-700">
                               Province <span className="text-red-500">*</span>
                             </Label>
                             <Input
@@ -434,7 +434,7 @@ export default function RegistrationPage() {
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label className="text-sm font-medium text-slate-700">
+                            <Label className="text-small font-medium text-slate-700">
                               Sector <span className="text-red-500">*</span>
                             </Label>
                             <Input
@@ -445,7 +445,7 @@ export default function RegistrationPage() {
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label className="text-sm font-medium text-slate-700">
+                            <Label className="text-small font-medium text-slate-700">
                               Cell
                             </Label>
                             <Input
@@ -458,7 +458,7 @@ export default function RegistrationPage() {
                         </div>
                         
                         {location.province && location.sector && (
-                          <div className="mt-3 text-xs text-slate-600 bg-white p-2 rounded border">
+                          <div className="mt-3 text-small text-slate-600 bg-white p-2 rounded border">
                             📍 {location.province}, {location.sector}{location.cell ? `, ${location.cell}` : ''}
                           </div>
                         )}
@@ -473,13 +473,13 @@ export default function RegistrationPage() {
                     <div className="h-8 w-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-semibold">
                       4
                     </div>
-                    <h3 className="text-xl font-semibold text-slate-900">
+                    <h3 className="text-mid font-semibold text-slate-900">
                       Specializations
                     </h3>
                   </div>
                   
                   <div className="space-y-4">
-                    <Label className="text-sm font-medium text-slate-700">
+                    <Label className="text-small font-medium text-slate-700">
                       Select your areas of expertise (you can choose multiple)
                     </Label>
                     
@@ -503,7 +503,7 @@ export default function RegistrationPage() {
                               <Check className="w-3 h-3 text-white" />
                             )}
                           </div>
-                          <span className={`text-sm font-medium ${
+                          <span className={`text-small font-medium ${
                             selectedSpecializations.includes(specialization)
                               ? "text-blue-700"
                               : "text-slate-700"
@@ -516,14 +516,14 @@ export default function RegistrationPage() {
                     
                     {selectedSpecializations.length > 0 && (
                       <div className="mt-4 p-4 bg-blue-50 border-2 border-blue-200 rounded-lg">
-                        <p className="text-sm text-blue-900 font-semibold mb-3">
+                        <p className="text-small text-blue-900 font-semibold mb-3">
                           Selected Specializations ({selectedSpecializations.length}):
                         </p>
                         <div className="flex flex-wrap gap-2">
                           {selectedSpecializations.map((spec) => (
                             <span
                               key={spec}
-                              className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800 border border-blue-300"
+                              className="inline-flex items-center px-3 py-1.5 rounded-full text-small font-medium bg-blue-100 text-blue-800 border border-blue-300"
                             >
                               {spec}
                               <button
@@ -551,7 +551,7 @@ export default function RegistrationPage() {
                       <div className="h-8 w-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-semibold">
                         5
                       </div>
-                      <h3 className="text-xl font-semibold text-slate-900">
+                      <h3 className="text-mid font-semibold text-slate-900">
                         Documents
                       </h3>
                     </div>
@@ -570,7 +570,7 @@ export default function RegistrationPage() {
                     {documents.map((document, index) => (
                       <div key={document.id} className="p-5 border-2 rounded-lg bg-gradient-to-br from-white to-slate-50 hover:shadow-md transition-shadow">
                         <div className="flex items-center justify-between mb-4">
-                          <span className="text-sm font-semibold text-slate-700">
+                          <span className="text-small font-semibold text-slate-700">
                             Document Set {index + 1}
                           </span>
                           {documents.length > 1 && (
@@ -588,7 +588,7 @@ export default function RegistrationPage() {
                         
                         <div className="space-y-4">
                           <div>
-                            <Label className="text-sm font-medium text-slate-700 mb-2 block">
+                            <Label className="text-small font-medium text-slate-700 mb-2 block">
                               Upload Files
                             </Label>
                             <div className="relative">
@@ -599,17 +599,17 @@ export default function RegistrationPage() {
                                   handleFileUpload(document.id, e.target.files);
                                 }}
                                 accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt"
-                                className="h-11 cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                className="h-11 cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-small file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                               />
                             </div>
-                            <p className="text-xs text-slate-500 mt-1">
+                            <p className="text-small text-slate-500 mt-1">
                               Accepted formats: PDF, DOC, DOCX, JPG, PNG, TXT
                             </p>
                           </div>
                           
                           {document.files.length > 0 && (
                             <div className="space-y-2">
-                              <Label className="text-sm font-medium text-slate-700">
+                              <Label className="text-small font-medium text-slate-700">
                                 Uploaded Files ({document.files.length})
                               </Label>
                               <div className="space-y-2 max-h-48 overflow-y-auto">
@@ -617,10 +617,10 @@ export default function RegistrationPage() {
                                   <div key={fileIndex} className="flex items-center gap-3 p-3 bg-white rounded-lg border-2 border-slate-200 hover:border-slate-300 transition-colors">
                                     <Upload className="w-5 h-5 text-blue-500 flex-shrink-0" />
                                     <div className="flex-1 min-w-0">
-                                      <p className="text-sm font-medium text-slate-900 truncate">
+                                      <p className="text-small font-medium text-slate-900 truncate">
                                         {document.names[fileIndex]}
                                       </p>
-                                      <p className="text-xs text-slate-500">
+                                      <p className="text-small text-slate-500">
                                         {document.types[fileIndex]}
                                       </p>
                                     </div>
@@ -659,7 +659,7 @@ export default function RegistrationPage() {
                       "Complete Registration"
                     )}
                   </Button>
-                  <p className="text-center text-sm text-slate-600 mt-4">
+                  <p className="text-center text-small text-slate-600 mt-4">
                     Already have an account?{" "}
                     <Link href="/login" className="text-blue-600 font-semibold hover:text-blue-700">
                       Sign in here

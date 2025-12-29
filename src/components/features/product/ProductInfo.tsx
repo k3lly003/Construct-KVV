@@ -55,7 +55,7 @@ export default function ProductInfo({
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight mt-1">{product.name}</h1>
+        <h1 className="text-title font-bold tracking-tight mt-1">{product.name}</h1>
         
         {/* Rating */}
         <div className="flex items-center gap-2 mt-3">
@@ -68,13 +68,13 @@ export default function ProductInfo({
               />
             ))}
           </div>
-          <span className="text-sm text-muted-foreground">
+          <span className="text-small text-muted-foreground">
             {product.rating} ({product.reviewCount} reviews)
           </span>
         </div>
         
         {/* Price */}
-        <p className="text-2xl font-semibold mt-4">{product.price} Rfw</p>
+        <p className="text-mid font-semibold mt-4">{product.price} Rfw</p>
       </div>
       
       {/* Quantity and Add to Cart */}

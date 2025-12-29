@@ -24,11 +24,11 @@ export default function ServiceBanner() {
         <div className="absolute inset-0 bg-gradient-to-b from-amber-500/70 via-amber-300/60 to-white" />
 
         <div className="relative z-10 text-center max-w-4xl mx-auto px-4">
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+          <h1 className="text-title md:text-6xl font-bold text-white mb-6 leading-tight">
             {t('serviceBanner.heroTitle')}
           </h1>
 
-          <p className="text-xl md:text-2xl text-amber-100 mb-12 max-w-2xl mx-auto">
+          <p className="text-mid md:text-mid text-amber-100 mb-12 max-w-2xl mx-auto">
             {t('serviceBanner.heroSubtitle')}
           </p>
 
@@ -41,12 +41,12 @@ export default function ServiceBanner() {
                   placeholder={t('serviceBanner.locationPlaceholder')}
                   value={zipCode}
                   onChange={(e) => setZipCode(e.target.value)}
-                  className="pl-10 h-12 text-lg border-2 border-gray-200 focus:border-amber-500"
+                  className="pl-10 h-12 text-mid border-2 border-gray-200 focus:border-amber-500"
                 />
               </div>
               <Button
                 onClick={handleSearch}
-                className="h-12 px-8 bg-orange-500 hover:bg-orange-600 text-white font-semibold text-lg shadow-lg transform hover:scale-105 transition-all duration-200"
+                className="h-12 px-8 bg-orange-500 hover:bg-orange-600 text-white font-semibold text-mid shadow-lg transform hover:scale-105 transition-all duration-200"
               >
                 <Search className="mr-2 h-5 w-5" />
                 {t('serviceBanner.findServices')}
@@ -69,7 +69,7 @@ export default function ServiceBanner() {
       {/* How It Works Section */}
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
+          <h2 className="text-title font-bold text-center mb-12 text-gray-900">
             {t('serviceBanner.howItWorksTitle')}
           </h2>
 
@@ -78,7 +78,7 @@ export default function ServiceBanner() {
               <div className="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-amber-200 transition-colors duration-200">
                 <Search className="h-8 w-8 text-amber-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">
+              <h3 className="text-mid font-semibold mb-3 text-gray-900">
                 {t('serviceBanner.step1Title')}
               </h3>
               <p className="text-gray-600 leading-relaxed">
@@ -90,7 +90,7 @@ export default function ServiceBanner() {
               <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-orange-200 transition-colors duration-200">
                 <Users className="h-8 w-8 text-orange-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">
+              <h3 className="text-mid font-semibold mb-3 text-gray-900">
                 {t('serviceBanner.step2Title')}
               </h3>
               <p className="text-gray-600 leading-relaxed">
@@ -102,7 +102,7 @@ export default function ServiceBanner() {
               <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-green-200 transition-colors duration-200">
                 <CheckCircle className="h-8 w-8 text-green-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">
+              <h3 className="text-mid font-semibold mb-3 text-gray-900">
                 {t('serviceBanner.step3Title')}
               </h3>
               <p className="text-gray-600 leading-relaxed">

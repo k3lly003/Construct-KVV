@@ -58,11 +58,11 @@ export default function ConstructorHero() {
           <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-6">
             <HardHat className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+          <h1 className="text-title md:text-title font-bold text-white mb-4 leading-tight">
             Build with
             <span className="block text-orange-200">Confidence</span>
           </h1>
-          <p className="text-xl text-orange-100 mb-8 leading-relaxed">
+          <p className="text-mid text-orange-100 mb-8 leading-relaxed">
             Connect with top contractors and bring ambitious projects to life
           </p>
         </div>
@@ -76,7 +76,7 @@ export default function ConstructorHero() {
                 className: "w-6 h-6 text-white",
               })}
             </div>
-            <h3 className="text-xl font-bold mb-2">{constructorBenefits[currentSlide].title}</h3>
+            <h3 className="text-mid font-bold mb-2">{constructorBenefits[currentSlide].title}</h3>
             <p className="text-base text-white/90 leading-relaxed">{constructorBenefits[currentSlide].description}</p>
           </div>
 

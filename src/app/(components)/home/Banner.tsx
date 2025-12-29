@@ -39,22 +39,22 @@ export const Banner: React.FC = () => {
       <div className="relative h-full flex items-center justify-center text-start px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 h-full">
         <div className="max-w-7xl flex flex-col justify-start w-full">
           {currentSlideData?.subtitleKey && (
-            <span className="text-yellow-500 text-2xl sm:text-5xl font-semibold mb-2 block">
+            <span className="text-mid text-yellow-500 font-semibold mb-2 block">
               {t(currentSlideData.subtitleKey)}
             </span>
           )}
           {currentSlideData?.titleKey && (
-            <h2 className="text-green-500 text-4xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 leading-tight">
+            <h2 className="text-large text-green-500 font-bold mb-4 leading-tight">
               {t(currentSlideData.titleKey)}
             </h2>
           )}
           {currentSlideData?.descriptionKey && (
-            <p className="text-gray-100 text-2xl mb-6 max-w-3xl leading-relaxed">
+            <p className="text-mid text-gray-100 mb-6 max-w-3xl leading-relaxed">
               {t(currentSlideData.descriptionKey)}
             </p>
           )}
           {currentSlideData?.buttonTextKey && (
-            <button className="inline-flex items-center bg-yellow-500 text-gray-900 text-base sm:text-lg px-4 sm:px-5 py-2 sm:py-3 rounded-md font-semibold hover:bg-yellow-400 transition-colors w-fit">
+            <button className="inline-flex items-center bg-yellow-500 text-gray-900 text-base sm:text-mid px-4 sm:px-5 py-2 sm:py-3 rounded-md font-semibold hover:bg-yellow-400 transition-colors w-fit">
               {t(currentSlideData.buttonTextKey)}
               <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
             </button>

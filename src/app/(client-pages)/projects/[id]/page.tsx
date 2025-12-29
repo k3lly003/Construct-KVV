@@ -127,7 +127,7 @@ export default function ProjectDetailsPage() {
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 py-8">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            <h1 className="text-mid font-bold text-gray-900 mb-4">
               Project Not Found
             </h1>
             <p className="text-gray-600 mb-4">
@@ -172,7 +172,7 @@ export default function ProjectDetailsPage() {
 
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-title font-bold text-gray-900 mb-2">
                 Project #{project.id.slice(-8)}
               </h1>
               <div className="flex items-center gap-3">
@@ -182,7 +182,7 @@ export default function ProjectDetailsPage() {
                 <Badge className={getStatusColor(project.status)}>
                   {project.status}
                 </Badge>
-                <span className="text-sm text-gray-500">
+                <span className="text-small text-gray-500">
                   Created {new Date(project.createdAt).toLocaleDateString()}
                 </span>
               </div>
@@ -233,7 +233,7 @@ export default function ProjectDetailsPage() {
                   <div className="text-center p-4 bg-green-50 rounded-lg">
                     <DollarSign className="h-8 w-8 text-green-600 mx-auto mb-2" />
                     <h4 className="font-semibold text-gray-900">Total Cost</h4>
-                    <p className="text-lg font-bold text-green-600">
+                    <p className="text-mid font-bold text-green-600">
                       {formatCurrency(
                         project.totalEstimatedCost,
                         project.currency
@@ -246,7 +246,7 @@ export default function ProjectDetailsPage() {
                   <div className="text-center p-4 bg-blue-50 rounded-lg">
                     <Clock className="h-8 w-8 text-blue-600 mx-auto mb-2" />
                     <h4 className="font-semibold text-gray-900">Duration</h4>
-                    <p className="text-lg font-bold text-blue-600">
+                    <p className="text-mid font-bold text-blue-600">
                       {project.estimatedDuration} months
                     </p>
                   </div>
@@ -256,7 +256,7 @@ export default function ProjectDetailsPage() {
                   <div className="text-center p-4 bg-purple-50 rounded-lg">
                     <Users className="h-8 w-8 text-purple-600 mx-auto mb-2" />
                     <h4 className="font-semibold text-gray-900">Workers</h4>
-                    <p className="text-lg font-bold text-purple-600">
+                    <p className="text-mid font-bold text-purple-600">
                       {project.numberOfWorkers} people
                     </p>
                   </div>
@@ -283,7 +283,7 @@ export default function ProjectDetailsPage() {
                       <h4 className="font-semibold text-gray-900">
                         Labor Cost
                       </h4>
-                      <p className="text-lg font-bold text-blue-600">
+                      <p className="text-mid font-bold text-blue-600">
                         {formatCurrency(project.laborCost, project.currency)}
                       </p>
                     </div>
@@ -293,7 +293,7 @@ export default function ProjectDetailsPage() {
                       <h4 className="font-semibold text-gray-900">
                         Material Cost
                       </h4>
-                      <p className="text-lg font-bold text-green-600">
+                      <p className="text-mid font-bold text-green-600">
                         {formatCurrency(project.materialCost, project.currency)}
                       </p>
                     </div>
@@ -303,7 +303,7 @@ export default function ProjectDetailsPage() {
                       <h4 className="font-semibold text-gray-900">
                         Other Expenses
                       </h4>
-                      <p className="text-lg font-bold text-purple-600">
+                      <p className="text-mid font-bold text-purple-600">
                         {formatCurrency(
                           project.otherExpenses,
                           project.currency
@@ -330,7 +330,7 @@ export default function ProjectDetailsPage() {
               </CardHeader>
               <CardContent>
                 <div className="bg-gray-50 p-4 rounded-lg max-h-96 overflow-y-auto">
-                  <pre className="text-sm text-gray-700 whitespace-pre-wrap">
+                  <pre className="text-small text-gray-700 whitespace-pre-wrap">
                     {project.text}
                   </pre>
                 </div>
@@ -384,7 +384,7 @@ export default function ProjectDetailsPage() {
                       <h4 className="font-semibold text-gray-900">
                         Current Status
                       </h4>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-small text-gray-600">
                         {project.status === "DRAFT" &&
                           "Project is in draft mode - contractors cannot bid yet"}
                         {project.status === "OPEN" &&
@@ -439,7 +439,7 @@ export default function ProjectDetailsPage() {
                       <h4 className="font-semibold text-green-900 mb-2">
                         ✅ Project is Open for Bidding
                       </h4>
-                      <p className="text-green-800 text-sm">
+                      <p className="text-green-800 text-small">
                         Contractors can now place bids on your project. You'll
                         receive notifications when new bids are submitted.
                       </p>

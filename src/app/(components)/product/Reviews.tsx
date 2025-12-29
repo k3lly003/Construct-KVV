@@ -16,7 +16,7 @@ const Reviews: React.FC<ReviewsProps> = ({ reviews, shop, showReviewDialog }) =>
   if (!reviews || reviews.length === 0) {
     return (
       <div className="w-[60%] p-3 md:w-full my-8 text-start">
-        <h2 className="text-2xl font-bold mb-4">Customer Reviews</h2>
+        <h2 className="text-mid font-bold mb-4">Customer Reviews</h2>
         <p className='text-red-400'>No reviews yet for {shopName}.</p>
         {showReviewDialog && (
           <button
@@ -33,7 +33,7 @@ const Reviews: React.FC<ReviewsProps> = ({ reviews, shop, showReviewDialog }) =>
   return (
     <div className="w-[100%] p-3 sm:w-[60%] my-8">
       <div className='flex justify-between'>
-        <h2 className="text-2xl font-bold mb-4">Customer Reviews for {shopName}</h2>
+        <h2 className="text-mid font-bold mb-4">Customer Reviews for {shopName}</h2>
         <DialogDemo shop={shop}/>
         {showReviewDialog && (
           <button

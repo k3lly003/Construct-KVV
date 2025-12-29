@@ -40,7 +40,7 @@ export const ProductCarousel: React.FC = () => {
   return (
     <div className="bg-white py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        <h2 className="text-mid font-bold text-gray-900 mb-6">
           Featured Products
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 space-x-5">
@@ -62,7 +62,7 @@ export const ProductCarousel: React.FC = () => {
                 </div>
               </div>
               <div className="p-4">
-                <div className="flex justify-between text-sm text-gray-500">
+                <div className="flex justify-between text-small text-gray-500">
                   <h3 className="text-md font-semibold text-gray-900 mb-1">
                     {product.name}
                   </h3>
@@ -71,13 +71,13 @@ export const ProductCarousel: React.FC = () => {
                     {product.rating}
                   </div>
                 </div>
-                <p className="text-sm text-gray-500 mb-2">
+                <p className="text-small text-gray-500 mb-2">
                   {"Description might not be directly available"}
                 </p>
                 <div className="mb-2">
                   {product.discountedPrice && product.originalPrice ? (
                     <div className="w-full flex justify-between">
-                      <p className="font-semibold text-yellow-400 line-through text-sm">
+                      <p className="font-semibold text-yellow-400 line-through text-small">
                         RwF {product.originalPrice.toLocaleString()}
                       </p>
                       <p className="font-semibold text-gray-900 text-md">
@@ -94,7 +94,7 @@ export const ProductCarousel: React.FC = () => {
                 </div>
                 <Button
                   text={"Add to cart"}
-                  texSize={"text-sm"}
+                  texSize={"text-small"}
                   hoverBg={"hover:bg-yellow-400"}
                   borderCol={"border-yellow-300"}
                   bgCol={"white"}

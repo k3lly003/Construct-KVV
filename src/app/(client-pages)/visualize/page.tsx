@@ -60,7 +60,7 @@ export default function VisualizePage() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-white/80 to-amber-100/80" />
       </div>
-      <h1 className="text-4xl md:text-5xl font-bold text-amber-900 mb-8 mt-24 text-center drop-shadow-lg">
+      <h1 className="text-title font-bold text-amber-900 mb-8 mt-24 text-center drop-shadow-lg">
         {t(dashboardFakes.VisualizePage.title)}
       </h1>
       <form
@@ -75,7 +75,7 @@ export default function VisualizePage() {
             ref={fileInputRef}
             type="file"
             accept="image/*,application/pdf"
-            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100"
+            className="block w-full text-small text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-small file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100"
             onChange={handleFileChange}
             disabled={loading}
           />
@@ -90,10 +90,10 @@ export default function VisualizePage() {
       
       {summary && (
         <div className="w-full max-w-lg mx-auto mt-6 bg-white/90 rounded-xl shadow-lg p-6 text-center">
-          <h2 className="text-xl font-bold text-amber-800 mb-2">
+          <h2 className="text-mid font-bold text-amber-800 mb-2">
             {t(dashboardFakes.VisualizePage.summaryTitle) || "Summary"}
           </h2>
-          <div className="text-sm text-gray-800 whitespace-pre-wrap text-left bg-gray-50 p-4 rounded-lg">
+          <div className="text-small text-gray-800 whitespace-pre-wrap text-left bg-gray-50 p-4 rounded-lg">
             {summary}
           </div>
         </div>

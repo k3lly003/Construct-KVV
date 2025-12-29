@@ -25,7 +25,7 @@ export function StepFivePreferences() {
       transition={{ duration: 0.3 }}
     >
       <div className="mb-6">
-        <h2 className="text-3xl font-bold tracking-tight">Design Preferences</h2>
+        <h2 className="text-title font-bold tracking-tight">Design Preferences</h2>
         <p className="text-muted-foreground mt-2">
           Share your inspiration and specific requirements for your project.
         </p>
@@ -35,8 +35,8 @@ export function StepFivePreferences() {
         <Card className="p-6">
           <div className="space-y-8">
             <div className="space-y-4">
-              <Label className="text-lg font-medium">Inspiration URLs</Label>
-              <p className="text-muted-foreground text-sm mb-4">
+              <Label className="text-mid font-medium">Inspiration URLs</Label>
+              <p className="text-muted-foreground text-small mb-4">
                 Add links to images or designs that inspire you (optional).
               </p>
               
@@ -59,8 +59,8 @@ export function StepFivePreferences() {
             </div>
 
             <div className="space-y-4">
-              <Label htmlFor="specificRequirements" className="text-lg font-medium">Specific Requirements</Label>
-              <p className="text-muted-foreground text-sm mb-4">
+              <Label htmlFor="specificRequirements" className="text-mid font-medium">Specific Requirements</Label>
+              <p className="text-muted-foreground text-small mb-4">
                 Describe any specific features, requirements, or preferences not covered in previous steps.
               </p>
               <Textarea
@@ -73,7 +73,7 @@ export function StepFivePreferences() {
             </div>
 
             <div className="space-y-4">
-              <Label className="text-lg font-medium">Budget Range (optional!)</Label>
+              <Label className="text-mid font-medium">Budget Range (optional!)</Label>
               <RadioGroup 
                 value={formData.budget}
                 onValueChange={(value) => updateFormData({ budget: value })}
@@ -104,7 +104,7 @@ export function StepFivePreferences() {
             </div>
 
             <div className="space-y-4">
-              <Label className="text-lg font-medium">Timeline</Label>
+              <Label className="text-mid font-medium">Timeline</Label>
               <RadioGroup 
                 value={formData.timeline}
                 onValueChange={(value) => updateFormData({ timeline: value })}

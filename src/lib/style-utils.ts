@@ -11,7 +11,7 @@ import { colors, statusColors } from "./design-tokens";
 export function getStatusBadgeClasses(status: "success" | "error" | "warning" | "info" | "pending") {
   const statusColor = statusColors[status];
   return cn(
-    "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
+    "inline-flex items-center px-2.5 py-0.5 rounded-full text-small font-medium",
     `bg-[${statusColor.bg}]`,
     `text-[${statusColor.text}]`,
     `border border-[${statusColor.border}]`
@@ -92,8 +92,8 @@ export function getButtonClasses(
   };
 
   const sizes = {
-    sm: "h-8 px-3 text-xs",
-    md: "h-10 px-4 text-sm",
+    sm: "h-8 px-3 text-small",
+    md: "h-10 px-4 text-small",
     lg: "h-12 px-6 text-base",
   };
 

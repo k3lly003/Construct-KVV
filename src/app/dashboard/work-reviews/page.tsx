@@ -42,10 +42,10 @@ function Page() {
     <div className="min-h-[calc(100dvh-80px)] w-full">
       <div className="from-amber-400 to-amber-600 relative isolate mb-8 w-full bg-gradient-to-r py-10 text-amber-50">
         <div className="mx-auto w-full max-w-6xl px-4">
-          <h1 className="text-balance text-2xl font-semibold md:text-3xl">
+          <h1 className="text-balance text-mid font-semibold md:text-title">
             Technician Work Reviews
           </h1>
-          <p className="text-amber-100/90 mt-2 max-w-2xl text-sm md:text-base">
+          <p className="text-amber-100/90 mt-2 max-w-2xl text-small md:text-base">
             View ratings, reviews, and comments left by your clients. Keep track
             of your performance and build trust.
           </p>
@@ -55,7 +55,7 @@ function Page() {
       <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 px-4 md:grid-cols-3">
         <Card className="md:col-span-1">
           <CardHeader>
-            <CardTitle className="text-sm text-muted-foreground">
+            <CardTitle className="text-small text-muted-foreground">
               Average Rating
             </CardTitle>
             <CardDescription className="sr-only">
@@ -65,10 +65,10 @@ function Page() {
           <CardContent>
             <div className="flex items-end justify-between">
               <div>
-                <div className="text-4xl font-bold text-amber-600">
+                <div className="text-title font-bold text-amber-600">
                   {avgRating.toFixed(1)}
                 </div>
-                <div className="text-muted-foreground mt-1 text-xs">
+                <div className="text-muted-foreground mt-1 text-small">
                   out of 5
                 </div>
               </div>
@@ -91,15 +91,15 @@ function Page() {
 
         <Card className="md:col-span-1">
           <CardHeader>
-            <CardTitle className="text-sm text-muted-foreground">
+            <CardTitle className="text-small text-muted-foreground">
               Total Reviews
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-4xl font-bold text-amber-600">
+            <div className="text-title font-bold text-amber-600">
               {totalReviews}
             </div>
-            <div className="text-muted-foreground mt-1 text-xs">
+            <div className="text-muted-foreground mt-1 text-small">
               reviews received
             </div>
           </CardContent>
@@ -107,12 +107,12 @@ function Page() {
 
         <Card className="md:col-span-1">
           <CardHeader>
-            <CardTitle className="text-sm text-muted-foreground">
+            <CardTitle className="text-small text-muted-foreground">
               Highlights
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="text-muted-foreground grid list-disc gap-2 pl-4 text-sm">
+            <ul className="text-muted-foreground grid list-disc gap-2 pl-4 text-small">
               <li>
                 No reviews yet — invite your recent clients to leave feedback.
               </li>
@@ -143,7 +143,7 @@ function Page() {
                   <div className="bg-amber-100/70 relative h-2 flex-1 overflow-hidden rounded">
                     <div className="bg-amber-500 h-full w-0" />
                   </div>
-                  <div className="text-muted-foreground w-10 text-right text-sm">
+                  <div className="text-muted-foreground w-10 text-right text-small">
                     {row.count}
                   </div>
                 </div>
@@ -180,7 +180,7 @@ function Page() {
                       <div className="flex-1">
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <div className="font-medium">{r.user}</div>
-                          <div className="text-muted-foreground text-xs">
+                          <div className="text-muted-foreground text-small">
                             {r.date}
                           </div>
                         </div>
@@ -197,7 +197,7 @@ function Page() {
                             />
                           ))}
                         </div>
-                        <p className="text-muted-foreground mt-2 text-sm">
+                        <p className="text-muted-foreground mt-2 text-small">
                           {r.comment}
                         </p>
                       </div>

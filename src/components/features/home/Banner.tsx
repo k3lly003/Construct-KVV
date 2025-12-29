@@ -47,12 +47,12 @@ export const Banner: React.FC = () => {
       <div className="relative h-full flex items-center justify-center text-start">
         <div className="max-w-6xl flex flex-col justify-start">
           {currentSlideData?.subtitleKey && (
-            <span className="text-yellow-500 text-2xl font-semibold mb-2 block">
+            <span className="text-yellow-500 text-mid font-semibold mb-2 block">
               {getText(currentSlideData.subtitleKey, "")}
             </span>
           )}
           {currentSlideData?.titleKey && (
-            <h2 className="text-green-500 text-5xl font-bold mb-4">
+            <h2 className="text-green-500 text-title font-bold mb-4">
               {getText(
                 "home.hero.title",
                 "Your One-Stop Solution for Construction Needs"
@@ -60,7 +60,7 @@ export const Banner: React.FC = () => {
             </h2>
           )}
           {currentSlideData?.descriptionKey && (
-            <p className="text-gray-100 text-lg mb-6">
+            <p className="text-gray-100 text-mid mb-6">
               {getText(
                 "home.hero.subtitle",
                 "Find the best materials, services, and professionals for your construction projects"

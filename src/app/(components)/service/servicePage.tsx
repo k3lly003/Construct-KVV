@@ -122,7 +122,7 @@ const ServicePage = () => {
         />
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-red-600 mb-2">
+            <h3 className="text-mid font-semibold text-red-600 mb-2">
               {t("common.error")} {t("projects.title")}
             </h3>
             <p className="text-amber-800">{t("projects.errorTryAgain")}</p>
@@ -156,7 +156,7 @@ const ServicePage = () => {
               </div>
 
               <div>
-                <Label className="text-sm font-medium">Category</Label>
+                <Label className="text-small font-medium">Category</Label>
                 <Select
                   value={categoryFilter}
                   onValueChange={setCategoryFilter}
@@ -188,7 +188,7 @@ const ServicePage = () => {
               <div>
                 <div className="flex items-center space-x-2 mb-2">
                   <MapPin className="h-4 w-4 text-gray-500" />
-                  <Label className="text-sm font-medium">Location</Label>
+                  <Label className="text-small font-medium">Location</Label>
                 </div>
                 <Input
                   placeholder="Enter location..."
@@ -225,10 +225,10 @@ const ServicePage = () => {
                         {p.isPublic ? 'Visible' : 'Invisible'}
                       </Badge>
                     </div>
-                    <h2 className="text-xl font-semibold text-gray-900">{p.title}</h2>
+                    <h2 className="text-mid font-semibold text-gray-900">{p.title}</h2>
                   </div>
                   <div className="text-right">
-                    <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                    <span className="text-small text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
                       P
                     </span>
                   </div>
@@ -237,19 +237,19 @@ const ServicePage = () => {
                 <p className="text-gray-600 mb-4">{p.description}</p>
 
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <div className="flex items-center space-x-2 text-small text-gray-600">
                     <MapPin className="h-4 w-4" />
                     <span>{p.location || 'N/A'}</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <div className="flex items-center space-x-2 text-small text-gray-600">
                     <Calendar className="h-4 w-4" />
                     <span>{formatPortfolioDate(p.workDate)}</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <div className="flex items-center space-x-2 text-small text-gray-600">
                     <DollarSign className="h-4 w-4" />
                     <span className="font-medium text-green-600">{p.budget || '—'}</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <div className="flex items-center space-x-2 text-small text-gray-600">
                     <Clock className="h-4 w-4" />
                     <span className="font-medium text-green-600">{p.duration || '—'}</span>
                   </div>
@@ -257,13 +257,13 @@ const ServicePage = () => {
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
-                    <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    <div className="flex items-center space-x-2 text-small text-gray-600">
                       <Users className="h-4 w-4" />
                       <span>{(p.images?.length ?? 0)} Photos</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <div className={`w-2 h-2 ${p.isPublic ? 'bg-green-500' : 'bg-red-500'} rounded-full`}></div>
-                      <span className={`text-sm ${p.isPublic ? 'text-green-700' : 'text-red-700'}`}>{p.isPublic ? 'Visible' : 'Invisible'}</span>
+                      <span className={`text-small ${p.isPublic ? 'text-green-700' : 'text-red-700'}`}>{p.isPublic ? 'Visible' : 'Invisible'}</span>
                     </div>
                   </div>
                   <div className="flex space-x-3">

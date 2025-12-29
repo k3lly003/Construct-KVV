@@ -62,7 +62,7 @@ export default function Comments({ comments = defaultComments }: CommentsProps) 
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <MessageSquare className="w-5 h-5 text-gray-500" />
-            <h2 className="text-lg font-semibold text-gray-900">Comments</h2>
+            <h2 className="text-mid font-semibold text-gray-900">Comments</h2>
           </div>
           <Button variant="ghost" size="sm" className="p-1">
             <MoreHorizontal className="w-4 h-4 text-gray-500" />
@@ -82,10 +82,10 @@ export default function Comments({ comments = defaultComments }: CommentsProps) 
                 />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium text-gray-900">{comment.user.name}</p>
-                    <span className="text-xs text-gray-500">{comment.timestamp}</span>
+                    <p className="text-small font-medium text-gray-900">{comment.user.name}</p>
+                    <span className="text-small text-gray-500">{comment.timestamp}</span>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">{comment.content}</p>
+                  <p className="text-small text-gray-600 mt-1">{comment.content}</p>
                 </div>
               </div>
 
@@ -96,7 +96,7 @@ export default function Comments({ comments = defaultComments }: CommentsProps) 
                   className={`p-1 h-auto ${comment.isLiked ? "text-red-500" : "text-gray-500"}`}
                 >
                   <Heart className={`w-4 h-4 mr-1 ${comment.isLiked ? "fill-current" : ""}`} />
-                  <span className="text-xs">{comment.likes}</span>
+                  <span className="text-small">{comment.likes}</span>
                 </Button>
 
                 <Button variant="ghost" size="sm" className="p-1 h-auto text-gray-500">
