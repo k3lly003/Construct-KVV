@@ -244,7 +244,7 @@ export default function ServicesShowCaseSection() {
       </div>
 
       {/* Dynamic Hero Section */}
-      <div className="relative mb-8 rounded-lg overflow-hidden">
+      <div className="relative mb-8 rounded-md overflow-hidden">
         <div
           className="h-36 md:h-64 bg-cover bg-center relative"
           style={{
@@ -255,15 +255,9 @@ export default function ServicesShowCaseSection() {
           <div className="absolute inset-0 bg-gradient-to-b from-gray-900" />
 
           {/* Content */}
-          <div className="relative z-6 p-8 h-full flex flex-col justify-center">
-            <div className="mb-10 w-3 h-3 md:w-10 md:h-10">{currentContent.hero.icon}</div>
-            <h1 className="text-white text-small sm:text-mid md:text-title font-bold mb-4 max-w-md">{t(currentContent.hero.title)}</h1>
-            <Button
-              variant="link"
-              className="text-white hover:text-gray-200 p-0 h-auto text-small dm:text-md font-medium text-left justify-start"
-            >
-              {t(currentContent.hero.subtitle)}
-            </Button>
+          <div className="relative z-6 p-8 h-full flex flex-col justify-center p-5">
+            <div className="w-3 h-3 md:w-10 md:h-10">{currentContent.hero.icon}</div>
+            <h1 className="text-white text-small sm:text-mid md:text-title font-bold max-w-xl">{t(currentContent.hero.title)}</h1>
           </div>
         </div>
       </div>
@@ -278,14 +272,14 @@ export default function ServicesShowCaseSection() {
         )}
         {!isLoading && !error && servicesToRender.map((service) => (
           <Link key={service.id} href={service.link || "#"}>
-            <div className="overflow-hidden hover:shadow-lg transition-shadow rounded-xl cursor-pointer">
+            <div className="overflow-hidden hover:shadow-lg transition-shadow rounded-md cursor-pointer">
               <div className="relative">
                 <Image
                   src={service.image || "/placeholder.svg"}
                   alt={typeof service.title === "string" ? service.title : ""}
                   width={256}
                   height={224}
-                  className="w-full h-56 object-cover rounded-xl"
+                  className="w-full h-56 object-cover rounded-md"
                 />
               </div>
               <div className="p-4">
@@ -332,7 +326,7 @@ export default function ServicesShowCaseSection() {
 
       {/* Tab-specific additional content */}
       {activeTab === "projects" && (
-        <div className="mt-8 p-6 bg-amber-50 rounded-lg">
+        <div className="mt-8 p-6 bg-amber-50 rounded-md">
           <h3 className="text-mid font-semibold text-gray-900 mb-2">{t("home.project-contents.features.title")}</h3>
           <p className="text-gray-600">
             {t("home.project-contents.features.description")}
@@ -341,7 +335,7 @@ export default function ServicesShowCaseSection() {
       )}
 
       {activeTab === "bids-bulk" && (
-        <div className="mt-8 p-6 bg-green-50 rounded-lg">
+        <div className="mt-8 p-6 bg-green-50 rounded-md">
           <h3 className="text-mid font-semibold text-gray-900 mb-2">{t("home.bidsBulk-contents.process.title")}</h3>
           <p className="text-gray-600">
             {t("home.bidsBulk-contents.process.description")}
@@ -350,7 +344,7 @@ export default function ServicesShowCaseSection() {
       )}
 
       {activeTab === "hire-professional" && (
-        <div className="mt-8 p-6 bg-purple-50 rounded-lg">
+        <div className="mt-8 p-6 bg-purple-50 rounded-md">
           <h3 className="text-mid font-semibold text-gray-900 mb-2">{t("home.hireProfessional-contents.network.title")}</h3>
           <p className="text-gray-600">
             {t("home.hireProfessional-contents.network.description")}

@@ -80,7 +80,7 @@ export const Footer: React.FC = () => {
               {/* <a href="#" className="block hover:text-yellow-400 transition-colors">{t('footer.about')}</a> */}
               <Link href="/portfolios" className="block hover:text-yellow-400 transition-colors">{t('footer.portfolio')}</Link>
               <Link href="/contact" className="block hover:text-yellow-400 transition-colors">{t('footer.contact')}</Link>
-              <a href="#" className="block hover:text-yellow-400 transition-colors">{t('footer.terms')}</a>
+              <a href="/terms"  className="block hover:text-yellow-400 transition-colors">{t('footer.terms')}</a>
             </nav>
           </div>
 

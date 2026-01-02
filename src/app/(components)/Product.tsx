@@ -237,7 +237,7 @@ export const Products: React.FC = () => {
                             alt={product.name}
                             width={100}
                             height={100}
-                            className="w-full h-56 object-cover rounded-xl"
+                            className="w-full h-56 object-cover rounded-md"
                           />
                         ) : (
                           <div className="w-full h-56 flex items-center justify-center bg-gray-100 rounded-xl text-gray-400">

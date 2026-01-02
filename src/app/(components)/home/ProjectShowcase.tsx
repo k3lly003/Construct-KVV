@@ -25,7 +25,7 @@ export const ProjectShowcase: React.FC = () => {
           {projectItems.map((item, index) => (
             <div
               key={item.titleKey}
-              className="group relative h-[300px] overflow-hidden cursor-pointer rounded-lg"
+              className="group relative h-[300px] overflow-hidden cursor-pointer rounded-md"
               onMouseEnter={() => setActiveIndex(index)}
               onMouseLeave={() => setActiveIndex(null)}
             >
