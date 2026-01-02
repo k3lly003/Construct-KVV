@@ -313,7 +313,7 @@ export default function ProjectProfessionalsPage() {
               technicianId: r.technicianId ?? r.user?.technicianId ?? null,
               sellerId: r.sellerId ?? r.user?.sellerId ?? null,
             }))
-            .sort((a, b) => {
+            .sort((a: MatchResultItem, b: MatchResultItem) => {
               // Sort by score from best to lowest
               const scoreA = a.score ?? 0;
               const scoreB = b.score ?? 0;
