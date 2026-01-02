@@ -28,6 +28,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import Head from "next/head";
+import { GenerateBOQModal } from "@/app/(components)/projects/GenerateBOQModal";
+import { getBOQ } from "@/app/services/boqService";
 
 export default function ProjectDetailsPage() {
   const params = useParams();
@@ -38,8 +40,16 @@ export default function ProjectDetailsPage() {
 
   const [project, setProject] = useState<ProjectDetails | null>(null);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+  const [isBOQModalOpen, setIsBOQModalOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+  const [hasBOQ, setHasBOQ] = useState(false);
+  const [isCheckingBOQ, setIsCheckingBOQ] = useState(true);
 
   const projectId = params.id as string;
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     const loadProject = async () => {
@@ -60,8 +70,28 @@ export default function ProjectDetailsPage() {
       }
     };
 
+    const checkBOQ = async () => {
+      try {
+        const authToken =
+          typeof window !== "undefined"
+            ? localStorage.getItem("authToken")
+            : null;
+
+        if (authToken) {
+          await getBOQ(projectId, authToken);
+          setHasBOQ(true);
+        }
+      } catch (err) {
+        // BOQ doesn't exist, which is fine
+        setHasBOQ(false);
+      } finally {
+        setIsCheckingBOQ(false);
+      }
+    };
+
     if (projectId) {
       loadProject();
+      checkBOQ();
     }
   }, [projectId, getProjectById, router]);
 
@@ -110,7 +140,7 @@ export default function ProjectDetailsPage() {
   if (loading && !project) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-center">
               <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900 mx-auto"></div>
@@ -125,7 +155,7 @@ export default function ProjectDetailsPage() {
   if (!project) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-4">
               Project Not Found
@@ -158,58 +188,78 @@ export default function ProjectDetailsPage() {
         />
       </Head>
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <Button
             variant="outline"
             onClick={() => router.push("/projects")}
-            className="mb-4"
+            className="mb-4 text-sm sm:text-base"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Projects
           </Button>
 
-          <div className="flex items-start justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+            <div className="flex-1">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
                 Project #{project.id.slice(-8)}
               </h1>
-              <div className="flex items-center gap-3">
-                <Badge className="bg-blue-100 text-blue-800">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <Badge className="bg-blue-100 text-blue-800 text-xs sm:text-sm">
                   AI Generated
                 </Badge>
-                <Badge className={getStatusColor(project.status)}>
+                <Badge className={`${getStatusColor(project.status)} text-xs sm:text-sm`}>
                   {project.status}
                 </Badge>
-                <span className="text-sm text-gray-500">
-                  Created {new Date(project.createdAt).toLocaleDateString()}
+                <span className="text-xs sm:text-sm text-gray-500">
+                  Created{" "}
+                  {isClient
+                    ? new Date(project.createdAt).toLocaleDateString()
+                    : new Date(project.createdAt).toISOString().split("T")[0]}
                 </span>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {role !== "CONTRACTOR" && (
                 <Button
                   variant="outline"
-                  className="border-amber-400 text-amber-700 hover:bg-amber-50"
+                  className="border-amber-400 text-amber-700 hover:bg-amber-50 text-sm sm:text-base"
                   onClick={() => router.push(`/projects/${project.id}/bids`)}
                 >
                   View Bids
                 </Button>
               )}
-              <Button
-                className="bg-gradient-to-r from-amber-500 to-amber-600 text-white hover:from-amber-600 hover:to-amber-700"
-                onClick={() =>
-                  router.push(`/projects/${project.id}/management`)
-                }
-              >
-                Open Project Workspace
-              </Button>
+              {!isCheckingBOQ && (
+                <>
+                  {hasBOQ ? (
+                    <Button
+                      variant="outline"
+                      className="border-amber-400 text-amber-700 hover:bg-amber-50 text-sm sm:text-base"
+                      onClick={() => router.push(`/projects/${project.id}/boq`)}
+                    >
+                      <FileText className="h-4 w-4 mr-1 sm:mr-2" />
+                      <span className="hidden sm:inline">View BOQ</span>
+                      <span className="sm:hidden">BOQ</span>
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      className="border-amber-400 text-amber-700 hover:bg-amber-50 text-sm sm:text-base"
+                      onClick={() => setIsBOQModalOpen(true)}
+                    >
+                      <FileText className="h-4 w-4 mr-1 sm:mr-2" />
+                      <span className="hidden sm:inline">Generate BOQ</span>
+                      <span className="sm:hidden">BOQ</span>
+                    </Button>
+                  )}
+                </>
+              )}
             </div>
           </div>
         </div>
 
-        <div className="grid gap-6">
+        <div className="grid gap-4 sm:gap-6">
           {/* Project Overview */}
           <Card>
             <CardHeader>
@@ -228,12 +278,12 @@ export default function ProjectDetailsPage() {
                 </div>
               )}
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 {project.totalEstimatedCost && (
-                  <div className="text-center p-4 bg-green-50 rounded-lg">
-                    <DollarSign className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                    <h4 className="font-semibold text-gray-900">Total Cost</h4>
-                    <p className="text-lg font-bold text-green-600">
+                  <div className="text-center p-3 sm:p-4 bg-green-50 rounded-lg">
+                    <DollarSign className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 mx-auto mb-2" />
+                    <h4 className="font-semibold text-gray-900 text-sm sm:text-base">Total Cost</h4>
+                    <p className="text-base sm:text-lg font-bold text-green-600 break-words">
                       {formatCurrency(
                         project.totalEstimatedCost,
                         project.currency
@@ -243,20 +293,20 @@ export default function ProjectDetailsPage() {
                 )}
 
                 {project.estimatedDuration && (
-                  <div className="text-center p-4 bg-blue-50 rounded-lg">
-                    <Clock className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                    <h4 className="font-semibold text-gray-900">Duration</h4>
-                    <p className="text-lg font-bold text-blue-600">
+                  <div className="text-center p-3 sm:p-4 bg-blue-50 rounded-lg">
+                    <Clock className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600 mx-auto mb-2" />
+                    <h4 className="font-semibold text-gray-900 text-sm sm:text-base">Duration</h4>
+                    <p className="text-base sm:text-lg font-bold text-blue-600">
                       {project.estimatedDuration} months
                     </p>
                   </div>
                 )}
 
                 {project.numberOfWorkers && (
-                  <div className="text-center p-4 bg-purple-50 rounded-lg">
-                    <Users className="h-8 w-8 text-purple-600 mx-auto mb-2" />
-                    <h4 className="font-semibold text-gray-900">Workers</h4>
-                    <p className="text-lg font-bold text-purple-600">
+                  <div className="text-center p-3 sm:p-4 bg-purple-50 rounded-lg sm:col-span-2 lg:col-span-1">
+                    <Users className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600 mx-auto mb-2" />
+                    <h4 className="font-semibold text-gray-900 text-sm sm:text-base">Workers</h4>
+                    <p className="text-base sm:text-lg font-bold text-purple-600">
                       {project.numberOfWorkers} people
                     </p>
                   </div>
@@ -277,33 +327,33 @@ export default function ProjectDetailsPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                   {project.laborCost && (
-                    <div className="text-center">
-                      <h4 className="font-semibold text-gray-900">
+                    <div className="text-center p-3 sm:p-4 bg-blue-50 rounded-lg">
+                      <h4 className="font-semibold text-gray-900 text-sm sm:text-base mb-1">
                         Labor Cost
                       </h4>
-                      <p className="text-lg font-bold text-blue-600">
+                      <p className="text-base sm:text-lg font-bold text-blue-600 break-words">
                         {formatCurrency(project.laborCost, project.currency)}
                       </p>
                     </div>
                   )}
                   {project.materialCost && (
-                    <div className="text-center">
-                      <h4 className="font-semibold text-gray-900">
+                    <div className="text-center p-3 sm:p-4 bg-green-50 rounded-lg">
+                      <h4 className="font-semibold text-gray-900 text-sm sm:text-base mb-1">
                         Material Cost
                       </h4>
-                      <p className="text-lg font-bold text-green-600">
+                      <p className="text-base sm:text-lg font-bold text-green-600 break-words">
                         {formatCurrency(project.materialCost, project.currency)}
                       </p>
                     </div>
                   )}
                   {project.otherExpenses && (
-                    <div className="text-center">
-                      <h4 className="font-semibold text-gray-900">
+                    <div className="text-center p-3 sm:p-4 bg-purple-50 rounded-lg sm:col-span-2 lg:col-span-1">
+                      <h4 className="font-semibold text-gray-900 text-sm sm:text-base mb-1">
                         Other Expenses
                       </h4>
-                      <p className="text-lg font-bold text-purple-600">
+                      <p className="text-base sm:text-lg font-bold text-purple-600 break-words">
                         {formatCurrency(
                           project.otherExpenses,
                           project.currency
@@ -329,8 +379,8 @@ export default function ProjectDetailsPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="bg-gray-50 p-4 rounded-lg max-h-96 overflow-y-auto">
-                  <pre className="text-sm text-gray-700 whitespace-pre-wrap">
+                <div className="bg-gray-50 p-3 sm:p-4 rounded-lg max-h-64 sm:max-h-96 overflow-y-auto">
+                  <pre className="text-xs sm:text-sm text-gray-700 whitespace-pre-wrap break-words">
                     {project.text}
                   </pre>
                 </div>
@@ -351,13 +401,13 @@ export default function ProjectDetailsPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {nonEmptySummaries.map((summary, index) => (
-                    <div key={index} className="bg-blue-50 p-4 rounded-lg">
-                      <h4 className="font-semibold text-blue-900 mb-2">
+                    <div key={index} className="bg-blue-50 p-3 sm:p-4 rounded-lg">
+                      <h4 className="font-semibold text-blue-900 mb-2 text-sm sm:text-base">
                         Analysis Part {index + 1}
                       </h4>
-                      <p className="text-blue-800">{summary}</p>
+                      <p className="text-blue-800 text-xs sm:text-sm leading-relaxed">{summary}</p>
                     </div>
                   ))}
                 </div>
@@ -369,22 +419,22 @@ export default function ProjectDetailsPage() {
           {role !== "CONTRACTOR" && (
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
                   <ToggleLeft className="h-5 w-5" />
                   Project Management
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-sm sm:text-base">
                   Control the bidding status of your project
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                    <div>
-                      <h4 className="font-semibold text-gray-900">
+                <div className="space-y-4 sm:space-y-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 p-4 bg-gray-50 rounded-lg">
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-900 text-sm sm:text-base mb-1">
                         Current Status
                       </h4>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-xs sm:text-sm text-gray-600">
                         {project.status === "DRAFT" &&
                           "Project is in draft mode - contractors cannot bid yet"}
                         {project.status === "OPEN" &&
@@ -395,17 +445,17 @@ export default function ProjectDetailsPage() {
                           "Project is completed"}
                       </p>
                     </div>
-                    <Badge className={getStatusColor(project.status)}>
+                    <Badge className={`${getStatusColor(project.status)} text-xs sm:text-sm shrink-0`}>
                       {project.status}
                     </Badge>
                   </div>
 
-                  <div className="flex gap-3">
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                     {project.status === "DRAFT" && (
                       <Button
                         onClick={() => handleStatusUpdate("OPEN")}
                         disabled={isUpdatingStatus}
-                        className="bg-green-600 hover:bg-green-700"
+                        className="bg-green-600 hover:bg-green-700 text-sm sm:text-base w-full sm:w-auto"
                       >
                         {isUpdatingStatus ? "Opening..." : "Open for Bidding"}
                       </Button>
@@ -416,6 +466,7 @@ export default function ProjectDetailsPage() {
                         onClick={() => handleStatusUpdate("CLOSED")}
                         disabled={isUpdatingStatus}
                         variant="outline"
+                        className="text-sm sm:text-base w-full sm:w-auto"
                       >
                         {isUpdatingStatus ? "Closing..." : "Close Bidding"}
                       </Button>
@@ -425,21 +476,30 @@ export default function ProjectDetailsPage() {
                       <Button
                         onClick={() => handleStatusUpdate("COMPLETED")}
                         disabled={isUpdatingStatus}
-                        className="bg-blue-600 hover:bg-blue-700"
+                        className="bg-blue-600 hover:bg-blue-700 text-sm sm:text-base w-full sm:w-auto"
                       >
                         {isUpdatingStatus
                           ? "Completing..."
                           : "Mark as Completed"}
                       </Button>
                     )}
+
+                    <Button
+                      className="bg-gradient-to-r from-amber-500 to-amber-600 text-white hover:from-amber-600 hover:to-amber-700 text-sm sm:text-base w-full sm:w-auto"
+                      onClick={() =>
+                        router.push(`/projects/${project.id}/management`)
+                      }
+                    >
+                      Open Project Workspace
+                    </Button>
                   </div>
 
                   {project.status === "OPEN" && (
-                    <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                      <h4 className="font-semibold text-green-900 mb-2">
+                    <div className="p-3 sm:p-4 bg-green-50 border border-green-200 rounded-lg">
+                      <h4 className="font-semibold text-green-900 mb-2 text-sm sm:text-base">
                         ✅ Project is Open for Bidding
                       </h4>
-                      <p className="text-green-800 text-sm">
+                      <p className="text-green-800 text-xs sm:text-sm">
                         Contractors can now place bids on your project. You'll
                         receive notifications when new bids are submitted.
                       </p>
@@ -451,6 +511,32 @@ export default function ProjectDetailsPage() {
           )}
         </div>
       </div>
+
+      {/* Generate BOQ Modal */}
+      <GenerateBOQModal
+        isOpen={isBOQModalOpen}
+        onClose={() => {
+          setIsBOQModalOpen(false);
+          // Refresh BOQ status after generation
+          const checkBOQ = async () => {
+            try {
+              const authToken =
+                typeof window !== "undefined"
+                  ? localStorage.getItem("authToken")
+                  : null;
+
+              if (authToken) {
+                await getBOQ(projectId, authToken);
+                setHasBOQ(true);
+              }
+            } catch (err) {
+              setHasBOQ(false);
+            }
+          };
+          checkBOQ();
+        }}
+        projectId={projectId}
+      />
     </div>
   );
 }
