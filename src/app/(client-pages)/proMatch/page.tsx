@@ -1087,7 +1087,7 @@ export default function ProMatchPage() {
                 <div className="grid grid-cols-2 gap-3 text-small md:flex-1">
                   {typeof selectedPro.experience === "number" ? (
                     <div className="p-3 rounded-lg border bg-gray-50">
-                      <div className="text-gray-500">Experience</div>
+                      <div className="text-gray-500">Experiences</div>
                       <div className="font-medium">
                         {selectedPro.experience} years
                       </div>

@@ -31,6 +31,9 @@ import {
   YAxis,
   CartesianGrid,
 } from "recharts";
+import { Button } from "@/components/ui/button";
+import { FileText } from "lucide-react";
+import { GenerateBOQModal } from "@/app/(components)/projects/GenerateBOQModal";
 
 export default function ProjectManagementPage() {
   const params = useParams();
@@ -42,6 +45,7 @@ export default function ProjectManagementPage() {
   const [error, setError] = useState<string | null>(null);
   const [milestones, setMilestones] = useState<PMMilestone[] | null>(null);
   const [timelines, setTimelines] = useState<PMTimeline[] | null>(null);
+  const [isBOQModalOpen, setIsBOQModalOpen] = useState(false);
 
   useEffect(() => {
     async function bootstrap() {
@@ -88,6 +92,14 @@ export default function ProjectManagementPage() {
                     </p>
                   </div>
                 </div>
+                <Button
+                  variant="outline"
+                  className="border-amber-400 text-amber-700 hover:bg-amber-50"
+                  onClick={() => setIsBOQModalOpen(true)}
+                >
+                  <FileText className="h-4 w-4 mr-2" />
+                  Generate BOQ
+                </Button>
               </div>
             </div>
           </div>
@@ -471,6 +483,13 @@ export default function ProjectManagementPage() {
           </div>
         )}
       </div>
+
+      {/* Generate BOQ Modal */}
+      <GenerateBOQModal
+        isOpen={isBOQModalOpen}
+        onClose={() => setIsBOQModalOpen(false)}
+        projectId={projectId}
+      />
     </div>
   );
 }
