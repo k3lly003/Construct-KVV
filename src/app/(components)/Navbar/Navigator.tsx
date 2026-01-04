@@ -463,7 +463,7 @@ const Navbar: React.FC = () => {
                     className="py-2 text-gray-900 hover:text-amber-500 border-b"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    {t("navigation.designMarketplace")|| "Desing market place"}
+                    {t("navigation.designMarketPlace")|| "Desing market place"}
                   </Link>
                   <Link
                     href="/cart"
