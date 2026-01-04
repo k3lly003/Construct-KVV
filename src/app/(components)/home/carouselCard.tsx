@@ -15,7 +15,7 @@ const CarouselCard: React.FC<Props> = ({ review }) => {
         </div>
       )}
       <div className="mb-2">
-        <p className="font-bold text-xl text-amber-500">{review.name}</p>
+        <p className="font-bold text-mid text-amber-500">{review.name}</p>
         {review.affiliation && <p className="text-md text-muted-foreground">{review.affiliation}</p>}
       </div>
       <CardContent className="p-0">

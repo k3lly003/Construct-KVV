@@ -35,19 +35,19 @@ export function ProfileSidebar() {
           <CardTitle className="text-md font-semibold text-amber-600 font-medium">{t('profile.personalInfo')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="flex justify-between text-sm">
+          <div className="flex justify-between text-small">
             <span className="text-gray-500">{t('profile.sellerName')}:</span>
             <span>{userData ? `${userData.firstName} ${userData.lastName}` : <Skeleton className="h-4 w-24" />}</span>
           </div>
-          <div className="flex justify-between text-sm">
+          <div className="flex justify-between text-small">
             <span className="text-gray-500">{t('profile.mobile')}:</span>
             <span>{userData ? userData.phone : <Skeleton className="h-4 w-20" />}</span>
           </div>
-          <div className="flex justify-between text-sm">
+          <div className="flex justify-between text-small">
             <span className="text-gray-500">{t('profile.email')}:</span>
             <span>{userData ? userData.email : <Skeleton className="h-4 w-32" />}</span>
           </div>
-          <div className="flex justify-between text-sm">
+          <div className="flex justify-between text-small">
             <span className="text-gray-500">{t('profile.location')}:</span>
             <span>{userData ? 'no data' : <Skeleton className="h-4 w-28" />}</span>
           </div>
@@ -68,32 +68,32 @@ export function ProfileSidebar() {
               <Skeleton className="h-4 w-full" />
             </>
           ) : myShopError ? (
-            <div className="text-sm text-red-500">{t('profile.shopInfoError')}</div>
+            <div className="text-small text-red-500">{t('profile.shopInfoError')}</div>
           ) : myShop ? (
             <>
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-small">
                 <span className="text-gray-500">{t('profile.shopName')}:</span>
                 <span>{myShop.name}</span>
               </div>
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-small">
                 <span className="text-gray-500">{t('profile.shopMobile')}:</span>
                 <span>{myShop?.phone || userData?.phone || 'N/A'}</span>
               </div>
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-small">
                 <span className="text-gray-500">{t('profile.email')}:</span>
                 <span>{userData?.email || 'N/A'}</span>
               </div>
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-small">
                 <span className="text-gray-500">{t('profile.joiningDate')}:</span>
                 <span>{formatDate(myShop.createdAt)}</span>
               </div>
-              <div className="flex justify-between text-sm">
+              <div className="flex justify-between text-small">
                 <span className="text-gray-500">{t('profile.workingDays')}:</span>
                 <span>{'N/A'}</span>
               </div>
             </>
           ) : (
-             <div className="text-sm text-gray-500 italic">{t('profile.noShopFound')}</div>
+             <div className="text-small text-gray-500 italic">{t('profile.noShopFound')}</div>
           )}
         </CardContent>
       </Card>

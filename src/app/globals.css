@@ -41,6 +41,16 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  /* Custom primary color overrides */
+  --color-primary: #f59e0b;
+  --color-primary-foreground: #ffffff;
+
+  /* Custom font-size tokens (used by our text utilities) */
+  --font-size-small: 14px;
+  --font-size-base: 16px;
+  --font-size-mid: 20px;
+  --font-size-title: 35px;
+  --font-size-large: 72px;
 }
 
 html, body {
@@ -54,6 +64,8 @@ body {
 }
 
 :root {
+    --primary: #f59e0b;
+    --primary-foreground: #ffffff;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.13 0.028 261.692);
@@ -129,6 +141,27 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Typography utilities based on global font-size tokens */
+@utility text-small {
+  font-size: var(--font-size-small);
+}
+
+@utility text-base {
+  font-size: var(--font-size-base);
+}
+
+@utility text-mid {
+  font-size: var(--font-size-mid);
+}
+
+@utility text-title {
+  font-size: var(--font-size-title);
+}
+
+@utility text-large {
+  font-size: var(--font-size-large);
 }
 
 /* Custom scrollbar styles using design tokens */

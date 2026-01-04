@@ -10,7 +10,7 @@ export default function ArchitectureProject() {
         <CardDescription>Manage and track your architecture engagements.</CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-muted-foreground">No projects to display yet.</p>
+        <p className="text-small text-muted-foreground">No projects to display yet.</p>
       </CardContent>
     </Card>
   );

@@ -223,13 +223,13 @@ export default function PortfolioDetailsPage() {
               {/* Header */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h1 className="text-2xl font-bold text-gray-900">{item.title}</h1>
+                  <h1 className="text-mid font-bold text-gray-900">{item.title}</h1>
               <Badge className={item.isPublic ? "bg-green-100 text-green-800" : "bg-red-100 text-red-700"}>
                     <Eye className="w-3 h-3 mr-1" />
                     {item.isPublic ? "Visible" : "Hidden"}
               </Badge>
             </div>
-                <p className="text-sm text-gray-600">{item.skills?.[0] || 'Portfolio'}</p>
+                <p className="text-small text-gray-600">{item.skills?.[0] || 'Portfolio'}</p>
               </div>
 
               {/* Image Gallery */}
@@ -261,7 +261,7 @@ export default function PortfolioDetailsPage() {
                     )}
 
                     {/* Image Counter */}
-                    <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
+                    <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-small">
                       <Camera className="w-4 h-4 inline mr-1" />
                       {currentImageIndex + 1} / {item.images.length}
                     </div>
@@ -290,24 +290,24 @@ export default function PortfolioDetailsPage() {
 
               {/* Portfolio Details */}
               <div className="bg-white rounded-xl shadow-sm p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">Portfolio Details</h2>
+                <h2 className="text-mid font-semibold text-gray-900 mb-4">Portfolio Details</h2>
                 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
                   <div className="flex items-center text-gray-600">
                     <MapPin className="w-5 h-5 mr-2 text-gray-400" />
-                    <span className="text-sm">{item.location || "—"}</span>
+                    <span className="text-small">{item.location || "—"}</span>
                   </div>
                   <div className="flex items-center text-gray-600">
                     <Calendar className="w-5 h-5 mr-2 text-gray-400" />
-                    <span className="text-sm">{item.workDate || "—"}</span>
+                    <span className="text-small">{item.workDate || "—"}</span>
                   </div>
                   <div className="flex items-center text-gray-600">
                     <Clock className="w-5 h-5 mr-2 text-gray-400" />
-                    <span className="text-sm">{item.duration || "—"}</span>
+                    <span className="text-small">{item.duration || "—"}</span>
                   </div>
                   <div className="flex items-center text-gray-600">
                     <DollarSign className="w-5 h-5 mr-2 text-gray-400" />
-                    <span className="text-sm font-semibold">{item.budget || "—"}</span>
+                    <span className="text-small font-semibold">{item.budget || "—"}</span>
                   </div>
                 </div>
 
@@ -318,12 +318,12 @@ export default function PortfolioDetailsPage() {
                 {/* Skills */}
                 {item.skills && item.skills.length > 0 && (
                   <div className="mt-6">
-                    <h3 className="text-lg font-medium text-gray-900 mb-3">Skills</h3>
+                    <h3 className="text-mid font-medium text-gray-900 mb-3">Skills</h3>
                     <div className="flex flex-wrap gap-2">
                       {item.skills.map((skill, index) => (
                         <span
                           key={index}
-                          className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
+                          className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-small font-medium"
                         >
                           {skill}
                         </span>
@@ -347,7 +347,7 @@ export default function PortfolioDetailsPage() {
                     />
                   ) : (
                     <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
-                      <span className="text-lg font-medium text-gray-600">
+                      <span className="text-mid font-medium text-gray-600">
                         {getInitials(`${architect?.user?.firstName || technician?.user?.firstName || 'P'} ${architect?.user?.lastName || technician?.user?.lastName || ''}`)}
                       </span>
                     </div>
@@ -363,13 +363,13 @@ export default function PortfolioDetailsPage() {
                     </div>
                     <div className="flex items-center space-x-1 mt-1">
                       <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                      <span className="text-sm font-medium text-gray-900">4.8</span>
-                      <span className="text-sm text-gray-500">(127 reviews)</span>
+                      <span className="text-small font-medium text-gray-900">4.8</span>
+                      <span className="text-small text-gray-500">(127 reviews)</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="space-y-3 text-sm text-gray-600">
+                <div className="space-y-3 text-small text-gray-600">
                   <div className="flex justify-between">
                     <span>Portfolio items:</span>
                     <span className="font-medium">{(item.images?.length ?? 0)}</span>
@@ -393,7 +393,7 @@ export default function PortfolioDetailsPage() {
 
               {/* Service Request Form */}
               <div className="bg-white rounded-xl shadow-sm p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                <h3 className="text-mid font-semibold text-gray-900 mb-4">
                   {professionalType === 'architect' ? 'Request Design' : 'Request Service'}
                 </h3>
                 
@@ -408,7 +408,7 @@ export default function PortfolioDetailsPage() {
                     </button>
                     
                     {!isAuthenticated && (
-                      <p className="text-xs text-gray-500 text-center">
+                      <p className="text-small text-gray-500 text-center">
                         You need to be logged in to {professionalType === 'architect' ? 'request a design' : 'request a service'}
                       </p>
                     )}
@@ -420,15 +420,15 @@ export default function PortfolioDetailsPage() {
                       <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
                         <div className="flex items-center space-x-2">
                           <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                            <span className="text-sm font-medium text-blue-600">
+                            <span className="text-small font-medium text-blue-600">
                               {user.name?.charAt(0) || user.email?.charAt(0) || 'U'}
                             </span>
                           </div>
                           <div>
-                            <p className="text-sm font-medium text-blue-900">
+                            <p className="text-small font-medium text-blue-900">
                               {user.firstName + " " + user.lastName || 'User'}
                             </p>
-                            <p className="text-xs text-blue-700">{user.email}</p>
+                            <p className="text-small text-blue-700">{user.email}</p>
                           </div>
                         </div>
                       </div>
@@ -441,7 +441,7 @@ export default function PortfolioDetailsPage() {
                             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                           </svg>
                         </div>
-                        <div className="text-sm text-blue-800">
+                        <div className="text-small text-blue-800">
                           <p className="font-medium">
                             {professionalType === 'architect' ? 'Design Request' : 'Service Request'}
                           </p>
@@ -479,7 +479,7 @@ export default function PortfolioDetailsPage() {
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                       <div className="flex items-start space-x-2">
                         <AlertCircle className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
-                        <div className="text-sm text-blue-800">
+                        <div className="text-small text-blue-800">
                           <p className="font-medium">What happens next?</p>
                           <p className="mt-1">
                             Your {professionalType === 'architect' ? 'design' : 'service'} request will be sent to the portfolio owner ({professionalType === 'architect' ? 'architect' : 'technician'}). 
@@ -494,19 +494,19 @@ export default function PortfolioDetailsPage() {
 
               {/* Trust Badges */}
               <div className="bg-white rounded-xl shadow-sm p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Why Choose Us?</h3>
+                <h3 className="text-mid font-semibold text-gray-900 mb-4">Why Choose Us?</h3>
                 <div className="space-y-3">
                   <div className="flex items-center space-x-3">
                     <Shield className="w-5 h-5 text-green-500" />
-                    <span className="text-sm text-gray-700">Verified Professionals</span>
+                    <span className="text-small text-gray-700">Verified Professionals</span>
               </div>
                   <div className="flex items-center space-x-3">
                     <Check className="w-5 h-5 text-green-500" />
-                    <span className="text-sm text-gray-700">Quality Guarantee</span>
+                    <span className="text-small text-gray-700">Quality Guarantee</span>
               </div>
                   <div className="flex items-center space-x-3">
                     <MessageCircle className="w-5 h-5 text-green-500" />
-                    <span className="text-sm text-gray-700">24/7 Customer Support</span>
+                    <span className="text-small text-gray-700">24/7 Customer Support</span>
             </div>
                 </div>
               </div>

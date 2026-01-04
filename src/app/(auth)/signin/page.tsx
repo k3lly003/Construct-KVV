@@ -143,7 +143,7 @@ const Page = () => {
               </GenericButton>
             </Link>
             <div className="mb-6">
-              <h2 className="text-lg font-semibold text-gray-800 my-2">
+              <h2 className="text-mid font-semibold text-gray-800 my-2">
                 {t("auth.signin.title")}
               </h2>
               <p className="text-gray-600">{t("auth.signin.subtitle")}</p>
@@ -152,7 +152,7 @@ const Page = () => {
               <div className="mb-4">
                 <label
                   htmlFor="email"
-                  className="block text-gray-700 text-sm font-bold mb-2"
+                  className="block text-gray-700 text-small font-bold mb-2"
                 >
                   {t("auth.signin.email")}
                 </label>
@@ -173,13 +173,13 @@ const Page = () => {
                   />
                 </div>
                 {errors.email && (
-                  <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                  <p className="text-red-500 text-small mt-1">{errors.email}</p>
                 )}
               </div>
               <div className="mb-6">
                 <label
                   htmlFor="password"
-                  className="block text-gray-700 text-sm font-bold mb-2"
+                  className="block text-gray-700 text-small font-bold mb-2"
                 >
                   {t("auth.signin.password")}
                 </label>
@@ -201,15 +201,15 @@ const Page = () => {
                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </div>
                 </div>
-                <p className="text-gray-600 text-xs italic">
+                <p className="text-gray-600 text-small italic">
                   Minimum 8 characters
                 </p>
                 {errors.password && (
-                  <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                  <p className="text-red-500 text-small mt-1">{errors.password}</p>
                 )}
               </div>
               <div className="flex items-center justify-between mb-4">
-                <label className="flex items-center text-gray-700 text-sm">
+                <label className="flex items-center text-gray-700 text-small">
                   <input
                     type="checkbox"
                     className="form-checkbox h-4 w-4 text-amber-300 rounded focus:ring-amber-600"
@@ -218,7 +218,7 @@ const Page = () => {
                 </label>
                 <a
                   href="#"
-                  className="inline-block align-baseline font-semibold text-sm text-amber-300 hover:text-amber-500"
+                  className="inline-block align-baseline font-semibold text-small text-amber-300 hover:text-amber-500"
                 >
                   {t("auth.signin.forgotPassword")}
                 </a>
@@ -232,7 +232,7 @@ const Page = () => {
               </button>
             </form>
             <div className="mt-6 border-t pt-6">
-              <p className="text-center text-gray-600 text-sm mb-2">
+              <p className="text-center text-gray-600 text-small mb-2">
                 Or sign in with
               </p>
               <div className="flex justify-center space-x-4">
@@ -249,7 +249,7 @@ const Page = () => {
                 </button>
               </div>
             </div>
-            <div className="mt-4 text-center text-gray-600 text-sm">
+            <div className="mt-4 text-center text-gray-600 text-small">
               Don&apos;t have an account yet?{" "}
               <Link
                 href="/signup"

@@ -16,7 +16,7 @@ const FAQItem = ({ question, answer, isOpen, onClick }: faqItemProps) => (
       className="w-full flex font-bold justify-between items-center text-left focus:outline-none py-4"
       onClick={onClick}
     >
-      <span className="text-lg md:text-xl font">{question}</span>
+      <span className="text-mid md:text-mid font">{question}</span>
       <span className="ml-2">
         {isOpen ? (
           <svg
@@ -96,7 +96,7 @@ const FAQ = () => {
 
   return (
     <div className="mb-12 max-w-7xl mx-auto">
-      <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">
+      <h2 className="text-mid md:text-title font-bold text-center mb-8">
         Frequently Asked Questions
       </h2>
 
@@ -113,12 +113,12 @@ const FAQ = () => {
       </div>
 
       <div className="flex my-9 justify-center gap-3 items-center">
-        <p className="font md:text-base text-sm">
+        <p className="font md:text-base text-small">
           My question is not here.
         </p>
         <Link
           href="/contact-us"
-          className="text-white p-2 uppercase md:text-[16px] text-xs font rounded bg-[#0B2B4E]"
+          className="text-white p-2 uppercase md:text-[16px] text-small font rounded bg-[#0B2B4E]"
         >
           Contact Us
         </Link>

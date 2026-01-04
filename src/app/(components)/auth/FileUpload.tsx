@@ -46,7 +46,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({ files, onChange }) => {
   return (
     <div className="space-y-6">
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-slate-800 mb-2">Upload Documents</h3>
+        <h3 className="text-mid font-semibold text-slate-800 mb-2">Upload Documents</h3>
         <p className="text-slate-600">Upload your certificates, ID, and other relevant documents</p>
       </div>
 
@@ -71,13 +71,13 @@ export const FileUpload: React.FC<FileUploadProps> = ({ files, onChange }) => {
             }`} />
           </div>
           <div>
-            <p className="text-lg font-semibold text-slate-800">
+            <p className="text-mid font-semibold text-slate-800">
               Drag & drop files here
             </p>
-            <p className="text-sm text-slate-600 mt-1">
+            <p className="text-small text-slate-600 mt-1">
               or <span className="text-emerald-600 font-medium">browse files</span>
             </p>
-            <p className="text-xs text-slate-500 mt-2">
+            <p className="text-small text-slate-500 mt-2">
               Supports PDF, DOC, DOCX, JPG, PNG (Max 10MB each)
             </p>
           </div>
@@ -95,7 +95,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({ files, onChange }) => {
 
       {files.length > 0 && (
         <div className="space-y-3">
-          <h4 className="text-sm font-semibold text-slate-700">
+          <h4 className="text-small font-semibold text-slate-700">
             Uploaded Files ({files.length})
           </h4>
           {files.map((file, index) => (
@@ -108,10 +108,10 @@ export const FileUpload: React.FC<FileUploadProps> = ({ files, onChange }) => {
                   <File className="w-5 h-5 text-emerald-600" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-slate-800 truncate max-w-xs">
+                  <p className="text-small font-semibold text-slate-800 truncate max-w-xs">
                     {file.name}
                   </p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-small text-slate-500">
                     {(file.size / 1024 / 1024).toFixed(2)} MB
                   </p>
                 </div>

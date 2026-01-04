@@ -56,7 +56,7 @@ export const CartPage: React.FC = () => {
   return (
     <div className="min-h-screen py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
+        <h1 className="text-title font-bold text-gray-900 mb-8">Shopping Cart</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
@@ -76,23 +76,23 @@ export const CartPage: React.FC = () => {
                       className="w-24 h-24 object-cover rounded-lg"
                     />
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900">
+                      <h3 className="text-mid font-semibold text-gray-900">
                         {item.name}
                       </h3>
-                      <p className="text-sm text-gray-500 mb-2">
+                      <p className="text-small text-gray-500 mb-2">
                         {item.category}
                       </p>
                       {item.dimensions && (
-                        <p className="text-sm text-gray-500">
+                        <p className="text-small text-gray-500">
                           Dimensions: {item.dimensions}
                         </p>
                       )}
-                      <p className="text-sm text-gray-500">
+                      <p className="text-small text-gray-500">
                         Weight: {item.weight}kg
                       </p>
                     </div>
                     <div className="flex flex-col items-end gap-2">
-                      <p className="text-lg font-semibold text-gray-900">
+                      <p className="text-mid font-semibold text-gray-900">
                         ${(item.price * item.quantity).toFixed(2)}
                       </p>
                       <div className="flex items-center gap-2">
@@ -112,7 +112,7 @@ export const CartPage: React.FC = () => {
                       </div>
                       <button
                         onClick={() => removeItem(item.id)}
-                        className="text-red-600 hover:text-red-700 flex items-center gap-1 text-sm"
+                        className="text-red-600 hover:text-red-700 flex items-center gap-1 text-small"
                       >
                         <Trash2 className="h-4 w-4" />
                         Remove
@@ -127,7 +127,7 @@ export const CartPage: React.FC = () => {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-sm p-6 sticky top-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">
+              <h2 className="text-mid font-semibold text-gray-900 mb-6">
                 Order Summary
               </h2>
 
@@ -144,8 +144,8 @@ export const CartPage: React.FC = () => {
                 </div>
                 <div className="border-t pt-4">
                   <div className="flex justify-between">
-                    <span className="text-lg font-semibold">Total</span>
-                    <span className="text-lg font-semibold">
+                    <span className="text-mid font-semibold">Total</span>
+                    <span className="text-mid font-semibold">
                       ${total.toFixed(2)}
                     </span>
                   </div>
@@ -165,15 +165,15 @@ export const CartPage: React.FC = () => {
 
               {/* Benefits */}
               <div className="mt-6 space-y-4">
-                <div className="flex items-center gap-3 text-sm text-gray-600">
+                <div className="flex items-center gap-3 text-small text-gray-600">
                   <Truck className="h-5 w-5 text-green-600" />
                   <span>Free shipping on orders over $500</span>
                 </div>
-                <div className="flex items-center gap-3 text-sm text-gray-600">
+                <div className="flex items-center gap-3 text-small text-gray-600">
                   <ShieldCheck className="h-5 w-5 text-green-600" />
                   <span>Secure payment processing</span>
                 </div>
-                <div className="flex items-center gap-3 text-sm text-gray-600">
+                <div className="flex items-center gap-3 text-small text-gray-600">
                   <PackageCheck className="h-5 w-5 text-green-600" />
                   <span>30-day return policy</span>
                 </div>

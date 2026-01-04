@@ -30,8 +30,8 @@ const EmptyCart: React.FC<EmptyCartProps> = ({
           className="opacity-90" // Adjust opacity and blur as needed
         />
       </div>
-      <h2 className="text-xl text-gray-500 mb-2 relative z-20">{title}</h2>
-      <h1 className="text-3xl font-bold mb-8 text-gray-800 relative z-20">
+      <h2 className="text-mid text-gray-500 mb-2 relative z-20">{title}</h2>
+      <h1 className="text-title font-bold mb-8 text-gray-800 relative z-20">
         {subTitle}
       </h1>
       <div className="z-20">

@@ -106,7 +106,7 @@ export function PlaceBidModal({ project, isOpen, onClose, onSubmit }: PlaceBidMo
                 <div className="p-2 bg-orange-100 rounded-lg">
                   <FileText className="h-5 w-5 text-orange-600" />
                 </div>
-                <DialogTitle className="text-lg font-semibold">Place Your Bid</DialogTitle>
+                <DialogTitle className="text-mid font-semibold">Place Your Bid</DialogTitle>
               </div>
               <Button
                 variant="ghost"
@@ -124,8 +124,8 @@ export function PlaceBidModal({ project, isOpen, onClose, onSubmit }: PlaceBidMo
             {/* Project Summary */}
             <Card className="mb-6 bg-gray-50">
               <CardContent className="p-4">
-                <h3 className="font-semibold text-lg mb-2">{project.title}</h3>
-                <div className="grid grid-cols-2 gap-4 text-sm">
+                <h3 className="font-semibold text-mid mb-2">{project.title}</h3>
+                <div className="grid grid-cols-2 gap-4 text-small">
                   <div className="flex items-center space-x-2">
                     <DollarSign className="h-4 w-4 text-green-500" />
                     <span className="text-gray-600">Budget:</span>
@@ -143,7 +143,7 @@ export function PlaceBidModal({ project, isOpen, onClose, onSubmit }: PlaceBidMo
             {/* Bid Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <Label htmlFor="bidAmount" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="bidAmount" className="text-small font-medium text-gray-700">
                   Bid Amount (USD)
                 </Label>
                 <div className="relative mt-2">
@@ -161,7 +161,7 @@ export function PlaceBidModal({ project, isOpen, onClose, onSubmit }: PlaceBidMo
               </div>
 
               <div>
-                <Label htmlFor="timeline" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="timeline" className="text-small font-medium text-gray-700">
                   Completion Timeline (Days)
                 </Label>
                 <div className="relative mt-2">
@@ -179,7 +179,7 @@ export function PlaceBidModal({ project, isOpen, onClose, onSubmit }: PlaceBidMo
               </div>
 
               <div>
-                <Label htmlFor="proposal" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="proposal" className="text-small font-medium text-gray-700">
                   Detailed Proposal
                 </Label>
                 <Textarea
@@ -190,7 +190,7 @@ export function PlaceBidModal({ project, isOpen, onClose, onSubmit }: PlaceBidMo
                   className="mt-2 min-h-32"
                   required
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-small text-gray-500 mt-1">
                   Include details about your experience, approach, and what sets you apart.
                 </p>
               </div>

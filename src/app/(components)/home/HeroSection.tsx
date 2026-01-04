@@ -106,7 +106,7 @@ const HeroSection = () => {
             {/* Badge */}
             <Badge
               variant="secondary"
-              className="w-fit bg-white/95 text-foreground hover:bg-white gap-2 px-4 py-2 text-sm font-normal backdrop-blur-sm"
+              className="w-fit bg-white/95 text-foreground hover:bg-white gap-2 px-4 py-2 text-small font-normal backdrop-blur-sm"
             >
               {t(slide.subtitleKey)}
               <Link href="/about">
@@ -118,10 +118,10 @@ const HeroSection = () => {
             </Badge>
 
             <div className="space-y-4 md:space-y-6">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-7xl font-bold text-white leading-tight text-balance">
+              <h1 className="text-large font-bold text-white leading-tight text-balance">
                 {t(slide.titleKey)}
               </h1>
-              <p className="text-lg md:text-xl text-white/90 max-w-2xl leading-relaxed">
+              <p className="text-mid text-white/90 max-w-2xl leading-relaxed">
                 {t(slide.descriptionKey)}
               </p>
             </div>
@@ -133,7 +133,7 @@ const HeroSection = () => {
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="appearance-none w-full px-6 py-3 bg-white text-gray-900 rounded-full border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 text-sm font-semibold shadow-lg cursor-pointer hover:border-primary/50 transition-all pr-12"
+                  className="appearance-none w-full px-6 py-3 bg-white text-gray-900 rounded-full border-2 border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/20 text-small font-semibold shadow-lg cursor-pointer hover:border-primary/50 transition-all pr-12"
                 >
                   <option value="all">All Categories</option>
                   <option value="product">Products</option>
@@ -153,7 +153,7 @@ const HeroSection = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                  className="flex-1 px-4 py-3 bg-transparent border-0 focus:ring-0 text-gray-900 placeholder:text-gray-500 text-sm font-medium"
+                  className="flex-1 px-4 py-3 bg-transparent border-0 focus:ring-0 text-gray-900 placeholder:text-gray-500 text-small font-medium"
                 />
                 <button
                   onClick={handleSearch}

@@ -59,11 +59,11 @@ export default function SpecialistHero() {
           <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-6">
             <Wrench className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+          <h1 className="text-title md:text-title font-bold text-white mb-4 leading-tight">
             Expert
             <span className="block text-green-200">Solutions</span>
           </h1>
-          <p className="text-xl text-green-100 mb-8 leading-relaxed">
+          <p className="text-mid text-green-100 mb-8 leading-relaxed">
             Showcase your specialized skills and connect with projects that need your expertise
           </p>
         </div>
@@ -77,7 +77,7 @@ export default function SpecialistHero() {
                 className: "w-6 h-6 text-white",
               })}
             </div>
-            <h3 className="text-xl font-bold mb-2">{specialistBenefits[currentSlide].title}</h3>
+            <h3 className="text-mid font-bold mb-2">{specialistBenefits[currentSlide].title}</h3>
             <p className="text-base text-white/90 leading-relaxed">{specialistBenefits[currentSlide].description}</p>
           </div>
 

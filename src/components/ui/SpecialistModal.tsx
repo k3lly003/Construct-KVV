@@ -31,13 +31,13 @@ const SpecialistModal: React.FC<SpecialistModalProps> = ({
             <AvatarImage src={worker.avatar} alt={worker.name} />
             <AvatarFallback>{worker.name[0]}</AvatarFallback>
           </Avatar>
-          <div className="font-bold text-lg text-amber-900 mt-2">
+          <div className="font-bold text-mid text-amber-900 mt-2">
             {worker.name}
           </div>
           <div className="text-amber-700">{worker.specialist}</div>
-          <div className="text-xs text-amber-700">{worker.email}</div>
-          <div className="text-xs text-amber-700">{worker.phone}</div>
-          <div className="flex flex-col sm:flex-row gap-2 items-center text-xs mt-2">
+          <div className="text-small text-amber-700">{worker.email}</div>
+          <div className="text-small text-amber-700">{worker.phone}</div>
+          <div className="flex flex-col sm:flex-row gap-2 items-center text-small mt-2">
             <Badge
               variant="outline"
               className="border-amber-500 text-amber-700 bg-white"
@@ -75,7 +75,7 @@ const SpecialistModal: React.FC<SpecialistModalProps> = ({
                   height={160}
                   className="mx-auto mb-2 max-h-40 rounded shadow cursor-pointer border border-amber-200 object-contain"
                 />
-                <div className="text-xs text-amber-700 underline text-center">
+                <div className="text-small text-amber-700 underline text-center">
                   Click to view full certificate
                 </div>
               </a>

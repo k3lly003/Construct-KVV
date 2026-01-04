@@ -31,6 +31,9 @@ import {
   YAxis,
   CartesianGrid,
 } from "recharts";
+import { Button } from "@/components/ui/button";
+import { FileText } from "lucide-react";
+import { GenerateBOQModal } from "@/app/(components)/projects/GenerateBOQModal";
 
 export default function ProjectManagementPage() {
   const params = useParams();
@@ -42,6 +45,7 @@ export default function ProjectManagementPage() {
   const [error, setError] = useState<string | null>(null);
   const [milestones, setMilestones] = useState<PMMilestone[] | null>(null);
   const [timelines, setTimelines] = useState<PMTimeline[] | null>(null);
+  const [isBOQModalOpen, setIsBOQModalOpen] = useState(false);
 
   useEffect(() => {
     async function bootstrap() {
@@ -80,14 +84,22 @@ export default function ProjectManagementPage() {
                 <div className="flex items-center gap-3">
                   <span className="h-6 w-2 rounded-full bg-amber-500" />
                   <div>
-                    <h1 className="text-xl sm:text-2xl font-semibold">
+                    <h1 className="text-title font-semibold">
                       Project Workspace
                     </h1>
-                    <p className="text-muted-foreground text-sm">
+                    <p className="text-muted-foreground text-small">
                       Managing project {projectId}
                     </p>
                   </div>
                 </div>
+                <Button
+                  variant="outline"
+                  className="border-amber-400 text-amber-700 hover:bg-amber-50"
+                  onClick={() => setIsBOQModalOpen(true)}
+                >
+                  <FileText className="h-4 w-4 mr-2" />
+                  Generate BOQ
+                </Button>
               </div>
             </div>
           </div>
@@ -109,16 +121,16 @@ export default function ProjectManagementPage() {
           <div className="grid gap-4 md:gap-6">
             <Card className="border-amber-100 shadow-sm md:shadow min-h-[400px] sm:min-h-[500px] md:min-h-[550px]">
               <CardHeader>
-                <CardTitle className="text-base sm:text-lg font-semibold">
+                <CardTitle className="text-base sm:text-mid font-semibold">
                   Budget Overview
                 </CardTitle>
-                <CardDescription className="text-sm sm:text-base">
+                <CardDescription className="text-small sm:text-base">
                   Visual summary of spent vs remaining and recent expenses
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 {!budget ? (
-                  <div className="text-sm sm:text-base text-muted-foreground">
+                  <div className="text-small sm:text-base text-muted-foreground">
                     No budget data found.
                   </div>
                 ) : (
@@ -166,16 +178,16 @@ export default function ProjectManagementPage() {
                           </PieChart>
                         </ResponsiveContainer>
                       </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm sm:text-base">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-small sm:text-base">
                         <div>
                           <div className="text-muted-foreground">Total</div>
-                          <div className="font-semibold text-base sm:text-lg break-words">
+                          <div className="font-semibold text-base sm:text-mid break-words">
                             {budget.totalBudget.toLocaleString()}
                           </div>
                         </div>
                         <div>
                           <div className="text-muted-foreground">Spent</div>
-                          <div className="font-semibold text-base sm:text-lg break-words">
+                          <div className="font-semibold text-base sm:text-mid break-words">
                             {budget.totalSpent.toLocaleString()}
                           </div>
                         </div>
@@ -183,7 +195,7 @@ export default function ProjectManagementPage() {
                           <div className="text-muted-foreground">Remaining</div>
                           <div className="flex items-center gap-2 flex-wrap">
                             <span
-                              className={`font-semibold text-base sm:text-lg break-words ${
+                              className={`font-semibold text-base sm:text-mid break-words ${
                                 budget.remaining < 0 ? "text-amber-800" : ""
                               }`}
                             >
@@ -211,9 +223,9 @@ export default function ProjectManagementPage() {
                         .map((e) => (
                           <div
                             key={e.id}
-                            className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-sm sm:text-base"
+                            className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-small sm:text-base"
                           >
-                            <div className="flex flex-wrap items-center gap-2 text-sm sm:text-base">
+                            <div className="flex flex-wrap items-center gap-2 text-small sm:text-base">
                               <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
                               <span className="font-medium break-words">
                                 {e.description}
@@ -226,7 +238,7 @@ export default function ProjectManagementPage() {
                                 {new Date(e.createdAt).toLocaleDateString()}
                               </span>
                             </div>
-                            <span className="font-semibold text-base sm:text-lg sm:text-right">
+                            <span className="font-semibold text-base sm:text-mid sm:text-right">
                               {e.expenseAmount.toLocaleString()}
                             </span>
                           </div>
@@ -239,16 +251,16 @@ export default function ProjectManagementPage() {
 
             <Card className="border-amber-100 shadow-sm md:shadow">
               <CardHeader>
-                <CardTitle className="text-base sm:text-lg font-semibold">
+                <CardTitle className="text-base sm:text-mid font-semibold">
                   Milestones
                 </CardTitle>
-                <CardDescription className="text-sm sm:text-base">
+                <CardDescription className="text-small sm:text-base">
                   Progress across key phases (percentage complete)
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 {!milestones || milestones.length === 0 ? (
-                  <div className="text-sm sm:text-base text-muted-foreground">
+                  <div className="text-small sm:text-base text-muted-foreground">
                     No milestones available.
                   </div>
                 ) : (
@@ -323,7 +335,7 @@ export default function ProjectManagementPage() {
                       </ResponsiveContainer>
                     </div>
                     <div className="space-y-3">
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-small text-muted-foreground">
                         Latest update:{" "}
                         {new Date(
                           milestones
@@ -335,7 +347,7 @@ export default function ProjectManagementPage() {
                             )[0].updatedAt
                         ).toLocaleString()}
                       </div>
-                      <div className="grid grid-cols-3 gap-4 text-sm sm:text-base">
+                      <div className="grid grid-cols-3 gap-4 text-small sm:text-base">
                         <div>
                           <div className="text-muted-foreground">
                             Foundation
@@ -392,16 +404,16 @@ export default function ProjectManagementPage() {
 
             <Card className="border-amber-100 shadow-sm md:shadow">
               <CardHeader>
-                <CardTitle className="text-base sm:text-lg font-semibold">
+                <CardTitle className="text-base sm:text-mid font-semibold">
                   Timeline
                 </CardTitle>
-                <CardDescription className="text-sm sm:text-base">
+                <CardDescription className="text-small sm:text-base">
                   Project duration and key dates
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 {!timelines || timelines.length === 0 ? (
-                  <div className="text-sm sm:text-base text-muted-foreground">
+                  <div className="text-small sm:text-base text-muted-foreground">
                     No timeline available.
                   </div>
                 ) : (
@@ -431,7 +443,7 @@ export default function ProjectManagementPage() {
                             className="rounded-lg border bg-card p-4"
                           >
                             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                              <div className="text-sm sm:text-base">
+                              <div className="text-small sm:text-base">
                                 <div className="text-muted-foreground">
                                   Start
                                 </div>
@@ -439,7 +451,7 @@ export default function ProjectManagementPage() {
                                   {start.toLocaleString()}
                                 </div>
                               </div>
-                              <div className="text-sm sm:text-base">
+                              <div className="text-small sm:text-base">
                                 <div className="text-muted-foreground">End</div>
                                 <div className="font-semibold">
                                   {end.toLocaleString()}
@@ -457,7 +469,7 @@ export default function ProjectManagementPage() {
                                   role="progressbar"
                                 />
                               </div>
-                              <div className="mt-1 text-xs sm:text-sm text-muted-foreground">
+                              <div className="mt-1 text-small sm:text-small text-muted-foreground">
                                 {pct}% elapsed
                               </div>
                             </div>
@@ -471,6 +483,13 @@ export default function ProjectManagementPage() {
           </div>
         )}
       </div>
+
+      {/* Generate BOQ Modal */}
+      <GenerateBOQModal
+        isOpen={isBOQModalOpen}
+        onClose={() => setIsBOQModalOpen(false)}
+        projectId={projectId}
+      />
     </div>
   );
 }

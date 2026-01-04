@@ -55,8 +55,8 @@ export function LoginCard({
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
       <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">{companyName}</h1>
-        <h2 className="text-xl mt-4 mb-2 text-gray-800">{welcomeText}</h2>
+        <h1 className="text-mid font-bold text-gray-900">{companyName}</h1>
+        <h2 className="text-mid mt-4 mb-2 text-gray-800">{welcomeText}</h2>
         <p className="text-gray-600">{description}</p>
       </div>
 
@@ -112,11 +112,11 @@ export function LoginCard({
                 checked={rememberMe}
                 onCheckedChange={(checked) => setRememberMe(!!checked)}
               />
-              <label htmlFor="remember" className="text-sm text-gray-700">
+              <label htmlFor="remember" className="text-small text-gray-700">
                 {rememberText}
               </label>
             </div>
-            <Link href="/forgot-password" className="text-sm text-blue-600 hover:underline">
+            <Link href="/forgot-password" className="text-small text-blue-600 hover:underline">
               {forgotPasswordText}
             </Link>
           </div>
@@ -126,7 +126,7 @@ export function LoginCard({
           </GenericButton>
         </form>
 
-        <div className="text-center mt-4 text-sm text-gray-600">
+        <div className="text-center mt-4 text-small text-gray-600">
           <Link href={signUpLink} className="text-blue-600 hover:underline">
             {signUpText}
           </Link>

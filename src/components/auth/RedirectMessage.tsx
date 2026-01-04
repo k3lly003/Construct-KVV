@@ -16,11 +16,11 @@ export const RedirectMessage: React.FC<RedirectMessageProps> = ({
         <div className="mb-4">
           <LoadingSpinner size="md" />
         </div>
-        <h2 className="text-xl font-semibold text-gray-800 mb-2">
+        <h2 className="text-mid font-semibold text-gray-800 mb-2">
           Authentication Required
         </h2>
         <p className="text-gray-600 mb-4">{message}</p>
-        <p className="text-sm text-gray-500">Redirecting to login...</p>
+        <p className="text-small text-gray-500">Redirecting to login...</p>
       </div>
     </div>
   );

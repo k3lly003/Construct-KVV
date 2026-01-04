@@ -129,11 +129,11 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
                       </div>
                     </div>
                   )}
-                  <p className="text-sm leading-relaxed">{message.content}</p>
+                  <p className="text-small leading-relaxed">{message.content}</p>
                   {/* Add support button for assistant messages */}
                   {!message.isUser && (
                     <button
-                      className="mt-2 text-xs text-amber-700 underline hover:text-amber-900 transition-colors"
+                      className="mt-2 text-small text-amber-700 underline hover:text-amber-900 transition-colors"
                       onClick={() => (window.location.href = "/help")}
                     >
                       Not satisfied? Contact our support team to help you.
@@ -149,7 +149,7 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
             {/* Display quick actions only if there's only the initial message */}
             {messages.length === 1 && (
               <div className="space-y-3 mt-4">
-                <p className="text-sm text-gray-600 font-medium">
+                <p className="text-small text-gray-600 font-medium">
                   What would you like to do?
                 </p>
                 <div className="space-y-2">

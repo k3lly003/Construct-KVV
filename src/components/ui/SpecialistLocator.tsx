@@ -69,7 +69,7 @@ const SpecialistLocator: React.FC = () => {
         variant="outline"
         size="default"
         onClick={() => handleLocate()}
-        className="text-sm hover:bg-gray-200 bg-white text-black"
+        className="text-small hover:bg-gray-200 bg-white text-black"
       > 
         Locate Me
       </Button>

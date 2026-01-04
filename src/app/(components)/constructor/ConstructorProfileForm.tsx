@@ -192,7 +192,7 @@ export default function ConstructorProfileForm() {
     <div className="max-w-4xl mx-auto p-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">
+          <CardTitle className="text-mid font-bold text-center">
             {t('constructor.profile.title', 'Constructor Profile')}
           </CardTitle>
           <CardDescription className="text-center">
@@ -209,7 +209,7 @@ export default function ConstructorProfileForm() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Business Information */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold border-b pb-2">
+              <h3 className="text-mid font-semibold border-b pb-2">
                 {t('constructor.profile.businessInfo', 'Business Information')}
               </h3>
               
@@ -279,7 +279,7 @@ export default function ConstructorProfileForm() {
             {/* Location */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold border-b pb-2">
+                <h3 className="text-mid font-semibold border-b pb-2">
                   {t('constructor.profile.location', 'Service Locations')}
                 </h3>
                 <Button
@@ -318,7 +318,7 @@ export default function ConstructorProfileForm() {
 
             {/* Insurance Information */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold border-b pb-2">
+              <h3 className="text-mid font-semibold border-b pb-2">
                 {t('constructor.profile.insuranceInfo', 'Insurance Information')}
               </h3>
               
@@ -345,7 +345,7 @@ export default function ConstructorProfileForm() {
 
             {/* Payout Method */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold border-b pb-2">
+              <h3 className="text-mid font-semibold border-b pb-2">
                 {t('constructor.profile.payoutMethod', 'Payout Method')}
               </h3>
               
@@ -375,7 +375,7 @@ export default function ConstructorProfileForm() {
             {/* Documents */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold border-b pb-2">
+                <h3 className="text-mid font-semibold border-b pb-2">
                   {t('constructor.profile.documents', 'Documents')}
                 </h3>
                 <Button

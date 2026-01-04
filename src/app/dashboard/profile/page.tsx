@@ -37,7 +37,7 @@ export default function ProfilePage() {
       {!role && (
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Profile Not Available</h1>
+            <h1 className="text-mid font-bold text-gray-900 mb-4">Profile Not Available</h1>
             <p className="text-gray-600">Dear anonymous friend, you don't have a profile yet.</p>
           </div>
         </div>

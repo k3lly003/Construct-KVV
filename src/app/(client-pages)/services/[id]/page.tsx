@@ -277,7 +277,7 @@ const Page = () => {
                     <DialogTitle>Share this service</DialogTitle>
                   </DialogHeader>
                   <div className="flex flex-col items-start gap-4 mt-2">
-                    <span className="text-sm text-gray-700">
+                    <span className="text-small text-gray-700">
                       Share this page on:
                     </span>
                     <div className="flex gap-4">
@@ -322,7 +322,7 @@ const Page = () => {
                         <Instagram className="h-6 w-6 text-pink-500 hover:text-pink-700 transition-colors" />
                       </a>
                     </div>
-                    <span className="text-xs text-gray-400 mt-2">
+                    <span className="text-small text-gray-400 mt-2">
                       Link copied! You can now paste it anywhere.
                     </span>
                   </div>
@@ -337,14 +337,14 @@ const Page = () => {
                     <Badge variant="secondary" className="mb-2">
                       {categoryName || "Category"}
                     </Badge>
-                    <h1 className="text-3xl font-bold text-gray-900">
+                    <h1 className="text-title font-bold text-gray-900">
                       {serviceData.title}
                     </h1>
                     <p className="text-gray-600 mt-2">
                       {serviceData.description}
                     </p>
                   </div>
-                  <div className="flex items-center gap-6 text-sm text-gray-600">
+                  <div className="flex items-center gap-6 text-small text-gray-600">
                     <div className="flex items-center gap-1">
                       <MapPin className="w-4 h-4" />
                       {serviceData.location.city}
@@ -399,7 +399,7 @@ const Page = () => {
                             className="flex items-center gap-2"
                           >
                             <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-                            <span className="text-sm">{feature}</span>
+                            <span className="text-small">{feature}</span>
                           </div>
                         )
                       )}
@@ -413,10 +413,10 @@ const Page = () => {
                             key={key}
                             className="flex justify-between py-2 border-b border-gray-100"
                           >
-                            <span className="text-sm font-medium text-gray-600">
+                            <span className="text-small font-medium text-gray-600">
                               {key}
                             </span>
-                            <span className="text-sm text-gray-900">
+                            <span className="text-small text-gray-900">
                               {String(value)}
                             </span>
                           </div>
@@ -428,15 +428,15 @@ const Page = () => {
                     <div className="rounded-xl bg-amber-100 p-6 shadow-sm border border-amber-100">
                       <div className="flex items-center gap-3 mb-4">
                         <Shield className="w-7 h-7 text-amber-600" />
-                        <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">
+                        <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-small font-semibold uppercase tracking-wide">
                           Warranty
                         </span>
                       </div>
                       <div className="flex items-center gap-3 mb-2">
-                        <span className="text-3xl font-bold text-amber-900">
+                        <span className="text-title font-bold text-amber-900">
                           {serviceData.warranty.duration}
                         </span>
-                        <span className="text-sm text-amber-600">
+                        <span className="text-small text-amber-600">
                           duration
                         </span>
                       </div>
@@ -462,7 +462,7 @@ const Page = () => {
                           ))}
                         </div>
                       </div>
-                      <div className="mt-6 text-xs text-amber-500 italic">
+                      <div className="mt-6 text-small text-amber-500 italic">
                         * Warranty terms and conditions may apply. Please
                         contact the provider for full details.
                       </div>
@@ -481,14 +481,14 @@ const Page = () => {
                 <div className="space-y-4">
                   <div>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-3xl font-bold">
+                      <span className="text-title font-bold">
                         ${serviceData.pricing.basePrice}
                       </span>
                       <span className="text-gray-600">
                         {serviceData.pricing.unit}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-small text-gray-600">
                       Estimated total: {serviceData.pricing.estimatedTotal}
                     </p>
                   </div>
@@ -526,13 +526,13 @@ const Page = () => {
                           {serviceData.provider.name}
                         </h3>
                         {serviceData.provider.verified && (
-                          <Badge variant="secondary" className="text-xs">
+                          <Badge variant="secondary" className="text-small">
                             <Shield className="w-3 h-3 mr-1" />
                             Verified
                           </Badge>
                         )}
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <div className="flex items-center gap-2 text-small text-gray-600">
                         <div className="flex items-center">
                           <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                           <span className="ml-1">
@@ -543,7 +543,7 @@ const Page = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="grid grid-cols-2 gap-4 text-small">
                     <div className="flex items-center gap-2">
                       <Award className="w-4 h-4 text-amber-600" />
                       <span>{serviceData.provider.yearsExperience} years exp.</span>
@@ -602,21 +602,21 @@ const Page = () => {
                           </div>
                           <span className="font-medium">{review.author}</span>
                           {review.verified && (
-                            <Badge variant="outline" className="text-xs">
+                            <Badge variant="outline" className="text-small">
                               Verified
                             </Badge>
                           )}
-                          <span className="text-sm text-gray-500 ml-auto">
+                          <span className="text-small text-gray-500 ml-auto">
                             {review.date}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-small text-gray-600">
                           {review.comment}
                         </p>
                       </div>
                     ))
                   ) : (
-                    <div className="text-gray-500 text-sm">No reviews yet</div>
+                    <div className="text-gray-500 text-small">No reviews yet</div>
                   )}
                 </div>
               </CardContent>

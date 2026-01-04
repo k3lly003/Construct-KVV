@@ -114,10 +114,10 @@ export default function ProjectCard({
                   {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
                 </Badge>
               </div>
-              <h3 className="font-bold text-lg text-slate-900 mb-2 line-clamp-2 group-hover:text-orange-700 transition-colors">
+              <h3 className="font-bold text-mid text-slate-900 mb-2 line-clamp-2 group-hover:text-orange-700 transition-colors">
                 {project.title}
               </h3>
-              <p className="text-slate-600 text-sm line-clamp-2 leading-relaxed">
+              <p className="text-slate-600 text-small line-clamp-2 leading-relaxed">
                 {project.description}
               </p>
             </div>
@@ -132,11 +132,11 @@ export default function ProjectCard({
         <CardContent className="space-y-4 relative z-10">
           {/* Project Details */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-small">
               <MapPin className="w-4 h-4 text-slate-500" />
               <span className="text-slate-700 font-medium truncate">{project.location}</span>
             </div>
-            <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-small">
               <Calendar className="w-4 h-4 text-slate-500" />
               <span className="text-slate-700 font-medium">
                 {format(new Date(project.deadline), "MMM d, yyyy")}
@@ -149,7 +149,7 @@ export default function ProjectCard({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <DollarSign className="w-5 h-5 text-green-600" />
-                <span className="text-sm font-medium text-slate-700">Budget Range</span>
+                <span className="text-small font-medium text-slate-700">Budget Range</span>
               </div>
               <span className="font-bold text-green-700">
                 {formatBudget(project.budget_min, project.budget_max)}
@@ -159,7 +159,7 @@ export default function ProjectCard({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Clock className="w-5 h-5 text-blue-600" />
-                <span className="text-sm font-medium text-slate-700">Time Left</span>
+                <span className="text-small font-medium text-slate-700">Time Left</span>
               </div>
               <span
                 className={`font-bold ${
@@ -175,11 +175,11 @@ export default function ProjectCard({
           <div className="flex items-center justify-between bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-3">
             <div className="flex items-center gap-2">
               <Users className="w-4 h-4 text-blue-600" />
-              <span className="text-sm font-medium text-slate-700">
+              <span className="text-small font-medium text-slate-700">
                 {bidCount} {bidCount === 1 ? "Bid" : "Bids"}
               </span>
             </div>
-            <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-small">
               <TrendingUp className="w-4 h-4 text-purple-600" />
               <span className="text-purple-700 font-medium">Active</span>
             </div>

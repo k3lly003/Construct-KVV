@@ -287,7 +287,7 @@ const Page = () => {
     return (
       <div className="flex items-center justify-center h-full p-8">
         <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
-        <p className="ml-4 text-lg">Loading your profile...</p>
+        <p className="ml-4 text-mid">Loading your profile...</p>
       </div>
     );
   }
@@ -298,7 +298,7 @@ const Page = () => {
     <div className="flex flex-col md:flex-row gap-5 p-8 w-full">
       {/* Form Section */}
       <div className="flex-1 max-w-md">
-        <h2 className="text-2xl font-bold mb-6">Create a New Service</h2>
+        <h2 className="text-mid font-bold mb-6">Create a New Service</h2>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
@@ -455,7 +455,7 @@ const Page = () => {
             />
             {/* Warranty Coverage dynamic list */}
             <div>
-              <FormLabel className='mb-3'>Warranty Coverage <span className='text-xs italic'>(services that comes with warranty)</span></FormLabel>
+              <FormLabel className='mb-3'>Warranty Coverage <span className='text-small italic'>(services that comes with warranty)</span></FormLabel>
               {coverageFields.map((item, idx) => (
                 <div key={item.id} className="flex gap-2 mb-2">
                   <FormControl>
@@ -563,7 +563,7 @@ const Page = () => {
       <Separator orientation="vertical" className="hidden md:block h-auto" />
       {/* Service-style Preview Section */}
       <div className="flex-1 max-w-4xl">
-        <h1 className="text-2xl font-bold mb-6">Live Preview</h1>
+        <h1 className="text-mid font-bold mb-6">Live Preview</h1>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-4">
@@ -620,10 +620,10 @@ const Page = () => {
                 <div className="space-y-4">
                   <div>
                     <Badge variant="secondary" className="mb-2">{categoryName || 'Category'}</Badge>
-                    <h1 className="text-3xl font-bold text-gray-900">{watchAllFields.title || 'Service Title'}</h1>
+                    <h1 className="text-title font-bold text-gray-900">{watchAllFields.title || 'Service Title'}</h1>
                     <p className="text-gray-600 mt-2">{watchAllFields.description || 'Service description goes here...'}</p>
                   </div>
-                  <div className="flex items-center gap-6 text-sm text-gray-600">
+                  <div className="flex items-center gap-6 text-small text-gray-600">
                     <div className="flex items-center gap-1">
                       <MapPin className="w-4 h-4" />
                       {watchAllFields.city || 'Location'}
@@ -658,7 +658,7 @@ const Page = () => {
                       {watchAllFields.features?.filter(f => f.value).map((feature, index) => (
                         <div key={index} className="flex items-center py-2">
                           <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-                          <span className="text-sm break-words">{feature.value}</span>
+                          <span className="text-small break-words">{feature.value}</span>
                         </div>
                       ))}
                     </div>
@@ -667,7 +667,7 @@ const Page = () => {
                     <div className="w-full border">
                       {watchAllFields.specifications?.filter(spec => typeof spec?.value === 'string' && spec.value.trim()).map((spec, idx) => (
                         <div key={idx} className="py-2 border-b border-gray-100 w-full">
-                          <span className="text-sm text-gray-900 break-words">{spec.value}</span>
+                          <span className="text-small text-gray-900 break-words">{spec.value}</span>
                         </div>
                       ))}
                     </div>
@@ -676,11 +676,11 @@ const Page = () => {
                     <div className="rounded-xl bg-amber-50 p-6 shadow-sm border border-amber-100">
                       <div className="flex items-center gap-3 mb-4">
                         <Shield className="w-7 h-7 text-amber-600" />
-                        <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">Warranty</span>
+                        <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-small font-semibold uppercase tracking-wide">Warranty</span>
                       </div>
                       <div className="flex items-center gap-3 mb-2">
-                        <span className="text-3xl font-bold text-amber-900">{watchAllFields.warrantyDuration || 'N/A'}</span>
-                        <span className="text-sm text-amber-600">duration</span>
+                        <span className="text-title font-bold text-amber-900">{watchAllFields.warrantyDuration || 'N/A'}</span>
+                        <span className="text-small text-amber-600">duration</span>
                       </div>
                       <div className="mt-4">
                         <h4 className="font-semibold text-amber-800 mb-2">Coverage includes:</h4>
@@ -693,11 +693,11 @@ const Page = () => {
                               </div>
                             ))
                           ) : (
-                            <span className="text-gray-400 text-sm">No coverage details provided.</span>
+                            <span className="text-gray-400 text-small">No coverage details provided.</span>
                           )}
                         </div>
                       </div>
-                      <div className="mt-6 text-xs text-amber-500 italic">
+                      <div className="mt-6 text-small text-amber-500 italic">
                         * Warranty terms and conditions may apply. Please contact the provider for full details.
                       </div>
                     </div>
@@ -714,10 +714,10 @@ const Page = () => {
                 <div className="space-y-4">
                   <div>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-3xl font-bold">{watchAllFields.basePrice || '$0.00'}</span>
+                      <span className="text-title font-bold">{watchAllFields.basePrice || '$0.00'}</span>
                       <span className="text-gray-600">per service</span>
                     </div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-small text-gray-600">
                       Estimated total: {watchAllFields.estimatedTotal || '$0.00'}
                     </p>
                   </div>
@@ -748,12 +748,12 @@ const Page = () => {
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <h3 className="font-semibold">{watchAllFields.providerName || 'Provider Name'}</h3>
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge variant="secondary" className="text-small">
                           <Shield className="w-3 h-3 mr-1" />
                           Verified
                         </Badge>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <div className="flex items-center gap-2 text-small text-gray-600">
                         <div className="flex items-center">
                           <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                           <span className="ml-1">4.9</span>
@@ -762,7 +762,7 @@ const Page = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="grid grid-cols-2 gap-4 text-small">
                     <div className="flex items-center gap-2">
                       <Award className="w-4 h-4 text-amber-600" />
                       <span>12 years exp.</span>
@@ -796,8 +796,8 @@ const Page = () => {
                       <Home className="w-4 h-4 text-amber-600" />
                     </div>
                     <div>
-                      <p className="font-medium text-sm">Free Consultation</p>
-                      <p className="text-xs text-gray-600">On-site assessment included</p>
+                      <p className="font-medium text-small">Free Consultation</p>
+                      <p className="text-small text-gray-600">On-site assessment included</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -805,8 +805,8 @@ const Page = () => {
                       <Shield className="w-4 h-4 text-green-600" />
                     </div>
                     <div>
-                      <p className="font-medium text-sm">Lifetime Warranty</p>
-                      <p className="text-xs text-gray-600">Full coverage guarantee</p>
+                      <p className="font-medium text-small">Lifetime Warranty</p>
+                      <p className="text-small text-gray-600">Full coverage guarantee</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -814,8 +814,8 @@ const Page = () => {
                       <Wrench className="w-4 h-4 text-orange-600" />
                     </div>
                     <div>
-                      <p className="font-medium text-sm">Professional Tools</p>
-                      <p className="text-xs text-gray-600">Commercial grade equipment</p>
+                      <p className="font-medium text-small">Professional Tools</p>
+                      <p className="text-small text-gray-600">Commercial grade equipment</p>
                     </div>
                   </div>
                 </div>
@@ -840,15 +840,15 @@ const Page = () => {
                           </div>
                           <span className="font-medium">{review.author}</span>
                           {review.verified && (
-                            <Badge variant="outline" className="text-xs">Verified</Badge>
+                            <Badge variant="outline" className="text-small">Verified</Badge>
                           )}
-                          <span className="text-sm text-gray-500 ml-auto">{review.date}</span>
+                          <span className="text-small text-gray-500 ml-auto">{review.date}</span>
                         </div>
-                        <p className="text-sm text-gray-600">{review.comment}</p>
+                        <p className="text-small text-gray-600">{review.comment}</p>
                       </div>
                     ))
                   ) : (
-                    <div className="text-gray-500 text-sm">No reviews yet</div>
+                    <div className="text-gray-500 text-small">No reviews yet</div>
                   )}
                 </div>
               </CardContent>

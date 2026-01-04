@@ -486,7 +486,7 @@ export function StepFourOutdoor() {
       ) : (
         <>
           <div className="mb-6">
-            <h2 className="text-3xl font-bold tracking-tight">
+            <h2 className="text-title font-bold tracking-tight">
               Cost Optimization
             </h2>
             <p className="text-muted-foreground mt-2">
@@ -499,10 +499,10 @@ export function StepFourOutdoor() {
               <div className="space-y-8">
                 {/* Cost Optimization Section */}
                 <div className="space-y-4">
-                  <Label className="text-lg font-medium">
+                  <Label className="text-mid font-medium">
                     Cost Optimization Options
                   </Label>
-                  <p className="text-muted-foreground text-sm">
+                  <p className="text-muted-foreground text-small">
                     Select cost optimization strategies from the API response to
                     reduce your project cost.
                   </p>
@@ -545,7 +545,7 @@ export function StepFourOutdoor() {
 
                             <Label
                               htmlFor={optimizationKey}
-                              className="text-sm leading-tight cursor-pointer flex-1 group-hover:text-orange-700 transition-colors"
+                              className="text-small leading-tight cursor-pointer flex-1 group-hover:text-orange-700 transition-colors"
                             >
                               {optimization}
                             </Label>

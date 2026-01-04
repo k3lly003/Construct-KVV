@@ -165,7 +165,7 @@ export default function ContractorPortfolioList({ title, description }: Props) {
       </CardHeader>
       <CardContent>
         {items.length === 0 && (
-          <p className="text-sm text-muted-foreground">No portfolio items published yet.</p>
+          <p className="text-small text-muted-foreground">No portfolio items published yet.</p>
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {items.map((p) => (
@@ -184,10 +184,10 @@ export default function ContractorPortfolioList({ title, description }: Props) {
                         {p.isPublic ? 'Visible' : 'Invisible'}
                       </Badge>
                     </div>
-                    <h2 className="text-xl font-semibold text-gray-900">{p.title}</h2>
+                    <h2 className="text-mid font-semibold text-gray-900">{p.title}</h2>
                   </div>
                   <div className="text-right">
-                    <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                    <span className="text-small text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
                       {p.skills?.[0]?.[0] ? p.skills[0][0].toUpperCase() : 'C'}
                     </span>
                   </div>
@@ -196,19 +196,19 @@ export default function ContractorPortfolioList({ title, description }: Props) {
                 <p className="text-gray-600 mb-4">{p.description}</p>
 
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <div className="flex items-center space-x-2 text-small text-gray-600">
                     <MapPin className="h-4 w-4" />
                     <span>{p.location || 'N/A'}</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <div className="flex items-center space-x-2 text-small text-gray-600">
                     <Calendar className="h-4 w-4" />
                     <span>{formatPortfolioDate(p.workDate)}</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <div className="flex items-center space-x-2 text-small text-gray-600">
                     <DollarSign className="h-4 w-4" />
                     <span className="font-medium text-green-600">{p.budget || '—'}</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <div className="flex items-center space-x-2 text-small text-gray-600">
                     <Clock className="h-4 w-4" />
                     <span className="font-medium text-green-600">{p.duration || '—'}</span>
                   </div>
@@ -216,13 +216,13 @@ export default function ContractorPortfolioList({ title, description }: Props) {
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4">
-                    <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    <div className="flex items-center space-x-2 text-small text-gray-600">
                       <Users className="h-4 w-4" />
                       <span>{(p.images?.length ?? 0)} Photos</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <div className={`w-2 h-2 ${p.isPublic ? 'bg-green-500' : 'bg-red-500'} rounded-full`}></div>
-                      <span className={`text-sm px-2 py-0.5 rounded ${p.isPublic ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-700'}`}>
+                      <span className={`text-small px-2 py-0.5 rounded ${p.isPublic ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-700'}`}>
                         {p.isPublic ? 'Visible' : 'Invisible'}
                       </span>
                     </div>
@@ -255,7 +255,7 @@ export default function ContractorPortfolioList({ title, description }: Props) {
               <DialogTitle className="flex items-center justify-between">
                 <span>{viewing?.title}</span>
                 {viewing && (
-                  <span className={`text-xs px-2 py-1 rounded ${viewing.isPublic ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-700'}`}>
+                  <span className={`text-small px-2 py-1 rounded ${viewing.isPublic ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-700'}`}>
                     {viewing.isPublic ? 'Visible' : 'Invisible'}
                   </span>
                 )}
@@ -274,27 +274,27 @@ export default function ContractorPortfolioList({ title, description }: Props) {
                 <p className="text-gray-700 whitespace-pre-line">{viewing.description}</p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div className="flex items-center space-x-2 text-sm text-gray-700">
+                  <div className="flex items-center space-x-2 text-small text-gray-700">
                     <Badge variant="secondary">Category</Badge>
                     <span>{viewing.category || '—'}</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-700">
+                  <div className="flex items-center space-x-2 text-small text-gray-700">
                     <MapPin className="h-4 w-4" />
                     <span>{viewing.location || '—'}</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-700">
+                  <div className="flex items-center space-x-2 text-small text-gray-700">
                     <Calendar className="h-4 w-4" />
                     <span>{formatDetailedDate(viewing.workDate)}</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-700">
+                  <div className="flex items-center space-x-2 text-small text-gray-700">
                     <DollarSign className="h-4 w-4" />
                     <span>{viewing.budget || '—'}</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-700">
+                  <div className="flex items-center space-x-2 text-small text-gray-700">
                     <Clock className="h-4 w-4" />
                     <span>{viewing.duration || '—'}</span>
                   </div>
-                  <div className="flex items-center space-x-2 text-sm text-gray-700">
+                  <div className="flex items-center space-x-2 text-small text-gray-700">
                     <Users className="h-4 w-4" />
                     <span>{(viewing.images?.length ?? 0)} Photos</span>
                   </div>
@@ -302,10 +302,10 @@ export default function ContractorPortfolioList({ title, description }: Props) {
 
                 {viewing.skills && viewing.skills.length > 0 && (
                   <div>
-                    <div className="text-sm font-medium mb-2">Skills</div>
+                    <div className="text-small font-medium mb-2">Skills</div>
                     <div className="flex flex-wrap gap-2">
                       {viewing.skills.map((s, i) => (
-                        <span key={i} className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-700">{s}</span>
+                        <span key={i} className="text-small px-2 py-1 rounded bg-gray-100 text-gray-700">{s}</span>
                       ))}
                     </div>
                   </div>
@@ -325,19 +325,19 @@ export default function ContractorPortfolioList({ title, description }: Props) {
             </DialogHeader>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
               <div>
-                <label className="text-sm font-medium">Title</label>
+                <label className="text-small font-medium">Title</label>
                 <Input value={editTitle} onChange={e => setEditTitle(e.target.value)} />
               </div>
               <div>
-                <label className="text-sm font-medium">Work Date</label>
+                <label className="text-small font-medium">Work Date</label>
                 <Input type="date" value={editWorkDate} onChange={e => setEditWorkDate(e.target.value)} />
               </div>
               <div className="md:col-span-2">
-                <label className="text-sm font-medium">Description</label>
+                <label className="text-small font-medium">Description</label>
                 <Textarea value={editDescription} onChange={e => setEditDescription(e.target.value)} />
               </div>
               <div>
-                <label className="text-sm font-medium">Category</label>
+                <label className="text-small font-medium">Category</label>
                 <Select value={editCategory} onValueChange={setEditCategory}>
                   <SelectTrigger>
                     <SelectValue placeholder="Type of work" />
@@ -354,23 +354,23 @@ export default function ContractorPortfolioList({ title, description }: Props) {
                 </Select>
               </div>
               <div>
-                <label className="text-sm font-medium">Location</label>
+                <label className="text-small font-medium">Location</label>
                 <Input value={editLocation} onChange={e => setEditLocation(e.target.value)} />
               </div>
               <div>
-                <label className="text-sm font-medium">Budget</label>
+                <label className="text-small font-medium">Budget</label>
                 <Input value={editBudget} onChange={e => setEditBudget(e.target.value)} />
               </div>
               <div>
-                <label className="text-sm font-medium">Duration</label>
+                <label className="text-small font-medium">Duration</label>
                 <Input value={editDuration} onChange={e => setEditDuration(e.target.value)} />
               </div>
               <div className="md:col-span-2">
-                <label className="text-sm font-medium">Images</label>
+                <label className="text-small font-medium">Images</label>
                 <ImageUploaderGrid files={editFiles} previews={editPreviews} onChange={(f, p) => { setEditFiles(f); setEditPreviews(p); }} />
               </div>
               <div className="md:col-span-2">
-                <label className="text-sm font-medium">Skills</label>
+                <label className="text-small font-medium">Skills</label>
                 <Select value={editSkills} onValueChange={setEditSkills}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a skill" />

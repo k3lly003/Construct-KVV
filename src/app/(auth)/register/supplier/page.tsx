@@ -103,7 +103,7 @@ export default function SupplierRegistration() {
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back
           </Link>
-          <h1 className="text-3xl font-bold text-slate-900">
+          <h1 className="text-title font-bold text-slate-900">
             Supplier Registration
           </h1>
           <p className="text-slate-600 mt-2">
@@ -135,7 +135,7 @@ export default function SupplierRegistration() {
                     placeholder="Robs"
                   />
                   {errors.firstName && (
-                    <p className="text-sm text-destructive">
+                    <p className="text-small text-destructive">
                       {errors.firstName.message}
                     </p>
                   )}
@@ -148,7 +148,7 @@ export default function SupplierRegistration() {
                     placeholder="Smith"
                   />
                   {errors.lastName && (
-                    <p className="text-sm text-destructive">
+                    <p className="text-small text-destructive">
                       {errors.lastName.message}
                     </p>
                   )}
@@ -165,7 +165,7 @@ export default function SupplierRegistration() {
                     placeholder="user@example.com"
                   />
                   {errors.email && (
-                    <p className="text-sm text-destructive">
+                    <p className="text-small text-destructive">
                       {errors.email.message}
                     </p>
                   )}
@@ -179,7 +179,7 @@ export default function SupplierRegistration() {
                     placeholder="••••••••"
                   />
                   {errors.password && (
-                    <p className="text-sm text-destructive">
+                    <p className="text-small text-destructive">
                       {errors.password.message}
                     </p>
                   )}
@@ -195,7 +195,7 @@ export default function SupplierRegistration() {
                     placeholder="1234567890"
                   />
                   {errors.phone && (
-                    <p className="text-sm text-destructive">
+                    <p className="text-small text-destructive">
                       {errors.phone.message}
                     </p>
                   )}
@@ -208,7 +208,7 @@ export default function SupplierRegistration() {
                     placeholder="Robert Smith"
                   />
                   {errors.ownerName && (
-                    <p className="text-sm text-destructive">
+                    <p className="text-small text-destructive">
                       {errors.ownerName.message}
                     </p>
                   )}
@@ -226,7 +226,7 @@ export default function SupplierRegistration() {
                   placeholder="50"
                 />
                 {errors.deliveryRadius && (
-                  <p className="text-sm text-destructive">
+                  <p className="text-small text-destructive">
                     {errors.deliveryRadius.message}
                   </p>
                 )}
@@ -240,7 +240,7 @@ export default function SupplierRegistration() {
                   placeholder="123 Main Street, Kigali, Rwanda"
                 />
                 {errors.location && (
-                  <p className="text-sm text-destructive">
+                  <p className="text-small text-destructive">
                     {errors.location.message}
                   </p>
                 )}
@@ -296,14 +296,14 @@ export default function SupplierRegistration() {
                         }
                       }}
                     />
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-small text-muted-foreground">
                       You can either paste an image URL or pick a file from your
                       computer.
                     </p>
                   </div>
                 </div>
                 {errors.shopImage && (
-                  <p className="text-sm text-destructive">
+                  <p className="text-small text-destructive">
                     {typeof errors.shopImage === "object" &&
                     "message" in errors.shopImage
                       ? String((errors.shopImage as any).message)
@@ -321,7 +321,7 @@ export default function SupplierRegistration() {
                   rows={4}
                 />
                 {errors.shopDescription && (
-                  <p className="text-sm text-destructive">
+                  <p className="text-small text-destructive">
                     {errors.shopDescription.message}
                   </p>
                 )}
@@ -335,7 +335,7 @@ export default function SupplierRegistration() {
                   placeholder="Rob's Store"
                 />
                 {errors.businessName && (
-                  <p className="text-sm text-destructive">
+                  <p className="text-small text-destructive">
                     {errors.businessName.message}
                   </p>
                 )}
@@ -350,7 +350,7 @@ export default function SupplierRegistration() {
                     placeholder="123 Business St, City, Country"
                   />
                   {errors.businessAddress && (
-                    <p className="text-sm text-destructive">
+                    <p className="text-small text-destructive">
                       {errors.businessAddress.message}
                     </p>
                   )}
@@ -363,7 +363,7 @@ export default function SupplierRegistration() {
                     placeholder="0987654321"
                   />
                   {errors.businessPhone && (
-                    <p className="text-sm text-destructive">
+                    <p className="text-small text-destructive">
                       {errors.businessPhone.message}
                     </p>
                   )}
@@ -380,7 +380,7 @@ export default function SupplierRegistration() {
                     placeholder="business@robsstore.com"
                   />
                   {errors.businessEmail && (
-                    <p className="text-sm text-destructive">
+                    <p className="text-small text-destructive">
                       {errors.businessEmail.message}
                     </p>
                   )}
@@ -393,7 +393,7 @@ export default function SupplierRegistration() {
                     placeholder="TAX123456"
                   />
                   {errors.taxId && (
-                    <p className="text-sm text-destructive">
+                    <p className="text-small text-destructive">
                       {errors.taxId.message}
                     </p>
                   )}
@@ -427,11 +427,11 @@ export default function SupplierRegistration() {
                   </Button>
                   {documentsPreview.length > 0 && (
                     <div className="space-y-1">
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-small text-muted-foreground">
                         Selected files:
                       </p>
                       {documentsPreview.map((file, index) => (
-                        <div key={index} className="text-sm text-green-600">
+                        <div key={index} className="text-small text-green-600">
                           ✓ {file.name} ({(file.size / 1024 / 1024).toFixed(2)}{" "}
                           MB)
                         </div>
@@ -440,7 +440,7 @@ export default function SupplierRegistration() {
                   )}
                 </div>
                 {errors.documents && (
-                  <p className="text-sm text-destructive">
+                  <p className="text-small text-destructive">
                     {(errors.documents as unknown as any)?.message}
                   </p>
                 )}

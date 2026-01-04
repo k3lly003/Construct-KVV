@@ -30,7 +30,7 @@ const DefaultPageBanner = ({
       <div
         className={`flex flex-col gap-6 items-center justify-center text-white w-full max-w-screen-xl`}
       >
-        <h1 className="text-3xl md:text-5xl font-extrabold w-full md:w-2/3 text-center">
+        <h1 className="text-title md:text-title font-extrabold w-full md:w-2/3 text-center">
           {title || t(dashboardFakes.defaultBanner.defaultTitle)}
         </h1>
       </div>

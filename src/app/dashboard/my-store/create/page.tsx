@@ -158,7 +158,7 @@ const Page = () => {
     return (
       <div className="flex items-center justify-center h-full p-8">
         <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
-        <p className="ml-4 text-lg">Loading your profile...</p>
+        <p className="ml-4 text-mid">Loading your profile...</p>
       </div>
     );
   }
@@ -180,7 +180,7 @@ const Page = () => {
                   name="name"
                   render={({ field }) => (
                     <FormItem className="space-y-2">
-                      <FormLabel className="text-sm font-medium">Product Name</FormLabel>
+                      <FormLabel className="text-small font-medium">Product Name</FormLabel>
                       <FormControl>
                         <Input 
                           placeholder="Enter product name" 
@@ -198,7 +198,7 @@ const Page = () => {
                   name="description"
                   render={({ field }) => (
                     <FormItem className="space-y-2">
-                      <FormLabel className="text-sm font-medium">Description</FormLabel>
+                      <FormLabel className="text-small font-medium">Description</FormLabel>
                       <FormControl>
                         <Textarea
                           placeholder="Enter product description"
@@ -224,7 +224,7 @@ const Page = () => {
                   name="price"
                   render={({ field }) => (
                     <FormItem className="space-y-2">
-                      <FormLabel className="text-sm font-medium">Price</FormLabel>
+                      <FormLabel className="text-small font-medium">Price</FormLabel>
                       <FormControl>
                         <Input
                           type="text"
@@ -243,7 +243,7 @@ const Page = () => {
                   name="discountedPrice"
                   render={({ field }) => (
                     <FormItem className="space-y-2">
-                      <FormLabel className="text-sm font-medium">Discounted Price</FormLabel>
+                      <FormLabel className="text-small font-medium">Discounted Price</FormLabel>
                       <FormControl>
                         <Input
                           type="text"
@@ -264,7 +264,7 @@ const Page = () => {
                   name="stock"
                   render={({ field }) => (
                     <FormItem className="space-y-2">
-                      <FormLabel className="text-sm font-medium">Stock</FormLabel>
+                      <FormLabel className="text-small font-medium">Stock</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
@@ -312,7 +312,7 @@ const Page = () => {
                 name="categoryId"
                 render={({ field }) => (
                   <FormItem className="space-y-2">
-                    <FormLabel className="text-sm font-medium">Product Category</FormLabel>
+                    <FormLabel className="text-small font-medium">Product Category</FormLabel>
                     <FormControl>
                       <CategorySelect
                         value={field.value || ""}

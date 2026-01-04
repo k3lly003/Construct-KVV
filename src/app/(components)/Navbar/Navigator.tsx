@@ -213,7 +213,7 @@ const Navbar: React.FC = () => {
                     isHomePage && !scrolled ? 'drop-shadow-lg' : ''
                   }`}
                 />
-                <span className={`ml-2 text-xl font-semibold transition-colors ${
+                <span className={`ml-2 text-mid font-semibold transition-colors ${
                   isHomePage && !scrolled ? 'text-white' : 'text-amber-500'
                 }`}>
                   kvv
@@ -252,7 +252,7 @@ const Navbar: React.FC = () => {
               )}
               <Link
                 href="/cart"
-                className={`inline-flex items-center px-1 pt-1 text-sm font-medium relative transition-colors ${
+                className={`inline-flex items-center px-1 pt-1 text-small font-medium relative transition-colors ${
                   isHomePage && !scrolled
                     ? 'text-white hover:text-amber-300'
                     : 'text-gray-900 hover:text-amber-600'
@@ -260,7 +260,7 @@ const Navbar: React.FC = () => {
               >
                 <ShoppingCart />
                 {isClient && getCartCount() > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-amber-500 text-white text-xs rounded-full px-2 py-0.5 font-bold">
+                  <span className="absolute -top-2 -right-2 bg-amber-500 text-white text-small rounded-full px-2 py-0.5 font-bold">
                     {getCartCount()}
                   </span>
                 )}
@@ -337,9 +337,9 @@ const Navbar: React.FC = () => {
                         alt="KVV Pro"
                         width={100}
                         height={100}
-                        className="text-xl"
+                        className="text-mid"
                       />
-                      <span className="ml-2 text-xl text-amber-500 font-semibold">
+                      <span className="ml-2 text-mid text-amber-500 font-semibold">
                         kvv
                       </span>
                     </div>
@@ -372,7 +372,7 @@ const Navbar: React.FC = () => {
                           <div key={section.title}>
                             <Link
                               href={`/${section.title}`}
-                              className="block text-sm font-semibold text-gray-900 py-1 hover:text-amber-500"
+                              className="block text-small font-semibold text-gray-900 py-1 hover:text-amber-500"
                               onClick={() => setMobileMenuOpen(false)}
                             >
                               {section.title}
@@ -385,7 +385,7 @@ const Navbar: React.FC = () => {
                                       <li key={sub.name}>
                                         <Link
                                           href={sub.href || "#"}
-                                          className="block text-sm text-gray-600 hover:text-amber-500 py-1"
+                                          className="block text-small text-gray-600 hover:text-amber-500 py-1"
                                           onClick={() =>
                                             setMobileMenuOpen(false)
                                           }
@@ -444,13 +444,13 @@ const Navbar: React.FC = () => {
                   >
                     Shops
                   </Link>
-                  <Link
+                  {/* <Link
                     href="/pricing"
                     className="py-2 text-gray-900 hover:text-amber-500 border-b"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Pricings
-                  </Link>
+                  </Link> */}
                   <Link
                     href="/help"
                     className="py-2 text-gray-900 hover:text-amber-500 border-b"
@@ -463,7 +463,7 @@ const Navbar: React.FC = () => {
                     className="py-2 text-gray-900 hover:text-amber-500 border-b"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    {t("navigation.designMarketplace")}
+                    {t("navigation.designMarketplace")|| "Desing market place"}
                   </Link>
                   <Link
                     href="/cart"
@@ -472,7 +472,7 @@ const Navbar: React.FC = () => {
                   >
                     <ShoppingCart className="h-5 w-5" />
                     {isClient && getCartCount() > 0 && (
-                      <span className="absolute -top-2 left-5 bg-amber-500 text-white text-xs rounded-full px-2 py-0.5 font-bold">
+                      <span className="absolute -top-2 left-5 bg-amber-500 text-white text-small rounded-full px-2 py-0.5 font-bold">
                         {getCartCount()}
                       </span>
                     )}
@@ -526,7 +526,7 @@ const Navbar: React.FC = () => {
           <div className="hidden md:ml-6 md:flex md:space-x-8">
             <div className="relative nav-menu">
               <button
-                className={`inline-flex items-center cursor-pointer py-3 text-sm font-medium transition-colors ${
+                className={`inline-flex items-center cursor-pointer py-3 text-small font-medium transition-colors ${
                   isHomePage && !scrolled 
                     ? 'text-white hover:text-amber-300' 
                     : 'text-gray-900 hover:text-amber-500'
@@ -562,7 +562,7 @@ const Navbar: React.FC = () => {
                           >
                             <div className="mb-4">
                               <Link
-                                className="text-sm font-semibold text-gray-900 hover:text-amber-500 transition-colors duration-200"
+                                className="text-small font-semibold text-gray-900 hover:text-amber-500 transition-colors duration-200"
                                 href={`/${section.title}`}
                                 onClick={() => setActiveMenu(null)}
                               >
@@ -578,13 +578,13 @@ const Navbar: React.FC = () => {
                                       {isMobile ? (
                                         <>
                                           <button
-                                            className="block p-2 text-sm text-gray-600 hover:bg-gray-100 w-full text-left"
+                                            className="block p-2 text-small text-gray-600 hover:bg-gray-100 w-full text-left"
                                             onClick={() =>
                                               setActiveSubSheet(item)
                                             }
                                           >
                                             {item.name}{" "}
-                                            <span className="ml-2 text-xs text-gray-400">
+                                            <span className="ml-2 text-small text-gray-400">
                                               (see more)
                                             </span>
                                           </button>
@@ -644,7 +644,7 @@ const Navbar: React.FC = () => {
                                             <Link
                                               key={sub.name}
                                               href={sub.href || "#"}
-                                              className="block px-3 py-2 text-sm text-gray-600 hover:text-amber-500 hover:bg-amber-50 rounded-md transition-all duration-200"
+                                              className="block px-3 py-2 text-small text-gray-600 hover:text-amber-500 hover:bg-amber-50 rounded-md transition-all duration-200"
                                               onClick={() =>
                                                 setActiveMenu(null)
                                               }
@@ -658,7 +658,7 @@ const Navbar: React.FC = () => {
                                   ) : (
                                     <Link
                                       href={item.href || "#"}
-                                      className="block p-2 text-sm text-gray-600 hover:bg-gray-100"
+                                      className="block p-2 text-small text-gray-600 hover:bg-gray-100"
                                       onClick={() => setActiveMenu(null)}
                                     >
                                       {item.name}
@@ -678,7 +678,7 @@ const Navbar: React.FC = () => {
             {/* Build House link (desktop) */}
             {/* <button
               type="button"
-              className="inline-flex items-center px-1 pt-1 mb-2 hover:text-amber-500 text-sm font-medium text-gray-900"
+              className="inline-flex items-center px-1 pt-1 mb-2 hover:text-amber-500 text-small font-medium text-gray-900"
               onClick={() => {
                 if (!localUserData) {
                   toast.error("Please sign in first to access build house");
@@ -698,7 +698,7 @@ const Navbar: React.FC = () => {
             {/* Projects link (desktop) */}
             <button
               type="button"
-              className={`inline-flex items-center px-1 pt-1 mb-2 text-sm font-medium transition-colors ${
+              className={`inline-flex items-center px-1 pt-1 mb-2 text-small font-medium transition-colors ${
                 isHomePage && !scrolled 
                   ? 'text-white hover:text-amber-300' 
                   : 'text-gray-900 hover:text-amber-500'
@@ -721,7 +721,7 @@ const Navbar: React.FC = () => {
             </button>
             <Link
               href="/services"
-              className={`inline-flex items-center px-1 pt-1 mb-2 text-sm font-medium transition-colors ${
+              className={`inline-flex items-center px-1 pt-1 mb-2 text-small font-medium transition-colors ${
                 isHomePage && !scrolled 
                   ? 'text-white hover:text-amber-300' 
                   : 'text-gray-900 hover:text-amber-500'
@@ -729,19 +729,19 @@ const Navbar: React.FC = () => {
             >
               {t("navigation.portfolio")}
             </Link>
-            <Link
+            {/* <Link
               href="/pricing"
-              className={`inline-flex items-center px-1 pt-1 mb-2 text-sm font-medium transition-colors ${
+              className={`inline-flex items-center px-1 pt-1 mb-2 text-small font-medium transition-colors ${
                 isHomePage && !scrolled 
                   ? 'text-white hover:text-amber-300' 
                   : 'text-gray-900 hover:text-amber-500'
               }`}
             >
               {t("navigation.pricing")}
-            </Link>
+            </Link> */}
             <Link
               href="/design-marketplace"
-              className={`inline-flex items-center px-1 pt-1 mb-2 text-sm font-medium transition-colors ${
+              className={`inline-flex items-center px-1 pt-1 mb-2 text-small font-medium transition-colors ${
                 isHomePage && !scrolled 
                   ? 'text-white hover:text-amber-300' 
                   : 'text-gray-900 hover:text-amber-500'

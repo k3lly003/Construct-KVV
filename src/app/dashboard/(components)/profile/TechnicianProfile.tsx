@@ -221,7 +221,7 @@ const TechnicianProfile: React.FC = () => {
   return (
     <div className="w-fullbg-gray-50 min-h-screen p-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Technician Profile</h1>
+        <h1 className="text-title font-bold text-gray-900 mb-2">Technician Profile</h1>
         <p className="text-gray-600">Manage your professional information and credentials</p>
       </div>
 
@@ -261,13 +261,13 @@ const TechnicianProfile: React.FC = () => {
         <div className="pt-20 pb-8 px-8">
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
             <div className="mb-6 lg:mb-0">
-                             <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                             <h2 className="text-mid font-bold text-gray-900 mb-2">
                  {profile.user?.firstName + " " + profile.user?.lastName}
                </h2>
 
                <p className="text-gray-600 mb-4">Professional Technician</p>
 
-               <div className="space-y-2 text-sm">
+               <div className="space-y-2 text-small">
                  <div className="flex items-center text-gray-600">
                    <Mail className="w-4 h-4 mr-3" />
                    <span>{profile.user?.email}</span>
@@ -292,8 +292,8 @@ const TechnicianProfile: React.FC = () => {
                     <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mx-auto mb-2">
                       <Icon className="w-6 h-6 text-amber-600" />
                     </div>
-                    <p className="text-xl font-bold text-gray-900">{stat.value}</p>
-                    <p className="text-xs text-gray-600">{stat.label}</p>
+                    <p className="text-mid font-bold text-gray-900">{stat.value}</p>
+                    <p className="text-small text-gray-600">{stat.label}</p>
                   </div>
                 );
               })}
@@ -308,7 +308,7 @@ const TechnicianProfile: React.FC = () => {
           {/* Experience & Categories */}
           <div className="w-full max-w-2xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100">
             <div className="flex items-center justify-between px-6 py-4">
-              <h1 className="text-xl font-semibold text-gray-900">Professional Info</h1>
+              <h1 className="text-mid font-semibold text-gray-900">Professional Info</h1>
               <button 
                 onClick={handleEditClick}
                 className="text-amber-600 font-medium p-0 h-auto bg-transparent border-none cursor-pointer hover:text-amber-700"
@@ -353,7 +353,7 @@ const TechnicianProfile: React.FC = () => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-gray-900 font-medium text-base">{item.label}</p>
-                        <p className="text-gray-500 text-sm mt-1 break-words">{item.value}</p>
+                        <p className="text-gray-500 text-small mt-1 break-words">{item.value}</p>
                       </div>
                     </div>
                   </div>
@@ -363,7 +363,7 @@ const TechnicianProfile: React.FC = () => {
           </div>
           {/* Categories */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+            <h3 className="text-mid font-semibold text-gray-900 mb-4 flex items-center">
               <Award className="w-5 h-5 mr-2" />
               Categories
             </h3>
@@ -372,7 +372,7 @@ const TechnicianProfile: React.FC = () => {
                 profile.categories.map((category, index) => (
                   <span
                     key={index}
-                    className="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium mr-2 mb-2"
+                    className="inline-block px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-small font-medium mr-2 mb-2"
                   >
                     {category}
                   </span>
@@ -388,14 +388,14 @@ const TechnicianProfile: React.FC = () => {
         <div className="space-y-6">
           {/* Account Status */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+            <h3 className="text-mid font-semibold text-gray-900 mb-4 flex items-center">
               <Star className="w-5 h-5 mr-2" />
               Account Status
             </h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${profile.status === 'APPROVED' ? 'bg-green-100 text-green-700' :
+                <label className="block text-small font-medium text-gray-700 mb-1">Status</label>
+                <span className={`inline-block px-3 py-1 rounded-full text-small font-medium ${profile.status === 'APPROVED' ? 'bg-green-100 text-green-700' :
                     profile.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' :
                       'bg-red-100 text-red-700'
                   }`}>
@@ -403,7 +403,7 @@ const TechnicianProfile: React.FC = () => {
                 </span>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Member Since</label>
+                <label className="block text-small font-medium text-gray-700 mb-1">Member Since</label>
                 <p className="text-gray-700">{new Date(profile.createdAt).toLocaleDateString()}</p>
               </div>
             </div>
@@ -411,7 +411,7 @@ const TechnicianProfile: React.FC = () => {
 
           {/* Professional Documents */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+            <h3 className="text-mid font-semibold text-gray-900 mb-4 flex items-center">
               <FileText className="w-5 h-5 mr-2" />
               Professional Documents
             </h3>
@@ -425,14 +425,14 @@ const TechnicianProfile: React.FC = () => {
                       </div>
                       <div>
                         <h4 className="font-medium text-gray-900">Document {index + 1}</h4>
-                        <p className="text-sm text-gray-600">{doc}</p>
+                        <p className="text-small text-gray-600">{doc}</p>
                       </div>
                     </div>
                     <a 
                       href={doc} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-amber-600 hover:text-amber-700 text-sm font-medium"
+                      className="text-amber-600 hover:text-amber-700 text-small font-medium"
                     >
                       View
                     </a>
@@ -447,17 +447,17 @@ const TechnicianProfile: React.FC = () => {
           {/* Payout Information */}
           {(profile as any).payoutMethod && (
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+              <h3 className="text-mid font-semibold text-gray-900 mb-4 flex items-center">
                 <TrendingUp className="w-5 h-5 mr-2" />
                 Payout Information
               </h3>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Payout Method</label>
+                  <label className="block text-small font-medium text-gray-700 mb-1">Payout Method</label>
                   <p className="text-gray-700">{(profile as any).payoutMethod?.type || 'Not configured'}</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Account Number</label>
+                  <label className="block text-small font-medium text-gray-700 mb-1">Account Number</label>
                   <p className="text-gray-700">{(profile as any).payoutMethod?.accountNumber || 'Not provided'}</p>
                 </div>
               </div>
@@ -472,7 +472,7 @@ const TechnicianProfile: React.FC = () => {
           <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             {/* Dialog Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <h3 className="text-xl font-semibold text-gray-900">Edit Profile</h3>
+              <h3 className="text-mid font-semibold text-gray-900">Edit Profile</h3>
               <button
                 onClick={handleCancelEdit}
                 className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -484,12 +484,12 @@ const TechnicianProfile: React.FC = () => {
             {/* Error/Success Messages */}
             {error && (
               <div className="mx-6 mt-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded-lg">
-                <p className="text-sm">{error}</p>
+                <p className="text-small">{error}</p>
               </div>
             )}
             {successMessage && (
               <div className="mx-6 mt-4 p-3 bg-green-100 border border-green-300 text-green-700 rounded-lg">
-                <p className="text-sm">{successMessage}</p>
+                <p className="text-small">{successMessage}</p>
               </div>
             )}
 
@@ -497,7 +497,7 @@ const TechnicianProfile: React.FC = () => {
             <div className="p-6 space-y-6">
               {/* Experience */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-small font-medium text-gray-700 mb-2">
                   Years of Experience
                 </label>
                 <input
@@ -513,7 +513,7 @@ const TechnicianProfile: React.FC = () => {
               {/* Payout Method */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-small font-medium text-gray-700 mb-2">
                     Payout Method Type
                   </label>
                   <select
@@ -528,7 +528,7 @@ const TechnicianProfile: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-small font-medium text-gray-700 mb-2">
                     Account Number
                   </label>
                   <input
@@ -543,7 +543,7 @@ const TechnicianProfile: React.FC = () => {
 
               {/* Locations */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-small font-medium text-gray-700 mb-2">
                   Locations
                 </label>
                 <div className="space-y-2">
@@ -582,7 +582,7 @@ const TechnicianProfile: React.FC = () => {
 
               {/* Categories */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-small font-medium text-gray-700 mb-2">
                   Categories
                 </label>
                 <div className="space-y-2">
@@ -621,7 +621,7 @@ const TechnicianProfile: React.FC = () => {
 
               {/* Documents */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-small font-medium text-gray-700 mb-2">
                   Documents
                 </label>
                 <div className="space-y-2">

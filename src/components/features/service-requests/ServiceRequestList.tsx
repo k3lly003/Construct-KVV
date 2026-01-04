@@ -162,7 +162,7 @@ export default function ServiceRequestList({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
+          <h2 className="text-mid font-bold text-gray-900">{title}</h2>
           <p className="text-gray-600 mt-1">
             {stats.total} total requests
           </p>
@@ -196,8 +196,8 @@ export default function ServiceRequestList({
           <div className="flex items-center space-x-2">
             <AlertCircle className="w-5 h-5 text-gray-500" />
             <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
-              <p className="text-sm text-gray-600">Total</p>
+              <p className="text-mid font-bold text-gray-900">{stats.total}</p>
+              <p className="text-small text-gray-600">Total</p>
             </div>
           </div>
         </div>
@@ -206,8 +206,8 @@ export default function ServiceRequestList({
           <div className="flex items-center space-x-2">
             <Clock className="w-5 h-5 text-yellow-500" />
             <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.pending}</p>
-              <p className="text-sm text-gray-600">Pending</p>
+              <p className="text-mid font-bold text-gray-900">{stats.pending}</p>
+              <p className="text-small text-gray-600">Pending</p>
             </div>
           </div>
         </div>
@@ -216,8 +216,8 @@ export default function ServiceRequestList({
           <div className="flex items-center space-x-2">
             <CheckCircle className="w-5 h-5 text-blue-500" />
             <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.accepted}</p>
-              <p className="text-sm text-gray-600">Accepted</p>
+              <p className="text-mid font-bold text-gray-900">{stats.accepted}</p>
+              <p className="text-small text-gray-600">Accepted</p>
             </div>
           </div>
         </div>
@@ -226,8 +226,8 @@ export default function ServiceRequestList({
           <div className="flex items-center space-x-2">
             <Clock className="w-5 h-5 text-purple-500" />
             <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.inProgress}</p>
-              <p className="text-sm text-gray-600">In Progress</p>
+              <p className="text-mid font-bold text-gray-900">{stats.inProgress}</p>
+              <p className="text-small text-gray-600">In Progress</p>
             </div>
           </div>
         </div>
@@ -236,8 +236,8 @@ export default function ServiceRequestList({
           <div className="flex items-center space-x-2">
             <CheckCircle className="w-5 h-5 text-green-500" />
             <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.completed}</p>
-              <p className="text-sm text-gray-600">Completed</p>
+              <p className="text-mid font-bold text-gray-900">{stats.completed}</p>
+              <p className="text-small text-gray-600">Completed</p>
             </div>
           </div>
         </div>
@@ -246,8 +246,8 @@ export default function ServiceRequestList({
           <div className="flex items-center space-x-2">
             <XCircle className="w-5 h-5 text-red-500" />
             <div>
-              <p className="text-2xl font-bold text-gray-900">{stats.cancelled}</p>
-              <p className="text-sm text-gray-600">Cancelled</p>
+              <p className="text-mid font-bold text-gray-900">{stats.cancelled}</p>
+              <p className="text-small text-gray-600">Cancelled</p>
             </div>
           </div>
         </div>
@@ -283,7 +283,7 @@ export default function ServiceRequestList({
           <div className="mt-4 pt-4 border-t border-gray-200">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                <label className="block text-small font-medium text-gray-700 mb-2">Status</label>
                 <select
                   value={filters.status || ''}
                   onChange={(e) => handleFilterChange('status', e.target.value)}
@@ -298,7 +298,7 @@ export default function ServiceRequestList({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                <label className="block text-small font-medium text-gray-700 mb-2">Category</label>
                 <select
                   value={filters.category || ''}
                   onChange={(e) => handleFilterChange('category', e.target.value)}
@@ -313,7 +313,7 @@ export default function ServiceRequestList({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Urgency</label>
+                <label className="block text-small font-medium text-gray-700 mb-2">Urgency</label>
                 <select
                   value={filters.urgency || ''}
                   onChange={(e) => handleFilterChange('urgency', e.target.value)}
@@ -345,7 +345,7 @@ export default function ServiceRequestList({
       {filteredRequests.length === 0 ? (
         <div className="text-center py-12">
           <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No requests found</h3>
+          <h3 className="text-mid font-medium text-gray-900 mb-2">No requests found</h3>
           <p className="text-gray-600">
             {searchTerm ? 'Try adjusting your search terms' : 'No service requests available'}
           </p>

@@ -27,7 +27,7 @@ export function StepSixContact() {
       transition={{ duration: 0.3 }}
     >
       <div className="mb-6">
-        <h2 className="text-3xl font-bold tracking-tight">Almost Done!</h2>
+        <h2 className="text-title font-bold tracking-tight">Almost Done!</h2>
         <p className="text-muted-foreground mt-2">
           Please provide your contact information so we can share your custom design.
         </p>
@@ -90,14 +90,14 @@ export function StepSixContact() {
                   />
                   <Label 
                     htmlFor="terms" 
-                    className="text-sm leading-relaxed cursor-pointer"
+                    className="text-small leading-relaxed cursor-pointer"
                   >
                     I agree to receive communications about my design request and understand that my information will be used in accordance with the privacy policy.
                   </Label>
                 </div>
                 
                 <div className="bg-muted/40 p-4 rounded-md border">
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-small text-muted-foreground">
                     <span className="font-medium text-foreground">What happens next?</span> Our design team will review your preferences and create a custom visualization of your dream project. You will receive your personalized design concept within 3-5 business days.
                   </p>
                 </div>

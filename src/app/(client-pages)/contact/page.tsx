@@ -90,8 +90,8 @@ function App() {
       {/* Header */}
       <div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h1 className="text-4xl font-bold text-gray-900 text-center">CONTACT US</h1>
-          <p className="mt-4 text-lg text-gray-600 text-center max-w-2xl mx-auto">
+          <h1 className="text-title font-bold text-gray-900 text-center">CONTACT US</h1>
+          <p className="mt-4 text-mid text-gray-600 text-center max-w-2xl mx-auto">
             If you have any questions, please feel free to get in touch with us via phone, text, email, the form below, or even on social media!
           </p>
         </div>
@@ -102,12 +102,12 @@ function App() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Form */}
           <div className="bg-white rounded-xl shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">GET IN TOUCH</h2>
+            <h2 className="text-mid font-bold text-gray-900 mb-6">GET IN TOUCH</h2>
             
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="name" className="block text-small font-medium text-gray-700 mb-2">
                     NAME
                   </label>
                   <input
@@ -121,11 +121,11 @@ function App() {
                     }`}
                     placeholder="Enter your name*"
                   />
-                  {errors.name && <p className="mt-1 text-sm text-amber-600">{errors.name}</p>}
+                  {errors.name && <p className="mt-1 text-small text-amber-600">{errors.name}</p>}
                 </div>
                 
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="phone" className="block text-small font-medium text-gray-700 mb-2">
                     PHONE NUMBER
                   </label>
                   <input
@@ -139,12 +139,12 @@ function App() {
                     }`}
                     placeholder="Enter your phone number*"
                   />
-                  {errors.phone && <p className="mt-1 text-sm text-amber-600">{errors.phone}</p>}
+                  {errors.phone && <p className="mt-1 text-small text-amber-600">{errors.phone}</p>}
                 </div>
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="email" className="block text-small font-medium text-gray-700 mb-2">
                   EMAIL
                 </label>
                 <input
@@ -158,11 +158,11 @@ function App() {
                   }`}
                   placeholder="Enter your email*"
                 />
-                {errors.email && <p className="mt-1 text-sm text-amber-600">{errors.email}</p>}
+                {errors.email && <p className="mt-1 text-small text-amber-600">{errors.email}</p>}
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="message" className="block text-small font-medium text-gray-700 mb-2">
                   YOUR MESSAGE
                 </label>
                 <textarea
@@ -176,7 +176,7 @@ function App() {
                   }`}
                   placeholder="Tell us about your construction project or inquiry..."
                 ></textarea>
-                {errors.message && <p className="mt-1 text-sm text-amber-600">{errors.message}</p>}
+                {errors.message && <p className="mt-1 text-small text-amber-600">{errors.message}</p>}
               </div>
 
               {/* Submit Status Messages */}
@@ -215,7 +215,7 @@ function App() {
           <div className="space-y-8">
             {/* Contact Details */}
             <div className="bg-white rounded-xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">CONTACT INFORMATION</h2>
+              <h2 className="text-mid font-bold text-gray-900 mb-6">CONTACT INFORMATION</h2>
               
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
@@ -262,7 +262,7 @@ function App() {
                 <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
                   <Clock className="w-5 h-5 text-amber-600" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">BUSINESS HOURS</h2>
+                <h2 className="text-mid font-bold text-gray-900">BUSINESS HOURS</h2>
               </div>
               
               <div className="space-y-4">
@@ -290,7 +290,7 @@ function App() {
           <div className="h-96 bg-gray-200 flex items-center justify-center">
             <div className="text-center">
               <MapPin className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-500 text-lg font-medium">Interactive Map</p>
+              <p className="text-gray-500 text-mid font-medium">Interactive Map</p>
               <p className="text-gray-400 mt-2">1425 N McLean Blvd, Elgin, IL 60123</p>
             </div>
           </div>

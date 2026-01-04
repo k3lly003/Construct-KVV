@@ -48,7 +48,7 @@ const ShadQuota: React.FC<ShadQuotaPropsDto> = ({
                                 <Calculator className="h-5 w-5 text-amber-500 mr-2" />
                                 <span className="font-medium">Price Calculator</span>
                             </div>
-                            <div className="text-sm text-gray-500">
+                            <div className="text-small text-gray-500">
                                 Min. Order: {product.minOrder} {product.unit}
                             </div>
                         </div>
@@ -67,16 +67,16 @@ const ShadQuota: React.FC<ShadQuotaPropsDto> = ({
                                 />
                             </div>
                             <div className="flex-1">
-                                <div className="block text-sm font-medium text-gray-700 mb-1">
+                                <div className="block text-small font-medium text-gray-700 mb-1">
                                     Total Estimate
                                 </div>
-                                <div className="text-2xl font-bold text-amber-500">
+                                <div className="text-mid font-bold text-amber-500">
                                     {calculateTotal().toLocaleString()} Rfw
                                 </div>
                             </div>
                         </div>
                         {initialQuantity > 0 && initialQuantity < product.minOrder && (
-                            <p className="text-red-600 text-sm">
+                            <p className="text-red-600 text-small">
                                 Quantity must be at least {product.minOrder} {product.unit}
                             </p>
                         )}

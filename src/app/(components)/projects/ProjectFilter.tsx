@@ -55,7 +55,7 @@ export default function ProjectFilters({
 
         {/* Category */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-700">Category</label>
+          <label className="text-small font-medium text-slate-700">Category</label>
           <Select
             value={filters.category || "all"}
             onValueChange={(value) => updateFilter("category", value)}
@@ -76,7 +76,7 @@ export default function ProjectFilters({
 
         {/* Location */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-700 flex items-center gap-2">
+          <label className="text-small font-medium text-slate-700 flex items-center gap-2">
             <MapPin className="w-4 h-4" />
             Location
           </label>
@@ -90,7 +90,7 @@ export default function ProjectFilters({
 
         {/* Budget Range */}
         <div className="space-y-3">
-          <label className="text-sm font-medium text-slate-700 flex items-center gap-2">
+          <label className="text-small font-medium text-slate-700 flex items-center gap-2">
             <DollarSign className="w-4 h-4" />
             Budget Range
           </label>
@@ -106,7 +106,7 @@ export default function ProjectFilters({
               className="w-full"
             />
           </div>
-          <div className="flex justify-between text-sm text-slate-600">
+          <div className="flex justify-between text-small text-slate-600">
             <span>${(filters.budgetMin || 0).toLocaleString()}</span>
             <span>${(filters.budgetMax || 1000000).toLocaleString()}</span>
           </div>
@@ -114,7 +114,7 @@ export default function ProjectFilters({
 
         {/* Status */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-700">Status</label>
+          <label className="text-small font-medium text-slate-700">Status</label>
           <Select
             value={filters.status || "all"}
             onValueChange={(value) => updateFilter("status", value)}
@@ -134,7 +134,7 @@ export default function ProjectFilters({
         {/* Active Filters */}
         {Object.keys(filters).length > 0 && (
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-700">Active Filters</label>
+            <label className="text-small font-medium text-slate-700">Active Filters</label>
             <div className="flex flex-wrap gap-2">
               {Object.entries(filters).map(([key, value]) => {
                 if (

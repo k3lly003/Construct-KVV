@@ -16,6 +16,7 @@ import { MdLocationPin } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import { ProductViewSkeleton } from "@/app/utils/skeleton/ProductSkeletons";
 import HeroSection from "../(components)/home/HeroSection";
+import { districtOptions } from "@/app/utils/fakes/HomeFakes"
 
 function RecommendedProductsSection() {
   const { t } = useTranslations();
@@ -50,7 +51,7 @@ function RecommendedProductsSection() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-7 py-12">
-      <h2 className="text-3xl font-bold mb-8 text-center">
+      <h2 className="text-title font-bold mb-8 text-center">
         {t(dashboardFakes.RecommendationsSection.title) ||
           "Top Picks We Recommend"}
       </h2>
@@ -161,39 +162,6 @@ export default function Home() {
     };
   }, [showDropdown]);
 
-  // District dropdown state
-  const districtOptions = [
-    "Karongi",
-    "Ngororero",
-    "Nyabihu",
-    "Nyamasheke",
-    "Rubavu",
-    "Rusizi",
-    "Rutsiro",
-    "Gasabo",
-    "Kicukiro",
-    "Nyarugenge",
-    "Bugesera",
-    "Gatsibo",
-    "Kayonza",
-    "Kirehe",
-    "Ngoma",
-    "Nyagatare",
-    "Rwamagana",
-    "Burera",
-    "Gakenke",
-    "Gicumbi",
-    "Musanze",
-    "Rulindo",
-    "Gisagara",
-    "Huye",
-    "Kamonyi",
-    "Muhanga",
-    "Nyamagabe",
-    "Nyanza",
-    "Nyaruguru",
-    "Ruhango",
-  ];
   const [districtInput, setDistrictInput] = useState("");
   const [showDistrictDropdown, setShowDistrictDropdown] = useState(false);
   const districtInputRef = useRef<HTMLInputElement>(null);
@@ -310,7 +278,7 @@ export default function Home() {
       <section className="w-full bg-white py-12">
         <div className="max-w-5xl mx-auto text-center px-4">
           {/* Heading */}
-          <h2 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-8">
+          <h2 className="text-title font-semibold text-gray-900 mb-8">
             <span className="italic">{t("home.hirePros.titleItalic")}</span> {t("home.hirePros.titleRegular")}
           </h2>
 
@@ -422,11 +390,11 @@ export default function Home() {
       {/* Visualize Dream Home Section */}
       <section className="w-full bg-gradient-to-b from-amber-50 to-white py-16">
         <div className="max-w-7xl mx-auto w-full flex flex-col items-center justify-center text-center px-4">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-amber-900">
+          <h2 className="text-title font-bold mb-6 text-amber-900">
             {t(dashboardFakes.VisualizeSection.title)}
           </h2>
           <Link href="/visualize">
-            <button className="mt-2 px-8 py-4 bg-amber-500 hover:bg-amber-600 text-white text-lg font-semibold rounded-full shadow-lg transition-all flex items-center gap-2">
+            <button className="mt-2 px-8 py-4 bg-amber-500 hover:bg-amber-600 text-white text-mid font-semibold rounded-full shadow-lg transition-all flex items-center gap-2">
               {t(dashboardFakes.VisualizeSection.button)}{" "}
               <span aria-hidden="true">→</span>
             </button>

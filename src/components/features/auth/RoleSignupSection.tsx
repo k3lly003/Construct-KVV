@@ -171,10 +171,10 @@ export default function RoleSignupSection() {
       <div className="text-center mb-8">
         <Link href="/" className="flex items-center justify-center gap-2 w-[12%] text-gray-600 hover:text-gray-900 mb-4 border p-2 rounded-lg hover:bg-gray-100">
             <ArrowLeft className="w-6 h-6 text-gray-600" />
-            <span className="text-sm font-semibold text-gray-800">Back home</span>
+            <span className="text-small font-semibold text-gray-800">Back home</span>
         </Link>
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">Join Our Professional Network</h1>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        <h1 className="text-title font-bold text-gray-900 mb-4">Join Our Professional Network</h1>
+        <p className="text-mid text-gray-600 max-w-2xl mx-auto">
           Choose your role and start connecting with industry professionals to grow your business
         </p>
       </div>
@@ -185,7 +185,7 @@ export default function RoleSignupSection() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`pb-3 px-4 text-sm font-medium transition-colors relative flex items-center gap-2 ${
+            className={`pb-3 px-4 text-small font-medium transition-colors relative flex items-center gap-2 ${
               activeTab === tab.id ? "text-blue-600 border-b-2 border-blue-600" : "text-gray-600 hover:text-gray-900"
             }`}
           >
@@ -207,8 +207,8 @@ export default function RoleSignupSection() {
           {/* Content */}
           <div className="relative z-10 p-8 h-full flex flex-col justify-center">
             <div className="mb-4">{currentContent.hero.icon}</div>
-            <h2 className="text-black text-2xl md:text-3xl font-bold mb-4 max-w-md">{currentContent.hero.title}</h2>
-            <p className="text-black text-lg mb-6 max-w-lg">{currentContent.hero.description}</p>
+            <h2 className="text-black text-mid md:text-title font-bold mb-4 max-w-md">{currentContent.hero.title}</h2>
+            <p className="text-black text-mid mb-6 max-w-lg">{currentContent.hero.description}</p>
             <Button
               onClick={() => handleRegister(activeTab)}
               className="bg-blue-600 hover:bg-blue-700 text-black px-6 py-3 rounded-lg font-medium flex items-center gap-2 w-fit"
@@ -225,7 +225,7 @@ export default function RoleSignupSection() {
         {currentContent.features.map((feature) => (
           <Card key={feature.id} className="p-6 hover:shadow-lg transition-shadow">
             <div className="mb-4">{feature.icon}</div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">{feature.title}</h3>
+            <h3 className="text-mid font-semibold text-gray-900 mb-3">{feature.title}</h3>
             <p className="text-gray-600">{feature.description}</p>
           </Card>
         ))}
@@ -233,7 +233,7 @@ export default function RoleSignupSection() {
 
       {/* Benefits Section */}
       <div className="bg-gray-50 rounded-lg p-8">
-        <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+        <h3 className="text-mid font-bold text-gray-900 mb-6 text-center">
           What You Get as a {navigationTabs.find((tab) => tab.id === activeTab)?.label}
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

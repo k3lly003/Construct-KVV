@@ -182,18 +182,18 @@ export const ShopProducts: React.FC<ShopProductsProps> = ({ shopId, shop }) => {
                         {product.name}
                       </h3>
                     </div>
-                    <p className="text-sm text-gray-500 mb-2 overflow">
+                    <p className="text-small text-gray-500 mb-2 overflow">
                       {product.description}
                     </p>
                     <div className="flex items-center justify-between mb-3">
                       <p className="font-semibold text-md text-yellow-400">
                         {product.price}
-                        <span className="text-sm text-yellow-400"> Rwf</span>
+                        <span className="text-small text-yellow-400"> Rwf</span>
                       </p>
                     </div>
                     <Button
                       text={t(dashboardFakes.common.addToCart)}
-                      texSize={"text-sm"}
+                      texSize={"text-small"}
                       hoverBg={"hover:bg-yellow-400"}
                       borderCol={"border-yellow-300"}
                       bgCol={"white"}
@@ -250,20 +250,20 @@ export const ShopProducts: React.FC<ShopProductsProps> = ({ shopId, shop }) => {
                     {/* Provider Info */}
                     <div className="px-4 pb-3">
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="text-sm font-medium text-gray-700">
+                        <span className="text-small font-medium text-gray-700">
                           {(service as any).provider?.name || "Unknown"}
                         </span>
                       </div>
 
                       {/* Service Title */}
-                      <h1 className="font-bold text-gray-900 text-lg leading-tight mb-4 line-clamp-2">
+                      <h1 className="font-bold text-gray-900 text-mid leading-tight mb-4 line-clamp-2">
                         {service.title}
                       </h1>
 
                       {/* Pricing and Location Info */}
                       <div className="grid grid-cols-2 gap-4 mb-4">
                         <div>
-                          <p className="text-xs text-gray-500 mb-1">Price</p>
+                          <p className="text-small text-gray-500 mb-1">Price</p>
                           <p className="font-semibold text-gray-900">
                             {(service as any).pricing?.basePrice
                               ? `${(service as any).pricing.basePrice} Rwf`
@@ -271,7 +271,7 @@ export const ShopProducts: React.FC<ShopProductsProps> = ({ shopId, shop }) => {
                           </p>
                         </div>
                         <div>
-                          <p className="text-xs text-gray-500 mb-1">Location</p>
+                          <p className="text-small text-gray-500 mb-1">Location</p>
                           <p className="font-semibold text-gray-900">
                             {(service as any).location?.city || "-"}
                           </p>
@@ -284,7 +284,7 @@ export const ShopProducts: React.FC<ShopProductsProps> = ({ shopId, shop }) => {
                           service.features.map((feature: string) => (
                             <span
                               key={feature}
-                              className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full"
+                              className="text-small px-2 py-1 bg-gray-100 text-gray-600 rounded-full"
                             >
                               {feature}
                             </span>
@@ -297,7 +297,7 @@ export const ShopProducts: React.FC<ShopProductsProps> = ({ shopId, shop }) => {
                     <div className="flex items-center gap-2 w-full">
                       <Button
                         text="View"
-                        texSize={"text-sm"}
+                        texSize={"text-small"}
                         hoverBg={"hover:bg-gray-800"}
                         borderCol={"border-gray-300"}
                         bgCol={"bg-gray-100"}
@@ -311,7 +311,7 @@ export const ShopProducts: React.FC<ShopProductsProps> = ({ shopId, shop }) => {
                       />
                       <Button
                         text="Add to cart"
-                        texSize={"text-sm"}
+                        texSize={"text-small"}
                         hoverBg={"hover:bg-amber-700"}
                         borderCol={"border-gray-900"}
                         bgCol={"bg-gray-900"}

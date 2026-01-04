@@ -55,7 +55,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({ open, onClose, productId, e
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
         <button className="absolute top-2 right-2 text-gray-400 hover:text-gray-600" onClick={onClose}>&times;</button>
-        <h2 className="text-xl font-bold mb-4">Write a Review</h2>
+        <h2 className="text-mid font-bold mb-4">Write a Review</h2>
         {error && <div className="text-red-500 mb-2">{error}</div>}
         {success && <div className="text-green-600 mb-2">Review submitted!</div>}
         <form className="space-y-4" onSubmit={handleSubmit}>

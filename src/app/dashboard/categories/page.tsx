@@ -128,7 +128,7 @@ const CategoriesTablePage = () => {
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold">{t('categories.title')}</h1>
+        <h1 className="text-mid font-semibold">{t('categories.title')}</h1>
         <Dialog open={openAddDialog} onOpenChange={setOpenAddDialog}>
           <DialogTrigger asChild>
             <GenericButton>

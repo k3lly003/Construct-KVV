@@ -75,23 +75,23 @@ export const ShopProducts: React.FC = () => {
                     <h3 className="text-md font-semibold text-gray-900 w-[60%] mb-1">
                       {product.name}
                     </h3>
-                    <div className="text-green-500 text-sm">
+                    <div className="text-green-500 text-small">
                       <Star className="h-4 w-4 text-yellow-400 fill-current inline-block mr-1" />
                       {product.rating}
                     </div>
                   </div>
-                  <p className="text-sm text-gray-500 mb-2 overflow">
+                  <p className="text-small text-gray-500 mb-2 overflow">
                     {product.description}
                   </p>
                   <div className="flex items-center justify-between mb-3">
                     <p className="font-semibold text-md text-yellow-400">
                       {product.originalPrice}
-                      <span className="text-sm text-yellow-400"> Rwf</span>
+                      <span className="text-small text-yellow-400"> Rwf</span>
                     </p>
                   </div>
                   <Button
                     text={"Add to cart"}
-                    texSize={"text-sm"}
+                    texSize={"text-small"}
                     hoverBg={"hover:bg-yellow-400"}
                     borderCol={"border-yellow-300"}
                     bgCol={"white"}

@@ -23,7 +23,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
           </div>
           
           <div>
-            <h2 className="text-2xl font-bold text-slate-800 mb-2">
+            <h2 className="text-mid font-bold text-slate-800 mb-2">
               Welcome aboard, {technicianName}! 🎉
             </h2>
             <p className="text-slate-600">
@@ -36,7 +36,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
               <Mail className="w-5 h-5 text-blue-600 mt-0.5" />
               <div>
                 <h4 className="font-semibold text-blue-800">Check your email</h4>
-                <p className="text-sm text-blue-700">We've sent a confirmation link to verify your account.</p>
+                <p className="text-small text-blue-700">We've sent a confirmation link to verify your account.</p>
               </div>
             </div>
 
@@ -44,7 +44,7 @@ export const SuccessModal: React.FC<SuccessModalProps> = ({
               <Calendar className="w-5 h-5 text-amber-600 mt-0.5" />
               <div>
                 <h4 className="font-semibold text-amber-800">Review in progress</h4>
-                <p className="text-sm text-amber-700">Our team will review your application within 24-48 hours.</p>
+                <p className="text-small text-amber-700">Our team will review your application within 24-48 hours.</p>
               </div>
             </div>
           </div>

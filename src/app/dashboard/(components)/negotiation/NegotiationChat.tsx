@@ -62,9 +62,9 @@ const BidDetailsCard = ({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-2xl font-bold mb-2">{formatAmount(bid.amount)}</p>
+        <p className="text-mid font-bold mb-2">{formatAmount(bid.amount)}</p>
         {bid.message && <p className="text-gray-700 mb-2">{bid.message}</p>}
-        <p className="text-xs text-gray-500 mt-2">
+        <p className="text-small text-gray-500 mt-2">
           Bid placed on: {formatDate(bid.createdAt)}
         </p>
       </CardContent>
@@ -131,7 +131,7 @@ const MessageBubble = ({
         </p>
         {isLong && (
           <button
-            className="text-xs underline mt-1 text-amber-700 hover:text-amber-900 focus:outline-none"
+            className="text-small underline mt-1 text-amber-700 hover:text-amber-900 focus:outline-none"
             onClick={() => setExpanded((v) => !v)}
           >
             {expanded ? "Show less" : "Show more"}
@@ -142,12 +142,12 @@ const MessageBubble = ({
             href={msg.fileUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm underline mt-2 block text-amber-700 hover:text-amber-900"
+            className="text-small underline mt-2 block text-amber-700 hover:text-amber-900"
           >
             View Attachment
           </a>
         )}
-        <p className="text-xs opacity-60 mt-2 text-right">
+        <p className="text-small opacity-60 mt-2 text-right">
           {new Date(msg.createdAt).toLocaleTimeString()}
         </p>
       </div>
@@ -229,19 +229,19 @@ const InitialBidMessage = ({
         style={{ wordBreak: "break-word" }}
       >
         <div className="mb-2">
-          <span className="text-xs font-semibold opacity-75">Initial Bid</span>
+          <span className="text-small font-semibold opacity-75">Initial Bid</span>
         </div>
         <p className="font-semibold mb-1">{formatAmount(bid.amount)}</p>
         {displayMessage && <p className="mb-1">{displayMessage}</p>}
         {isLong && (
           <button
-            className="text-xs underline mt-1 text-amber-700 hover:text-amber-900 focus:outline-none"
+            className="text-small underline mt-1 text-amber-700 hover:text-amber-900 focus:outline-none"
             onClick={() => setExpanded((v) => !v)}
           >
             {expanded ? "Show less" : "Show more"}
           </button>
         )}
-        <p className="text-xs opacity-60 mt-2 text-right">
+        <p className="text-small opacity-60 mt-2 text-right">
           {formatTime(bid.createdAt || "")}
         </p>
       </div>
@@ -267,7 +267,7 @@ const ErrorFallback = ({
     <div className="text-center">
       <div className="text-red-500 mb-4">
         <p className="font-semibold">Something went wrong</p>
-        <p className="text-sm mt-1">{error.message}</p>
+        <p className="text-small mt-1">{error.message}</p>
       </div>
       <button
         onClick={resetErrorBoundary}
@@ -449,7 +449,7 @@ const ChatContent = ({
         style={{ height: "70vh", maxHeight: "70vh" }}
       >
         <div className="p-4 border-b flex justify-between items-center">
-          <h2 className="text-xl font-bold">Negotiation Chat</h2>
+          <h2 className="text-mid font-bold">Negotiation Chat</h2>
           {/* {isSeller && (
             <button
               onClick={() => setIsModalOpen(true)}
@@ -588,10 +588,10 @@ const ChatContent = ({
         </div>
         {file && (
           <div className="p-2 bg-gray-50 border-t">
-            <p className="text-sm">Selected file: {file.name}</p>
+            <p className="text-small">Selected file: {file.name}</p>
             <button
               onClick={() => setFile(null)}
-              className="text-xs text-red-500 hover:text-red-700 ml-2"
+              className="text-small text-red-500 hover:text-red-700 ml-2"
             >
               Remove
             </button>

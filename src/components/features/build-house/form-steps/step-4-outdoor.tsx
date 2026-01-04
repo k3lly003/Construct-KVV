@@ -26,7 +26,7 @@ export function StepFourOutdoor() {
       transition={{ duration: 0.3 }}
     >
       <div className="mb-6">
-        <h2 className="text-3xl font-bold tracking-tight">Outdoor Spaces</h2>
+        <h2 className="text-title font-bold tracking-tight">Outdoor Spaces</h2>
         <p className="text-muted-foreground mt-2">
           Design your outdoor environment to complement your home.
         </p>
@@ -36,8 +36,8 @@ export function StepFourOutdoor() {
         <Card className="p-6">
           <div className="space-y-8">
             <div className="space-y-4">
-              <Label className="text-lg font-medium">Landscape Style</Label>
-              <p className="text-muted-foreground text-sm mb-4">
+              <Label className="text-mid font-medium">Landscape Style</Label>
+              <p className="text-muted-foreground text-small mb-4">
                 Choose a landscaping approach that matches your aesthetic vision.
               </p>
               <ImageSelector 
@@ -61,7 +61,7 @@ export function StepFourOutdoor() {
                     onCheckedChange={(checked) => updateFormData({ hasDeck: checked })}
                   />
                 </div>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-muted-foreground text-small">
                   An outdoor lounging and entertainment area
                 </p>
               </div>
@@ -78,7 +78,7 @@ export function StepFourOutdoor() {
                     onCheckedChange={(checked) => updateFormData({ hasPool: checked })}
                   />
                 </div>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-muted-foreground text-small">
                   Private swimming area for recreation
                 </p>
               </div>
@@ -95,7 +95,7 @@ export function StepFourOutdoor() {
                     onCheckedChange={(checked) => updateFormData({ hasOutdoorKitchen: checked })}
                   />
                 </div>
-                <p className="text-muted-foreground text-sm">
+                <p className="text-muted-foreground text-small">
                   Outdoor cooking and dining space
                 </p>
               </div>

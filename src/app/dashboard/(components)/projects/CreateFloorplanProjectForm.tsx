@@ -93,7 +93,7 @@ export default function CreateFloorplanProjectForm({ onSuccess, onCancel }: Crea
               {selectedFile && (
                 <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
                   <FileText className="h-4 w-4 text-green-600" />
-                  <span className="text-sm text-green-800">
+                  <span className="text-small text-green-800">
                     Selected: {selectedFile.name} ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
                   </span>
                 </div>
@@ -106,7 +106,7 @@ export default function CreateFloorplanProjectForm({ onSuccess, onCancel }: Crea
                 <Sparkles className="h-5 w-5 text-blue-600 mt-0.5" />
                 <div>
                   <h4 className="font-semibold text-blue-900 mb-1">AI Will Automatically:</h4>
-                  <ul className="text-sm text-blue-800 space-y-1">
+                  <ul className="text-small text-blue-800 space-y-1">
                     <li>• Extract text and details from your floorplan</li>
                     <li>• Analyze the architectural design</li>
                     <li>• Generate realistic cost estimates</li>
@@ -120,7 +120,7 @@ export default function CreateFloorplanProjectForm({ onSuccess, onCancel }: Crea
             {/* Error Display */}
             {error && (
               <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-sm text-red-800">{error}</p>
+                <p className="text-small text-red-800">{error}</p>
               </div>
             )}
 

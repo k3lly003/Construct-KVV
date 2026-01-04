@@ -236,31 +236,31 @@ const Page = () => {
     switch (type) {
       case "seller_request":
         return (
-          <Badge className="bg-blue-100 text-blue-800 text-xs">
+          <Badge className="bg-blue-100 text-blue-800 text-small">
             {t("dashboard.notifications.sellerRequest")}
           </Badge>
         );
       case "shop_approval":
         return (
-          <Badge className="bg-green-100 text-green-800 text-xs">
+          <Badge className="bg-green-100 text-green-800 text-small">
             {t("dashboard.notifications.shopApproval")}
           </Badge>
         );
       case "system":
         return (
-          <Badge className="bg-yellow-100 text-yellow-800 text-xs">
+          <Badge className="bg-yellow-100 text-yellow-800 text-small">
             {t("dashboard.notifications.system")}
           </Badge>
         );
       case "order":
         return (
-          <Badge className="bg-purple-100 text-purple-800 text-xs">
+          <Badge className="bg-purple-100 text-purple-800 text-small">
             {t("dashboard.notifications.order")}
           </Badge>
         );
       default:
         return (
-          <Badge className="bg-gray-100 text-gray-800 text-xs">
+          <Badge className="bg-gray-100 text-gray-800 text-small">
             {t("dashboard.notifications.other")}
           </Badge>
         );
@@ -272,7 +272,7 @@ const Page = () => {
       {/* Header and Search - Responsive Flex */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4">
-          <h1 className="text-xl sm:text-2xl font-semibold flex items-center mb-2 sm:mb-0">
+          <h1 className="text-mid sm:text-mid font-semibold flex items-center mb-2 sm:mb-0">
             <Bell className="mr-2 h-5 w-5" />{" "}
             {t("dashboard.notifications.title")}
           </h1>
@@ -305,25 +305,25 @@ const Page = () => {
         <TabsList className="flex flex-wrap gap-2">
           <TabsTrigger value="all">
             {t("dashboard.notifications.all")}
-            <Badge className="ml-2 bg-amber-500 text-white text-xs">
+            <Badge className="ml-2 bg-amber-500 text-white text-small">
               {mappedNotifications.length}
             </Badge>
           </TabsTrigger>
           <TabsTrigger value="read">
             {t("dashboard.notifications.read")}
-            <Badge className="ml-2 bg-amber-500 text-white text-xs">
+            <Badge className="ml-2 bg-amber-500 text-white text-small">
               {readCount}
             </Badge>
           </TabsTrigger>
           <TabsTrigger value="unread">
             {t("dashboard.notifications.unread")}
-            <Badge className="ml-2 bg-amber-500 text-white text-xs">
+            <Badge className="ml-2 bg-amber-500 text-white text-small">
               {unreadCount}
             </Badge>
           </TabsTrigger>
           <TabsTrigger value="orders">
             {t("dashboard.notifications.orders")}
-            <Badge className="ml-2 bg-amber-500 text-white text-xs">
+            <Badge className="ml-2 bg-amber-500 text-white text-small">
               {orderCount}
             </Badge>
           </TabsTrigger>
@@ -359,7 +359,7 @@ const Page = () => {
                       <div className="flex-1 min-w-0">
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-1 gap-1 sm:gap-0">
                           <div className="flex items-center space-x-2">
-                            <p className="text-sm font-medium truncate max-w-[140px] sm:max-w-xs">
+                            <p className="text-small font-medium truncate max-w-[140px] sm:max-w-xs">
                               {notification.title}
                             </p>
                             {getNotificationBadge(notification.type)}
@@ -369,13 +369,13 @@ const Page = () => {
                               <div className="w-2 h-2 rounded-full bg-amber-500" />
                             )}
                             <Clock className="w-3 h-3 text-gray-400" />
-                            <span className="text-xs text-gray-500">
+                            <span className="text-small text-gray-500">
                               {notification.timeAgo}
                             </span>
                           </div>
                         </div>
                         {notification.description && (
-                          <p className="text-xs sm:text-sm text-gray-600 mb-2">
+                          <p className="text-small sm:text-small text-gray-600 mb-2">
                             {notification.description}
                           </p>
                         )}
@@ -413,7 +413,7 @@ const Page = () => {
                 </Card>
               ))}
               {filteredNotifications.length === 0 && (
-                <div className="py-6 text-center text-sm text-gray-500">
+                <div className="py-6 text-center text-small text-gray-500">
                   <Bell className="w-12 h-12 mx-auto mb-2 text-gray-300" />
                   <p>{t("dashboard.notifications.empty")}</p>
                 </div>
@@ -428,7 +428,7 @@ const Page = () => {
             <Card>
               <CardContent className="p-4 sm:p-6">
                 <div className="flex flex-col sm:flex-row items-center justify-between mb-4 gap-2">
-                  <h3 className="text-base sm:text-lg font-semibold">
+                  <h3 className="text-base sm:text-mid font-semibold">
                     {t("dashboard.notifications.details")}
                   </h3>
                   <GenericButton
@@ -451,7 +451,7 @@ const Page = () => {
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <h4 className="font-medium text-sm sm:text-base">
+                      <h4 className="font-medium text-small sm:text-base">
                         {selectedNotification.title}
                       </h4>
                       {getNotificationBadge(selectedNotification.type)}
@@ -459,10 +459,10 @@ const Page = () => {
                   </div>
 
                   <div>
-                    <p className="text-xs sm:text-sm text-gray-600 mb-2">
+                    <p className="text-small sm:text-small text-gray-600 mb-2">
                       {selectedNotification.description}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-small text-gray-500">
                       {selectedNotification.timeAgo}
                     </p>
                   </div>
@@ -471,40 +471,40 @@ const Page = () => {
                     <div className="space-y-3 pt-4 border-t">
                       {selectedNotification.data.userName && (
                         <div>
-                          <p className="text-xs sm:text-sm font-medium">
+                          <p className="text-small sm:text-small font-medium">
                             {t("dashboard.notifications.userName")}
                           </p>
-                          <p className="text-xs sm:text-sm text-gray-600">
+                          <p className="text-small sm:text-small text-gray-600">
                             {selectedNotification.data.userName}
                           </p>
                         </div>
                       )}
                       {selectedNotification.data.userEmail && (
                         <div>
-                          <p className="text-xs sm:text-sm font-medium">
+                          <p className="text-small sm:text-small font-medium">
                             {t("dashboard.notifications.userEmail")}
                           </p>
-                          <p className="text-xs sm:text-sm text-gray-600">
+                          <p className="text-small sm:text-small text-gray-600">
                             {selectedNotification.data.userEmail}
                           </p>
                         </div>
                       )}
                       {selectedNotification.data.shopName && (
                         <div>
-                          <p className="text-xs sm:text-sm font-medium">
+                          <p className="text-small sm:text-small font-medium">
                             {t("dashboard.notifications.shopName")}
                           </p>
-                          <p className="text-xs sm:text-sm text-gray-600">
+                          <p className="text-small sm:text-small text-gray-600">
                             {selectedNotification.data.shopName}
                           </p>
                         </div>
                       )}
                       {selectedNotification.data.requestDetails && (
                         <div>
-                          <p className="text-xs sm:text-sm font-medium">
+                          <p className="text-small sm:text-small font-medium">
                             {t("dashboard.notifications.requestDetails")}
                           </p>
-                          <p className="text-xs sm:text-sm text-gray-600">
+                          <p className="text-small sm:text-small text-gray-600">
                             {selectedNotification.data.requestDetails}
                           </p>
                         </div>
@@ -515,7 +515,7 @@ const Page = () => {
                   {(selectedNotification.type === "seller_request" ||
                     selectedNotification.type === "shop_approval") && (
                     <div className="pt-4 border-t">
-                      <p className="text-xs sm:text-sm font-medium mb-3">
+                      <p className="text-small sm:text-small font-medium mb-3">
                         {t("dashboard.notifications.actions")}
                       </p>
                       <div className="flex flex-col sm:flex-row gap-2">

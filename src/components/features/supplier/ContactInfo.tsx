@@ -65,7 +65,7 @@ export const ContactInfo: React.FC = () => {
         <div className="space-y-5">
           {/* Contact Information */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
+            <h3 className="text-mid font-semibold mb-4">Contact Information</h3>
             <div className="space-y-3">
               <div className="flex items-center">
                 <Phone className="h-5 w-5 text-gray-400 mr-3" />
@@ -88,7 +88,7 @@ export const ContactInfo: React.FC = () => {
 
           {/* Certifications */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Certifications</h3>
+            <h3 className="text-mid font-semibold mb-4">Certifications</h3>
             <div className="space-y-2">
               {supplierInfo.certifications.map((cert, index) => (
                 <div key={index} className="flex items-center">
@@ -107,7 +107,7 @@ export const ContactInfo: React.FC = () => {
 
           {/* Categories */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Categories</h3>
+            <h3 className="text-mid font-semibold mb-4">Categories</h3>
             <div className="space-y-2">
               {categories.map((category) => (
                 <button

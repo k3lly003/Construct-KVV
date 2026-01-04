@@ -72,8 +72,8 @@ export function SignupCard({
   return (
     <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
       <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">{companyName}</h1>
-        <h2 className="text-xl mt-4 mb-2 text-gray-800">{welcomeText}</h2>
+        <h1 className="text-mid font-bold text-gray-900">{companyName}</h1>
+        <h2 className="text-mid mt-4 mb-2 text-gray-800">{welcomeText}</h2>
         <p className="text-gray-600">{description}</p>
       </div>
 
@@ -142,7 +142,7 @@ export function SignupCard({
           </div>
 
           {passwordError && (
-            <p className="text-sm text-red-500">{passwordError}</p>
+            <p className="text-small text-red-500">{passwordError}</p>
           )}
 
           <div className="flex items-center space-x-2">
@@ -151,7 +151,7 @@ export function SignupCard({
               checked={agreeTerms}
               onCheckedChange={(checked) => setAgreeTerms(!!checked)}
             />
-            <label htmlFor="terms" className="text-sm text-gray-700">
+            <label htmlFor="terms" className="text-small text-gray-700">
               {termsText}
             </label>
           </div>
@@ -161,7 +161,7 @@ export function SignupCard({
           </GenericButton>
         </form>
 
-        <div className="text-center mt-4 text-sm text-gray-600">
+        <div className="text-center mt-4 text-small text-gray-600">
           <Link href={loginLink} className="text-blue-600 hover:underline">
             {loginText}
           </Link>

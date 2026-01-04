@@ -282,12 +282,12 @@ const ServiceRequestsPage = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">{getPageTitle()}</h1>
+          <h1 className="text-title font-bold text-gray-900 mb-2">{getPageTitle()}</h1>
           <p className="text-gray-600">{getPageDescription()}</p>
           {role && (
             <div className="mt-2 flex items-center space-x-2">
               <User className="w-4 h-4 text-gray-500" />
-              <span className="text-sm text-gray-500">Role: {role}</span>
+              <span className="text-small text-gray-500">Role: {role}</span>
             </div>
           )}
         </div>
@@ -332,7 +332,7 @@ const ServiceRequestsPage = () => {
             <div className="mt-4 pt-4 border-t border-gray-200">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                  <label className="block text-small font-medium text-gray-700 mb-2">Status</label>
                   <select
                     value={filters.status}
                     onChange={(e) => handleFilterChange({ status: e.target.value })}
@@ -348,7 +348,7 @@ const ServiceRequestsPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                  <label className="block text-small font-medium text-gray-700 mb-2">Category</label>
                   <select
                     value={filters.category}
                     onChange={(e) => handleFilterChange({ category: e.target.value })}
@@ -365,7 +365,7 @@ const ServiceRequestsPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Urgency</label>
+                  <label className="block text-small font-medium text-gray-700 mb-2">Urgency</label>
                   <select
                     value={filters.urgency}
                     onChange={(e) => handleFilterChange({ urgency: e.target.value })}
@@ -396,7 +396,7 @@ const ServiceRequestsPage = () => {
         {filteredRequests.length === 0 ? (
           <div className="text-center py-12">
             <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No service requests found</h3>
+            <h3 className="text-mid font-medium text-gray-900 mb-2">No service requests found</h3>
             <p className="text-gray-600">
               {filters.searchTerm ? 'Try adjusting your search terms' : 'No service requests available'}
             </p>
@@ -411,12 +411,12 @@ const ServiceRequestsPage = () => {
               return (
                 <div key={request.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
                   {statusConfig ? (
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${statusConfig.color}`}>
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-small font-medium border ${statusConfig.color}`}>
                       {StatusIcon && <StatusIcon className="w-3 h-3 mr-1" />}
                       {statusConfig.label}
                     </span>
                   ) : (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border bg-gray-100 text-gray-800 border-gray-200">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-small font-medium border bg-gray-100 text-gray-800 border-gray-200">
                       <AlertCircle className="w-3 h-3 mr-1" />
                       Unknown
                     </span>
@@ -425,23 +425,23 @@ const ServiceRequestsPage = () => {
                     {/* Card Header with Title and Price */}
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                        <h3 className="text-mid font-semibold text-gray-900 mb-2 line-clamp-2">
                           {(request.displayTitle || '').length > 50
                             ? `${(request.displayTitle || '').substring(0, 50)}...`
                             : (request.displayTitle || 'No description provided')
                           }
                         </h3>
                         <div className="flex items-center space-x-3 mb-3">
-                          <span className="text-2xl font-bold text-blue-600">
+                          <span className="text-mid font-bold text-blue-600">
                             {typeof request.displayBudget === 'number' ? request.displayBudget.toLocaleString() : '—'} RWF
                           </span>
                           {statusConfig ? (
-                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${statusConfig.color}`}>
+                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-small font-medium border ${statusConfig.color}`}>
                               {StatusIcon && <StatusIcon className="w-3 h-3 mr-1" />}
                               {statusConfig.label}
                             </span>
                           ) : (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border bg-gray-100 text-gray-800 border-gray-200">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-small font-medium border bg-gray-100 text-gray-800 border-gray-200">
                               <AlertCircle className="w-3 h-3 mr-1" />
                               Unknown
                             </span>
@@ -451,7 +451,7 @@ const ServiceRequestsPage = () => {
                     </div>
 
                     {/* Description */}
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                    <p className="text-gray-600 text-small mb-4 line-clamp-2">
                       {request.displayDescription}
                     </p>
 
@@ -459,15 +459,15 @@ const ServiceRequestsPage = () => {
                     <div className="space-y-2 mb-4">
                       <div className="flex items-center text-gray-600">
                         <MapPin className="w-4 h-4 mr-2 text-gray-400" />
-                        <span className="text-sm">{request.displayLocation}</span>
+                        <span className="text-small">{request.displayLocation}</span>
                       </div>
                       <div className="flex items-center text-gray-600">
                         <Calendar className="w-4 h-4 mr-2 text-gray-400" />
-                        <span className="text-sm">{formatDate(request.createdAt)}</span>
+                        <span className="text-small">{formatDate(request.createdAt)}</span>
                       </div>
                       <div className="flex items-center text-gray-600">
                         <Clock className="w-4 h-4 mr-2 text-gray-400" />
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${(urgencyConfig?.color) || 'bg-gray-100 text-gray-800'}`}>
+                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-small font-medium ${(urgencyConfig?.color) || 'bg-gray-100 text-gray-800'}`}>
                           {(urgencyConfig?.label) || 'Unknown Priority'}
                         </span>
                       </div>
@@ -475,13 +475,13 @@ const ServiceRequestsPage = () => {
 
                     {/* Service Tags */}
                     <div className="flex flex-wrap gap-2 mb-4">
-                      <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
+                      <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-small font-medium">
                         {request.displayCategory}
                       </span>
-                      <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
+                      <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-small font-medium">
                         Service Request
                       </span>
-                      <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
+                      <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-small font-medium">
                         Professional Service
                       </span>
                     </div>
@@ -490,20 +490,20 @@ const ServiceRequestsPage = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
                         <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                          <span className="text-sm font-medium text-gray-600">
+                          <span className="text-small font-medium text-gray-600">
                             {request.displayCustomerInitial}
                           </span>
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-gray-900">
+                          <p className="text-small font-medium text-gray-900">
                             {request.displayCustomerName}
                           </p>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-small text-gray-500">
                             {request.customer?.phone || 'Not provided'}
                           </p>
                           <div className="flex items-center space-x-1">
                             <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                            <span className="text-xs text-gray-500">4.8 (127)</span>
+                            <span className="text-small text-gray-500">4.8 (127)</span>
                           </div>
                         </div>
                       </div>
@@ -518,13 +518,13 @@ const ServiceRequestsPage = () => {
                             <div className="flex space-x-2">
                               <button
                                 onClick={() => handleStatusUpdate(request.id, 'ACCEPTED')}
-                                className="flex-1 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                                className="flex-1 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-small font-medium transition-colors"
                               >
                                 Accept
                               </button>
                               <button
                                 onClick={() => handleStatusUpdate(request.id, 'CANCELLED')}
-                                className="flex-1 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                                className="flex-1 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-small font-medium transition-colors"
                               >
                                 Decline
                               </button>
@@ -536,7 +536,7 @@ const ServiceRequestsPage = () => {
                           <div className="mt-4 pt-4 border-t border-gray-200">
                             <button
                               onClick={() => handleStatusUpdate(request.id, 'IN_PROGRESS')}
-                              className="w-full bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                              className="w-full bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-small font-medium transition-colors"
                             >
                               Start Work
                             </button>
@@ -547,7 +547,7 @@ const ServiceRequestsPage = () => {
                           <div className="mt-4 pt-4 border-t border-gray-200">
                             <button
                               onClick={() => handleStatusUpdate(request.id, 'COMPLETED')}
-                              className="w-full bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                              className="w-full bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-small font-medium transition-colors"
                             >
                               Mark Complete
                             </button>
@@ -561,7 +561,7 @@ const ServiceRequestsPage = () => {
                       <div className="mt-4 pt-4 border-t border-gray-200">
                         <button
                           onClick={() => handleDeleteRequest(request.id)}
-                          className="w-full bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center space-x-2"
+                          className="w-full bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-small font-medium transition-colors flex items-center justify-center space-x-2"
                         >
                           <Trash2 className="w-4 h-4" />
                           <span>Delete Request</span>
@@ -578,14 +578,14 @@ const ServiceRequestsPage = () => {
         {/* Pagination */}
         {pagination && pagination.totalPages > 1 && (
           <div className="mt-8 flex items-center justify-between">
-            <div className="text-sm text-gray-700">
+            <div className="text-small text-gray-700">
               Showing {((pagination.page - 1) * pagination.limit) + 1} to {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total} results
             </div>
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => handlePageChange(pagination.page - 1)}
                 disabled={!pagination || pagination.page === 1}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-2 border border-gray-300 rounded-lg text-small font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Previous
               </button>
@@ -599,7 +599,7 @@ const ServiceRequestsPage = () => {
                   <button
                     key={pageNum}
                     onClick={() => handlePageChange(pageNum)}
-                    className={`px-3 py-2 border rounded-lg text-sm font-medium ${pageNum === pagination.page
+                    className={`px-3 py-2 border rounded-lg text-small font-medium ${pageNum === pagination.page
                         ? 'bg-blue-600 text-white border-blue-600'
                         : 'border-gray-300 text-gray-700 hover:bg-gray-50'
                       }`}
@@ -612,7 +612,7 @@ const ServiceRequestsPage = () => {
               <button
                 onClick={() => handlePageChange(pagination.page + 1)}
                 disabled={!pagination || pagination.page === pagination.totalPages}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-2 border border-gray-300 rounded-lg text-small font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next
               </button>
@@ -627,7 +627,7 @@ const ServiceRequestsPage = () => {
               <div className="p-6">
                 {/* Modal Header */}
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-gray-900">Service Request Details</h2>
+                  <h2 className="text-mid font-bold text-gray-900">Service Request Details</h2>
                   <button
                     onClick={() => setShowDetailsModal(false)}
                     className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -645,18 +645,18 @@ const ServiceRequestsPage = () => {
                         const statusConfig = getStatusConfig(selectedRequest.status);
                         const StatusIcon = statusConfig.icon;
                         return (
-                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${statusConfig.color}`}>
+                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-small font-medium border ${statusConfig.color}`}>
                             <StatusIcon className="w-4 h-4 mr-2" />
                             {statusConfig.label}
                           </span>
                         );
                       })()}
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getUrgencyConfig(selectedRequest.urgency).color}`}>
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-small font-medium ${getUrgencyConfig(selectedRequest.urgency).color}`}>
                         {getUrgencyConfig(selectedRequest.urgency).label}
                       </span>
                     </div>
                     <div className="text-right">
-                      <p className="text-3xl font-bold text-blue-600">
+                      <p className="text-title font-bold text-blue-600">
                         {selectedRequest.budget.toLocaleString()} RWF
                       </p>
                     </div>
@@ -664,7 +664,7 @@ const ServiceRequestsPage = () => {
 
                   {/* Description */}
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Description</h3>
+                    <h3 className="text-mid font-semibold text-gray-900 mb-2">Description</h3>
                     <p className="text-gray-700">{selectedRequest.description}</p>
                   </div>
 
@@ -672,7 +672,7 @@ const ServiceRequestsPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <h4 className="font-medium text-gray-900 mb-2">Category</h4>
-                      <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                      <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-small">
                         {selectedRequest.category}
                       </span>
                     </div>
@@ -702,11 +702,11 @@ const ServiceRequestsPage = () => {
                   {/* Customer Information */}
                   {selectedRequest.customer && (
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">Customer Information</h3>
+                      <h3 className="text-mid font-semibold text-gray-900 mb-3">Customer Information</h3>
                       <div className="bg-gray-50 rounded-lg p-4">
                         <div className="flex items-center space-x-3">
                           <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
-                            <span className="text-lg font-medium text-gray-600">
+                            <span className="text-mid font-medium text-gray-600">
                               {(
                                 (selectedRequest.customer.name ||
                                   [
@@ -721,8 +721,8 @@ const ServiceRequestsPage = () => {
                               (selectedRequest.customer as any)?.firstName,
                               (selectedRequest.customer as any)?.lastName
                             ].filter(Boolean).join(' ')}</p>
-                            <p className="text-sm text-gray-600">{selectedRequest.customer.email}</p>
-                            <p className="text-sm text-gray-600">{selectedRequest.customer.phone}</p>
+                            <p className="text-small text-gray-600">{selectedRequest.customer.email}</p>
+                            <p className="text-small text-gray-600">{selectedRequest.customer.phone}</p>
                           </div>
                         </div>
                       </div>
@@ -732,18 +732,18 @@ const ServiceRequestsPage = () => {
                   {/* Technician Information */}
                   {selectedRequest.technician && (
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">Technician Information</h3>
+                      <h3 className="text-mid font-semibold text-gray-900 mb-3">Technician Information</h3>
                       <div className="bg-gray-50 rounded-lg p-4">
                         <div className="flex items-center space-x-3">
                           <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
-                            <span className="text-lg font-medium text-gray-600">
+                            <span className="text-mid font-medium text-gray-600">
                               {selectedRequest.technician.name?.charAt(0) || 'T'}
                             </span>
                           </div>
                           <div>
                             <p className="font-medium text-gray-900">{selectedRequest.technician.name}</p>
-                            <p className="text-sm text-gray-600">{selectedRequest.technician.email}</p>
-                            <p className="text-sm text-gray-600">{selectedRequest.technician.phone}</p>
+                            <p className="text-small text-gray-600">{selectedRequest.technician.email}</p>
+                            <p className="text-small text-gray-600">{selectedRequest.technician.phone}</p>
                           </div>
                         </div>
                       </div>

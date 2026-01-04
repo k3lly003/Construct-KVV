@@ -493,7 +493,7 @@ const Page = () => {
                       min={1}
                     />
                     {bidAmountError && (
-                      <div className="text-red-500 text-xs mt-1">
+                      <div className="text-red-500 text-small mt-1">
                         {bidAmountError}
                       </div>
                     )}
@@ -512,7 +512,7 @@ const Page = () => {
                       rows={3}
                     />
                     {bidMessageError && (
-                      <div className="text-red-500 text-xs mt-1">
+                      <div className="text-red-500 text-small mt-1">
                         {bidMessageError}
                       </div>
                     )}
@@ -553,7 +553,7 @@ const Page = () => {
             <div className="p-6 space-y-12">
               {/* --- Section 1: Manage Your Bids --- */}
               <section>
-                <h2 className="text-xl font-bold text-amber-800 mb-4">
+                <h2 className="text-mid font-bold text-amber-800 mb-4">
                   {t('dashboard.manageYourBids')}
                 </h2>
                 {bidsLoading ? (
@@ -577,7 +577,7 @@ const Page = () => {
                               {t('dashboard.bid')}: {bid.amount?.toLocaleString()} RWF
                             </div>
                             <span
-                              className={`text-xs px-2 py-1 rounded-full ${
+                              className={`text-small px-2 py-1 rounded-full ${
                                 bid.status === "ACCEPTED"
                                   ? "bg-amber-200 text-amber-800"
                                   : bid.status === "WITHDRAWN"
@@ -590,16 +590,16 @@ const Page = () => {
                               {bid.status}
                             </span>
                           </div>
-                          <div className="text-amber-700 text-sm mb-2">
+                          <div className="text-amber-700 text-small mb-2">
                             {bid.message}
                           </div>
-                          <div className="text-xs text-gray-500 mb-2">
+                          <div className="text-small text-gray-500 mb-2">
                             {t('dashboard.projectId')}:{" "}
                             <span className="font-mono">
                               {bid.finalProjectId}
                             </span>
                           </div>
-                          <div className="text-xs text-gray-500 mb-2">
+                          <div className="text-small text-gray-500 mb-2">
                             {t('dashboard.created')}:{" "}
                             {new Date(bid.createdAt).toLocaleDateString()}
                           </div>
@@ -631,7 +631,7 @@ const Page = () => {
 
               {/* --- Section 2: Available Projects to Bid On --- */}
               <section className="mt-12">
-                <h2 className="text-xl font-bold text-amber-800 mb-4">
+                <h2 className="text-mid font-bold text-amber-800 mb-4">
                   {t('dashboard.availableProjectsToBidOn')}
                 </h2>
                 {projectsLoading ? (
@@ -655,24 +655,24 @@ const Page = () => {
                           {t('dashboard.projectId')}:{" "}
                           <span className="font-mono">{project.id}</span>
                         </div>
-                        <div className="text-sm text-gray-700 mb-2">
+                        <div className="text-small text-gray-700 mb-2">
                           <span className="font-semibold">{t('dashboard.status')}:</span>{" "}
                           {project.status}
                         </div>
-                        <div className="text-xs text-gray-500 mb-2">
+                        <div className="text-small text-gray-500 mb-2">
                           {t('dashboard.created')}:{" "}
                           {new Date(project.createdAt).toLocaleDateString()}
                         </div>
-                        <div className="text-xs text-gray-500 mb-2">
+                        <div className="text-small text-gray-500 mb-2">
                           {t('dashboard.owner')}: {project.owner?.firstName}{" "}
                           {project.owner?.lastName}
                         </div>
-                        <div className="text-xs text-gray-500 mb-2">
+                        <div className="text-small text-gray-500 mb-2">
                           {t('dashboard.estCost')}:{" "}
                           {project.choosenEstimation?.estimatedCost?.toLocaleString()}{" "}
                           RWF
                         </div>
-                        <div className="text-xs text-gray-500 mb-2">
+                        <div className="text-small text-gray-500 mb-2">
                           {t('dashboard.description')}:{" "}
                           {project.choosenEstimation?.description?.slice(
                             0,
@@ -712,7 +712,7 @@ const Page = () => {
                   ) : detailsError ? (
                     <div className="text-red-500">{detailsError}</div>
                   ) : detailsProject ? (
-                    <div className="space-y-3 text-sm text-gray-700">
+                    <div className="space-y-3 text-small text-gray-700">
                       <div><span className="font-semibold">ID:</span> {detailsProject.id}</div>
                       <div><span className="font-semibold">Status:</span> {detailsProject.status}</div>
                       <div><span className="font-semibold">Created:</span> {new Date(detailsProject.createdAt).toLocaleDateString()}</div>
@@ -750,7 +750,7 @@ const Page = () => {
         const wonBids = bids.filter((bid) => bid.status === "ACCEPTED");
         return (
           <div className="p-6">
-            <h2 className="text-xl font-bold text-amber-800 mb-4">
+            <h2 className="text-mid font-bold text-amber-800 mb-4">
               {t('dashboard.wonBids')}
             </h2>
             {bidsLoading ? (
@@ -772,29 +772,29 @@ const Page = () => {
                       <div className="font-bold text-green-800">
                         {t('dashboard.bid')}: {bid.amount?.toLocaleString()} RWF
                       </div>
-                      <span className="text-xs px-2 py-1 rounded-full bg-green-200 text-green-800">
+                      <span className="text-small px-2 py-1 rounded-full bg-green-200 text-green-800">
                         {t('dashboard.accepted') || 'ACCEPTED'}
                       </span>
                     </div>
-                    <div className="text-green-700 text-sm mb-2">
+                    <div className="text-green-700 text-small mb-2">
                       {bid.message}
                     </div>
-                    <div className="text-xs text-gray-500 mb-2">
+                    <div className="text-small text-gray-500 mb-2">
                       {t('dashboard.projectId')}:{" "}
                       <span className="font-mono">
                         {bid.finalProjectId}
                       </span>
                     </div>
-                    <div className="text-xs text-gray-500 mb-2">
+                    <div className="text-small text-gray-500 mb-2">
                       {t('dashboard.acceptedAt')}:{" "}
                       {new Date(bid.updatedAt || bid.createdAt).toLocaleDateString()}
                     </div>
-                    <div className="text-xs text-gray-500 mb-2">
+                    <div className="text-small text-gray-500 mb-2">
                       {t('dashboard.owner')}: {bid.finalProject?.ownerId}
                     </div>
                     <div className="mt-3 flex gap-2">
                       <button
-                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 text-sm"
+                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 text-small"
                         onClick={() => {
                           setNegotiationBid(bid);
                           setNegotiationDrawerOpen(true);
@@ -803,7 +803,7 @@ const Page = () => {
                         {t('dashboard.negotiate')}
                       </button>
                       <button
-                        className="bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600 text-sm"
+                        className="bg-amber-500 text-white px-4 py-2 rounded hover:bg-amber-600 text-small"
                         onClick={() => openProjectDetails(bid.finalProjectId)}
                       >
                         {t('dashboard.viewProject')}
@@ -837,7 +837,7 @@ const Page = () => {
                 </SheetClose>
               </SheetContent>
               <div>
-                <h2 className="text-xl font-bold text-amber-800 mb-4">
+                <h2 className="text-mid font-bold text-amber-800 mb-4">
                   {t('dashboard.yourBidsNegotiation')}
                 </h2>
                 {bidsLoading ? (
@@ -859,11 +859,11 @@ const Page = () => {
                             {bid.finalProjectId}
                           </span>
                         </div>
-                        <div className="text-sm text-gray-700 mb-2">
+                        <div className="text-small text-gray-700 mb-2">
                           <span className="font-semibold">{t('dashboard.bidAmount')}:</span>{" "}
                           {bid.amount?.toLocaleString()} RWF
                         </div>
-                        <div className="text-xs text-gray-500 mb-2">
+                        <div className="text-small text-gray-500 mb-2">
                           {t('dashboard.message')}: {bid.message}
                         </div>
                         <button
@@ -893,7 +893,7 @@ const Page = () => {
       {/* Summary metrics */}
       <div className="mb-8">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-amber-800">Bid Statistics</h2>
+          <h2 className="text-mid font-bold text-amber-800">Bid Statistics</h2>
           <button
             onClick={refreshBids}
             disabled={bidsLoading}
@@ -921,25 +921,25 @@ const Page = () => {
         )}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         <div className="bg-amber-400 rounded-xl p-6 shadow text-center">
-          <div className="text-3xl font-bold text-white">
+          <div className="text-title font-bold text-white">
             {bidsLoading ? "..." : projectsBidOn}
           </div>
           <div className="text-amber-900 mt-2">{t('dashboard.projectsBidOn')}</div>
         </div>
         <div className="bg-amber-200 rounded-xl p-6 shadow text-center">
-          <div className="text-3xl font-bold text-amber-900">
+          <div className="text-title font-bold text-amber-900">
             {bidsLoading ? "..." : acceptedCount}
           </div>
           <div className="text-amber-900 mt-2">{t('dashboard.accepted')}</div>
         </div>
         <div className="bg-amber-100 rounded-xl p-6 shadow text-center">
-          <div className="text-3xl font-bold text-amber-900">
+          <div className="text-title font-bold text-amber-900">
             {bidsLoading ? "..." : rejectedCount}
           </div>
           <div className="text-amber-900 mt-2">{t('dashboard.rejected')}</div>
         </div>
         <div className="bg-white rounded-xl p-6 shadow text-center border border-amber-100">
-          <div className="text-3xl font-bold text-amber-900">
+          <div className="text-title font-bold text-amber-900">
             {bidsLoading ? "..." : withdrawnCount}
           </div>
           <div className="text-amber-900 mt-2">{t('dashboard.withdrawn')}</div>

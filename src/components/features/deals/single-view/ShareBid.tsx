@@ -25,7 +25,7 @@ const Share: React.FC<ShareProps> = ({ title = 'Share', url }) => {
 
   return (
     <div className="flex flex-col items-start">
-      <span className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{title}</span>
+      <span className="text-small font-medium text-gray-700 dark:text-gray-300 mb-2">{title}</span>
       <div className="flex space-x-4">
         <a href={shareLinks.email} target="_blank" rel="noopener noreferrer" aria-label="Share via Email">
           <Mail className="h-5 w-5 text-gray-700 hover:text-blue-900 transition-colors" />

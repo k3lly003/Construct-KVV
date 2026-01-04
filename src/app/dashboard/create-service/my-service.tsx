@@ -294,7 +294,7 @@ const MyService = ({ searchTerm = "" }: MyServiceProps) => {
 
       {totalResults > 0 && (
         <div className="flex items-center justify-between mt-4">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-small text-muted-foreground">
             {t('dashboard.showingResults', { start: startIndex + 1, end: Math.min(endIndex, totalResults), total: totalResults })}
           </p>
           <div className="flex items-center space-x-4">
@@ -304,7 +304,7 @@ const MyService = ({ searchTerm = "" }: MyServiceProps) => {
               onPageChange={handlePageChange}
             />
             <div className="flex items-center space-x-2">
-              <p className="text-sm text-muted-foreground">{t('dashboard.resultsPerPage')}</p>
+              <p className="text-small text-muted-foreground">{t('dashboard.resultsPerPage')}</p>
               <Select
                 value={resultsPerPage.toString()}
                 onValueChange={handleResultsPerPageChange}
@@ -362,7 +362,7 @@ const MyService = ({ searchTerm = "" }: MyServiceProps) => {
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium">{t('dashboard.title')}</label>
+                <label className="block text-small font-medium">{t('dashboard.title')}</label>
                 <Input
                   value={editForm.title}
                   onChange={e => setEditForm({ ...editForm, title: e.target.value })}
@@ -370,7 +370,7 @@ const MyService = ({ searchTerm = "" }: MyServiceProps) => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium">{t('dashboard.description')}</label>
+                <label className="block text-small font-medium">{t('dashboard.description')}</label>
                 <Input
                   value={editForm.description}
                   onChange={e => setEditForm({ ...editForm, description: e.target.value })}
@@ -378,7 +378,7 @@ const MyService = ({ searchTerm = "" }: MyServiceProps) => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium">{t('dashboard.category')}</label>
+                <label className="block text-small font-medium">{t('dashboard.category')}</label>
                 <Input
                   value={editForm.category}
                   onChange={e => setEditForm({ ...editForm, category: e.target.value })}
@@ -386,7 +386,7 @@ const MyService = ({ searchTerm = "" }: MyServiceProps) => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium">{t('dashboard.pricing')}</label>
+                <label className="block text-small font-medium">{t('dashboard.pricing')}</label>
                 <Input
                   value={editForm.pricing}
                   onChange={e => setEditForm({ ...editForm, pricing: e.target.value })}

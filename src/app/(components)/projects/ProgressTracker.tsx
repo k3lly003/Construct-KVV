@@ -122,9 +122,9 @@ const ProgressTracker = ({ projectId }: ProgressTrackerProps) => {
     <div className="mt-6 flex flex-col gap-8">
       {/* Budget Tracker */}
       <div className="bg-white border-2 border-amber-500 rounded-2xl p-4 sm:p-6 shadow-xl flex flex-col">
-        <h4 className="font-bold text-amber-600 mb-2 text-lg flex items-center gap-2">
+        <h4 className="font-bold text-amber-600 mb-2 text-mid flex items-center gap-2">
           <span>Budget Tracker</span>
-          <span className="ml-auto text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded-full">
+          <span className="ml-auto text-small bg-amber-100 text-amber-700 px-2 py-1 rounded-full">
             Detailed
           </span>
         </h4>
@@ -152,11 +152,11 @@ const ProgressTracker = ({ projectId }: ProgressTrackerProps) => {
             style={{ width: `${percentUsed}%` }}
           />
         </div>
-        <div className="text-xs text-right text-amber-600 mb-4">
+        <div className="text-small text-right text-amber-600 mb-4">
           {percentUsed}% used
         </div>
         <div className="flex-1">
-          <h5 className="font-semibold text-amber-700 mb-2 text-sm">
+          <h5 className="font-semibold text-amber-700 mb-2 text-small">
             Expense Breakdown
           </h5>
           {expenses.length === 0 ? (
@@ -179,10 +179,10 @@ const ProgressTracker = ({ projectId }: ProgressTrackerProps) => {
                   <div className="flex flex-col sm:flex-row sm:items-center flex-1">
                     <span className="text-gray-600 flex-1">
                       {exp.description}
-                      <span className="ml-2 text-xs text-amber-500 font-semibold bg-amber-50 px-2 py-0.5 rounded-full">
+                      <span className="ml-2 text-small text-amber-500 font-semibold bg-amber-50 px-2 py-0.5 rounded-full">
                         {exp.stage}
                       </span>
-                      <span className="ml-2 text-xs text-gray-400 block sm:inline">
+                      <span className="ml-2 text-small text-gray-400 block sm:inline">
                         {exp.createdAt
                           ? new Date(exp.createdAt).toLocaleDateString()
                           : ""}
@@ -198,7 +198,7 @@ const ProgressTracker = ({ projectId }: ProgressTrackerProps) => {
 
       {/* Milestone Progress */}
       <div className="bg-white border-2 border-amber-500 rounded-2xl p-6 shadow-xl">
-        <h4 className="font-bold text-amber-600 mb-2 text-lg">
+        <h4 className="font-bold text-amber-600 mb-2 text-mid">
           Milestone Progress
         </h4>
         {milestonesLoading ? (
@@ -209,12 +209,12 @@ const ProgressTracker = ({ projectId }: ProgressTrackerProps) => {
           <>
             {milestoneKeys.map((key, i) => (
               <div className="mb-5" key={key}>
-                <div className="flex justify-between text-sm mb-1">
+                <div className="flex justify-between text-small mb-1">
                   <span className="font-semibold text-amber-800">
                     {key.charAt(0).toUpperCase() + key.slice(1)}
                   </span>
                   <span
-                    className={`text-xs px-2 py-0.5 rounded-full ${
+                    className={`text-small px-2 py-0.5 rounded-full ${
                       milestones[key] === 100
                         ? "bg-green-100 text-green-700"
                         : milestones[key] > 0
@@ -237,7 +237,7 @@ const ProgressTracker = ({ projectId }: ProgressTrackerProps) => {
                     style={{ width: `${milestones[key]}%` }}
                   />
                 </div>
-                <div className="text-xs text-right text-amber-500 mt-1">
+                <div className="text-small text-right text-amber-500 mt-1">
                   {milestones[key]}%
                 </div>
               </div>
@@ -248,7 +248,7 @@ const ProgressTracker = ({ projectId }: ProgressTrackerProps) => {
 
       {/* Project Timeline */}
       <div className="bg-white border-2 border-amber-500 rounded-2xl p-6 shadow-xl">
-        <h4 className="font-bold text-amber-600 mb-2 text-lg">
+        <h4 className="font-bold text-amber-600 mb-2 text-mid">
           Project Timeline
         </h4>
         {timelineLoading ? (
@@ -256,7 +256,7 @@ const ProgressTracker = ({ projectId }: ProgressTrackerProps) => {
         ) : timelineError ? (
           <div className="text-red-500">Error: {timelineError}</div>
         ) : (
-          <ul className="text-sm space-y-4">
+          <ul className="text-small space-y-4">
             <li className="flex items-center gap-3">
               <PlayCircle className="w-5 h-5 text-amber-500" />
               <span className="font-semibold text-amber-700">Start Date:</span>

@@ -329,12 +329,12 @@ export const CartPage: React.FC = () => {
     return (
       <div className="min-h-screen py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">
+          <h1 className="text-title font-bold text-gray-900 mb-8">
             {t("cart.title")}
           </h1>
           <div className="text-center py-12">
             <PackageCheck className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            <h2 className="text-mid font-semibold text-gray-900 mb-2">
               {t("cart.empty")}
             </h2>
             <p className="text-gray-600 mb-6">
@@ -355,7 +355,7 @@ export const CartPage: React.FC = () => {
   return (
     <div className="min-h-screen py-6 sm:py-10 bg-gray-50">
       <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">
+        <h1 className="text-title font-bold text-gray-900 mb-6 sm:mb-8">
           Shopping Cart
         </h1>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
@@ -406,23 +406,23 @@ export const CartPage: React.FC = () => {
                       <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </button>
                     <div className="flex-1 w-full">
-                    <h3 className="text-base sm:text-lg font-semibold text-gray-900">
+                    <h3 className="text-base sm:text-mid font-semibold text-gray-900">
                       {items.name}
                     </h3>
-                    <p className="text-xs sm:text-sm text-gray-500 mb-1">
+                    <p className="text-small sm:text-small text-gray-500 mb-1">
                       {items.category}
                     </p>
                     {items.dimensions && (
-                      <p className="text-xs sm:text-sm text-gray-500">
+                      <p className="text-small sm:text-small text-gray-500">
                         Dimensions: {items.dimensions}
                       </p>
                     )}
-                    <p className="text-xs sm:text-sm text-gray-500">
+                    <p className="text-small sm:text-small text-gray-500">
                       Weight: {items.weight}kg
                     </p>
                   </div>
                     <div className="flex flex-col items-end gap-2 w-full sm:w-auto">
-                    <p className="text-base sm:text-lg font-semibold text-gray-900">
+                    <p className="text-base sm:text-mid font-semibold text-gray-900">
                       {`RWF ${(items.price * items.quantity).toLocaleString()}`}
                     </p>
                     <div className="flex items-center gap-2">
@@ -477,7 +477,7 @@ export const CartPage: React.FC = () => {
                         handleRemoveItem(items.cartItemId);
                       }}
                       disabled={isLoading || !items.cartItemId}
-                      className="text-red-600 hover:text-red-700 flex items-center gap-1 text-xs sm:text-sm disabled:opacity-50"
+                      className="text-red-600 hover:text-red-700 flex items-center gap-1 text-small sm:text-small disabled:opacity-50"
                     >
                       <Trash2 className="h-4 w-4" />
                       Remove
@@ -492,19 +492,19 @@ export const CartPage: React.FC = () => {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 sticky top-6 flex flex-col gap-4">
-              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-4">
+              <h2 className="text-mid font-semibold text-gray-900 mb-4">
                 Order Summary
               </h2>
               <div className="space-y-3 mb-4">
                 <div className="flex justify-between">
-                  <span className="text-gray-600 text-sm">Subtotal</span>
-                  <span className="font-semibold text-sm">
+                  <span className="text-gray-600 text-small">Subtotal</span>
+                  <span className="font-semibold text-small">
                     RWF {subtotal.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 text-sm">Supply</span>
-                  <span className="font-semibold text-sm">
+                  <span className="text-gray-600 text-small">Supply</span>
+                  <span className="font-semibold text-small">
                     Able to supply on large quantity
                   </span>
                 </div>
@@ -520,7 +520,7 @@ export const CartPage: React.FC = () => {
               <button
                 onClick={handlePlaceOrder}
                 disabled={loading || isLoading || cartItems.length === 0}
-                className={`w-full bg-amber-600 text-white py-3 rounded-lg font-semibold text-sm sm:text-base
+                className={`w-full bg-amber-600 text-white py-3 rounded-lg font-semibold text-small sm:text-base
                   hover:bg-amber-700 transition-colors ${
                     loading || isLoading || cartItems.length === 0
                       ? "opacity-75 cursor-not-allowed"
@@ -538,15 +538,15 @@ export const CartPage: React.FC = () => {
               </button>
               {/* Benefits */}
               <div className="mt-4 space-y-3">
-                <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-small sm:text-small text-gray-600">
                   <ShieldCheck className="h-5 w-5 text-green-600" />
                   <span>Best quality service is our priority</span>
                 </div>
-                <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-small sm:text-small text-gray-600">
                   <ShieldCheck className="h-5 w-5 text-green-600" />
                   <span>Secure payment processing</span>
                 </div>
-                <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-small sm:text-small text-gray-600">
                   <PackageCheck className="h-5 w-5 text-green-600" />
                   <span>30-day return policy</span>
                 </div>
@@ -558,7 +558,7 @@ export const CartPage: React.FC = () => {
         {/* Pending Orders Section */}
         {pendingOrders.length > 0 && (
           <div className="mt-10 sm:mt-12">
-            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-6">
+            <h2 className="text-mid sm:text-mid font-semibold text-gray-900 mb-6">
               Pending Orders
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -571,7 +571,7 @@ export const CartPage: React.FC = () => {
                     <span className="font-semibold text-gray-700">
                       Order ID:
                     </span>
-                    <span className="text-gray-900 font-mono text-xs break-all">
+                    <span className="text-gray-900 font-mono text-small break-all">
                       {order.id}
                     </span>
                   </div>
@@ -585,14 +585,14 @@ export const CartPage: React.FC = () => {
                   </div>
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2 gap-2">
                     <span className="font-semibold text-gray-700">Total:</span>
-                    <span className="text-lg font-bold text-yellow-600">
+                    <span className="text-mid font-bold text-yellow-600">
                       RWF {order.total.toLocaleString()}
                     </span>
                   </div>
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
                     <span className="font-semibold text-gray-700">Status:</span>
                     <span
-                      className={`px-3 py-1 rounded-full border text-xs font-semibold ${
+                      className={`px-3 py-1 rounded-full border text-small font-semibold ${
                         statusColors[order.status] ||
                         "bg-gray-100 text-gray-700 border-gray-300"
                       }`}
@@ -600,7 +600,7 @@ export const CartPage: React.FC = () => {
                       {order.status}
                     </span>
                     <select
-                      className="ml-0 sm:ml-2 border rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                      className="ml-0 sm:ml-2 border rounded px-2 py-1 text-small focus:outline-none focus:ring-2 focus:ring-yellow-400"
                       value={order.status}
                       disabled={orderLoading === order.id}
                       onChange={(e) =>
@@ -619,7 +619,7 @@ export const CartPage: React.FC = () => {
                   </div>
                   <div>
                     <span className="font-semibold text-gray-700">Items:</span>
-                    <ul className="ml-4 list-disc text-gray-700 text-xs sm:text-sm">
+                    <ul className="ml-4 list-disc text-gray-700 text-small sm:text-small">
                       {order.items.map((item: any) => (
                         <li key={item.id}>
                           {item.product?.name || "Product"} x{item.quantity}{" "}
@@ -632,7 +632,7 @@ export const CartPage: React.FC = () => {
                   <button
                     onClick={() => handleDeleteOrder(order.id)}
                     disabled={orderLoading === order.id}
-                    className="ml-2 text-red-600 hover:text-red-700 flex items-center gap-1 text-xs sm:text-sm disabled:opacity-50 transition-transform transform hover:scale-110 hover:bg-red-50 rounded-full p-1"
+                    className="ml-2 text-red-600 hover:text-red-700 flex items-center gap-1 text-small sm:text-small disabled:opacity-50 transition-transform transform hover:scale-110 hover:bg-red-50 rounded-full p-1"
                     title="Delete Order"
                   >
                     {orderLoading === order.id ? (
@@ -665,7 +665,7 @@ export const CartPage: React.FC = () => {
             />
             <button
               type="button"
-              className="absolute top-3 right-3 px-3 py-1 rounded-full bg-black/70 text-amber-500 text-sm hover:bg-black"
+              className="absolute top-3 right-3 px-3 py-1 rounded-full bg-black/70 text-amber-500 text-small hover:bg-black"
               onClick={() => setPreviewImage(null)}
             >
               Close

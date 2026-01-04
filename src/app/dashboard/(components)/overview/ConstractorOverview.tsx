@@ -222,13 +222,13 @@ export default function ConstructorOverview() {
               </div>
             </div>
             <div className="text-center lg:text-left">
-              <h1 className="text-2xl lg:text-3xl font-bold mb-2">
+              <h1 className="text-mid lg:text-title font-bold mb-2">
                 Welcome back, {userInfo.fullName || "User"}!
               </h1>
-              <p className="text-amber-100 text-lg mb-1">
+              <p className="text-amber-100 text-mid mb-1">
                 {userInfo.role || ""}
               </p>
-              <p className="text-amber-200 text-sm">
+              <p className="text-amber-200 text-small">
                 {contractorData.profile.company}
               </p>
             </div>
@@ -243,16 +243,16 @@ export default function ConstructorOverview() {
                 <Target className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-small text-gray-600 dark:text-gray-400">
                   Total Bids Placed
                 </p>
-                <p className="text-2xl font-semibold text-gray-900 dark:text-white">
+                <p className="text-mid font-semibold text-gray-900 dark:text-white">
                   {bidsLoading
                     ? "..."
                     : projectsBidOn || contractorData.summary.totalBids}
                 </p>
                 {bidsError && (
-                  <p className="text-xs text-red-500 mt-1">{bidsError}</p>
+                  <p className="text-small text-red-500 mt-1">{bidsError}</p>
                 )}
               </div>
             </div>
@@ -264,10 +264,10 @@ export default function ConstructorOverview() {
                 <Award className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-small text-gray-600 dark:text-gray-400">
                   Projects Won
                 </p>
-                <p className="text-2xl font-semibold text-gray-900 dark:text-white">
+                <p className="text-mid font-semibold text-gray-900 dark:text-white">
                   {bidsLoading
                     ? "..."
                     : acceptedCount || contractorData.summary.projectsWon}
@@ -282,10 +282,10 @@ export default function ConstructorOverview() {
                 <TrendingUp className="w-6 h-6 text-white" />
               </div>
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-small text-gray-600 dark:text-gray-400">
                   Rejected
                 </p>
-                <p className="text-2xl font-semibold text-gray-900 dark:text-white">
+                <p className="text-mid font-semibold text-gray-900 dark:text-white">
                   {bidsLoading ? "..." : rejectedCount}
                 </p>
               </div>
@@ -297,7 +297,7 @@ export default function ConstructorOverview() {
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
           {/* 3. Budget Overview (Bar Chart) */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-mid font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
               <div className="w-2 h-6 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full"></div>
               Budget Overview
             </h2>
@@ -344,7 +344,7 @@ export default function ConstructorOverview() {
 
           {/* 4. Project Progress (Line Chart) */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-mid font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
               <div className="w-2 h-6 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full"></div>
               Project Progress Timeline
             </h2>
@@ -390,7 +390,7 @@ export default function ConstructorOverview() {
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
           {/* 5. Milestones & Timeline */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-mid font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
               <div className="w-2 h-6 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full"></div>
               Project Milestones
             </h2>
@@ -401,7 +401,7 @@ export default function ConstructorOverview() {
                   className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
                   <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center text-lg
+                    className={`w-10 h-10 rounded-full flex items-center justify-center text-mid
                     ${
                       milestone.status === "completed"
                         ? "bg-green-100"
@@ -424,7 +424,7 @@ export default function ConstructorOverview() {
                     >
                       {milestone.title}
                     </p>
-                    <p className="text-sm text-gray-500 capitalize">
+                    <p className="text-small text-gray-500 capitalize">
                       {milestone.status.replace("-", " ")}
                     </p>
                   </div>
@@ -435,7 +435,7 @@ export default function ConstructorOverview() {
 
           {/* 6. Assigned Workers */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-mid font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
               <div className="w-2 h-6 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full"></div>
               Team Members
             </h2>
@@ -451,10 +451,10 @@ export default function ConstructorOverview() {
                     className="w-10 h-10 rounded-full object-cover border-2 border-amber-200"
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-900 dark:text-white text-sm truncate">
+                    <p className="font-medium text-gray-900 dark:text-white text-small truncate">
                       {worker.name}
                     </p>
-                    <p className="text-xs text-gray-500">{worker.role}</p>
+                    <p className="text-small text-gray-500">{worker.role}</p>
                   </div>
                 </div>
               ))}
@@ -463,7 +463,7 @@ export default function ConstructorOverview() {
 
           {/* 7. Upcoming Deadlines */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-mid font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
               <div className="w-2 h-6 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full"></div>
               Upcoming Deadlines
             </h2>
@@ -475,7 +475,7 @@ export default function ConstructorOverview() {
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(
+                      className={`px-2 py-1 rounded-full text-small font-medium ${getPriorityColor(
                         deadline.priority
                       )}`}
                     >
@@ -483,7 +483,7 @@ export default function ConstructorOverview() {
                     </span>
                     <div className="flex items-center gap-1 text-gray-500">
                       <Calendar className="w-4 h-4" />
-                      <span className="text-sm">
+                      <span className="text-small">
                         {formatDate(deadline.dueDate)}
                       </span>
                     </div>

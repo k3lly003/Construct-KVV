@@ -120,7 +120,7 @@
 //       <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
 //         {/* Header */}
 //         <div className="flex items-center justify-between p-6 border-b border-gray-200">
-//           <h2 className="text-xl font-semibold text-gray-900">Request Service</h2>
+//           <h2 className="text-mid font-semibold text-gray-900">Request Service</h2>
 //           <button
 //             onClick={onClose}
 //             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -133,7 +133,7 @@
 //         <form onSubmit={handleSubmit} className="p-6 space-y-6">
 //           {/* Category */}
 //           <div>
-//             <label className="block text-sm font-medium text-gray-700 mb-2">
+//             <label className="block text-small font-medium text-gray-700 mb-2">
 //               Service Category *
 //             </label>
 //             <select
@@ -151,7 +151,7 @@
 //               ))}
 //             </select>
 //             {errors.category && (
-//               <p className="mt-1 text-sm text-red-600 flex items-center">
+//               <p className="mt-1 text-small text-red-600 flex items-center">
 //                 <AlertCircle className="w-4 h-4 mr-1" />
 //                 {errors.category}
 //               </p>
@@ -160,7 +160,7 @@
 
 //           {/* Description */}
 //           <div>
-//             <label className="block text-sm font-medium text-gray-700 mb-2">
+//             <label className="block text-small font-medium text-gray-700 mb-2">
 //               <FileText className="w-4 h-4 inline mr-1" />
 //               Service Description *
 //             </label>
@@ -174,19 +174,19 @@
 //               }`}
 //             />
 //             {errors.description && (
-//               <p className="mt-1 text-sm text-red-600 flex items-center">
+//               <p className="mt-1 text-small text-red-600 flex items-center">
 //                 <AlertCircle className="w-4 h-4 mr-1" />
 //                 {errors.description}
 //               </p>
 //             )}
-//             <p className="mt-1 text-xs text-gray-500">
+//             <p className="mt-1 text-small text-gray-500">
 //               {formData.description.length}/500 characters
 //             </p>
 //           </div>
 
 //           {/* Location */}
 //           <div>
-//             <label className="block text-sm font-medium text-gray-700 mb-2">
+//             <label className="block text-small font-medium text-gray-700 mb-2">
 //               <MapPin className="w-4 h-4 inline mr-1" />
 //               Location *
 //             </label>
@@ -200,7 +200,7 @@
 //               }`}
 //             />
 //             {errors.location && (
-//               <p className="mt-1 text-sm text-red-600 flex items-center">
+//               <p className="mt-1 text-small text-red-600 flex items-center">
 //                 <AlertCircle className="w-4 h-4 mr-1" />
 //                 {errors.location}
 //               </p>
@@ -210,7 +210,7 @@
 //           {/* Urgency and Budget */}
 //           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 //             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-2">
+//               <label className="block text-small font-medium text-gray-700 mb-2">
 //                 <Clock className="w-4 h-4 inline mr-1" />
 //                 Urgency Level
 //               </label>
@@ -227,7 +227,7 @@
 //                     />
 //                     <div>
 //                       <p className="font-medium text-gray-900">{option.label}</p>
-//                       <p className="text-sm text-gray-500">{option.description}</p>
+//                       <p className="text-small text-gray-500">{option.description}</p>
 //                     </div>
 //                   </label>
 //                 ))}
@@ -235,7 +235,7 @@
 //             </div>
 
 //             <div>
-//               <label className="block text-sm font-medium text-gray-700 mb-2">
+//               <label className="block text-small font-medium text-gray-700 mb-2">
 //                 <DollarSign className="w-4 h-4 inline mr-1" />
 //                 Budget (RWF) *
 //               </label>
@@ -250,12 +250,12 @@
 //                 }`}
 //               />
 //               {errors.budget && (
-//                 <p className="mt-1 text-sm text-red-600 flex items-center">
+//                 <p className="mt-1 text-small text-red-600 flex items-center">
 //                   <AlertCircle className="w-4 h-4 mr-1" />
 //                   {errors.budget}
 //                 </p>
 //               )}
-//               <p className="mt-1 text-xs text-gray-500">
+//               <p className="mt-1 text-small text-gray-500">
 //                 This helps the technician understand your budget range
 //               </p>
 //             </div>
@@ -265,7 +265,7 @@
 //           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
 //             <div className="flex items-start space-x-2">
 //               <AlertCircle className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
-//               <div className="text-sm text-blue-800">
+//               <div className="text-small text-blue-800">
 //                 <p className="font-medium mb-1">What happens next?</p>
 //                 <ul className="list-disc list-inside space-y-1">
 //                   <li>Your request will be sent to the technician</li>

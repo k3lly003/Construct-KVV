@@ -20,8 +20,8 @@ export function FormSummary() {
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         </div>
-        <h1 className="text-3xl font-bold tracking-tight">Design Request Submitted!</h1>
-        <p className="text-muted-foreground mt-2 text-lg">
+        <h1 className="text-title font-bold tracking-tight">Design Request Submitted!</h1>
+        <p className="text-muted-foreground mt-2 text-mid">
           Thank you, {formData.name}. We have received your design preferences.
         </p>
       </div>
@@ -29,50 +29,50 @@ export function FormSummary() {
       <Card className="p-6 mb-8">
         <div className="space-y-6">
           <div className="space-y-2">
-            <h3 className="text-xl font-semibold tracking-tight">Project Details</h3>
+            <h3 className="text-mid font-semibold tracking-tight">Project Details</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <div className="space-y-1">
-                <p className="text-muted-foreground text-sm">Project Type</p>
+                <p className="text-muted-foreground text-small">Project Type</p>
                 <p className="font-medium capitalize">{formData.projectType}</p>
               </div>
               <div className="space-y-1">
-                <p className="text-muted-foreground text-sm">Square Footage</p>
+                <p className="text-muted-foreground text-small">Square Footage</p>
                 <p className="font-medium">{formData.squareFootage} sq ft</p>
               </div>
               <div className="space-y-1">
-                <p className="text-muted-foreground text-sm">House Style</p>
+                <p className="text-muted-foreground text-small">House Style</p>
                 <p className="font-medium capitalize">{formData.houseStyle.replace('_', ' ')}</p>
               </div>
               <div className="space-y-1">
-                <p className="text-muted-foreground text-sm">Layout</p>
+                <p className="text-muted-foreground text-small">Layout</p>
                 <p className="font-medium">{formData.bedrooms} bed, {formData.bathrooms} bath, {formData.stories} story</p>
               </div>
             </div>
           </div>
 
           <div className="space-y-2">
-            <h3 className="text-xl font-semibold tracking-tight">Timeline & Budget</h3>
+            <h3 className="text-mid font-semibold tracking-tight">Timeline & Budget</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <div className="space-y-1">
-                <p className="text-muted-foreground text-sm">Timeline</p>
+                <p className="text-muted-foreground text-small">Timeline</p>
                 <p className="font-medium capitalize">{formData.timeline.replace(/_/g, ' ')}</p>
               </div>
               <div className="space-y-1">
-                <p className="text-muted-foreground text-sm">Budget Range</p>
+                <p className="text-muted-foreground text-small">Budget Range</p>
                 <p className="font-medium capitalize">{formData.budget.replace(/_/g, ' ')}</p>
               </div>
             </div>
           </div>
 
           <div className="space-y-2">
-            <h3 className="text-xl font-semibold tracking-tight">Contact Information</h3>
+            <h3 className="text-mid font-semibold tracking-tight">Contact Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <div className="space-y-1">
-                <p className="text-muted-foreground text-sm">Email</p>
+                <p className="text-muted-foreground text-small">Email</p>
                 <p className="font-medium">{formData.email}</p>
               </div>
               <div className="space-y-1">
-                <p className="text-muted-foreground text-sm">Phone</p>
+                <p className="text-muted-foreground text-small">Phone</p>
                 <p className="font-medium">{formData.phone || "Not provided"}</p>
               </div>
             </div>

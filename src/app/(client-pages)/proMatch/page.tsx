@@ -507,25 +507,25 @@ export default function ProMatchPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-gray-50 py-12 px-4">
-      <h1 className="text-3xl font-bold mb-2">Find Your Pro Match</h1>
+      <h1 className="text-title font-bold mb-2">Find Your Pro Match</h1>
       <p className="text-gray-600 mb-8 text-center max-w-xl">
         Answer a few questions and we will match you with the best
         professionals.
       </p>
 
       <div className="w-full max-w-2xl bg-white rounded-xl shadow p-6">
-        <div className="mb-6 text-sm text-gray-500">
+        <div className="mb-6 text-small text-gray-500">
           Step {step + 1} of {totalSteps}
         </div>
         {validationError && (
-          <div className="mb-4 p-3 rounded-md bg-amber-50 text-amber-800 border border-amber-200 text-sm">
+          <div className="mb-4 p-3 rounded-md bg-amber-50 text-amber-800 border border-amber-200 text-small">
             {validationError}
           </div>
         )}
 
         {step === 0 && (
           <div>
-            <h2 className="text-xl font-semibold mb-4">
+            <h2 className="text-mid font-semibold mb-4">
               What type of pro are you looking for?
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -549,7 +549,7 @@ export default function ProMatchPage() {
 
         {step === 1 && (
           <div>
-            <h2 className="text-xl font-semibold mb-4">
+            <h2 className="text-mid font-semibold mb-4">
               Select a service type
             </h2>
             {form.role === "Architect" && (
@@ -605,7 +605,7 @@ export default function ProMatchPage() {
                   }
                   className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-small text-gray-500 mt-1">
                   Optional. If left empty, we will still match by role.
                 </p>
               </div>
@@ -615,11 +615,11 @@ export default function ProMatchPage() {
 
         {step === 2 && (
           <div>
-            <h2 className="text-xl font-semibold mb-4">
+            <h2 className="text-mid font-semibold mb-4">
               Where is the job located?
             </h2>
             <div className="mb-3 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-              <p className="text-sm text-gray-600">
+              <p className="text-small text-gray-600">
                 Provide an address or let us detect your location.
               </p>
               <button
@@ -650,7 +650,7 @@ export default function ProMatchPage() {
               </button>
             </div>
             {locateError && (
-              <div className="mb-3 p-3 rounded-md bg-amber-50 text-amber-800 border border-amber-200 text-sm">
+              <div className="mb-3 p-3 rounded-md bg-amber-50 text-amber-800 border border-amber-200 text-small">
                 {locateError}
               </div>
             )}
@@ -771,7 +771,7 @@ export default function ProMatchPage() {
 
         {step === 3 && (
           <div>
-            <h2 className="text-xl font-semibold mb-4">
+            <h2 className="text-mid font-semibold mb-4">
               When do you need the service?
             </h2>
             <input
@@ -782,7 +782,7 @@ export default function ProMatchPage() {
               }
               className="px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
             />
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-small text-gray-500 mt-1">
               Optional. You can skip this.
             </p>
           </div>
@@ -790,7 +790,7 @@ export default function ProMatchPage() {
 
         {step === 4 && (
           <div>
-            <h2 className="text-xl font-semibold mb-4">What is your budget?</h2>
+            <h2 className="text-mid font-semibold mb-4">What is your budget?</h2>
             <input
               type="number"
               min="0"
@@ -804,7 +804,7 @@ export default function ProMatchPage() {
               }
               className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
             />
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-small text-gray-500 mt-1">
               Optional. Helps prioritize suitable pros.
             </p>
           </div>
@@ -812,7 +812,7 @@ export default function ProMatchPage() {
 
         {step === 5 && (
           <div>
-            <h2 className="text-xl font-semibold mb-4">
+            <h2 className="text-mid font-semibold mb-4">
               Minimum years of experience?
             </h2>
             <input
@@ -834,7 +834,7 @@ export default function ProMatchPage() {
               }
               className="w-full px-4 py-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
             />
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-small text-gray-500 mt-1">
               Optional. Leave empty for no minimum.
             </p>
           </div>
@@ -883,7 +883,7 @@ export default function ProMatchPage() {
         >
           <div className="w-full max-w-3xl bg-white rounded-xl shadow-lg p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold">Matched Professionals</h3>
+              <h3 className="text-mid font-semibold">Matched Professionals</h3>
               <button
                 type="button"
                 onClick={() => setResultsOpen(false)}
@@ -893,7 +893,7 @@ export default function ProMatchPage() {
               </button>
             </div>
             {apiError && (
-              <div className="mb-4 p-3 rounded-md bg-amber-50 text-amber-800 border border-amber-200 text-sm">
+              <div className="mb-4 p-3 rounded-md bg-amber-50 text-amber-800 border border-amber-200 text-small">
                 {apiError}
               </div>
             )}
@@ -926,7 +926,7 @@ export default function ProMatchPage() {
                             className="w-16 h-16 rounded-full object-cover border border-gray-200"
                           />
                         ) : (
-                          <div className="w-16 h-16 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-semibold border border-amber-200 text-lg">
+                          <div className="w-16 h-16 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-semibold border border-amber-200 text-mid">
                             {String(item.name || "")
                               .split(" ")
                               .filter(Boolean)
@@ -940,12 +940,12 @@ export default function ProMatchPage() {
                         </div>
                       </div>
                       {typeof item.score === "number" && (
-                        <span className="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-700">
+                        <span className="text-small px-2 py-1 rounded-full bg-amber-100 text-amber-700">
                           Score: {item.score}
                         </span>
                       )}
                     </div>
-                    <div className="text-sm text-gray-600 mt-1 flex items-center gap-2">
+                    <div className="text-small text-gray-600 mt-1 flex items-center gap-2">
                       <span>{item.role}</span>
                       {item?.isActive ? (
                         <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200">
@@ -954,24 +954,24 @@ export default function ProMatchPage() {
                       ) : null}
                     </div>
                     {typeof item.experience === "number" && (
-                      <div className="text-xs text-gray-500 mt-1">
+                      <div className="text-small text-gray-500 mt-1">
                         Experience: {item.experience} years
                       </div>
                     )}
                     {item.businessName && (
-                      <div className="text-sm text-gray-700">
+                      <div className="text-small text-gray-700">
                         {item.businessName}
                       </div>
                     )}
-                    <div className="text-sm text-gray-700 mt-2">
+                    <div className="text-small text-gray-700 mt-2">
                       {item.email}
                     </div>
                     {item.phone && (
-                      <div className="text-sm text-gray-700">{item.phone}</div>
+                      <div className="text-small text-gray-700">{item.phone}</div>
                     )}
                     {(typeof item.avgRating === "number" ||
                       typeof item.totalReviews === "number") && (
-                      <div className="text-xs text-gray-500 mt-1">
+                      <div className="text-small text-gray-500 mt-1">
                         Rating: {item.avgRating ?? "-"} (
                         {item.totalReviews ?? 0} reviews)
                       </div>
@@ -994,10 +994,10 @@ export default function ProMatchPage() {
               <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-white px-6 py-4">
                 <div className="flex items-start justify-between">
                   <div>
-                    <h3 className="text-xl font-semibold">
+                    <h3 className="text-mid font-semibold">
                       Professional Details
                     </h3>
-                    <p className="text-sm text-amber-100">
+                    <p className="text-small text-amber-100">
                       {(selectedPro.role || "").toString()}
                     </p>
                   </div>
@@ -1036,7 +1036,7 @@ export default function ProMatchPage() {
                       className="w-20 h-20 rounded-full object-cover border border-gray-200"
                     />
                   ) : (
-                    <div className="w-20 h-20 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-semibold border border-amber-200 text-xl">
+                    <div className="w-20 h-20 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-semibold border border-amber-200 text-mid">
                       {String(selectedPro.name || "")
                         .split(" ")
                         .filter(Boolean)
@@ -1046,20 +1046,20 @@ export default function ProMatchPage() {
                     </div>
                   )}
                   <div>
-                    <div className="text-lg font-semibold text-amber-900">
+                    <div className="text-mid font-semibold text-amber-900">
                       {selectedPro.name}
                     </div>
-                    <div className="text-sm text-gray-700">
+                    <div className="text-small text-gray-700">
                       {selectedPro.email}
                     </div>
                     {selectedPro.phone ? (
-                      <div className="text-sm text-gray-700">
+                      <div className="text-small text-gray-700">
                         {selectedPro.phone}
                       </div>
                     ) : null}
                     {typeof selectedPro.avgRating === "number" ||
                     typeof selectedPro.totalReviews === "number" ? (
-                      <div className="text-xs text-gray-600 mt-1">
+                      <div className="text-small text-gray-600 mt-1">
                         Rating: {selectedPro.avgRating ?? "-"} (
                         {selectedPro.totalReviews ?? 0} reviews)
                       </div>
@@ -1068,7 +1068,7 @@ export default function ProMatchPage() {
                       {selectedPro.email ? (
                         <a
                           href={`mailto:${selectedPro.email}`}
-                          className="inline-flex items-center px-3 py-1.5 rounded-md bg-amber-500 hover:bg-amber-600 text-white text-sm"
+                          className="inline-flex items-center px-3 py-1.5 rounded-md bg-amber-500 hover:bg-amber-600 text-white text-small"
                         >
                           Contact Email
                         </a>
@@ -1076,7 +1076,7 @@ export default function ProMatchPage() {
                       {selectedPro.phone ? (
                         <a
                           href={`tel:${selectedPro.phone}`}
-                          className="inline-flex items-center px-3 py-1.5 rounded-md bg-amber-500 hover:bg-amber-600 text-white text-sm"
+                          className="inline-flex items-center px-3 py-1.5 rounded-md bg-amber-500 hover:bg-amber-600 text-white text-small"
                         >
                           Call
                         </a>
@@ -1084,10 +1084,10 @@ export default function ProMatchPage() {
                     </div>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3 text-sm md:flex-1">
+                <div className="grid grid-cols-2 gap-3 text-small md:flex-1">
                   {typeof selectedPro.experience === "number" ? (
                     <div className="p-3 rounded-lg border bg-gray-50">
-                      <div className="text-gray-500">Experience</div>
+                      <div className="text-gray-500">Experiences</div>
                       <div className="font-medium">
                         {selectedPro.experience} years
                       </div>
@@ -1107,18 +1107,18 @@ export default function ProMatchPage() {
 
               <div className="mt-6">
                 <div className="flex items-center justify-between mb-3">
-                  <h4 className="text-lg font-semibold text-amber-900">
+                  <h4 className="text-mid font-semibold text-amber-900">
                     Portfolio
                   </h4>
                   {portfolioLoading ? (
-                    <span className="inline-flex items-center text-sm text-gray-600">
+                    <span className="inline-flex items-center text-small text-gray-600">
                       <span className="mr-2 inline-block w-4 h-4 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
                       Loading...
                     </span>
                   ) : null}
                 </div>
                 {portfolioError ? (
-                  <div className="p-3 rounded-md bg-amber-50 text-amber-800 border border-amber-200 text-sm">
+                  <div className="p-3 rounded-md bg-amber-50 text-amber-800 border border-amber-200 text-small">
                     {portfolioError}
                   </div>
                 ) : null}
@@ -1137,12 +1137,12 @@ export default function ProMatchPage() {
                                 {proj.title || "Untitled Project"}
                               </div>
                               {proj.category ? (
-                                <div className="text-xs text-amber-700">
+                                <div className="text-small text-amber-700">
                                   {proj.category}
                                 </div>
                               ) : null}
                             </div>
-                            <div className="p-4 space-y-2 text-sm">
+                            <div className="p-4 space-y-2 text-small">
                               {proj.description ? (
                                 <p className="text-gray-700">
                                   {proj.description}
@@ -1188,7 +1188,7 @@ export default function ProMatchPage() {
                                   {proj.skills.map((s: string, i: number) => (
                                     <span
                                       key={i}
-                                      className="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 border border-amber-200"
+                                      className="text-small px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 border border-amber-200"
                                     >
                                       {s}
                                     </span>
@@ -1197,7 +1197,7 @@ export default function ProMatchPage() {
                               ) : null}
                               {proj.clientFeedback ? (
                                 <div className="mt-2 p-2 rounded-md bg-gray-50 border text-gray-700">
-                                  <div className="text-xs text-gray-500 mb-1">
+                                  <div className="text-small text-gray-500 mb-1">
                                     Client Feedback
                                   </div>
                                   <div>{proj.clientFeedback}</div>
@@ -1286,7 +1286,7 @@ export default function ProMatchPage() {
             >
               ›
             </button>
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-white bg-black/40 px-2 py-1 rounded">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-small text-white bg-black/40 px-2 py-1 rounded">
               {previewIndex + 1} / {previewImages.length}
             </div>
           </div>

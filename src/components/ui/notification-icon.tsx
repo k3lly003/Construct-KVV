@@ -59,7 +59,7 @@ export function NotificationIcon({
 
       {/* Always show badge for authenticated users */}
       <Badge
-        className={`absolute -top-1 -right-1 h-5 min-w-5 px-1.5 text-xs font-medium ${
+        className={`absolute -top-1 -right-1 h-5 min-w-5 px-1.5 text-small font-medium ${
           hasNotifications
             ? "bg-amber-500 text-white border-2 border-white"
             : "bg-gray-300 text-gray-600 border-2 border-white"

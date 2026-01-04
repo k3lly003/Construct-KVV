@@ -35,8 +35,8 @@ export function ProfileContent() {
         <CardContent className="pt-6">
           <div className="text-center text-red-500">
             <Store className="h-12 w-12 mx-auto mb-4 text-red-300" />
-            <h3 className="text-lg font-semibold mb-2">{t('dashboard.shopNotFound')}</h3>
-            <p className="text-sm text-gray-600">
+            <h3 className="text-mid font-semibold mb-2">{t('dashboard.shopNotFound')}</h3>
+            <p className="text-small text-gray-600">
               {myShopError.message || t('dashboard.unableToLoadShop')}
             </p>
           </div>
@@ -51,8 +51,8 @@ export function ProfileContent() {
         <CardContent className="pt-6">
           <div className="text-center text-gray-500">
             <Store className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-            <h3 className="text-lg font-semibold mb-2">{t('dashboard.noShopFound')}</h3>
-            <p className="text-sm text-gray-600">
+            <h3 className="text-mid font-semibold mb-2">{t('dashboard.noShopFound')}</h3>
+            <p className="text-small text-gray-600">
               {t('dashboard.createShopMessage')}
             </p>
           </div>
@@ -66,7 +66,7 @@ export function ProfileContent() {
       {/* Shop Overview Card */}
       <Card>
           <div className="flex flex-col space-x-5">
-            <CardHeader className="text-lg font-semibold text-amber-600 font-medium">{t('dashboard.about')}</CardHeader>
+            <CardHeader className="text-mid font-semibold text-amber-600 font-medium">{t('dashboard.about')}</CardHeader>
               <CardContent className="flex items-center space-x-4 mt-1">
                 {t('dashboard.aboutDescription')}
               </CardContent>

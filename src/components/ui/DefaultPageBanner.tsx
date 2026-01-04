@@ -18,7 +18,7 @@ const DefaultPageBanner = ({backgroundImage, title}:DefaultPageBannerProps) => {
     return (
         <div className='flex flex-col items-center justify-center mx-auto w-full px-12 md:px-12 pt-36 pb-16 md:pb-32 overflow-hidden' style={jssStyles}>
             <div className={`flex flex-col gap-6 items-center justify-center text-white w-full max-w-screen-xl`}>
-                <h1 className="text-3xl md:text-5xl font-extrabold w-full md:w-2/3 text-center">{title}</h1>
+                <h1 className="text-title md:text-title font-extrabold w-full md:w-2/3 text-center">{title}</h1>
             </div>
         </div>
     )

@@ -55,7 +55,7 @@ export const BrickLoader: React.FC = () => {
         </div>
 
         {/* Loading text */}
-        <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 text-white text-lg font-medium">
+        <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 text-white text-mid font-medium">
           kvv ...
         </div>
       </div>
@@ -141,7 +141,7 @@ export const BrickLoaderDash: React.FC = () => {
         </div>
 
         {/* Loading text */}
-        <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 text-white text-lg font-medium">
+        <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 text-white text-mid font-medium">
           kvv Dashboard...
         </div>
       </div>

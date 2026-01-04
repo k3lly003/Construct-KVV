@@ -125,7 +125,7 @@ const ProductCard = ({
           {/* Show Highly Recommended badge in the top right corner if needed */}
           {showHighlyRecommended && isHighlyRecommended && (
             <span
-              className="absolute top-3 right-3 z-10 bg-amber-500 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg"
+              className="absolute top-3 right-3 z-10 bg-amber-500 text-white text-small font-bold px-4 py-2 rounded-full shadow-lg"
               style={{ padding: "8px 16px" }}
             >
               Highly Recommended
@@ -137,7 +137,7 @@ const ProductCard = ({
             <h3 className="text-md font-semibold text-gray-900 w-full mb-1 text-left">
               {name}
             </h3>
-            <p className="text-sm text-gray-500 mb-2 overflow text-left min-h-[40px]">
+            <p className="text-small text-gray-500 mb-2 overflow text-left min-h-[40px]">
               {product.description}
             </p>
           </div>
@@ -145,18 +145,18 @@ const ProductCard = ({
             <div className="flex items-center justify-between mb-3">
               <div>
                 {originalPrice && (
-                  <span className="line-through text-gray-400 text-sm mr-2">
+                  <span className="line-through text-gray-400 text-small mr-2">
                     RwF {originalPrice.toLocaleString()}
                   </span>
                 )}
                 <span className="font-semibold text-md text-yellow-400">
-                  {price} <span className="text-sm text-yellow-400">Rwf</span>
+                  {price} <span className="text-small text-yellow-400">Rwf</span>
                 </span>
               </div>
             </div>
             <Button
               text={"Add to cart"}
-              texSize={"text-sm"}
+              texSize={"text-small"}
               hoverBg={"hover:bg-yellow-400"}
               borderCol={"border-yellow-300"}
               bgCol={"white"}

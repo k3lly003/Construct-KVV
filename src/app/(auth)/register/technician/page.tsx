@@ -165,7 +165,7 @@ export default function TechnicianRegistration() {
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back
           </Link>
-          <h1 className="text-3xl font-bold text-slate-900">
+          <h1 className="text-title font-bold text-slate-900">
             Technician Registration
           </h1>
           <p className="text-slate-600 mt-2">
@@ -183,14 +183,14 @@ export default function TechnicianRegistration() {
           <CardContent>
             {error && (
               <div className="mb-6 p-3 border border-red-200 bg-red-50 rounded-lg">
-                <p className="text-sm text-red-800">{error}</p>
+                <p className="text-small text-red-800">{error}</p>
               </div>
             )}
 
             <form onSubmit={onSubmit} className="space-y-6">
               {/* Personal Information */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold border-b pb-2">Personal Information</h3>
+                <h3 className="text-mid font-semibold border-b pb-2">Personal Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="firstName">First Name *</Label>
@@ -253,9 +253,9 @@ export default function TechnicianRegistration() {
 
               {/* Categories (Multi-select) */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold border-b pb-2">Categories</h3>
+                <h3 className="text-mid font-semibold border-b pb-2">Categories</h3>
                 <div className="space-y-3">
-                  <Label className="text-sm font-medium text-gray-700">
+                  <Label className="text-small font-medium text-gray-700">
                     Select your technician categories (you can choose multiple)
                   </Label>
                   
@@ -282,7 +282,7 @@ export default function TechnicianRegistration() {
                           )}
                         </div>
                         <span
-                          className={`text-sm font-medium ${
+                          className={`text-small font-medium ${
                             selectedSpecializations.includes(category)
                               ? "text-blue-700"
                               : "text-gray-700"
@@ -296,14 +296,14 @@ export default function TechnicianRegistration() {
                   
                   {selectedSpecializations.length > 0 && (
                     <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                      <p className="text-sm text-blue-800 font-medium mb-2">
+                      <p className="text-small text-blue-800 font-medium mb-2">
                         Selected Categories ({selectedSpecializations.length}):
                       </p>
                       <div className="flex flex-wrap gap-2">
                         {selectedSpecializations.map((category) => (
                           <span
                             key={category}
-                            className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                            className="inline-flex items-center px-2 py-1 rounded-full text-small font-medium bg-blue-100 text-blue-800"
                           >
                             {category}
                             <button
@@ -323,10 +323,10 @@ export default function TechnicianRegistration() {
 
               {/* Location */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold border-b pb-2">Location</h3>
+                <h3 className="text-mid font-semibold border-b pb-2">Location</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <div>
-                    <Label className="text-sm font-medium text-gray-700">Province *</Label>
+                    <Label className="text-small font-medium text-gray-700">Province *</Label>
                     <Input
                       value={location.province}
                       onChange={(e) => setLocation((p) => ({ ...p, province: e.target.value }))}
@@ -335,7 +335,7 @@ export default function TechnicianRegistration() {
                     />
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-gray-700">District *</Label>
+                    <Label className="text-small font-medium text-gray-700">District *</Label>
                     <Input
                       value={location.district}
                       onChange={(e) => setLocation((p) => ({ ...p, district: e.target.value }))}
@@ -344,7 +344,7 @@ export default function TechnicianRegistration() {
                     />
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-gray-700">Cell *</Label>
+                    <Label className="text-small font-medium text-gray-700">Cell *</Label>
                     <Input
                       value={location.cell}
                       onChange={(e) => setLocation((p) => ({ ...p, cell: e.target.value }))}
@@ -369,13 +369,13 @@ export default function TechnicianRegistration() {
 
               {/* Documents */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold border-b pb-2">Documents</h3>
+                <h3 className="text-mid font-semibold border-b pb-2">Documents</h3>
                 
                 {documents.map((document) => (
                   <div key={document.id} className="space-y-3 p-4 border rounded-lg bg-gray-50">
                     <div className="space-y-3">
                       <div>
-                        <Label className="text-sm font-medium text-gray-700">Document Files *</Label>
+                        <Label className="text-small font-medium text-gray-700">Document Files *</Label>
                         <Input
                           type="file"
                           multiple
@@ -392,8 +392,8 @@ export default function TechnicianRegistration() {
                           {document.files.map((file, index) => (
                             <div key={index} className="flex items-center gap-2 p-2 bg-white rounded border">
                               <div className="flex-1">
-                                <p className="text-sm font-medium text-gray-900">{document.names[index]}</p>
-                                <p className="text-xs text-gray-500">{document.types[index]}</p>
+                                <p className="text-small font-medium text-gray-900">{document.names[index]}</p>
+                                <p className="text-small text-gray-500">{document.types[index]}</p>
                               </div>
                               <Button
                                 type="button"
@@ -411,7 +411,7 @@ export default function TechnicianRegistration() {
                     </div>
                     
                     <div className="flex justify-between items-center">
-                      <div className="text-xs text-gray-500">
+                      <div className="text-small text-gray-500">
                         {document.files.length > 0 
                           ? `${document.files.length} file(s) attached`
                           : "Please select document files"

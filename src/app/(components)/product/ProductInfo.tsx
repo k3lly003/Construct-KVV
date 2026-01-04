@@ -177,7 +177,7 @@ const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight mt-1">
+        <h1 className="text-title font-bold tracking-tight mt-1">
           {product.name}
         </h1>
         {/* Rating */}
@@ -196,7 +196,7 @@ const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
                 />
               ))}
             </div>
-            <span className="text-sm text-muted-foreground">
+            <span className="text-small text-muted-foreground">
               {product.rating} ({product.reviewCount}{" "}
               {t(dashboardFakes.productInfo.reviews)})
             </span>
@@ -204,7 +204,7 @@ const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
         )}
         {/* Price */}
         <div className="flex items-center gap-3 mt-4">
-          <p className="text-2xl font-semibold flex justify-between w-full">
+          <p className="text-mid font-semibold flex justify-between w-full">
             {product.discountedPrice ? (
               <>
                 <span className="line-through text-gray-400 mr-2">
@@ -241,7 +241,7 @@ const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
           </GenericButton>
         </div>
         <GenericButton
-          className="w-full sm:flex-1 h-11 gap-2 flex items-center justify-center text-sm sm:text-base"
+          className="w-full sm:flex-1 h-11 gap-2 flex items-center justify-center text-small sm:text-base"
           onClick={handleAddToCart}
         >
           <ShoppingCart size={16} />

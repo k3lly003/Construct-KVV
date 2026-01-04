@@ -103,15 +103,15 @@ export default function ApprovedSellers({ searchQuery = "" }: { searchQuery?: st
 
                 <div className="px-4 pb-3">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-xs px-2 py-1 rounded bg-purple-100 text-purple-700">Seller</span>
-                    <span className="text-xs px-2 py-1 rounded bg-gray-100 text-gray-600">{prof.location?.city || '-'}</span>
+                    <span className="text-small px-2 py-1 rounded bg-purple-100 text-purple-700">Seller</span>
+                    <span className="text-small px-2 py-1 rounded bg-gray-100 text-gray-600">{prof.location?.city || '-'}</span>
                   </div>
-                  <h1 className="font-bold text-gray-900 text-lg leading-tight mb-1 line-clamp-2">{prof.title}</h1>
-                  <p className="text-sm text-gray-600 mb-3">{prof.provider?.name || '-'}</p>
+                  <h1 className="font-bold text-gray-900 text-mid leading-tight mb-1 line-clamp-2">{prof.title}</h1>
+                  <p className="text-small text-gray-600 mb-3">{prof.provider?.name || '-'}</p>
 
                   <div className="flex flex-wrap gap-1 mt-2">
                     {(prof.features || []).filter((f: string) => !f.startsWith('Role:')).slice(0, 4).map((feature: string) => (
-                      <span key={feature} className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">
+                      <span key={feature} className="text-small px-2 py-1 bg-gray-100 text-gray-600 rounded">
                         {feature}
                       </span>
                     ))}

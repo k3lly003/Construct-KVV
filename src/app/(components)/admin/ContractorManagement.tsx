@@ -125,7 +125,7 @@ export default function ContractorManagement() {
     <div className="max-w-7xl mx-auto p-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">
+          <CardTitle className="text-mid font-bold">
             {t('admin.contractorManagement.title', 'Contractor Management')}
           </CardTitle>
           <CardDescription>
@@ -159,8 +159,8 @@ export default function ContractorManagement() {
                 <div className="flex items-center gap-2">
                   <Clock className="w-5 h-5 text-yellow-600" />
                   <div>
-                    <p className="text-sm text-gray-600">Pending</p>
-                    <p className="text-2xl font-bold">{pendingContractors.length}</p>
+                    <p className="text-small text-gray-600">Pending</p>
+                    <p className="text-mid font-bold">{pendingContractors.length}</p>
                   </div>
                 </div>
               </CardContent>
@@ -171,8 +171,8 @@ export default function ContractorManagement() {
                 <div className="flex items-center gap-2">
                   <CheckCircle className="w-5 h-5 text-green-600" />
                   <div>
-                    <p className="text-sm text-gray-600">Approved</p>
-                    <p className="text-2xl font-bold">{approvedContractors.length}</p>
+                    <p className="text-small text-gray-600">Approved</p>
+                    <p className="text-mid font-bold">{approvedContractors.length}</p>
                   </div>
                 </div>
               </CardContent>
@@ -183,8 +183,8 @@ export default function ContractorManagement() {
                 <div className="flex items-center gap-2">
                   <XCircle className="w-5 h-5 text-red-600" />
                   <div>
-                    <p className="text-sm text-gray-600">Rejected</p>
-                    <p className="text-2xl font-bold">{rejectedContractors.length}</p>
+                    <p className="text-small text-gray-600">Rejected</p>
+                    <p className="text-mid font-bold">{rejectedContractors.length}</p>
                   </div>
                 </div>
               </CardContent>
@@ -195,8 +195,8 @@ export default function ContractorManagement() {
                 <div className="flex items-center gap-2">
                   <User className="w-5 h-5 text-blue-600" />
                   <div>
-                    <p className="text-sm text-gray-600">Total</p>
-                    <p className="text-2xl font-bold">{contractors.length}</p>
+                    <p className="text-small text-gray-600">Total</p>
+                    <p className="text-mid font-bold">{contractors.length}</p>
                   </div>
                 </div>
               </CardContent>
@@ -271,25 +271,25 @@ export default function ContractorManagement() {
             <div className="space-y-6">
               {/* Basic Info */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold border-b pb-2">
+                <h3 className="text-mid font-semibold border-b pb-2">
                   {t('admin.contractorManagement.basicInfo', 'Basic Information')}
                 </h3>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-sm font-medium text-gray-600">Name</Label>
-                    <p className="text-sm">{selectedContractor.firstName} {selectedContractor.lastName}</p>
+                    <Label className="text-small font-medium text-gray-600">Name</Label>
+                    <p className="text-small">{selectedContractor.firstName} {selectedContractor.lastName}</p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-gray-600">Email</Label>
-                    <p className="text-sm">{selectedContractor.email}</p>
+                    <Label className="text-small font-medium text-gray-600">Email</Label>
+                    <p className="text-small">{selectedContractor.email}</p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-gray-600">Phone</Label>
-                    <p className="text-sm">{selectedContractor.phone}</p>
+                    <Label className="text-small font-medium text-gray-600">Phone</Label>
+                    <p className="text-small">{selectedContractor.phone}</p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-gray-600">Status</Label>
+                    <Label className="text-small font-medium text-gray-600">Status</Label>
                     <div className="mt-1">{getStatusBadge(selectedContractor.status)}</div>
                   </div>
                 </div>
@@ -297,34 +297,34 @@ export default function ContractorManagement() {
 
               {/* Business Info */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold border-b pb-2">
+                <h3 className="text-mid font-semibold border-b pb-2">
                   {t('admin.contractorManagement.businessInfo', 'Business Information')}
                 </h3>
                 
                 <div className="space-y-3">
                   <div>
-                    <Label className="text-sm font-medium text-gray-600">Business Name</Label>
-                    <p className="text-sm">{selectedContractor.businessName || 'N/A'}</p>
+                    <Label className="text-small font-medium text-gray-600">Business Name</Label>
+                    <p className="text-small">{selectedContractor.businessName || 'N/A'}</p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-gray-600">Business Address</Label>
-                    <p className="text-sm">{selectedContractor.businessAddress || 'N/A'}</p>
+                    <Label className="text-small font-medium text-gray-600">Business Address</Label>
+                    <p className="text-small">{selectedContractor.businessAddress || 'N/A'}</p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-gray-600">Business Phone</Label>
-                    <p className="text-sm">{selectedContractor.businessPhone || 'N/A'}</p>
+                    <Label className="text-small font-medium text-gray-600">Business Phone</Label>
+                    <p className="text-small">{selectedContractor.businessPhone || 'N/A'}</p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-gray-600">Tax ID</Label>
-                    <p className="text-sm">{selectedContractor.taxId || 'N/A'}</p>
+                    <Label className="text-small font-medium text-gray-600">Tax ID</Label>
+                    <p className="text-small">{selectedContractor.taxId || 'N/A'}</p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-gray-600">Years Experience</Label>
-                    <p className="text-sm">{selectedContractor.yearsExperience || 'N/A'}</p>
+                    <Label className="text-small font-medium text-gray-600">Years Experience</Label>
+                    <p className="text-small">{selectedContractor.yearsExperience || 'N/A'}</p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-gray-600">License Number</Label>
-                    <p className="text-sm">{selectedContractor.licenseNumber || 'N/A'}</p>
+                    <Label className="text-small font-medium text-gray-600">License Number</Label>
+                    <p className="text-small">{selectedContractor.licenseNumber || 'N/A'}</p>
                   </div>
                 </div>
               </div>
@@ -332,7 +332,7 @@ export default function ContractorManagement() {
               {/* Locations */}
               {selectedContractor.location && selectedContractor.location.length > 0 && (
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold border-b pb-2">
+                  <h3 className="text-mid font-semibold border-b pb-2">
                     {t('admin.contractorManagement.locations', 'Service Locations')}
                   </h3>
                   <div className="flex flex-wrap gap-2">
@@ -349,18 +349,18 @@ export default function ContractorManagement() {
               {/* Insurance */}
               {selectedContractor.insuranceInfo && (
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold border-b pb-2">
+                  <h3 className="text-mid font-semibold border-b pb-2">
                     {t('admin.contractorManagement.insurance', 'Insurance Information')}
                   </h3>
                   
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label className="text-sm font-medium text-gray-600">Provider</Label>
-                      <p className="text-sm">{selectedContractor.insuranceInfo.provider}</p>
+                      <Label className="text-small font-medium text-gray-600">Provider</Label>
+                      <p className="text-small">{selectedContractor.insuranceInfo.provider}</p>
                     </div>
                     <div>
-                      <Label className="text-sm font-medium text-gray-600">Policy Number</Label>
-                      <p className="text-sm">{selectedContractor.insuranceInfo.policyNumber}</p>
+                      <Label className="text-small font-medium text-gray-600">Policy Number</Label>
+                      <p className="text-small">{selectedContractor.insuranceInfo.policyNumber}</p>
                     </div>
                   </div>
                 </div>
@@ -369,7 +369,7 @@ export default function ContractorManagement() {
               {/* Documents */}
               {selectedContractor.documents && selectedContractor.documents.length > 0 && (
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold border-b pb-2">
+                  <h3 className="text-mid font-semibold border-b pb-2">
                     {t('admin.contractorManagement.documents', 'Documents')}
                   </h3>
                   <div className="space-y-2">
@@ -380,7 +380,7 @@ export default function ContractorManagement() {
                           href={doc} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="text-sm text-blue-600 hover:underline"
+                          className="text-small text-blue-600 hover:underline"
                         >
                           Document {index + 1}
                         </a>
@@ -393,7 +393,7 @@ export default function ContractorManagement() {
               {/* Status Update */}
               {selectedContractor.status === 'PENDING' && (
                 <div className="space-y-4 pt-4 border-t">
-                  <h3 className="text-lg font-semibold">
+                  <h3 className="text-mid font-semibold">
                     {t('admin.contractorManagement.updateStatus', 'Update Status')}
                   </h3>
                   
@@ -488,19 +488,19 @@ function ContractorTable({ contractors, onViewDetails, loading }: ContractorTabl
             <TableCell>
               <div>
                 <p className="font-medium">{contractor.firstName} {contractor.lastName}</p>
-                <p className="text-sm text-gray-500">{contractor.email}</p>
+                <p className="text-small text-gray-500">{contractor.email}</p>
               </div>
             </TableCell>
             <TableCell>
               <div>
                 <p className="font-medium">{contractor.businessName || 'N/A'}</p>
-                <p className="text-sm text-gray-500">{contractor.businessAddress || 'N/A'}</p>
+                <p className="text-small text-gray-500">{contractor.businessAddress || 'N/A'}</p>
               </div>
             </TableCell>
             <TableCell>
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-gray-500" />
-                <span className="text-sm">{contractor.phone || 'N/A'}</span>
+                <span className="text-small">{contractor.phone || 'N/A'}</span>
               </div>
             </TableCell>
             <TableCell>

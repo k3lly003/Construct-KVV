@@ -254,6 +254,234 @@
       "relatedProducts": "Produits connexes"
     }
   },
+  "pricing": {
+    "hero": {
+      "title": "Tarification Flexible Pour Chaque Projet",
+      "subtitle": "Transparent. Fiable. Conçu Pour la Construction.",
+      "description": "Que vous soyez fournisseur, entrepreneur, architecte ou propriétaire de projet, choisissez un plan adapté à vos besoins.",
+      "stats": {
+        "projectsCompleted": "10 000+ Projets Terminés",
+        "verifiedSuppliers": "500+ Fournisseurs Vérifiés",
+        "uptime": "99,9% de Disponibilité"
+      }
+    },
+    "roles": {
+      "constructor": "constructeur",
+      "architect": "architecte",
+      "supplier": "fournisseur"
+    },
+    "plans": {
+      "mostPopular": "Le Plus Populaire",
+      "perMonth": "/mois",
+      "custom": "Personnalisé",
+      "constructor": {
+        "starter": {
+          "name": "Démarrage",
+          "price": "RWF 10 000",
+          "description": "Parfait pour les entrepreneurs individuels et les petites équipes",
+          "features": [
+            "Jusqu'à 3 projets actifs",
+            "Annuaire de fournisseurs de base",
+            "Support standard",
+            "Accès à l'application mobile",
+            "Analyses de base"
+          ],
+          "cta": "Commencer à Construire"
+        },
+        "professional": {
+          "name": "Professionnel",
+          "price": "RWF 27 000",
+          "description": "Idéal pour les entreprises de construction en croissance",
+          "features": [
+            "Projets illimités",
+            "Réseau de fournisseurs premium",
+            "Support prioritaire",
+            "Gestion de projet avancée",
+            "Outils de collaboration d'équipe",
+            "Rapports personnalisés"
+          ],
+          "cta": "Essayer Gratuitement"
+        },
+        "enterprise": {
+          "name": "Entreprise",
+          "price": "Personnalisé",
+          "description": "Pour les grandes entreprises de construction avec des besoins complexes",
+          "features": [
+            "Tout ce qui est dans Professionnel",
+            "Gestionnaire de compte dédié",
+            "Intégrations personnalisées",
+            "Options de marque blanche",
+            "Sécurité avancée",
+            "Garantie SLA"
+          ],
+          "cta": "Contacter les Ventes"
+        }
+      },
+      "architect": {
+        "starter": {
+          "name": "Démarrage",
+          "price": "RWF 12 000",
+          "description": "Pour les architectes indépendants et les petits studios",
+          "features": [
+            "Jusqu'à 5 projets de design",
+            "Outils de spécification de matériaux",
+            "Visualisation 3D de base",
+            "Portail de collaboration client",
+            "Support standard"
+          ],
+          "cta": "Commencer à Concevoir"
+        },
+        "professional": {
+          "name": "Professionnel",
+          "price": "RWF 25 000",
+          "description": "Parfait pour les cabinets d'architecture établis",
+          "features": [
+            "Projets de design illimités",
+            "Suite de visualisation avancée",
+            "Intégration fournisseur",
+            "Collaboration d'équipe",
+            "Outils de présentation client",
+            "Analyses avancées"
+          ],
+          "cta": "Essayer Gratuitement"
+        },
+        "enterprise": {
+          "name": "Entreprise",
+          "price": "Personnalisé",
+          "description": "Pour les grandes pratiques architecturales",
+          "features": [
+            "Tout ce qui est dans Professionnel",
+            "Automatisation de workflow personnalisée",
+            "Accès API",
+            "Support dédié",
+            "Sécurité avancée",
+            "Gestion multi-bureaux"
+          ],
+          "cta": "Contacter les Ventes"
+        }
+      },
+      "supplier": {
+        "starter": {
+          "name": "Démarrage",
+          "price": "RWF 10 000",
+          "description": "Pour les petits fournisseurs et vendeurs locaux",
+          "features": [
+            "Catalogue de produits (jusqu'à 100 articles)",
+            "Vitrine de base",
+            "Gestion des commandes",
+            "Traitement des paiements",
+            "Support standard"
+          ],
+          "cta": "Commencer à Vendre"
+        },
+        "professional": {
+          "name": "Professionnel",
+          "price": "RWF 30 000",
+          "description": "Pour les fournisseurs et distributeurs établis",
+          "features": [
+            "Catalogue de produits illimité",
+            "Vitrine premium",
+            "Gestion des commandes en gros",
+            "Analyses avancées",
+            "Outils marketing",
+            "Listage prioritaire"
+          ],
+          "cta": "Essayer Gratuitement"
+        },
+        "enterprise": {
+          "name": "Entreprise",
+          "price": "Personnalisé",
+          "description": "Pour les grands fournisseurs et fabricants",
+          "features": [
+            "Tout ce qui est dans Professionnel",
+            "Niveaux de tarification personnalisés",
+            "Intégration API",
+            "Gestionnaire de compte dédié",
+            "Marché en marque blanche",
+            "Rapports avancés"
+          ],
+          "cta": "Contacter les Ventes"
+        }
+      }
+    },
+    "features": {
+      "title": "Comparer les Fonctionnalités",
+      "table": {
+        "feature": "Fonctionnalité",
+        "starter": "Démarrage",
+        "professional": "Professionnel",
+        "enterprise": "Entreprise"
+      },
+      "list": {
+        "fileUploads": "Téléchargement de fichiers",
+        "supplierRatings": "Évaluations des fournisseurs",
+        "bulkOrderDeals": "Offres de commandes en gros",
+        "dedicatedSupport": "Support dédié",
+        "analyticsReports": "Rapports d'analyse",
+        "apiAccess": "Accès API",
+        "customIntegrations": "Intégrations personnalisées",
+        "whiteLabelOptions": "Options de marque blanche"
+      }
+    },
+    "faq": {
+      "title": "Questions Fréquemment Posées",
+      "items": {
+        "changePlans": {
+          "question": "Comment changer de plan ?",
+          "answer": "Vous pouvez mettre à niveau ou rétrograder votre plan à tout moment depuis les paramètres de votre compte. Les modifications prennent effet immédiatement, et nous proratiserons toutes les différences de facturation."
+        },
+        "billing": {
+          "question": "Comment fonctionne la facturation pour les commandes e-commerce ?",
+          "answer": "Nous facturons de petits frais de transaction (2,9% + 0,30 $) pour chaque commande réussie traitée via notre plateforme. Cela couvre le traitement des paiements et la maintenance de la plateforme."
+        },
+        "volumeDiscounts": {
+          "question": "Y a-t-il des remises de volume pour les grands projets ?",
+          "answer": "Oui ! Les clients Enterprise reçoivent des tarifs personnalisés basés sur leur volume et leurs besoins spécifiques. Contactez notre équipe commerciale pour discuter des remises de volume et des arrangements personnalisés."
+        },
+        "paymentMethods": {
+          "question": "Quels modes de paiement acceptez-vous ?",
+          "answer": "Nous acceptons toutes les principales cartes de crédit, les virements ACH et les virements bancaires pour les clients Enterprise. Tous les paiements sont traités en toute sécurité via notre système de paiement crypté."
+        },
+        "freeTrial": {
+          "question": "Y a-t-il un essai gratuit disponible ?",
+          "answer": "Oui ! Tous les plans Professionnels incluent un essai gratuit de 14 jours. Aucune carte de crédit requise pour commencer. Vous pouvez explorer toutes les fonctionnalités et décider si c'est adapté à votre entreprise."
+        }
+      }
+    },
+    "testimonials": {
+      "title": "Ce Que Disent Nos Clients",
+      "items": [
+        {
+          "name": "Sarah Johnson",
+          "role": "Chef de Projet, BuildCorp",
+          "content": "Cette plateforme a rationalisé notre processus d'approvisionnement de 60%. Le réseau de fournisseurs est incroyable."
+        },
+        {
+          "name": "Mike Chen",
+          "role": "Architecte, Design Studio",
+          "content": "Les outils de visualisation et les spécifications de matériaux ont transformé notre façon de travailler avec les clients."
+        },
+        {
+          "name": "Lisa Rodriguez",
+          "role": "Fournisseur, Materials Plus",
+          "content": "Nous avons constaté une augmentation de 40% des commandes depuis notre adhésion à la plateforme. Les analyses changent la donne."
+        }
+      ],
+      "stats": {
+        "trustedCompanies": "Approuvé par 1 000+ Entreprises",
+        "averageRating": "Note Moyenne 4,9/5",
+        "activeUsers": "50 000+ Utilisateurs Actifs"
+      }
+    },
+    "cta": {
+      "title": "Prêt à Transformer Vos Projets de Construction ?",
+      "description": "Rejoignez des milliers de professionnels de la construction qui font confiance à notre plateforme pour leurs projets.",
+      "getStarted": "Commencer Gratuitement",
+      "requestDemo": "Demander une Démo",
+      "bookConsultation": "Réserver une Consultation",
+      "seePricingDetails": "Voir les Détails de Tarification"
+    }
+  },
   "cart": {
     "title": "Panier d'achat",
     "empty": "Votre panier est vide",

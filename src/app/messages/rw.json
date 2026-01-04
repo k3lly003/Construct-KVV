@@ -348,10 +348,10 @@
     "button": "Tangira Kureba"
   },
   "RecommendationsSection": {
-    "title": "Bikubwira",
+    "title": "Ibicuruzwa twabahitiyemo",
     "loading": "Kuzana ibikubwira...",
-    "error": "Kuzana ibikubwira byanze",
-    "noRecommendations": "Nta bikubwira bihari.",
+    "error": "Nta bicuruzwa bihari.",
+    "noRecommendations": "Nta bicuruzwa bihari.",
     "seeAllProducts": "Reba Ibicuruzwa Byose"
   },
   "dash": {

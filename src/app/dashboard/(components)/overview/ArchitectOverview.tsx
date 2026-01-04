@@ -449,36 +449,36 @@ export default function ArchitectOverview() {
               </div>
             </div>
             <div className="text-center lg:text-left flex-1">
-              <h1 className="text-2xl lg:text-3xl font-bold mb-2">
+              <h1 className="text-mid lg:text-title font-bold mb-2">
                 Welcome back, {userCredentials?.firstName || ""}{" "}
                 {userCredentials?.lastName || ""}!
               </h1>
-              <p className="text-amber-100 text-lg mb-1">
+              <p className="text-amber-100 text-mid mb-1">
                 {userCredentials?.role || architectData.profile.role}
               </p>
-              <p className="text-amber-200 text-sm mb-4">
+              <p className="text-amber-200 text-small mb-4">
                 {userCredentials?.company || architectData.profile.company}
               </p>
 
               {/* Quick Stats */}
               <div className="grid grid-cols-3 gap-4 mt-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold">
+                  <div className="text-mid font-bold">
                     {designsData.loading
                       ? "..."
                       : designsData.count ||
                         userCredentials?.totalDesigns ||
                         architectData.stats.totalDesigns}
                   </div>
-                  <div className="text-amber-100 text-sm">Designs Uploaded</div>
+                  <div className="text-amber-100 text-small">Designs Uploaded</div>
                 </div>
                 <RequestsReceivedQuickStat />
                 <div className="text-center">
-                  <div className="text-2xl font-bold">
+                  <div className="text-mid font-bold">
                     {userCredentials?.completed ||
                       architectData.stats.completed}
                   </div>
-                  <div className="text-amber-100 text-sm">Completed</div>
+                  <div className="text-amber-100 text-small">Completed</div>
                 </div>
               </div>
             </div>
@@ -489,7 +489,7 @@ export default function ArchitectOverview() {
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
           {/* 2. Design Requests Overview (Pie Chart) */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-mid font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
               <div className="w-2 h-6 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full"></div>
               Design Requests Overview
             </h2>
@@ -531,7 +531,7 @@ export default function ArchitectOverview() {
 
           {/* 5. Performance (Line Chart) */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-mid font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
               <div className="w-2 h-6 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full"></div>
               Monthly Performance
             </h2>
@@ -586,7 +586,7 @@ export default function ArchitectOverview() {
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
           {/* 3. Uploaded Designs Portfolio */}
           <div className="xl:col-span-2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-mid font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
               <div className="w-2 h-6 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full"></div>
               Design Portfolio
             </h2>
@@ -648,7 +648,7 @@ export default function ArchitectOverview() {
                       {/* Image count indicator */}
                       {(design as any).images &&
                         (design as any).images.length > 1 && (
-                          <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded-full">
+                          <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-small px-2 py-1 rounded-full">
                             +{(design as any).images.length - 1}
                           </div>
                         )}
@@ -659,7 +659,7 @@ export default function ArchitectOverview() {
                       </h3>
                       <div className="flex items-center justify-between mt-2">
                         <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                          className={`px-2 py-1 rounded-full text-small font-medium ${getStatusColor(
                             design.status
                           )}`}
                         >
@@ -667,7 +667,7 @@ export default function ArchitectOverview() {
                         </span>
                         <div className="flex items-center gap-1">
                           {renderStars(design.rating)}
-                          <span className="text-sm text-gray-600 ml-1">
+                          <span className="text-small text-gray-600 ml-1">
                             {design.rating}
                           </span>
                         </div>
@@ -683,7 +683,7 @@ export default function ArchitectOverview() {
           <div className="space-y-8">
             {/* Client Interactions */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-              <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+              <h2 className="text-mid font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
                 <div className="w-2 h-6 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full"></div>
                 Recent Feedback
               </h2>
@@ -704,7 +704,7 @@ export default function ArchitectOverview() {
                         {renderStars(feedback.rating)}
                       </div>
                     </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                    <p className="text-small text-gray-600 dark:text-gray-300">
                       {feedback.message}
                     </p>
                   </div>
@@ -714,7 +714,7 @@ export default function ArchitectOverview() {
 
             {/* Upcoming Deadlines */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-              <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+              <h2 className="text-mid font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
                 <div className="w-2 h-6 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full"></div>
                 Upcoming Deadlines
               </h2>
@@ -729,7 +729,7 @@ export default function ArchitectOverview() {
                   >
                     <div className="flex items-center justify-between mb-2">
                       <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(
+                        className={`px-2 py-1 rounded-full text-small font-medium ${getPriorityColor(
                           deadline.priority
                         )}`}
                       >
@@ -737,7 +737,7 @@ export default function ArchitectOverview() {
                       </span>
                       <div className="flex items-center gap-1 text-gray-500">
                         <Calendar className="w-4 h-4" />
-                        <span className="text-sm">
+                        <span className="text-small">
                           {formatDate(deadline.dueDate)}
                         </span>
                       </div>
@@ -754,7 +754,7 @@ export default function ArchitectOverview() {
 
         {/* 6. Top-Rated Designs */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-          <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+          <h2 className="text-mid font-semibold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
             <div className="w-2 h-6 bg-gradient-to-b from-amber-400 to-amber-600 rounded-full"></div>
             Top-Rated Designs
           </h2>
@@ -818,21 +818,21 @@ export default function ArchitectOverview() {
                     {/* Image count indicator */}
                     {(design as any).images &&
                       (design as any).images.length > 1 && (
-                        <div className="absolute top-1 right-1 bg-black bg-opacity-50 text-white text-xs px-1 py-0.5 rounded-full">
+                        <div className="absolute top-1 right-1 bg-black bg-opacity-50 text-white text-small px-1 py-0.5 rounded-full">
                           +{(design as any).images.length - 1}
                         </div>
                       )}
                   </div>
                   <div className="flex-1 w-full sm:w-auto">
-                    <h3 className="font-semibold text-gray-900 dark:text-white mb-1 text-base sm:text-sm">
+                    <h3 className="font-semibold text-gray-900 dark:text-white mb-1 text-base sm:text-small">
                       {design.title}
                     </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-3 sm:mb-2 line-clamp-2">
+                    <p className="text-small text-gray-600 dark:text-gray-300 mb-3 sm:mb-2 line-clamp-2">
                       {design.description}
                     </p>
                     <div className="flex items-center gap-1 justify-start">
                       {renderStars(design.rating)}
-                      <span className="text-base sm:text-sm text-gray-600 dark:text-gray-400 ml-2 font-medium">
+                      <span className="text-base sm:text-small text-gray-600 dark:text-gray-400 ml-2 font-medium">
                         {design.rating}
                       </span>
                     </div>
@@ -849,7 +849,7 @@ export default function ArchitectOverview() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-800 rounded-lg max-w-4xl max-h-[90vh] overflow-hidden">
             <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-600">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              <h3 className="text-mid font-semibold text-gray-900 dark:text-white">
                 {previewModal.title} -{" "}
                 {previewModal.type === "images" ? "Images" : "Documents"}
               </h3>
@@ -929,7 +929,7 @@ export default function ArchitectOverview() {
                   </div>
 
                   {/* Image counter */}
-                  <div className="text-center text-sm text-gray-600 dark:text-gray-400">
+                  <div className="text-center text-small text-gray-600 dark:text-gray-400">
                     {previewModal.currentIndex + 1} of{" "}
                     {previewModal.data.length}
                   </div>
@@ -1001,17 +1001,17 @@ export default function ArchitectOverview() {
                           </svg>
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-gray-900 dark:text-white">
+                          <p className="text-small font-medium text-gray-900 dark:text-white">
                             Document {index + 1}
                           </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                          <p className="text-small text-gray-500 dark:text-gray-400">
                             PDF Document
                           </p>
                         </div>
                       </div>
                       <button
                         onClick={() => window.open(docUrl, "_blank")}
-                        className="px-3 py-1 bg-amber-500 text-white text-sm rounded hover:bg-amber-600 transition-colors"
+                        className="px-3 py-1 bg-amber-500 text-white text-small rounded hover:bg-amber-600 transition-colors"
                       >
                         View
                       </button>
@@ -1064,8 +1064,8 @@ function RequestsReceivedQuickStat() {
 
   return (
     <div className="text-center">
-      <div className="text-2xl font-bold">{loading ? "..." : count ?? 0}</div>
-      <div className="text-amber-100 text-sm">Requests Received</div>
+      <div className="text-mid font-bold">{loading ? "..." : count ?? 0}</div>
+      <div className="text-amber-100 text-small">Requests Received</div>
       {error && <div className="text-[10px] text-red-100 mt-1">{error}</div>}
     </div>
   );

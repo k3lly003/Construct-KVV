@@ -77,7 +77,7 @@ export default function RevenueSplitPage() {
 
   return (
     <div className="p-6 min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white">
+      <h1 className="text-title font-bold mb-6 text-gray-800 dark:text-white">
         Revenue Split
       </h1>
       <div className="mb-4 flex gap-2">
@@ -170,7 +170,7 @@ export default function RevenueSplitPage() {
                     RWF {split.totalAmount.toLocaleString()}
                   </td>
                   <td
-                    className="px-4 py-2 text-xs"
+                    className="px-4 py-2 text-small"
                     style={{ fontSize: "1rem" }}
                   >
                     {new Date(split.createdAt).toLocaleString()}
@@ -186,7 +186,7 @@ export default function RevenueSplitPage() {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Seller Details</h3>
+              <h3 className="text-mid font-semibold">Seller Details</h3>
               <button
                 className="text-gray-500 hover:text-gray-700"
                 onClick={() => setSellerModalOpen(false)}
@@ -209,12 +209,12 @@ export default function RevenueSplitPage() {
                     <div className="font-semibold">
                       {activeSeller.businessName}
                     </div>
-                    <div className="text-sm text-gray-500">
+                    <div className="text-small text-gray-500">
                       {activeSeller.email}
                     </div>
                   </div>
                 </div>
-                <div className="space-y-2 text-sm">
+                <div className="space-y-2 text-small">
                   <div>
                     <span className="font-semibold">Owner:</span>{" "}
                     {activeSeller.ownerName}

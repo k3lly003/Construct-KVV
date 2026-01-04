@@ -94,20 +94,20 @@ export default function ServiceRequestCard({
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <div className="flex items-center space-x-3 mb-2">
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-mid font-semibold text-gray-900">
               {request.category}
             </h3>
-            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${statusConfig.color}`}>
+            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-small font-medium border ${statusConfig.color}`}>
               <StatusIcon className="w-3 h-3 mr-1" />
               {statusConfig.label}
             </span>
-            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${urgencyConfig.color}`}>
+            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-small font-medium ${urgencyConfig.color}`}>
               <AlertCircle className="w-3 h-3 mr-1" />
               {urgencyConfig.label}
             </span>
           </div>
           
-          <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+          <p className="text-gray-600 text-small mb-3 line-clamp-2">
             {request.description}
           </p>
         </div>
@@ -132,15 +132,15 @@ export default function ServiceRequestCard({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         <div className="flex items-center text-gray-600">
           <MapPin className="w-4 h-4 mr-2 text-gray-400" />
-          <span className="text-sm">{request.location}</span>
+          <span className="text-small">{request.location}</span>
         </div>
         <div className="flex items-center text-gray-600">
           <DollarSign className="w-4 h-4 mr-2 text-gray-400" />
-          <span className="text-sm font-medium">{request.budget.toLocaleString()} RWF</span>
+          <span className="text-small font-medium">{request.budget.toLocaleString()} RWF</span>
         </div>
         <div className="flex items-center text-gray-600">
           <Clock className="w-4 h-4 mr-2 text-gray-400" />
-          <span className="text-sm">{formatDate(request.createdAt)}</span>
+          <span className="text-small">{formatDate(request.createdAt)}</span>
         </div>
       </div>
 
@@ -156,8 +156,8 @@ export default function ServiceRequestCard({
                   className="w-8 h-8 rounded-full object-cover"
                 />
                 <div>
-                  <p className="text-sm font-medium text-gray-900">{request.technician.name}</p>
-                  <p className="text-xs text-gray-500">{request.technician.email}</p>
+                  <p className="text-small font-medium text-gray-900">{request.technician.name}</p>
+                  <p className="text-small text-gray-500">{request.technician.email}</p>
                 </div>
               </div>
             )}
@@ -170,19 +170,19 @@ export default function ServiceRequestCard({
                   className="w-8 h-8 rounded-full object-cover"
                 />
                 <div>
-                  <p className="text-sm font-medium text-gray-900">{request.customer.name}</p>
-                  <p className="text-xs text-gray-500">{request.customer.email}</p>
+                  <p className="text-small font-medium text-gray-900">{request.customer.name}</p>
+                  <p className="text-small text-gray-500">{request.customer.email}</p>
                 </div>
               </div>
             )}
           </div>
 
           <div className="flex items-center space-x-2">
-            <button className="flex items-center space-x-1 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
+            <button className="flex items-center space-x-1 px-3 py-1.5 text-small text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
               <MessageCircle className="w-4 h-4" />
               <span>Message</span>
             </button>
-            <button className="flex items-center space-x-1 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
+            <button className="flex items-center space-x-1 px-3 py-1.5 text-small text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
               <Phone className="w-4 h-4" />
               <span>Call</span>
             </button>

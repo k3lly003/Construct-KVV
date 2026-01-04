@@ -74,7 +74,7 @@ const DetailedSection: React.FC = () => {
     <>
       <div className="flex flex-col gap-5 py-5">
         <div>
-          <h1 className="text-3xl font-semibold text-gray-800 mb-2">
+          <h1 className="text-title font-semibold text-gray-800 mb-2">
             {product.name}
           </h1>
           <div className="flex items-center mb-2">
@@ -87,37 +87,37 @@ const DetailedSection: React.FC = () => {
           <div className="flex gap-3 items-center mb-3">
             {product.saleInfo?.onSale ? (
               <>
-                <p className="font-semibold text-xl text-green-500 mr-2">
+                <p className="font-semibold text-mid text-green-500 mr-2">
                   {product.price?.toFixed(0)}Rwf
                 </p>
                 <p className="text-red-500 line-through mr-2">
                   Was {product.saleInfo.originalPrice?.toFixed(0)}Rwf
                 </p>
                 {product.saleInfo.discountPercentage && (
-                  <span className="text-sm text-green-500">
+                  <span className="text-small text-green-500">
                     ({product.saleInfo.discountPercentage}% Off)
                   </span>
                 )}
                 {product.saleInfo.offerEnds && (
-                  <span className="text-xs text-gray-600 ml-2">
+                  <span className="text-small text-gray-600 ml-2">
                     Limited time offer ends {product.saleInfo.offerEnds}
                   </span>
                 )}
               </>
             ) : (
-              <p className="font-semibold text-xl text-yellow-400">
+              <p className="font-semibold text-mid text-yellow-400">
                 ${product.price?.toFixed(2)} / {product.unit}
               </p>
             )}
           </div>
 
           <div className="mb-4">
-            <h3 className="text-lg font-semibold text-gray-700 mb-1">Style:</h3>
+            <h3 className="text-mid font-semibold text-gray-700 mb-1">Style:</h3>
             <div className="flex items-center gap-2">
               {product.availableStyles?.map((style) => (
                 <button
                   key={style}
-                  className={`px-3 py-1 rounded-md text-sm border ${
+                  className={`px-3 py-1 rounded-md text-small border ${
                     product.selectedStyle === style
                       ? "border-blue-500 font-semibold"
                       : "border-gray-300 hover:border-blue-300"
@@ -132,17 +132,17 @@ const DetailedSection: React.FC = () => {
           <p className="text-gray-600 mb-4">{product.description}</p>
 
           <div className="mb-4 space-y-2">
-            <div className="flex items-center text-sm text-gray-600">
+            <div className="flex items-center text-small text-gray-600">
               <Package className="h-4 w-4 mr-2" />
               <span>
                 Min. Order: {product.minOrder} {product.unit}
               </span>
             </div>
-            <div className="flex items-center text-sm text-gray-600">
+            <div className="flex items-center text-small text-gray-600">
               <Clock className="h-4 w-4 mr-2" />
               <span>Lead Time: {product.leadTime}</span>
             </div>
-            <div className="flex items-center text-sm text-gray-600">
+            <div className="flex items-center text-small text-gray-600">
               <BadgeCheck className="h-4 w-4 text-green-500 mr-2" />
               <span>Certification: {product.certifications.join(", ")}</span>
             </div>
@@ -152,7 +152,7 @@ const DetailedSection: React.FC = () => {
         {/* Action Buttons */}
         <Button
           text={"Request Quote"}
-          texSize={"text-sm"}
+          texSize={"text-small"}
           hoverBg={"bg-amber-500"}
           borderCol={"border-0"}
           bgCol={"bg-amber-400"}

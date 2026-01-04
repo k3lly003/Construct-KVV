@@ -22,7 +22,7 @@ const ReviewCarousel: React.FC<Props> = ({ reviews }) => {
   return (
     <>
       <div className="flex self-center">
-        <h1 className="font-bold text-4xl my-10">Why use Kvv for your project ?</h1>
+        <h1 className="font-bold text-title my-10">Why use Kvv for your project ?</h1>
       </div>
       <div className="relative max-w-6xl flex justify-center self-center w-full overflow-hidden">
         <AnimatePresence initial={false} custom={reviews[currentIndex]?.id}>

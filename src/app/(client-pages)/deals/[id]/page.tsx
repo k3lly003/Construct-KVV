@@ -71,7 +71,7 @@ const DealViewPage: React.FC = () => {
         </div>
         <hr className="my-10 border-1" />
         <div className="mt-10">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          <h2 className="text-mid font-semibold text-gray-800 mb-4">
             Additonal Features
           </h2>
           <ul className="list-disc list-inside text-gray-600">

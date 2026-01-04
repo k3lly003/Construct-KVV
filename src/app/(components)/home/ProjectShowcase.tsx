@@ -14,7 +14,7 @@ export const ProjectShowcase: React.FC = () => {
   return (
     <div className="py-20 bg-gradient-to-b from-slate-50 to-white w-full">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-4xl font-bold text-black mb-4 text-center">
+        <h2 className="text-title font-bold text-black mb-4 text-center">
           {t("ProjectShowcase.title")}
         </h2>
         <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
@@ -25,7 +25,7 @@ export const ProjectShowcase: React.FC = () => {
           {projectItems.map((item, index) => (
             <div
               key={item.titleKey}
-              className="group relative h-[300px] overflow-hidden cursor-pointer rounded-lg"
+              className="group relative h-[300px] overflow-hidden cursor-pointer rounded-md"
               onMouseEnter={() => setActiveIndex(index)}
               onMouseLeave={() => setActiveIndex(null)}
             >
@@ -62,7 +62,7 @@ export const ProjectShowcase: React.FC = () => {
                     ${activeIndex === index ? "w-16" : "w-0"}`}
                   />
 
-                  <h3 className="text-2xl font-bold text-white mb-2">
+                  <h3 className="text-mid font-bold text-white mb-2">
                     {t(item.titleKey)}
                   </h3>
                   <p className="text-gray-200 mb-4 opacity-90">

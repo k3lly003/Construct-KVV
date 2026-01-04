@@ -16,7 +16,7 @@ const TypingIndicator: React.FC<TypingIndicatorProps> = ({
           <div className="w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center">
             <div className="w-3 h-3 bg-white rounded-full"></div>
           </div>
-          <span className="text-xs text-gray-500">
+          <span className="text-small text-gray-500">
             KVV Construction Assistant is typing...
           </span>
         </div>

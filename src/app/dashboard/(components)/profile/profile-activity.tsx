@@ -143,13 +143,13 @@ export default function ActivitySection() {
     <>
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">Recent Activity</h2>
+        <h2 className="text-mid font-semibold text-gray-900">Recent Activity</h2>
         <div className="flex gap-1">
           {filters.map((filter) => (
             <button
               key={filter}
               onClick={() => setActiveFilter(filter)}
-              className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+              className={`px-4 py-2 text-small font-medium rounded-md transition-colors ${
                 activeFilter === filter
                   ? "bg-gray-900 text-white"
                   : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
@@ -188,20 +188,20 @@ export default function ActivitySection() {
                     <div className="flex items-start gap-2">
                       <h3 className="font-semibold text-gray-900">{item.user.name}</h3>
                       {item.type === "ticket_received" && (
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className="text-small">
                           New ticket received
                         </Badge>
                       )}
                     </div>
                     
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-small text-gray-600 mt-1">
                       {item.description}
                     </p>
 
                     {/* Content Text */}
                     {item.content && (
                       <div className="mt-3 p-4 bg-gray-50 rounded-lg">
-                        <p className="text-sm text-gray-700 leading-relaxed">
+                        <p className="text-small text-gray-700 leading-relaxed">
                           {item.content}
                         </p>
                       </div>
@@ -217,10 +217,10 @@ export default function ActivitySection() {
                           >
                             {getFileIcon(attachment.type)}
                             <div className="flex-1">
-                              <p className="text-sm font-medium text-gray-900">
+                              <p className="text-small font-medium text-gray-900">
                                 {attachment.name}
                               </p>
-                              <p className="text-xs text-gray-500">{attachment.size}</p>
+                              <p className="text-small text-gray-500">{attachment.size}</p>
                             </div>
                           </div>
                         ))}
@@ -230,7 +230,7 @@ export default function ActivitySection() {
                     {/* Comment */}
                     {item.comment && (
                       <div className="mt-3 pl-4 border-l-2 border-gray-200">
-                        <p className="text-sm text-gray-600 italic leading-relaxed">
+                        <p className="text-small text-gray-600 italic leading-relaxed">
                         &quot;{item.comment}&quot;
                         </p>
                       </div>
@@ -247,7 +247,7 @@ export default function ActivitySection() {
                             <AvatarImage src="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=32&h=32&dpr=2" />
                           </Avatar>
                           <div className="w-6 h-6 bg-gray-200 rounded-full border-2 border-white flex items-center justify-center">
-                            <span className="text-xs font-medium text-gray-600">
+                            <span className="text-small font-medium text-gray-600">
                               {item.teamMembers[0]}
                             </span>
                           </div>

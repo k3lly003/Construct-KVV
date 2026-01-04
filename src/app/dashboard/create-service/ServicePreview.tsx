@@ -34,19 +34,19 @@ const ServicePreview: React.FC<ServicePreviewProps> = ({ name, description, pric
       </div>
       <div className="p-4">
         <div className="flex justify-between items-center">
-          <h3 className="text-lg font-semibold text-gray-800 mb-1 truncate">
+          <h3 className="text-mid font-semibold text-gray-800 mb-1 truncate">
             {name || "Service Name"}
           </h3>
-          <p className="font-semibold text-lg text-yellow-400">
+          <p className="font-semibold text-mid text-yellow-400">
             {price > 0 ? `${price.toLocaleString()}` : "0"}
-            <span className="text-sm"> Rwf</span>
+            <span className="text-small"> Rwf</span>
           </p>
         </div>
-        <p className="text-sm text-gray-500 mb-2 h-10 overflow-hidden">
+        <p className="text-small text-gray-500 mb-2 h-10 overflow-hidden">
           {description || "Service description goes here..."}
         </p>
         <div className="flex justify-between items-center mb-3">
-          <div className="text-green-500 text-sm flex items-center">⭐ 4.0</div>
+          <div className="text-green-500 text-small flex items-center">⭐ 4.0</div>
           <div
             onClick={toggleDetails}
             className="cursor-pointer rounded-sm p-1 bg-gray-200 hover:bg-gray-300 transition"
@@ -60,7 +60,7 @@ const ServicePreview: React.FC<ServicePreviewProps> = ({ name, description, pric
         </div>
         
         {showDetails && (
-          <div className="mt-2 text-sm text-gray-700 space-y-1">
+          <div className="mt-2 text-small text-gray-700 space-y-1">
             <p><strong>Details:</strong></p>
             <p className="break-words">{description || "No additional details provided."}</p>
           </div>
@@ -69,7 +69,7 @@ const ServicePreview: React.FC<ServicePreviewProps> = ({ name, description, pric
         <div className="flex justify-between w-full mt-4 space-x-2">
           <Button
             text={"Order a sample"}
-            texSize={"text-sm"}
+            texSize={"text-small"}
             hoverBg={"hover:bg-yellow-500"}
             borderCol={"border-yellow-500"}
             bgCol={"white"}
@@ -81,7 +81,7 @@ const ServicePreview: React.FC<ServicePreviewProps> = ({ name, description, pric
           />
           <Button
             text={"Add to cart"}
-            texSize={"text-sm"}
+            texSize={"text-small"}
             hoverBg={"hover:bg-yellow-500"}
             borderCol={""}
             bgCol={"bg-amber-400"}

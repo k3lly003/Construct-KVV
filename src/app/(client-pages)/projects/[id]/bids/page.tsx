@@ -111,7 +111,7 @@ export default function ProjectBidsPage() {
           <Button variant="outline" onClick={() => router.push(`/projects/${projectId}`)} className="border-amber-400 text-amber-700 hover:bg-amber-50">
             <ArrowLeft className="h-4 w-4 mr-2" /> Back to Project
           </Button>
-          <h1 className="text-2xl font-bold text-amber-900">Project Bids</h1>
+          <h1 className="text-mid font-bold text-amber-900">Project Bids</h1>
         </div>
 
         {loading ? (
@@ -123,7 +123,7 @@ export default function ProjectBidsPage() {
             <div className="w-16 h-16 mx-auto mb-4 bg-amber-50 rounded-full flex items-center justify-center">
               <Users className="h-8 w-8 text-amber-400" />
             </div>
-            <p className="text-amber-800 text-lg font-medium">No bids yet for this project.</p>
+            <p className="text-amber-800 text-mid font-medium">No bids yet for this project.</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -140,10 +140,10 @@ export default function ProjectBidsPage() {
                       }>
                         {bid.status}
                       </Badge>
-                      <span className="text-sm text-gray-500">{new Date(bid.createdAt).toLocaleString()}</span>
+                      <span className="text-small text-gray-500">{new Date(bid.createdAt).toLocaleString()}</span>
                     </div>
                     {bid.message && (
-                      <p className="text-sm text-gray-700 max-w-2xl">{bid.message}</p>
+                      <p className="text-small text-gray-700 max-w-2xl">{bid.message}</p>
                     )}
                     <div className="mt-2">
                       <Link
@@ -156,7 +156,7 @@ export default function ProjectBidsPage() {
                   </div>
                   <div className="flex items-center gap-3">
                     <DollarSign className="h-5 w-5 text-green-600" />
-                    <span className="text-lg font-semibold text-green-600">
+                    <span className="text-mid font-semibold text-green-600">
                       {new Intl.NumberFormat("en-RW", { style: "currency", currency: "RWF", minimumFractionDigits: 0 }).format(bid.amount)}
                     </span>
                     <Button
@@ -210,9 +210,9 @@ export default function ProjectBidsPage() {
             <DialogTitle>Accept Bid</DialogTitle>
           </DialogHeader>
           <div className="space-y-3">
-            <p className="text-sm text-gray-600">Set the final agreed amount. This will close the project and notify all contractors.</p>
+            <p className="text-small text-gray-600">Set the final agreed amount. This will close the project and notify all contractors.</p>
             <div>
-              <label className="text-sm font-medium text-gray-700">Final Amount (RWF)</label>
+              <label className="text-small font-medium text-gray-700">Final Amount (RWF)</label>
               <Input type="number" value={finalAmount} onChange={(e) => setFinalAmount(e.target.value)} className="mt-1" />
             </div>
           </div>

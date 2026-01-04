@@ -251,7 +251,7 @@ const DesignDetails: React.FC<{ params: Promise<{ designId: string }> }> = ({ pa
           <CardContent className="pt-6">
             <div className="text-center text-red-600">
               <p className="font-medium">Error loading design</p>
-              <p className="text-sm">{error || 'Design not found'}</p>
+              <p className="text-small">{error || 'Design not found'}</p>
               <div className="mt-4 flex gap-2 justify-center">
                 <Button onClick={() => designId && fetchDesignDetails(designId)} variant="outline">
                   Try Again
@@ -334,8 +334,8 @@ const DesignDetails: React.FC<{ params: Promise<{ designId: string }> }> = ({ pa
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div>
-                    <CardTitle className="text-2xl mb-2">{design.title}</CardTitle>
-                    <CardDescription className="text-lg">
+                    <CardTitle className="text-mid mb-2">{design.title}</CardTitle>
+                    <CardDescription className="text-mid">
                       {design.description}
                     </CardDescription>
                   </div>
@@ -350,19 +350,19 @@ const DesignDetails: React.FC<{ params: Promise<{ designId: string }> }> = ({ pa
               <CardContent className="space-y-6">
                 {/* Building Description */}
                 <div>
-                  <h3 className="text-lg font-semibold mb-2">What You Can Build</h3>
+                  <h3 className="text-mid font-semibold mb-2">What You Can Build</h3>
                   <p className="text-gray-700">{design.buildingDescription}</p>
                 </div>
 
                 {/* Specifications */}
                 <div>
-                  <h3 className="text-lg font-semibold mb-4">Specifications</h3>
+                  <h3 className="text-mid font-semibold mb-4">Specifications</h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {design.squareFootage && (
                       <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
                         <Ruler className="w-5 h-5 text-amber-600" />
                         <div>
-                          <p className="text-sm text-gray-600">Area</p>
+                          <p className="text-small text-gray-600">Area</p>
                           <p className="font-semibold">{design.squareFootage} sq ft</p>
                         </div>
                       </div>
@@ -371,7 +371,7 @@ const DesignDetails: React.FC<{ params: Promise<{ designId: string }> }> = ({ pa
                       <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
                         <Home className="w-5 h-5 text-amber-600" />
                         <div>
-                          <p className="text-sm text-gray-600">Bedrooms</p>
+                          <p className="text-small text-gray-600">Bedrooms</p>
                           <p className="font-semibold">{design.bedrooms}</p>
                         </div>
                       </div>
@@ -380,7 +380,7 @@ const DesignDetails: React.FC<{ params: Promise<{ designId: string }> }> = ({ pa
                       <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
                         <Users className="w-5 h-5 text-amber-600" />
                         <div>
-                          <p className="text-sm text-gray-600">Bathrooms</p>
+                          <p className="text-small text-gray-600">Bathrooms</p>
                           <p className="font-semibold">{design.bathrooms}</p>
                         </div>
                       </div>
@@ -389,7 +389,7 @@ const DesignDetails: React.FC<{ params: Promise<{ designId: string }> }> = ({ pa
                       <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
                         <Building className="w-5 h-5 text-amber-600" />
                         <div>
-                          <p className="text-sm text-gray-600">Floors</p>
+                          <p className="text-small text-gray-600">Floors</p>
                           <p className="font-semibold">{design.floors}</p>
                         </div>
                       </div>
@@ -400,10 +400,10 @@ const DesignDetails: React.FC<{ params: Promise<{ designId: string }> }> = ({ pa
                 {/* Tags */}
                 {design.tags.length > 0 && (
                   <div>
-                    <h3 className="text-lg font-semibold mb-3">Tags</h3>
+                    <h3 className="text-mid font-semibold mb-3">Tags</h3>
                     <div className="flex flex-wrap gap-2">
                       {design.tags.map((tag, index) => (
-                        <Badge key={index} variant="outline" className="text-sm">
+                        <Badge key={index} variant="outline" className="text-small">
                           {tag}
                         </Badge>
                       ))}
@@ -414,12 +414,12 @@ const DesignDetails: React.FC<{ params: Promise<{ designId: string }> }> = ({ pa
                 {/* Documents */}
                 {design.documents.length > 0 && (
                   <div>
-                    <h3 className="text-lg font-semibold mb-3">Documents Included</h3>
+                    <h3 className="text-mid font-semibold mb-3">Documents Included</h3>
                     <div className="space-y-2">
                       {design.documents.map((doc, index) => (
                         <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
                           <Download className="w-4 h-4 text-amber-600" />
-                          <span className="text-sm">{doc}</span>
+                          <span className="text-small">{doc}</span>
                         </div>
                       ))}
                     </div>
@@ -436,15 +436,15 @@ const DesignDetails: React.FC<{ params: Promise<{ designId: string }> }> = ({ pa
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-3xl font-bold text-amber-600">
+                    <div className="text-title font-bold text-amber-600">
                       ${design.price.toLocaleString()}
                     </div>
-                    <div className="text-sm text-gray-600">One-time purchase</div>
+                    <div className="text-small text-gray-600">One-time purchase</div>
                   </div>
                   <div className="flex items-center gap-1">
                     <Star className="w-4 h-4 text-yellow-500 fill-current" />
                     <span className="font-semibold">{design.rating.toFixed(1)}</span>
-                    <span className="text-sm text-gray-600">({design.reviewCount})</span>
+                    <span className="text-small text-gray-600">({design.reviewCount})</span>
                   </div>
                 </div>
               </CardHeader>
@@ -452,7 +452,7 @@ const DesignDetails: React.FC<{ params: Promise<{ designId: string }> }> = ({ pa
                 <Button
                   onClick={handlePurchase}
                   disabled={purchasing}
-                  className="w-full bg-amber-500 hover:bg-amber-600 text-white py-3 text-lg font-semibold"
+                  className="w-full bg-amber-500 hover:bg-amber-600 text-white py-3 text-mid font-semibold"
                 >
                   {purchasing ? (
                     <>
@@ -485,7 +485,7 @@ const DesignDetails: React.FC<{ params: Promise<{ designId: string }> }> = ({ pa
                   </Button>
                 </div>
 
-                <div className="text-sm text-gray-600 space-y-2">
+                <div className="text-small text-gray-600 space-y-2">
                   <div className="flex items-center gap-2">
                     <Eye className="w-4 h-4" />
                     <span>{design.views} views</span>
@@ -501,18 +501,18 @@ const DesignDetails: React.FC<{ params: Promise<{ designId: string }> }> = ({ pa
             {/* Architect Card */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Architect</CardTitle>
+                <CardTitle className="text-mid">Architect</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-amber-200 rounded-full flex items-center justify-center">
-                    <span className="text-lg font-semibold text-amber-800">
+                    <span className="text-mid font-semibold text-amber-800">
                       {design.architect.user.firstName[0]}{design.architect.user.lastName[0]}
                     </span>
                   </div>
                   <div>
                     <p className="font-semibold">{design.architect.businessName}</p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-small text-gray-600">
                       {design.architect.user.firstName} {design.architect.user.lastName}
                     </p>
                   </div>

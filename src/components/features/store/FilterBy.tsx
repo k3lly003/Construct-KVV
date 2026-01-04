@@ -241,7 +241,7 @@ export const FilterBy: React.FC = () => {
   return (
     <div className="bg-white py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-2xl font-medium text-gray-900 mb-6 flex justify-between">
+        <div className="text-mid font-medium text-gray-900 mb-6 flex justify-between">
           <DropdownMenuDemo Prod='product' Serv='service'/>
           <div className="border-gray-200 border rounded-md flex">
             <input type="text" className="hover:border-0" />
@@ -272,7 +272,7 @@ export const FilterBy: React.FC = () => {
                 />
               </div>
               <div className="p-4 h-30 flex flex-col gap-3">
-                <h3 className="text-sm font-medium text-gray-900">
+                <h3 className="text-small font-medium text-gray-900">
                   <a href="#">
                     <span aria-hidden="true" className="absolute inset-0" />
                     {product.name}
@@ -280,7 +280,7 @@ export const FilterBy: React.FC = () => {
                 </h3>
                 <div className="mt-1 flex items-center">
                   <FaStar className="h-4 w-4 text-yellow-500 flex-shrink-0" />
-                  <p className="ml-1 text-sm text-gray-500">{product.rating}</p>
+                  <p className="ml-1 text-small text-gray-500">{product.rating}</p>
                 </div>
                 <div className="mt-2 flex items-baseline">
                   <p className="font-semibold text-gray-900">

@@ -77,7 +77,7 @@ export const ShopBanner: React.FC<ShopBannerProps> = ({ shop }) => {
                 {shopInfo.logo && (
                   <img src={shopInfo.logo} alt="Shop Logo" className="h-16 w-16 rounded-full mb-2" />
                 )}
-                <h1 className="text-4xl font-bold mb-4">{shopInfo.name}</h1>
+                <h1 className="text-title font-bold mb-4">{shopInfo.name}</h1>
               </div>
               <div className="flex items-center space-x-4 mb-2">
                 <div className="flex items-center">
@@ -97,7 +97,7 @@ export const ShopBanner: React.FC<ShopBannerProps> = ({ shop }) => {
               </div>
               {/* Display extra seller info from API */}
               {sellerProfile && (
-                <div className="mb-2 text-yellow-100 text-sm">
+                <div className="mb-2 text-yellow-100 text-small">
                   <div>{t(dashboardFakes.shopbanner.status)}: <span className="font-bold">{shopInfo.status}</span></div>
                   <div>{t(dashboardFakes.shopbanner.taxId)}: <span className="font-bold">{shopInfo.taxId}</span></div>
                   <div>{t(dashboardFakes.shopbanner.commissionRate)}: <span className="font-bold">{shopInfo.commissionRate ?? 'N/A'}</span></div>
@@ -121,14 +121,14 @@ export const ShopBanner: React.FC<ShopBannerProps> = ({ shop }) => {
                     <Shield className="h-5 w-5 mr-2" />
                     <span className="font-semibold">{t(dashboardFakes.shopbanner.verifiedSupplier)}</span>
                   </div>
-                  <p className="text-sm text-yellow-200">{t(dashboardFakes.shopbanner.since, { year: shopInfo.yearEstablished })}</p>
+                  <p className="text-small text-yellow-200">{t(dashboardFakes.shopbanner.since, { year: shopInfo.yearEstablished })}</p>
                 </div>
                 <div className="bg-white/10 rounded-lg p-4">
                   <div className="flex items-center mb-2">
                     <Truck className="h-5 w-5 mr-2" />
                     <span className="font-semibold">{t(dashboardFakes.shopbanner.fastDelivery)}</span>
                   </div>
-                  <p className="text-sm text-yellow-200">{shopInfo.deliveryTime}</p>
+                  <p className="text-small text-yellow-200">{shopInfo.deliveryTime}</p>
                 </div>
               </div>
             </div>

@@ -200,24 +200,24 @@ function SellerEarnings() {
       <div className="lg:col-span-1 space-y-4">
         <Card className="bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/10">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-amber-800 dark:text-amber-300">
+            <CardTitle className="text-small text-amber-800 dark:text-amber-300">
               This Month Earnings
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-semibold">
+            <div className="text-mid font-semibold">
               RWF {thisMonthEarnings.toLocaleString()}
             </div>
           </CardContent>
         </Card>
         <Card className="bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/10">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-amber-800 dark:text-amber-300">
+            <CardTitle className="text-small text-amber-800 dark:text-amber-300">
               Last Month Earnings
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-semibold">
+            <div className="text-mid font-semibold">
               RWF {lastMonthEarnings.toLocaleString()}
             </div>
           </CardContent>
@@ -406,7 +406,7 @@ export default function SellerOverview() {
   };
 
   if (isLoading) {
-    return <div className="p-8 text-lg">Loading analytics...</div>;
+    return <div className="p-8 text-mid">Loading analytics...</div>;
   }
 
   if (hasError) {
@@ -431,7 +431,7 @@ export default function SellerOverview() {
       <div className="px-2">
         {/* Header */}
         <div className="mb-10 pt-8">
-          <h1 className="text-2xl font-semibold">
+          <h1 className="text-mid font-semibold">
             Welcome Back, {userInfo.fullName || "User"}!
           </h1>
           <p className="text-gray-500">
@@ -486,7 +486,7 @@ export default function SellerOverview() {
         {/* Preferred Orders */}
         <div className="mb-8">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-2xl font-semibold">
+            <h2 className="text-mid font-semibold">
               Preferred Ordered Products
             </h2>
           </div>

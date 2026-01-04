@@ -109,7 +109,7 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
                       </div>
                     </div>
                   )}
-                  <p className="text-sm leading-relaxed">{message.content}</p>
+                  <p className="text-small leading-relaxed">{message.content}</p>
                 </div>
               </div>
             ))}
@@ -118,7 +118,7 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
             {/* Display quick actions only if there's only the initial message */}
             {messages.length === 1 && (
               <div className="space-y-3 mt-4">
-                <p className="text-sm text-gray-600 font-medium">What would you like to do?</p>
+                <p className="text-small text-gray-600 font-medium">What would you like to do?</p>
                 <div className="space-y-2">
                   {quickActions.map((action, index) => (
                     <button
@@ -147,7 +147,7 @@ const ChatDialog: React.FC<ChatDialogProps> = ({ isOpen, onClose }) => {
                 onClick={handleSendMessage} // Call the returned handleSendMessage
                 className="bg-amber-500 hover:bg-amber-600 text-white px-2"
               >
-                <Send className="text-lg w-4 h-4" />
+                <Send className="text-mid w-4 h-4" />
               </button>
             </div>
           </div>

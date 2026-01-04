@@ -37,7 +37,7 @@ export function StepThreeInterior() {
       transition={{ duration: 0.3 }}
     >
       <div className="mb-6">
-        <h2 className="text-3xl font-bold tracking-tight">Interior Features</h2>
+        <h2 className="text-title font-bold tracking-tight">Interior Features</h2>
         <p className="text-muted-foreground mt-2">
           Design the interior spaces and room layout of your dream home.
         </p>
@@ -49,8 +49,8 @@ export function StepThreeInterior() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label htmlFor="openFloorPlan" className="text-lg font-medium">Open Floor Plan</Label>
-                  <p className="text-muted-foreground text-sm">
+                  <Label htmlFor="openFloorPlan" className="text-mid font-medium">Open Floor Plan</Label>
+                  <p className="text-muted-foreground text-small">
                     Spacious layout with minimal walls between living spaces.
                   </p>
                 </div>
@@ -63,7 +63,7 @@ export function StepThreeInterior() {
             </div>
 
             <div className="space-y-4">
-              <Label className="text-lg font-medium">Kitchen Style</Label>
+              <Label className="text-mid font-medium">Kitchen Style</Label>
               <RadioGroup 
                 value={formData.kitchenStyle}
                 onValueChange={(value) => updateFormData({ kitchenStyle: value })}
@@ -100,7 +100,7 @@ export function StepThreeInterior() {
               <div className="flex items-center justify-between space-x-4 p-4 border rounded-md">
                 <div>
                   <Label htmlFor="hasBasement" className="text-base font-medium">Basement</Label>
-                  <p className="text-muted-foreground text-sm">Include a basement level</p>
+                  <p className="text-muted-foreground text-small">Include a basement level</p>
                 </div>
                 <Switch 
                   id="hasBasement" 
@@ -112,7 +112,7 @@ export function StepThreeInterior() {
               <div className="flex items-center justify-between space-x-4 p-4 border rounded-md">
                 <div>
                   <Label htmlFor="hasHomeOffice" className="text-base font-medium">Home Office</Label>
-                  <p className="text-muted-foreground text-sm">Dedicated workspace</p>
+                  <p className="text-muted-foreground text-small">Dedicated workspace</p>
                 </div>
                 <Switch 
                   id="hasHomeOffice" 
@@ -123,8 +123,8 @@ export function StepThreeInterior() {
             </div>
 
             <div className="space-y-4">
-              <Label className="text-lg font-medium">Special Rooms</Label>
-              <p className="text-muted-foreground text-sm">
+              <Label className="text-mid font-medium">Special Rooms</Label>
+              <p className="text-muted-foreground text-small">
                 Select any special purpose rooms you would like to include.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-2">

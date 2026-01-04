@@ -276,13 +276,13 @@ const DesignMarketplace: React.FC = () => {
         <div className="relative h-full flex items-center justify-center text-center">
           <div className="max-w-7xl mx-auto px-4">
             <div className="max-w-4xl mx-auto">
-              <span className="text-amber-500 text-xl font-semibold mb-4 block">
+              <span className="text-mid text-amber-500 font-semibold mb-4 block">
                 Professional Architectural Designs
               </span>
-              <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white">
+              <h1 className="text-large font-bold mb-6 text-white">
                 Design Marketplace
               </h1>
-              <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-3xl mx-auto">
+              <p className="text-mid text-gray-200 mb-8 max-w-3xl mx-auto">
                 Discover and purchase architectural designs from professional architects. 
                 Transform your vision into reality with our curated collection of innovative designs.
               </p>
@@ -290,7 +290,7 @@ const DesignMarketplace: React.FC = () => {
               {/* Hero Actions */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <button 
-                  className="bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg transition-all flex items-center gap-2"
+                  className="bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 text-mid font-semibold rounded-full shadow-lg transition-all flex items-center gap-2"
                   onClick={() => document.getElementById('designs-section')?.scrollIntoView({ behavior: 'smooth' })}
                 >
                   <Search className="w-5 h-5" />
@@ -299,7 +299,7 @@ const DesignMarketplace: React.FC = () => {
                 {isHydrated && userRole && (
                   <Link href="/design-orders">
                     <button 
-                      className="border-2 border-white text-white hover:bg-white hover:text-gray-900 px-8 py-4 text-lg font-semibold rounded-full shadow-lg transition-all bg-transparent flex items-center gap-2"
+                      className="border-2 border-white text-white hover:bg-white hover:text-gray-900 px-8 py-4 text-mid font-semibold rounded-full shadow-lg transition-all bg-transparent flex items-center gap-2"
                     >
                       <ShoppingCart className="w-5 h-5" />
                       View Your Orders
@@ -317,10 +317,10 @@ const DesignMarketplace: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 py-12">
           {/* Section Header */}
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-amber-800 mb-4">
+            <h2 className="text-title font-bold text-amber-800 mb-4">
               Explore Our Design Collection
             </h2>
-            <p className="text-lg text-amber-700 max-w-3xl mx-auto">
+            <p className="text-mid text-amber-700 max-w-3xl mx-auto">
               Browse through our carefully curated collection of architectural designs, 
               from modern residential homes to commercial buildings and sustainable structures.
             </p>
@@ -338,7 +338,7 @@ const DesignMarketplace: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
               {/* Search */}
               <div>
-                <label className="block text-sm font-medium mb-2">Search</label>
+                <label className="block text-small font-medium mb-2">Search</label>
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <Input
@@ -352,7 +352,7 @@ const DesignMarketplace: React.FC = () => {
 
               {/* Category */}
               <div>
-                <label className="block text-sm font-medium mb-2">Category</label>
+                <label className="block text-small font-medium mb-2">Category</label>
                 <Select value={filters.category} onValueChange={(value) => handleFilterChange('category', value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select category" />
@@ -369,7 +369,7 @@ const DesignMarketplace: React.FC = () => {
 
               {/* Price Range */}
               <div>
-                <label className="block text-sm font-medium mb-2">Min Price</label>
+                <label className="block text-small font-medium mb-2">Min Price</label>
                 <Input
                   type="number"
                   placeholder="Min price"
@@ -379,7 +379,7 @@ const DesignMarketplace: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Max Price</label>
+                <label className="block text-small font-medium mb-2">Max Price</label>
                 <Input
                   type="number"
                   placeholder="Max price"
@@ -392,7 +392,7 @@ const DesignMarketplace: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
               {/* Bedrooms */}
               <div>
-                <label className="block text-sm font-medium mb-2">Bedrooms</label>
+                <label className="block text-small font-medium mb-2">Bedrooms</label>
                 <Select value={filters.bedrooms} onValueChange={(value) => handleFilterChange('bedrooms', value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Any" />
@@ -408,7 +408,7 @@ const DesignMarketplace: React.FC = () => {
 
               {/* Bathrooms */}
               <div>
-                <label className="block text-sm font-medium mb-2">Bathrooms</label>
+                <label className="block text-small font-medium mb-2">Bathrooms</label>
                 <Select value={filters.bathrooms} onValueChange={(value) => handleFilterChange('bathrooms', value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Any" />
@@ -424,7 +424,7 @@ const DesignMarketplace: React.FC = () => {
 
               {/* Sort */}
               <div>
-                <label className="block text-sm font-medium mb-2">Sort By</label>
+                <label className="block text-small font-medium mb-2">Sort By</label>
                 <Select value={filters.sortBy} onValueChange={(value) => handleFilterChange('sortBy', value)}>
                   <SelectTrigger>
                     <SelectValue />
@@ -454,7 +454,7 @@ const DesignMarketplace: React.FC = () => {
           {/* Results Header */}
           <div id="designs-section" className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-4">
-            <h2 className="text-xl font-semibold text-amber-800">
+            <h2 className="text-mid font-semibold text-amber-800">
               {loading ? 'Loading...' : `${pagination.total} designs found`}
             </h2>
             <div className="flex gap-2">
@@ -482,7 +482,7 @@ const DesignMarketplace: React.FC = () => {
             <CardContent className="pt-6">
               <div className="text-center text-red-600">
                 <p className="font-medium">Error loading designs</p>
-                <p className="text-sm">{error}</p>
+                <p className="text-small">{error}</p>
                 <Button onClick={fetchDesigns} className="mt-4">
                   Try Again
                 </Button>
@@ -536,25 +536,25 @@ const DesignMarketplace: React.FC = () => {
                   </div>
                   
                   <CardContent className="p-4">
-                    <CardTitle className="text-lg mb-2 line-clamp-2">{design.title}</CardTitle>
-                    <CardDescription className="text-sm mb-3 line-clamp-2">
+                    <CardTitle className="text-mid mb-2 line-clamp-2">{design.title}</CardTitle>
+                    <CardDescription className="text-small mb-3 line-clamp-2">
                       {design.description}
                     </CardDescription>
                     
                     {/* Design specs */}
                     <div className="flex flex-wrap gap-2 mb-3">
                       {design.bedrooms && (
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className="text-small">
                           {design.bedrooms} bed
                         </Badge>
                       )}
                       {design.bathrooms && (
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className="text-small">
                           {design.bathrooms} bath
                         </Badge>
                       )}
                       {design.squareFootage && (
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className="text-small">
                           {design.squareFootage} sq ft
                         </Badge>
                       )}
@@ -563,17 +563,17 @@ const DesignMarketplace: React.FC = () => {
                     {/* Architect info */}
                     <div className="flex items-center gap-2 mb-3">
                       <div className="w-6 h-6 bg-amber-200 rounded-full flex items-center justify-center">
-                        <span className="text-xs font-medium text-amber-800">
+                        <span className="text-small font-medium text-amber-800">
                           {design.architect.user.firstName[0]}
                         </span>
                       </div>
-                      <span className="text-sm text-gray-600">
+                      <span className="text-small text-gray-600">
                         {design.architect.businessName}
                       </span>
                     </div>
 
                     {/* Stats */}
-                    <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                    <div className="flex items-center justify-between text-small text-gray-500 mb-4">
                       <div className="flex items-center gap-1">
                         <Star className="w-4 h-4 text-yellow-500 fill-current" />
                         <span>{design.rating.toFixed(1)}</span>
@@ -587,7 +587,7 @@ const DesignMarketplace: React.FC = () => {
 
                     {/* Price and actions */}
                     <div className="flex items-center justify-between">
-                      <div className="text-2xl font-bold text-amber-600">
+                      <div className="text-mid font-bold text-amber-600">
                         ${design.price.toLocaleString()}
                       </div>
                       <div className="flex gap-2">
@@ -661,7 +661,7 @@ const DesignMarketplace: React.FC = () => {
                 <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Search className="w-12 h-12 text-gray-400" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">No designs found</h3>
+                <h3 className="text-mid font-semibold text-gray-800 mb-2">No designs found</h3>
                 <p className="text-gray-600 mb-4">
                   Try adjusting your filters or search terms
                 </p>
@@ -689,7 +689,7 @@ const DesignMarketplace: React.FC = () => {
               <div className="space-y-4">
                 <div className="flex justify-between">
                   <span className="font-medium">Price:</span>
-                  <span className="text-2xl font-bold text-amber-600">
+                  <span className="text-mid font-bold text-amber-600">
                     ${selectedDesign.price.toLocaleString()}
                   </span>
                 </div>
@@ -697,7 +697,7 @@ const DesignMarketplace: React.FC = () => {
                   <span className="font-medium">Architect:</span>
                   <span>{selectedDesign.architect.businessName}</span>
                 </div>
-                <div className="text-sm text-gray-600">
+                <div className="text-small text-gray-600">
                   After purchase, you'll receive access to all design files and documents.
                 </div>
               </div>
