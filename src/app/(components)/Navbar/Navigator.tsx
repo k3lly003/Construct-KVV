@@ -747,7 +747,7 @@ const Navbar: React.FC = () => {
                   : 'text-gray-900 hover:text-amber-500'
               }`}
             >
-              {t("navigation.designMarketplace")}
+              {t("navigation.designMarketPlace")}
             </Link>
           </div>
         </div>
