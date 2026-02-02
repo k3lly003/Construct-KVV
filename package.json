@@ -54,7 +54,7 @@
     "i18next": "^25.7.3",
     "input-otp": "^1.4.2",
     "jodit-react": "^5.2.19",
-    "jspdf": "^4.0.0",
+    "jspdf": "^4.1.0",
     "lucide-react": "^0.488.0",
     "motion": "^12.15.0",
     "next": "^15.5.9",
