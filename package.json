@@ -42,7 +42,7 @@
     "@types/pdfjs-dist": "^2.10.377",
     "@types/styled-components": "^5.1.34",
     "@vercel/speed-insights": "^1.2.0",
-    "axios": "^1.12.0",
+    "axios": "^1.13.5",
     "chart.js": "^4.4.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
