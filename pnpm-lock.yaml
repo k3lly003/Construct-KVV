@@ -132,8 +132,8 @@ importers:
         specifier: ^5.2.19
         version: 5.2.38(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       jspdf:
-        specifier: ^4.0.0
-        version: 4.0.0
+        specifier: ^4.1.0
+        version: 4.1.0
       lucide-react:
         specifier: ^0.488.0
         version: 0.488.0(react@19.2.3)
@@ -329,6 +329,10 @@ packages:
     resolution: {integrity: sha512-cjQ7ZlQ0Mv3b47hABuTevyTuYN4i+loJKGeV9flcCgIK37cCXRh+L1bd3iBHlynerhQ7BhCkn2BPbQUL+rGqFg==}
     engines: {node: '>=6.9.0'}
 
+  '@babel/code-frame@7.29.0':
+    resolution: {integrity: sha512-9NhCeYjq9+3uxgdtp20LSiJXJvN0FeCtNGpJxuMFZ1Kv3cWUNb6DOhJwUvcVCzKGR66cw4njwM6hrJLqgOwbcw==}
+    engines: {node: '>=6.9.0'}
+
   '@babel/compat-data@7.28.5':
     resolution: {integrity: sha512-6uFXyCayocRbqhZOB+6XcuZbkMNimwfVGFji8CTZnCzOHVGvDqzvitu1re2AU5LROliz7eQPhB8CpAMvnx9EjA==}
     engines: {node: '>=6.9.0'}
@@ -477,6 +481,10 @@ packages:
 
   '@babel/runtime@7.28.4':
     resolution: {integrity: sha512-Q/N6JNWvIvPnLDvjlE1OUBLPQHH6l3CltCEsHIujp45zQUSSh8K+gHnaEX45yAT1nyngnINhvWtzN+Nb9D8RAQ==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/runtime@7.28.6':
+    resolution: {integrity: sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==}
     engines: {node: '>=6.9.0'}
 
   '@babel/template@7.27.2':
@@ -2265,6 +2273,9 @@ packages:
   '@types/node@20.19.27':
     resolution: {integrity: sha512-N2clP5pJhB2YnZJ3PIHFk5RkygRX5WO/5f0WC08tp0wd+sv0rsJk3MqWn3CbNmT2J505a5336jaQj4ph1AdMug==}
 
+  '@types/node@20.19.30':
+    resolution: {integrity: sha512-WJtwWJu7UdlvzEAUm484QNg5eAoq5QR08KDNx7g45Usrs2NtOPiX8ugDqmKdXkyL03rBqU5dYNYVQetEpBHq2g==}
+
   '@types/pako@2.0.4':
     resolution: {integrity: sha512-VWDCbrLeVXJM9fihYodcLiIv0ku+AlOa/TQ1SvYOaBuyrSKgEcro95LJyIsJ4vSo6BXIxOKxiJAat04CmST9Fw==}
 
@@ -2915,8 +2926,8 @@ packages:
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
-  core-js@3.47.0:
-    resolution: {integrity: sha512-c3Q2VVkGAUyupsjRnaNX6u8Dq2vAdzm9iuPj5FW0fRxzlxgq9Q39MDq10IvmQSpLgHQNyQzQmOo6bgGHmH3NNg==}
+  core-js@3.48.0:
+    resolution: {integrity: sha512-zpEHTy1fjTMZCKLHUZoVeylt9XrzaIN2rbPXEt0k+q7JE5CkCZdo6bNq55bn24a69CH7ErAVLKijxJja4fw+UQ==}
 
   cosmiconfig@7.1.0:
     resolution: {integrity: sha512-AdmX6xUzdNASswsFtmwSt7Vj8po9IuqXm0UXz7QKPuEUmPB4XyjGfaAr2PSuELMwkRMVH1EpIkX5bTZGRB3eCA==}
@@ -4130,8 +4141,8 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
 
-  jspdf@4.0.0:
-    resolution: {integrity: sha512-w12U97Z6edKd2tXDn3LzTLg7C7QLJlx0BPfM3ecjK2BckUl9/81vZ+r5gK4/3KQdhAcEZhENUxRhtgYBj75MqQ==}
+  jspdf@4.1.0:
+    resolution: {integrity: sha512-xd1d/XRkwqnsq6FP3zH1Q+Ejqn2ULIJeDZ+FTKpaabVpZREjsJKRJwuokTNgdqOU+fl55KgbvgZ1pRTSWCP2kQ==}
 
   jsx-ast-utils@3.3.5:
     resolution: {integrity: sha512-ZZow9HBI5O6EPgSJLUb8n2NKgmVWTwCvHGwFuJlMjvLFqlGG6pjirPhtdsseaLZjSibD8eegzmYpUZwoIlj2cQ==}
@@ -5235,8 +5246,8 @@ packages:
       uglify-js:
         optional: true
 
-  terser@5.44.1:
-    resolution: {integrity: sha512-t/R3R/n0MSwnnazuPpPNVO60LX0SKL45pyl9YlvxIdkH0Of7D5qM2EVe+yASRIlY5pZ73nclYJfNANGWPwFDZw==}
+  terser@5.46.0:
+    resolution: {integrity: sha512-jTwoImyr/QbOWFFso3YoU3ik0jBBDJ6JTOQiy/J2YxVJdZCc+5u7skhNwiOR3FQIygFqVUPHl7qbbxtjW2K3Qg==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -5474,8 +5485,8 @@ packages:
   wasm-feature-detect@1.8.0:
     resolution: {integrity: sha512-zksaLKM2fVlnB5jQQDqKXXwYHLQUVH9es+5TOOHwGOVJOCeRBCiPjwSg+3tN2AdTCzjgli4jijCH290kXb/zWQ==}
 
-  watchpack@2.5.0:
-    resolution: {integrity: sha512-e6vZvY6xboSwLz2GD36c16+O/2Z6fKvIf4pOXptw2rY9MVwE/TXc6RGqxD3I3x0a28lwBY7DE+76uTPSsBrrCA==}
+  watchpack@2.5.1:
+    resolution: {integrity: sha512-Zn5uXdcFNIA1+1Ei5McRd+iRzfhENPCe7LeABkJtNulSxjma+l7ltNx55BWZkRlwRnpOgHqxnjyaDgJnNXnqzg==}
     engines: {node: '>=10.13.0'}
 
   webidl-conversions@3.0.1:
@@ -5685,6 +5696,12 @@ snapshots:
       js-tokens: 4.0.0
       picocolors: 1.1.1
 
+  '@babel/code-frame@7.29.0':
+    dependencies:
+      '@babel/helper-validator-identifier': 7.28.5
+      js-tokens: 4.0.0
+      picocolors: 1.1.1
+
   '@babel/compat-data@7.28.5': {}
 
   '@babel/core@7.28.5':
@@ -5844,6 +5861,8 @@ snapshots:
       '@babel/helper-plugin-utils': 7.27.1
 
   '@babel/runtime@7.28.4': {}
+
+  '@babel/runtime@7.28.6': {}
 
   '@babel/template@7.27.2':
     dependencies:
@@ -7507,8 +7526,8 @@ snapshots:
 
   '@testing-library/dom@10.4.1':
     dependencies:
-      '@babel/code-frame': 7.27.1
-      '@babel/runtime': 7.28.4
+      '@babel/code-frame': 7.29.0
+      '@babel/runtime': 7.28.6
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       dom-accessibility-api: 0.5.16
@@ -7646,6 +7665,10 @@ snapshots:
   '@types/jspdf@1.3.3': {}
 
   '@types/node@20.19.27':
+    dependencies:
+      undici-types: 6.21.0
+
+  '@types/node@20.19.30':
     dependencies:
       undici-types: 6.21.0
 
@@ -8155,7 +8178,7 @@ snapshots:
 
   babel-plugin-macros@3.1.0:
     dependencies:
-      '@babel/runtime': 7.28.4
+      '@babel/runtime': 7.28.6
       cosmiconfig: 7.1.0
       resolve: 1.22.11
 
@@ -8262,9 +8285,9 @@ snapshots:
 
   canvg@3.0.11:
     dependencies:
-      '@babel/runtime': 7.28.4
+      '@babel/runtime': 7.28.6
       '@types/raf': 3.4.3
-      core-js: 3.47.0
+      core-js: 3.48.0
       raf: 3.4.1
       regenerator-runtime: 0.13.11
       rgbcolor: 1.0.1
@@ -8341,7 +8364,7 @@ snapshots:
 
   convert-source-map@2.0.0: {}
 
-  core-js@3.47.0:
+  core-js@3.48.0:
     optional: true
 
   cosmiconfig@7.1.0:
@@ -8516,7 +8539,7 @@ snapshots:
 
   dom-helpers@5.2.1:
     dependencies:
-      '@babel/runtime': 7.28.4
+      '@babel/runtime': 7.28.6
       csstype: 3.2.3
 
   dom-serializer@2.0.0:
@@ -9807,7 +9830,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 20.19.27
+      '@types/node': 20.19.30
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -9898,14 +9921,14 @@ snapshots:
 
   json5@2.2.3: {}
 
-  jspdf@4.0.0:
+  jspdf@4.1.0:
     dependencies:
-      '@babel/runtime': 7.28.4
+      '@babel/runtime': 7.28.6
       fast-png: 6.4.0
       fflate: 0.8.2
     optionalDependencies:
       canvg: 3.0.11
-      core-js: 3.47.0
+      core-js: 3.48.0
       dompurify: 3.3.1
       html2canvas: 1.4.1
 
@@ -10452,7 +10475,7 @@ snapshots:
 
   rc-util@5.44.4(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
     dependencies:
-      '@babel/runtime': 7.28.4
+      '@babel/runtime': 7.28.6
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
       react-is: 18.3.1
@@ -10550,7 +10573,7 @@ snapshots:
 
   react-transition-group@4.4.5(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
     dependencies:
-      '@babel/runtime': 7.28.4
+      '@babel/runtime': 7.28.6
       dom-helpers: 5.2.1
       loose-envify: 1.4.0
       prop-types: 15.8.1
@@ -11037,12 +11060,12 @@ snapshots:
       jest-worker: 27.5.1
       schema-utils: 4.3.3
       serialize-javascript: 6.0.2
-      terser: 5.44.1
+      terser: 5.46.0
       webpack: 5.104.1(@swc/core@1.15.7)
     optionalDependencies:
       '@swc/core': 1.15.7
 
-  terser@5.44.1:
+  terser@5.46.0:
     dependencies:
       '@jridgewell/source-map': 0.3.11
       acorn: 8.15.0
@@ -11329,7 +11352,7 @@ snapshots:
 
   wasm-feature-detect@1.8.0: {}
 
-  watchpack@2.5.0:
+  watchpack@2.5.1:
     dependencies:
       glob-to-regexp: 0.4.1
       graceful-fs: 4.2.11
@@ -11365,7 +11388,7 @@ snapshots:
       schema-utils: 4.3.3
       tapable: 2.3.0
       terser-webpack-plugin: 5.3.16(@swc/core@1.15.7)(webpack@5.104.1(@swc/core@1.15.7))
-      watchpack: 2.5.0
+      watchpack: 2.5.1
       webpack-sources: 3.3.3
     transitivePeerDependencies:
       - '@swc/core'
