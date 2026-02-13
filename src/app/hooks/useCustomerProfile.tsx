@@ -11,13 +11,16 @@ export const useCustomerProfile = () => {
   // Add a small delay to ensure the token is fully processed
   useEffect(() => {
     if (authToken) {
+      console.log("🔍 useCustomerProfile: Token detected, waiting...");
       // Add a small delay to allow the backend to process the Google auth token
       const timer = setTimeout(() => {
+        console.log("✅ useCustomerProfile: Token ready, making API call");
         setIsTokenReady(true);
       }, 1000); // 1 second delay
 
       return () => clearTimeout(timer);
     } else {
+      console.log("❌ useCustomerProfile: No token found");
       setIsTokenReady(false);
     }
   }, [authToken]);
