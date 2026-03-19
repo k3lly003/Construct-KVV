@@ -160,18 +160,31 @@ export const useCartStore = create<CartState>((set, get) => ({
 
       // Convert API cart items to local cart items for compatibility
       const localCartItems: LocalCartItem[] = cart.items.map(
-        (item: CartItem) => ({
-          id: item.product.id, // Use product ID as the main ID
-          cartItemId: item.id, // Store the cart item ID for API operations
-          productId: item.product.id,
-          name: item.product.name,
-          price: parseFloat(item.product.price),
-          quantity: item.quantity,
-          image: "", // Will be handled by image utilities
-          category: item.product.categoryId,
-          weight: 0, // Not provided by API
-          dimensions: item.product.attributes?.dimensions || "",
-        })
+        (item: CartItem) => {
+          // Extract image from the actual API response structure
+          console.log('[CartStore] Processing cart item:', item);
+          
+          // Priority: product.thumbnailUrl -> product.images[0].url -> item.images[0].url
+          const imageUrl = item.product?.thumbnailUrl || 
+                          (item.product?.images && item.product.images[0]?.url) || 
+                          (item.images && item.images[0]?.url) || "";
+          
+          console.log('[CartStore] Extracted image URL:', imageUrl);
+          
+          return {
+            id: item.product.id, // Use product ID as main ID
+            cartItemId: item.id, // Store the cart item ID for API operations
+            productId: item.product.id,
+            name: item.product.name,
+            price: parseFloat(item.product.price),
+            quantity: item.quantity,
+            // Preserve image data from product
+            image: imageUrl,
+            category: item.product.categoryId,
+            weight: 0, // Not provided by API
+            dimensions: item.product.attributes?.dimensions || "",
+          };
+        }
       );
 
       set({ cart, cartItems: localCartItems });

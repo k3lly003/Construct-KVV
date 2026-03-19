@@ -74,7 +74,7 @@ const Page = () => {
     setLoading(true);
     try {
       // Use Railway for registration (sends welcome email + OTP)
-      const NEXT_PUBLIC_API_URL_2 = process.env.NEXT_PUBLIC_NEXT_PUBLIC_API_URL_2 || 'https://construct-kvv-bn-fork-production.up.railway.app';
+      const NEXT_PUBLIC_API_URL_2 = process.env.NEXT_PUBLIC_NEXT_PUBLIC_API_URL_2 || 'https://construct-kvv-bn-fork.onrender.com';
       const response = await axios.post(
         `${NEXT_PUBLIC_API_URL_2}/api/v1/user/register`,
         {
