@@ -40,7 +40,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "construct-kvv-bn-fork-production.up.railway.app",
+        hostname: "construct-kvv-bn-fork.onrender.com",
         port: "",
         pathname: "/**",
       },
@@ -85,7 +85,7 @@ const nextConfig = {
       // other allowed domains...
       "certificatesinn.com",
       "example.com",
-      "construct-kvv-bn-fork-production.up.railway.app",
+      "construct-kvv-bn-fork.onrender.com",
       "construct-kvv-bn-fork.onrender.com",
       "tse1.mm.bing.net",
       "tse2.mm.bing.net",

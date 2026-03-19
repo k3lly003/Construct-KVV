@@ -16,6 +16,9 @@ export interface CartProduct {
   isActive: boolean;
   slug: string;
   categoryId: string;
+  // Optional fields used by UI when rendering cart images
+  thumbnailUrl?: string;
+  images?: Array<{ url: string }>;
   attributes: Record<string, any>;
   sellerId: string;
   discountedPrice?: string;
@@ -29,6 +32,9 @@ export interface CartItem {
   quantity: number;
   price: number;
   subtotal: number;
+  // Some API responses include a flat images array at item level
+  // (cartStore uses it as a fallback for cart images).
+  images?: Array<{ url: string }>;
 }
 
 export interface Cart {
