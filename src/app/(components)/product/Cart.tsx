@@ -11,16 +11,14 @@ import {
   Loader2,
 } from "lucide-react";
 import Image from "next/image";
-import { initiateSplitPayment } from "@/app/services/paymentService";
-import { toast } from "sonner";
-import { useCartStore, useCartHydration } from "@/store/cartStore";
+import { GenericButton } from "@/components/ui/generic-button";
+import { useCartStore } from "@/store/cartStore";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 import { getFallbackImage } from "@/app/utils/imageUtils";
-import { orderService } from "@/app/services/orderService";
-import { useUserStore } from "@/store/userStore";
-import { getCheckoutDetails } from "@/app/services/cartService";
 import { useTranslations } from "@/app/hooks/useTranslations";
+import { orderService } from "@/app/services/orderService";
+import { MomoPaymentModal } from "../MomoPaymentModal";
 
 export const CartPage: React.FC = () => {
   const {
@@ -28,33 +26,18 @@ export const CartPage: React.FC = () => {
     cart,
     isLoading,
     error,
-    updateQuantity,
-    removeFromCart,
-    clearCart,
     fetchCart,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
   } = useCartStore();
 
-  const { isAuthenticated } = useAuth();
-  const { t } = useTranslations();
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<
-    "mobilemoney" | "card" | "bank"
-  >("mobilemoney");
+  const [isMomoModalOpen, setIsMomoModalOpen] = useState(false);
+  const [currentOrderId, setCurrentOrderId] = useState<string | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const router = useRouter();
-
-  const userEmail = useUserStore((state) => state.email);
-  // You may need to add phone_number to your user store if not present
-  // For now, fallback to a hardcoded value if not available
-  const userPhone = "250791322102";
-
-  function generateTxRef() {
-    // Generates a tx_ref like tx-123456 with a random 6-digit number
-    return `tx-${Math.floor(100000 + Math.random() * 900000)}`;
-  }
-
-  // Hydrate cart from API
-  useCartHydration();
+  const { t } = useTranslations();
 
   // Card/Bank input states
   const [cardDetails, setCardDetails] = useState({
@@ -151,75 +134,49 @@ export const CartPage: React.FC = () => {
         }, 1200);
         return;
       }
-      // 0. Get checkout details and log to console
-      // const checkoutDetails = await getCheckoutDetails(cart.id, token);
-      // console.log("[CHECKOUT DETAILS]", checkoutDetails);
       // 1. Place the order
       const response = await orderService.placeOrder(cart.id, "string", token);
       if (!response.data?.id) throw new Error("Order creation failed");
       toast.success("Order placed successfully!");
-      // 2. Prepare payment payload
+      
+      // 2. Set current order ID and open MoMo modal
       const order = response.data;
-      const firstCartItem = cartItems[0];
-      if (!firstCartItem) throw new Error("No cart items found");
-      // Get sellerId from product (from cartService types)
-      const sellerId =
-        (cart && cart.items && cart.items[0]?.product?.sellerId) || undefined;
-      if (!sellerId) throw new Error("Seller ID not found in product");
-      const tx_ref = generateTxRef();
-      const amount = order.total;
-      const order_id = order.id;
-      const narration = `Payment for order ${order.id}`;
-      // Persist for redirect handling
-      if (typeof window !== "undefined") {
-        localStorage.setItem("lastOrderId", order_id);
-        localStorage.setItem("lastTxRef", tx_ref);
-        localStorage.setItem("lastCartId", cart.id); // Store cartId for payment-complete page
-      }
-      // 3. Initiate payment
-      const baseUrl = getBaseUrl();
-      // Get user info from localStorage if available
-      let localUserEmail = userEmail || "";
-      let localUserPhone = userPhone || "";
-      if (typeof window !== "undefined") {
-        const userStr = localStorage.getItem("user");
-        if (userStr) {
-          try {
-            const userObj = JSON.parse(userStr);
-            if (userObj.email) localUserEmail = userObj.email;
-            if (userObj.phone_number) localUserPhone = userObj.phone_number;
-          } catch {}
-        }
-      }
-      const paymentRes: any = await initiateSplitPayment({
-        sellerId,
-        paymentType: "card",
-        tx_ref,
-        amount,
-        currency: "RWF",
-        redirect_url: `${baseUrl}/payment-complete`,
-        order_id,
-        email: localUserEmail,
-        phone_number: localUserPhone, // Now from localStorage if available
-        narration,
-        token,
-        customizations: {
-          title: "Construct kvv",
-          description: "Payment services",
-          logo: `${baseUrl}/favicon.ico`,
-        },
-      });
-      if (paymentRes.data?.link) {
-        toast.success("Redirecting to payment...");
-        window.location.href = paymentRes.data.link;
-      } else {
-        throw new Error("Failed to get payment link");
-      }
+      console.log('[Cart] 📦 Order created successfully:', order);
+      setCurrentOrderId(order.id);
+      console.log('[Cart] 🎭 Opening MoMo modal for order:', order.id);
+      setIsMomoModalOpen(true);
     } catch (err: any) {
-      toast.error(err?.message || "Order or payment failed.");
+      toast.error(err?.message || "Order creation failed.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePaymentSuccess = async (transactionId: string, reference: string) => {
+    console.log('[Cart] 🎉 Payment success callback received:', { transactionId, reference, currentOrderId });
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("authToken")
+        : null;
+    if (token && currentOrderId) {
+      console.log('[Cart] 📝 Updating order status to PAID for order:', currentOrderId);
+      await orderService.updateOrderStatus(currentOrderId, "PAID", token);
+      clearCart();
+      console.log('[Cart] 🗑️ Cart cleared, closing modal');
+      setIsMomoModalOpen(false);
+      console.log('[Cart] 🚀 Redirecting to payment-complete page');
+      router.push(
+        `/payment-complete?status=successful&transaction_id=${transactionId}&reference=${reference}&order_id=${currentOrderId}` 
+      );
+    } else {
+      console.error('[Cart] ❌ Missing token or order ID for payment success');
+    }
+  };
+
+  const handlePaymentFailure = (message: string) => {
+    console.log('[Cart] 💥 Payment failure callback received:', { message, currentOrderId });
+    console.log('[Cart] 🚀 Redirecting to payment-complete with failed status');
+    router.push(`/payment-complete?status=failed&order_id=${currentOrderId}`);
   };
 
   const [pendingOrders, setPendingOrders] = useState<any[]>([]);
@@ -263,14 +220,13 @@ export const CartPage: React.FC = () => {
     }
   };
 
-  // Add this function to handle order deletion
   const handleDeleteOrder = async (orderId: string) => {
     const token =
       typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
     if (!token) return;
     setOrderLoading(orderId);
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork-production.up.railway.app';
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork.onrender.com';
       const res = await fetch(
         `${API_URL}/api/v1/orders/${orderId}`,
         {
@@ -324,7 +280,7 @@ export const CartPage: React.FC = () => {
     );
   }
 
-  // Show empty cart
+  // Show empty cart but still show pending orders if they exist
   if (!cart || cartItems.length === 0) {
     return (
       <div className="min-h-screen py-12">
@@ -332,7 +288,9 @@ export const CartPage: React.FC = () => {
           <h1 className="text-title font-bold text-gray-900 mb-8">
             {t("cart.title")}
           </h1>
-          <div className="text-center py-12">
+          
+          {/* Empty Cart Message */}
+          <div className="text-center py-12 mb-8">
             <PackageCheck className="h-16 w-16 text-gray-400 mx-auto mb-4" />
             <h2 className="text-mid font-semibold text-gray-900 mb-2">
               {t("cart.empty")}
@@ -347,6 +305,94 @@ export const CartPage: React.FC = () => {
               {t("cart.continueShopping")}
             </button>
           </div>
+
+          {/* Pending Orders Section - Always show if there are pending orders */}
+          {pendingOrders.length > 0 && (
+            <div className="mt-10 sm:mt-12">
+              <h2 className="text-mid sm:text-mid font-semibold text-gray-900 mb-6">
+                Pending Orders
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {pendingOrders.map((order) => (
+                  <div
+                    key={order.id}
+                    className="rounded-xl shadow-lg bg-white p-4 sm:p-6 border border-gray-200 flex flex-col gap-4"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2 gap-2">
+                      <span className="font-semibold text-gray-700">
+                        Order ID:
+                      </span>
+                      <span className="text-gray-900 font-mono text-small break-all">
+                        {order.id}
+                      </span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2 gap-2">
+                      <span className="font-semibold text-gray-700">
+                        Created At:
+                      </span>
+                      <span className="text-gray-700">
+                        {new Date(order.createdAt).toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2 gap-2">
+                      <span className="font-semibold text-gray-700">Total:</span>
+                      <span className="text-mid font-bold text-yellow-600">
+                        RWF {order.total.toLocaleString()}
+                      </span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                      <span className="font-semibold text-gray-700">Status:</span>
+                      <span
+                        className={`px-3 py-1 rounded-full border text-small font-semibold ${
+                          statusColors[order.status] || "bg-gray-100 text-gray-700 border-gray-300"
+                        }`}
+                      >
+                        {order.status}
+                      </span>
+                    </div>
+                    {/* Status Change Buttons */}
+                    <div className="flex flex-wrap gap-2">
+                      {statusOptions.map((status) => (
+                        <button
+                          key={status}
+                          onClick={() => handleStatusChange(order.id, status)}
+                          disabled={orderLoading === order.id || order.status === status}
+                          className={`px-3 py-1 rounded text-small font-medium transition-colors ${
+                            orderLoading === order.id
+                              ? "opacity-50 cursor-not-allowed"
+                              : "hover:bg-gray-100"
+                          } ${
+                            order.status === status
+                              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                              : statusColors[status] || "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                          }`}
+                        >
+                          {orderLoading === order.id ? (
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                          ) : (
+                            status
+                          )}
+                        </button>
+                      ))}
+                      <button
+                        onClick={() => handleDeleteOrder(order.id)}
+                        disabled={orderLoading === order.id}
+                        className={`px-3 py-1 rounded text-small font-medium text-red-600 border border-red-300 hover:bg-red-50 transition-colors ${
+                          orderLoading === order.id ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
+                      >
+                        {orderLoading === order.id ? (
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                        ) : (
+                          "Delete"
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -363,26 +409,9 @@ export const CartPage: React.FC = () => {
           <div className="lg:col-span-2">
             <div className="bg-white rounded-xl shadow-lg overflow-hidden divide-y divide-gray-200">
               {cartItems.map((items) => {
+                // Use same image logic as ProductCard for consistency
                 const imageUrl = getFallbackImage(
-                  (Array.isArray(items.image)
-                    ? typeof items.image[0] === "string"
-                      ? items.image[0]
-                      : items.image.find((img: any) => img?.isDefault)?.url ||
-                        items.image[0]?.url
-                    : undefined) ||
-                    (Array.isArray((items as any).images)
-                      ? typeof (items as any).images[0] === "string"
-                        ? (items as any).images[0]
-                        : (items as any).images.find(
-                            (img: any) => img?.isDefault
-                          )?.url || (items as any).images[0]?.url
-                      : undefined) ||
-                    (Array.isArray((items as any).product?.images)
-                      ? (items as any).product.images.find(
-                          (img: any) => img?.isDefault
-                        )?.url || (items as any).product.images[0]?.url
-                      : undefined) ||
-                    "",
+                  items.image, // Primary image field from LocalCartItem
                   "product"
                 );
 
@@ -470,10 +499,10 @@ export const CartPage: React.FC = () => {
                       onClick={() => {
                         if (!items.cartItemId) {
                           toast.error(
-                            "Missing cart item id; refresh your cart."
-                          );
-                          return;
-                        }
+                              "Missing cart item id; refresh your cart."
+                            );
+                            return;
+                          }
                         handleRemoveItem(items.cartItemId);
                       }}
                       disabled={isLoading || !items.cartItemId}
@@ -555,7 +584,7 @@ export const CartPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Pending Orders Section */}
+        {/* Pending Orders Section - Always show if there are pending orders */}
         {pendingOrders.length > 0 && (
           <div className="mt-10 sm:mt-12">
             <h2 className="text-mid sm:text-mid font-semibold text-gray-900 mb-6">
@@ -576,15 +605,15 @@ export const CartPage: React.FC = () => {
                     </span>
                   </div>
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2 gap-2">
-                    <span className="font-semibold text-gray-700">
-                      Created At:
-                    </span>
-                    <span className="text-gray-700">
-                      {new Date(order.createdAt).toLocaleString()}
-                    </span>
+                      <span className="font-semibold text-gray-700">
+                        Created At:
+                      </span>
+                      <span className="text-gray-700">
+                        {new Date(order.createdAt).toLocaleString()}
+                      </span>
                   </div>
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2 gap-2">
-                    <span className="font-semibold text-gray-700">Total:</span>
+                      <span className="font-semibold text-gray-700">Total:</span>
                     <span className="text-mid font-bold text-yellow-600">
                       RWF {order.total.toLocaleString()}
                     </span>
@@ -593,83 +622,106 @@ export const CartPage: React.FC = () => {
                     <span className="font-semibold text-gray-700">Status:</span>
                     <span
                       className={`px-3 py-1 rounded-full border text-small font-semibold ${
-                        statusColors[order.status] ||
-                        "bg-gray-100 text-gray-700 border-gray-300"
+                        statusColors[order.status] || "bg-gray-100 text-gray-700 border-gray-300"
                       }`}
                     >
                       {order.status}
                     </span>
-                    <select
-                      className="ml-0 sm:ml-2 border rounded px-2 py-1 text-small focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                      value={order.status}
+                  </div>
+                  {/* Status Change Buttons */}
+                  <div className="flex flex-wrap gap-2">
+                    {statusOptions.map((status) => (
+                      <button
+                        key={status}
+                        onClick={() => handleStatusChange(order.id, status)}
+                        disabled={orderLoading === order.id || order.status === status}
+                        className={`px-3 py-1 rounded text-small font-medium transition-colors ${
+                          orderLoading === order.id
+                            ? "opacity-50 cursor-not-allowed"
+                            : "hover:bg-gray-100"
+                        } ${
+                          order.status === status
+                            ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                            : statusColors[status] || "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        }`}
+                      >
+                        {orderLoading === order.id ? (
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                        ) : (
+                          status
+                        )}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => handleDeleteOrder(order.id)}
                       disabled={orderLoading === order.id}
-                      onChange={(e) =>
-                        handleStatusChange(order.id, e.target.value)
-                      }
+                      className={`px-3 py-1 rounded text-small font-medium text-red-600 border border-red-300 hover:bg-red-50 transition-colors ${
+                        orderLoading === order.id ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                     >
-                      {statusOptions.map((opt) => (
-                        <option key={opt} value={opt}>
-                          {opt}
-                        </option>
-                      ))}
-                    </select>
-                    {orderLoading === order.id && (
-                      <Loader2 className="h-4 w-4 animate-spin ml-2 text-yellow-600" />
-                    )}
+                      {orderLoading === order.id ? (
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                      ) : (
+                        "Delete"
+                      )}
+                    </button>
                   </div>
-                  <div>
-                    <span className="font-semibold text-gray-700">Items:</span>
-                    <ul className="ml-4 list-disc text-gray-700 text-small sm:text-small">
-                      {order.items.map((item: any) => (
-                        <li key={item.id}>
-                          {item.product?.name || "Product"} x{item.quantity}{" "}
-                          (RWF {item.price.toLocaleString()})
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  {/* Delete Icon */}
-                  <button
-                    onClick={() => handleDeleteOrder(order.id)}
-                    disabled={orderLoading === order.id}
-                    className="ml-2 text-red-600 hover:text-red-700 flex items-center gap-1 text-small sm:text-small disabled:opacity-50 transition-transform transform hover:scale-110 hover:bg-red-50 rounded-full p-1"
-                    title="Delete Order"
-                  >
-                    {orderLoading === order.id ? (
-                      <Loader2 className="h-6 w-6 animate-spin" />
-                    ) : (
-                      <Trash2 className="h-6 w-6 transition-colors" />
-                    )}
-                  </button>
                 </div>
               ))}
             </div>
           </div>
         )}
       </div>
+
+      {/* MoMo Payment Modal */}
+      <MomoPaymentModal
+        isOpen={isMomoModalOpen}
+        onClose={() => setIsMomoModalOpen(false)}
+        amount={total}
+        description={`Payment for order ${currentOrderId}`}
+        customerName=""
+        customerEmail=""
+        sellerId=""
+        orderId={currentOrderId || ""}
+        onSuccess={handlePaymentSuccess}
+        onFailure={handlePaymentFailure}
+      />
+
+      {/* Image Preview Modal */}
       {previewImage && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
           onClick={() => setPreviewImage(null)}
         >
           <div
-            className="relative max-w-3xl w-full max-h-[90vh] bg-black/40 rounded-lg overflow-hidden"
+            className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
+            <button
+              onClick={() => setPreviewImage(null)}
+              className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
             <Image
               src={previewImage}
               alt="Product preview"
-              width={1200}
-              height={800}
-              className="w-full h-full object-contain bg-black"
+              width={800}
+              height={600}
+              className="w-full h-full object-contain"
             />
-            <button
-              type="button"
-              className="absolute top-3 right-3 px-3 py-1 rounded-full bg-black/70 text-amber-500 text-small hover:bg-black"
-              onClick={() => setPreviewImage(null)}
-            >
-              Close
-            </button>
           </div>
         </div>
       )}

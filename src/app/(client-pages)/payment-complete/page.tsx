@@ -6,13 +6,29 @@ import { getCheckoutDetails } from "@/app/services/cartService";
 
 const PaymentCompletePage: React.FC = () => {
   const searchParams = useSearchParams();
-  const status = searchParams.get("status");
-  const tx_ref = searchParams.get("tx_ref");
-  const transaction_id = searchParams.get("transaction_id");
-  // Use lastOrderId from localStorage if available, otherwise fallback to tx_ref
-  let orderId: string | null = null;
-  if (typeof window !== "undefined") {
-    orderId = localStorage.getItem("lastOrderId") || (tx_ref as string);
+  
+  // Backwards-compatible param reading
+  const status =
+    searchParams.get("status") ||           // Intouch
+    searchParams.get("payment_status");      // Flutterwave
+
+  const transactionId = searchParams.get("transaction_id");  // same for both
+
+  const reference =
+    searchParams.get("reference") ||         // Intouch
+    searchParams.get("tx_ref");              // Flutterwave
+
+  const orderId = searchParams.get("order_id");
+
+  // Normalize status string
+  const isSuccess =
+    status?.toLowerCase() === "successful" ||
+    status?.toLowerCase() === "completed";
+
+  // Use lastOrderId from localStorage if available, otherwise fallback to reference
+  let finalOrderId: string | null = orderId;
+  if (!finalOrderId && typeof window !== "undefined") {
+    finalOrderId = localStorage.getItem("lastOrderId") || (reference as string);
   }
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -22,17 +38,17 @@ const PaymentCompletePage: React.FC = () => {
 
   // PATCH order status to PAID if payment is successful
   useEffect(() => {
-    if (status === "successful" && orderId && !statusPatched) {
+    if (isSuccess && finalOrderId && !statusPatched) {
       console.log("[PaymentComplete] Patching order status to PAID", {
-        orderId,
+        orderId: finalOrderId,
       });
       const token =
         typeof window !== "undefined"
           ? localStorage.getItem("authToken")
           : null;
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork-production.up.railway.app';
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork.onrender.com';
       fetch(
-        `${API_URL}/api/v1/orders/${orderId}/status`,
+        `${API_URL}/api/v1/orders/${finalOrderId}/status`,
         {
           method: "PATCH",
           headers: {
@@ -55,13 +71,13 @@ const PaymentCompletePage: React.FC = () => {
           setStatusPatched(true);
         });
     }
-  }, [status, orderId, statusPatched]);
+  }, [isSuccess, finalOrderId, statusPatched]);
 
   // Fetch checkout details after payment is successful and status is patched
   useEffect(() => {
-    if (status === "successful" && orderId && statusPatched) {
+    if (isSuccess && finalOrderId && statusPatched) {
       console.log("[PaymentComplete] Ready to fetch checkout details", {
-        orderId,
+        orderId: finalOrderId,
         statusPatched,
       });
       const token =
@@ -93,20 +109,20 @@ const PaymentCompletePage: React.FC = () => {
         );
       }
     }
-  }, [status, orderId, statusPatched]);
+  }, [isSuccess, finalOrderId, statusPatched]);
 
   useEffect(() => {
-    if (!orderId) return;
+    if (!finalOrderId) return;
     setLoading(true);
     // Get authToken from localStorage if available
     let token = null;
     if (typeof window !== "undefined") {
       token = localStorage.getItem("authToken");
     }
-    console.log("[PaymentComplete] Fetching order details", { orderId, token });
+    console.log("[PaymentComplete] Fetching order details", { orderId: finalOrderId, token });
     const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork-production.up.railway.app';
     fetch(
-      `${API_URL}/api/v1/orders/${orderId}`,
+      `${API_URL}/api/v1/orders/${finalOrderId}`,
       {
         headers: token
           ? {
@@ -139,7 +155,7 @@ const PaymentCompletePage: React.FC = () => {
         setError(err.message);
         setLoading(false);
       });
-  }, [orderId]);
+  }, [finalOrderId]);
 
   const handleDownloadReceipt = () => {
     console.log("[PaymentComplete] Downloading receipt");
@@ -162,8 +178,8 @@ const PaymentCompletePage: React.FC = () => {
     doc.setFontSize(18);
     doc.text("Payment Receipt", 14, 18);
     doc.setFontSize(12);
-    doc.text(`Order ID: ${orderId}`, 14, 30);
-    doc.text(`Transaction ID: ${transaction_id}`, 14, 38);
+    doc.text(`Order ID: ${finalOrderId}`, 14, 30);
+    doc.text(`Transaction ID: ${transactionId}`, 14, 38);
     doc.text(`Payment Status: ${status}`, 14, 46);
     doc.text(`Customer: ${userName}`, 14, 54);
     doc.text(`Date: ${dateStr}`, 14, 62);
@@ -197,7 +213,7 @@ const PaymentCompletePage: React.FC = () => {
     doc.text(`Total: RWF ${order.total.toLocaleString()}`, 14, y);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(0, 0, 0);
-    doc.save(`receipt-${orderId}.pdf`);
+    doc.save(`receipt-${finalOrderId}.pdf`);
   };
 
   return (
@@ -207,16 +223,16 @@ const PaymentCompletePage: React.FC = () => {
           <div>Loading order details...</div>
         ) : error ? (
           <div className="text-error-600">❌ {error}</div>
-        ) : status === "successful" ? (
+        ) : isSuccess ? (
           <>
             <div className="text-mid text-success-600">
               ✅ Payment Successful
             </div>
             <div className="my-4 font-semibold">
-              Order ID: {orderId}
+              Order ID: {finalOrderId}
             </div>
             <div className="mb-4">
-              Transaction ID: {transaction_id}
+              Transaction ID: {transactionId}
             </div>
             <div className="text-left mx-auto mb-4 bg-gray-100 rounded-lg p-3">
               <div className="font-semibold mb-2">

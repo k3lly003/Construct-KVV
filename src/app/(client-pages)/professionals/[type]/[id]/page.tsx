@@ -11,7 +11,7 @@ import { getAllSellers, SellerProfile } from "@/app/services/sellerService";
 import { useArchitect } from "@/app/hooks/useArchitect";
 import { useUserStore } from "@/store/userStore";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork-production.up.railway.app';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork.onrender.com';
 
 interface ProfessionalData {
   id: string;

@@ -22,7 +22,7 @@ export default function VisualizePage() {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork-production.up.railway.app';
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork.onrender.com';
       const response = await fetch(
         `${API_URL}/api/v1/floorplan/ocr`,
         {
