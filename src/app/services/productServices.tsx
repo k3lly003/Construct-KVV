@@ -516,11 +516,21 @@ export const productService = {
       const productIds: string[] = recommendations
         .map((r) => r.product_id)
         .filter(Boolean);
+
+      // Deduplicate productIds (AI can return the same product multiple times)
+      const seenProductIds = new Set<string>();
+      const uniqueProductIds: string[] = [];
+      for (const pid of productIds) {
+        if (!seenProductIds.has(pid)) {
+          seenProductIds.add(pid);
+          uniqueProductIds.push(pid);
+        }
+      }
       console.log(
         "[fetchRecommendedProducts] Fetching details for productIds:",
-        productIds
+        uniqueProductIds
       );
-      const productPromises = productIds.map(async (pid) => {
+      const productPromises = uniqueProductIds.map(async (pid) => {
         const productUrl = `${API_URL}/api/v1/products/${pid}`;
         console.log(
           `[fetchRecommendedProducts] Fetching product from:`,
@@ -551,11 +561,21 @@ export const productService = {
       const products: Product[] = productsRaw.filter((p): p is Product =>
         Boolean(p)
       );
+
+      // Extra safety: deduplicate final products by id
+      const seenProductMap = new Set<string>();
+      const uniqueProducts: Product[] = [];
+      for (const p of products) {
+        if (!seenProductMap.has(p.id)) {
+          seenProductMap.add(p.id);
+          uniqueProducts.push(p);
+        }
+      }
       console.log(
         "[fetchRecommendedProducts] Final recommended products:",
-        products
+        uniqueProducts
       );
-      return products;
+      return uniqueProducts;
     } catch (error) {
       console.error("[fetchRecommendedProducts] Error:", error);
       return [];

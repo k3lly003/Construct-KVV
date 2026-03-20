@@ -120,7 +120,7 @@ const PaymentCompletePage: React.FC = () => {
       token = localStorage.getItem("authToken");
     }
     console.log("[PaymentComplete] Fetching order details", { orderId: finalOrderId, token });
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://construct-kvv-bn-fork-production.up.railway.app';
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
     fetch(
       `${API_URL}/api/v1/orders/${finalOrderId}`,
       {
@@ -160,9 +160,12 @@ const PaymentCompletePage: React.FC = () => {
   const handleDownloadReceipt = () => {
     console.log("[PaymentComplete] Downloading receipt");
     if (!order) return;
+
     const doc = new jsPDF();
     const today = new Date();
     const dateStr = today.toLocaleDateString();
+    const logoPath = "/kvv-logo.png";
+
     // Get user name from localStorage or order
     let userName = "";
     if (typeof window !== "undefined") {
@@ -170,96 +173,305 @@ const PaymentCompletePage: React.FC = () => {
       if (userStr) {
         try {
           const userObj = JSON.parse(userStr);
+          // Keep existing logic, but add firstName/lastName as an additional fallback
           userName = userObj.name || userObj.fullName || userObj.email || "";
+
+          if (
+            !userName &&
+            (userObj.firstName || userObj.lastName)
+          ) {
+            userName = `${userObj.firstName || ""} ${userObj.lastName || ""}`.trim();
+          }
         } catch {}
       }
     }
     if (!userName && order?.user?.name) userName = order.user.name;
+
+    const orderIdSafe = finalOrderId ? String(finalOrderId) : "";
+    const transactionIdSafe = transactionId ? String(transactionId) : "";
+    const referenceSafe = reference ? String(reference) : "";
+    const orderTotal = typeof order?.total === "number" ? order.total : 0;
+
+    // HEADER BAR
+    doc.setFillColor(255, 193, 7);
+    doc.rect(0, 0, 210, 38, "F");
+
+    // LOGO
+    try {
+      doc.addImage(logoPath, "PNG", 10, 5, 28, 28);
+    } catch (e) {
+      // If logo fails, still generate the PDF
+    }
+
+    // COMPANY NAME in header
+    doc.setTextColor(255, 255, 255);
     doc.setFontSize(18);
-    doc.text("Payment Receipt", 14, 18);
-    doc.setFontSize(12);
-    doc.text(`Order ID: ${finalOrderId}`, 14, 30);
-    doc.text(`Transaction ID: ${transactionId}`, 14, 38);
-    doc.text(`Payment Status: ${status}`, 14, 46);
-    doc.text(`Customer: ${userName}`, 14, 54);
-    doc.text(`Date: ${dateStr}`, 14, 62);
-    // Table header
-    let y = 72;
-    doc.setFontSize(13);
-    doc.text("Items:", 14, y);
-    y += 8;
-    doc.setFontSize(11);
-    doc.setFillColor(230, 230, 250);
-    doc.rect(14, y - 6, 180, 8, "F");
-    doc.text("#", 16, y);
-    doc.text("Product", 24, y);
-    doc.text("Qty", 100, y);
-    doc.text("Price", 120, y);
-    doc.text("Subtotal", 150, y);
-    y += 7;
-    order.items.forEach((item: any, idx: number) => {
-      doc.text(`${idx + 1}`, 16, y);
-      doc.text(`${item.product?.name || "Product"}`, 24, y);
-      doc.text(`${item.quantity}`, 100, y);
-      doc.text(`RWF ${item.price.toLocaleString()}`, 120, y);
-      doc.text(`RWF ${(item.price * item.quantity).toLocaleString()}`, 150, y);
-      y += 7;
-    });
-    y += 4;
-    // Highlight total
-    doc.setFontSize(13);
-    doc.setTextColor(34, 197, 94); // green
     doc.setFont("helvetica", "bold");
-    doc.text(`Total: RWF ${order.total.toLocaleString()}`, 14, y);
+    doc.text("Construct KVV", 46, 17);
+    doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
+    doc.text("Payment Receipt", 46, 26);
+
+    // START y = 50
+    let y = 50;
+
+    // DETAILS SECTION
+    const writeDetailRow = (label: string, value: string) => {
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10);
+      doc.setTextColor(0, 0, 0);
+      doc.text(label, 14, y);
+      doc.setFont("helvetica", "normal");
+      doc.text(value, 65, y);
+      y += 8;
+    };
+
+    writeDetailRow("Order ID:", orderIdSafe);
+    writeDetailRow("Transaction ID:", transactionIdSafe);
+    writeDetailRow("Reference:", referenceSafe);
+    writeDetailRow("Customer:", userName || "N/A");
+    writeDetailRow("Date:", dateStr);
+    writeDetailRow("Status:", "Successful");
+
+    // DIVIDER
+    doc.setDrawColor(255, 193, 7);
+    doc.setLineWidth(0.8);
+    doc.line(14, y + 6, 196, y + 6);
+    y += 16;
+
+    const items: any[] = Array.isArray(order?.items) ? order.items : [];
+
+    // ITEMS TABLE HEADER ROW
+    doc.setFillColor(255, 193, 7);
+    doc.rect(14, y - 7, 182, 10, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.text("#", 16, y);
+    doc.text("Product", 40, y);
+    doc.text("Qty", 112, y);
+    doc.text("Unit Price", 140, y);
+    doc.text("Subtotal", 168, y, { align: "right" });
+    y += 8;
+
+    // ITEMS ROWS
     doc.setTextColor(0, 0, 0);
-    doc.save(`receipt-${finalOrderId}.pdf`);
+    doc.setFont("helvetica", "normal");
+    items.forEach((item: any, idx: number) => {
+      const isEven = idx % 2 === 0;
+      doc.setFillColor(isEven ? 255 : 255, isEven ? 253 : 255, isEven ? 231 : 255);
+      doc.rect(14, y - 6, 182, 9, "F");
+
+      const productName = String(item?.product?.name || item?.name || "Product");
+      const productSafe =
+        productName.length > 26 ? `${productName.slice(0, 23)}...` : productName;
+
+      const qty = typeof item?.quantity === "number" ? item.quantity : 0;
+      const unitPrice = typeof item?.price === "number" ? item.price : 0;
+      const subtotal = unitPrice * qty;
+
+      doc.setTextColor(0, 0, 0);
+      doc.setFont("helvetica", "normal");
+      doc.text(String(idx + 1), 16, y);
+      doc.text(productSafe, 40, y);
+      doc.text(String(qty), 112, y);
+      doc.text(`RWF ${unitPrice.toLocaleString()}`, 140, y);
+      doc.text(`RWF ${subtotal.toLocaleString()}`, 168, y, { align: "right" });
+
+      y += 9;
+    });
+
+    // TOTAL ROW
+    y += 6;
+    doc.setFillColor(255, 193, 7);
+    doc.rect(14, y - 6, 182, 12, "F");
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.text("TOTAL", 16, y + 2);
+    doc.text(`RWF ${orderTotal.toLocaleString()}`, 168, y + 2, { align: "right" });
+    y += 20;
+
+    // THANK YOU LINE
+    doc.setTextColor(100, 100, 100);
+    doc.setFont("helvetica", "italic");
+    doc.setFontSize(10);
+    doc.text("Thank you for choosing Construct KVV!", 105, y, { align: "center" });
+    y += 14;
+
+    // CONTACT SECTION BOX
+    doc.setFillColor(248, 248, 248);
+    doc.rect(14, y, 182, 28, "F");
+    doc.setDrawColor(220, 220, 220);
+    doc.rect(14, y, 182, 28, "S");
+    doc.setTextColor(80, 80, 80);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.text("Contact Us", 105, y + 9, { align: "center" });
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.text("+250 785 648 616", 105, y + 17, { align: "center" });
+    doc.text(
+      "For any payment issues or inquiries, we are here to help.",
+      105,
+      y + 24,
+      { align: "center" }
+    );
+
+    // SAVE
+    doc.save("receipt-" + orderIdSafe + ".pdf");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white p-8 rounded-xl shadow-sm min-w-[340px] max-w-[400px] text-center">
+    <div className="min-h-screen flex items-center justify-center bg-[#FFF8E1] p-4">
+      <div className="bg-white rounded-2xl shadow-lg max-w-[480px] w-full p-10 text-center">
         {loading ? (
-          <div>Loading order details...</div>
+          <div className="flex flex-col items-center">
+            <div className="animate-spin w-8 h-8 border-4 border-[#FFC107] border-t-transparent rounded-full mb-4" />
+            <div className="text-gray-500 text-sm">Loading order details...</div>
+          </div>
         ) : error ? (
-          <div className="text-error-600">❌ {error}</div>
+          <div className="space-y-4">
+            <div className="w-20 h-20 rounded-full bg-red-100 mx-auto mb-6 flex items-center justify-center">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#EF4444"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-10 h-10"
+              >
+                <path d="M18 6 6 18" />
+                <path d="M6 6l12 12" />
+              </svg>
+            </div>
+            <div className="text-2xl font-bold text-gray-800 mb-2">Payment Failed</div>
+            <div className="text-sm text-gray-500 mb-6">
+              Your payment could not be processed. Please try again.
+            </div>
+            <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-600">
+              {error ||
+                "If you were charged, please contact support with your MoMo transaction ID."}
+            </div>
+            <div className="text-sm text-gray-500 mt-4">📞 +250 785 648 616</div>
+          </div>
         ) : isSuccess ? (
           <>
-            <div className="text-mid text-success-600">
-              ✅ Payment Successful
+            <div className="w-20 h-20 rounded-full bg-[#FFC107] mx-auto mb-6 flex items-center justify-center">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="white"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-10 h-10"
+              >
+                <path d="M5 13l4 4L19 7" />
+              </svg>
             </div>
-            <div className="my-4 font-semibold">
-              Order ID: {finalOrderId}
+
+            <div className="text-2xl font-bold text-gray-800 mb-2">
+              Payment Successful!
             </div>
-            <div className="mb-4">
-              Transaction ID: {transactionId}
+            <div className="text-sm text-gray-500 mb-6">
+              Your order has been confirmed and is being processed.
             </div>
-            <div className="text-left mx-auto mb-4 bg-gray-100 rounded-lg p-3">
-              <div className="font-semibold mb-2">
-                Order Items:
+
+            <div className="bg-[#FFFDE7] border border-[#FFC107] rounded-xl p-4 mb-6 text-left">
+              <div className="flex justify-between text-sm py-2 border-b border-yellow-100">
+                <span className="text-gray-700 font-medium">Order ID</span>
+                <span className="text-gray-900 font-semibold">{finalOrderId}</span>
               </div>
-              <ul className="pl-5">
-                {order.items.map((item: any) => (
-                  <li key={item.id}>
-                    {item.product?.name || "Product"} x{item.quantity} (RWF{" "}
-                    {item.price.toLocaleString()})
-                  </li>
-                ))}
-              </ul>
+              <div className="flex justify-between text-sm py-2 border-b border-yellow-100">
+                <span className="text-gray-700 font-medium">Transaction ID</span>
+                <span className="text-gray-900 font-semibold">{transactionId}</span>
+              </div>
+              <div className="flex justify-between text-sm py-2 border-b border-yellow-100">
+                <span className="text-gray-700 font-medium">Status</span>
+                <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-xs font-semibold">
+                  Successful
+                </span>
+              </div>
+              <div className="flex justify-between text-sm py-2">
+                <span className="text-gray-700 font-medium">Date</span>
+                <span className="text-gray-900 font-semibold">
+                  {new Date().toLocaleDateString()}
+                </span>
+              </div>
             </div>
-            <div className="font-semibold mb-4">
-              Total: RWF {order.total.toLocaleString()}
+
+            <div className="text-left">
+              <div className="text-sm font-semibold text-gray-600 mb-3">
+                Order Items
+              </div>
+              {(order?.items || []).map((item: any) => (
+                <div
+                  key={item.id}
+                  className="bg-gray-50 rounded-lg p-3 mb-2 flex justify-between items-center"
+                >
+                  <div>
+                    <div className="font-medium text-gray-800">
+                      {item.product?.name || "Product"}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      Qty: {item.quantity}
+                    </div>
+                  </div>
+                  <div className="font-semibold text-gray-700">
+                    RWF {(item.price * item.quantity).toLocaleString()}
+                  </div>
+                </div>
+              ))}
             </div>
+
+            <div className="flex justify-between items-center bg-[#FFC107] rounded-xl p-4 mb-6">
+              <span className="font-bold text-white text-base">Total Amount</span>
+              <span className="font-bold text-white text-xl">
+                RWF {order?.total?.toLocaleString()}
+              </span>
+            </div>
+
             <button
               onClick={handleDownloadReceipt}
-              className="bg-info-600 text-white px-5 py-2.5 rounded-md font-semibold border-none cursor-pointer mt-2 hover:bg-info-700 transition-colors"
+              className="w-full bg-[#FFC107] hover:bg-[#FFB300] text-white font-bold py-3 px-6 rounded-xl text-base cursor-pointer border-none transition-colors animate-pulse"
             >
-              Download Receipt (PDF)
+              ⬇ Download Receipt (PDF)
             </button>
+
+            <div className="text-xs text-gray-400 mt-4">
+              Need help? Call us: +250 785 648 616
+            </div>
           </>
         ) : (
-          <div className="text-mid text-error-600">
-            ❌ Payment Failed or Cancelled
+          <div className="space-y-4">
+            <div className="w-20 h-20 rounded-full bg-red-100 mx-auto mb-6 flex items-center justify-center">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#EF4444"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-10 h-10"
+              >
+                <path d="M18 6 6 18" />
+                <path d="M6 6l12 12" />
+              </svg>
+            </div>
+            <div className="text-2xl font-bold text-gray-800 mb-2">
+              Payment Failed
+            </div>
+            <div className="text-sm text-gray-500 mb-6">
+              Your payment could not be processed. Please try again.
+            </div>
+            <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-600">
+              If you were charged, please contact support with your MoMo transaction ID.
+            </div>
+            <div className="text-sm text-gray-500 mt-4">
+              📞 +250 785 648 616
+            </div>
           </div>
         )}
       </div>
