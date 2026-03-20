@@ -8,7 +8,6 @@ export default function ServiceBanner() {
     const { t } = useTranslations();
     const [zipCode, setZipCode] = useState('');
     const handleSearch = () => {
-        console.log('Searching for services in:', zipCode);
       };
     const [showLocationForm, setShowLocationForm] = useState(false);
   return (

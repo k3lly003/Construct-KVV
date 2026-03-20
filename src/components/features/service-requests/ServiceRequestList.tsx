@@ -94,7 +94,6 @@ export default function ServiceRequestList({
           break;
       }
     } catch (error) {
-      console.error('Failed to load requests:', error);
     }
   };
 
@@ -102,7 +101,6 @@ export default function ServiceRequestList({
     try {
       await updateRequestStatus(id, status);
     } catch (error) {
-      console.error('Failed to update status:', error);
     }
   };
 
@@ -110,7 +108,6 @@ export default function ServiceRequestList({
     try {
       await deleteRequest(id);
     } catch (error) {
-      console.error('Failed to delete request:', error);
     }
   };
 

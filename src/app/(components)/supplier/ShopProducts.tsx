@@ -50,7 +50,6 @@ export const ShopProducts: React.FC<ShopProductsProps> = ({ shopId, shop }) => {
         if (!shopId && !shop?.id) {
           const shopData = await ShopService.getMyShop(authToken);
           setMyShop(shopData);
-          console.log("MMMMMMAAAAAAAAAAAAAAA:", shopData);
         }
 
         // Use the actual shop ID to fetch products
@@ -63,14 +62,12 @@ export const ShopProducts: React.FC<ShopProductsProps> = ({ shopId, shop }) => {
             );
             setProducts(shopProducts);
           } catch (error) {
-            console.error("Error fetching products:", error);
             setProducts([]);
           }
         } else {
           setProducts([]);
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
         setShopError("Failed to fetch shop data");
         setProducts([]);
       } finally {
@@ -92,7 +89,6 @@ export const ShopProducts: React.FC<ShopProductsProps> = ({ shopId, shop }) => {
           );
           setServices(shopServices);
         } catch (error) {
-          console.error("Error fetching services:", error);
           setServices([]);
         } finally {
           setServicesLoading(false);

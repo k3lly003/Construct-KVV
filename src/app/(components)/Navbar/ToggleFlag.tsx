@@ -24,28 +24,22 @@ const ToggleFlag = () => {
   // Initialize selected flag based on current language
   useEffect(() => {
     if (ready && i18n.language) {
-      console.log('Current i18n language:', i18n.language);
       const countryCode = languageToCountry[i18n.language] || 'US';
-      console.log('Setting selected flag to:', countryCode);
       setSelected(countryCode);
       setError(null);
     }
   }, [i18n.language, ready]);
 
   const handleFlagSelect = (countryCode: string) => {
-    console.log('Flag selected:', countryCode);
     setSelected(countryCode);
     setError(null);
     
     const languageCode = countryToLanguage[countryCode];
-    console.log('Language code:', languageCode);
     
     if (languageCode && ready) {
-      console.log('Changing language to:', languageCode);
       i18n.changeLanguage(languageCode);
       setUserLocale(languageCode as 'en' | 'fr' | 'rw');
     } else {
-      console.error('Language code not found or i18n not ready:', { countryCode, languageCode, ready });
       setError("Failed to switch language.");
     }
   };

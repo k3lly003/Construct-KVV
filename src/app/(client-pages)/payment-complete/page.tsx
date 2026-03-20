@@ -39,9 +39,6 @@ const PaymentCompletePage: React.FC = () => {
   // PATCH order status to PAID if payment is successful
   useEffect(() => {
     if (isSuccess && finalOrderId && !statusPatched) {
-      console.log("[PaymentComplete] Patching order status to PAID", {
-        orderId: finalOrderId,
-      });
       const token =
         typeof window !== "undefined"
           ? localStorage.getItem("authToken")
@@ -61,13 +58,9 @@ const PaymentCompletePage: React.FC = () => {
       )
         .then((res) => res.json())
         .then(() => {
-          console.log("[PaymentComplete] Order status patched to PAID");
           setStatusPatched(true);
         })
         .catch(() => {
-          console.log(
-            "[PaymentComplete] Failed to patch order status, but continuing"
-          );
           setStatusPatched(true);
         });
     }
@@ -76,10 +69,6 @@ const PaymentCompletePage: React.FC = () => {
   // Fetch checkout details after payment is successful and status is patched
   useEffect(() => {
     if (isSuccess && finalOrderId && statusPatched) {
-      console.log("[PaymentComplete] Ready to fetch checkout details", {
-        orderId: finalOrderId,
-        statusPatched,
-      });
       const token =
         typeof window !== "undefined"
           ? localStorage.getItem("authToken")
@@ -89,24 +78,14 @@ const PaymentCompletePage: React.FC = () => {
           ? localStorage.getItem("lastCartId")
           : null;
       if (cartId && token) {
-        console.log("[PaymentComplete] Calling getCheckoutDetails", {
-          cartId,
-          token,
-        });
         getCheckoutDetails(cartId, token)
           .then((data) => {
-            console.log("[PaymentComplete] getCheckoutDetails response", data);
             setCheckoutDetails(data);
           })
           .catch((err) => {
-            console.log("[PaymentComplete] getCheckoutDetails error", err);
             setCheckoutDetails(null);
           });
       } else {
-        console.log(
-          "[PaymentComplete] Missing cartId or token for getCheckoutDetails",
-          { cartId, token }
-        );
       }
     }
   }, [isSuccess, finalOrderId, statusPatched]);
@@ -119,7 +98,6 @@ const PaymentCompletePage: React.FC = () => {
     if (typeof window !== "undefined") {
       token = localStorage.getItem("authToken");
     }
-    console.log("[PaymentComplete] Fetching order details", { orderId: finalOrderId, token });
     const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
     fetch(
       `${API_URL}/api/v1/orders/${finalOrderId}`,
@@ -142,7 +120,6 @@ const PaymentCompletePage: React.FC = () => {
         return res.json();
       })
       .then((data) => {
-        console.log("[PaymentComplete] Order details fetched", data);
         if (data && data.data) {
           setOrder(data.data);
         } else {
@@ -151,14 +128,12 @@ const PaymentCompletePage: React.FC = () => {
         setLoading(false);
       })
       .catch((err) => {
-        console.log("[PaymentComplete] Error fetching order details", err);
         setError(err.message);
         setLoading(false);
       });
   }, [finalOrderId]);
 
   const handleDownloadReceipt = () => {
-    console.log("[PaymentComplete] Downloading receipt");
     if (!order) return;
 
     const doc = new jsPDF();

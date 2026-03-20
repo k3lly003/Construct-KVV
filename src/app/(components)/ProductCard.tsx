@@ -60,8 +60,6 @@ const ProductCard = ({
         interaction_type: interactionType,
       } as const;
 
-      console.log(`[ProductCard] ${interactionType} payload:`, payload);
-
       // Fire-and-forget; do not await to avoid blocking UI
       fetch(API_URL, {
         method: "POST",
@@ -74,19 +72,10 @@ const ProductCard = ({
       })
         .then(async (res) => {
           const data = await res.json().catch(() => ({}));
-          console.log(
-            `[ProductCard] ${interactionType} interaction response:`,
-            data
-          );
         })
         .catch((error) => {
-          console.log(
-            `[ProductCard] ${interactionType} interaction error:`,
-            error
-          );
         });
     } catch (error) {
-      console.log(`[ProductCard] ${interactionType} interaction error:`, error);
     }
   };
 

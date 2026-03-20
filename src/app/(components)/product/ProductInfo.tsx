@@ -66,9 +66,6 @@ const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
         interaction_type: interactionType,
       } as const;
 
-      // eslint-disable-next-line no-console
-      console.log(`[ProductInfo] ${interactionType} payload:`, payload);
-
       fetch(API_URL, {
         method: "POST",
         headers: {
@@ -80,22 +77,10 @@ const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
       })
         .then(async (res) => {
           const data = await res.json().catch(() => ({}));
-          // eslint-disable-next-line no-console
-          console.log(
-            `[ProductInfo] ${interactionType} interaction response:`,
-            data
-          );
         })
         .catch((error) => {
-          // eslint-disable-next-line no-console
-          console.log(
-            `[ProductInfo] ${interactionType} interaction error:`,
-            error
-          );
         });
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(`[ProductInfo] ${interactionType} interaction error:`, error);
     }
   };
 
@@ -137,10 +122,8 @@ const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
           token: user.token,
         })
         .then((res) => {
-          console.log("[ProductInfo] Wishlist interaction sent:", res);
         })
         .catch((err) => {
-          console.log("[ProductInfo] Wishlist interaction error:", err);
         });
     }
   };
@@ -159,10 +142,8 @@ const ProductInfo = ({ product, quantity, setQuantity }: ProductInfoProps) => {
           token: user.token,
         })
         .then((res) => {
-          console.log("[ProductInfo] Shared interaction sent:", res);
         })
         .catch((err) => {
-          console.log("[ProductInfo] Shared interaction error:", err);
         });
     }
   };

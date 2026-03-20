@@ -122,48 +122,35 @@ export const MomoPaymentModal: React.FC<MomoPaymentModalProps> = ({
       };
 
       // Initiate payment
-      console.log('[MomoModal] 🚀 Starting payment initiation...');
       const response = await initiateIntouchPayment(payload, token);
-      console.log('[MomoModal] 📥 Payment initiation successful:', response);
       setPaymentData(response);
       setStep("pending");
-      console.log('[MomoModal] ⏳ Step changed to: pending (loader should show)');
 
       // Start polling for payment status
-      console.log('[MomoModal] 📡 Starting polling for reference:', response.reference);
-
-      console.log('[MomoModal] 📡 Starting DB polling for reference:', response.reference);
 
       pollLocalPaymentStatus(
         response.reference,
         token,
         (status) => {
-          console.log('[MomoModal] 🔄 Live status update from DB:', status);
         }
       ).then((result) => {
-        console.log('[MomoModal] 🎉 Payment COMPLETED — result:', result);
         setStep("success");
         onSuccess(result.intouchRef, result.reference);
       }).catch((err: any) => {
-        console.error('[MomoModal] ❌ Polling ended with error:', err.message);
         setStep("failed");
         setError(err.message);
         if (onFailure) onFailure(err.message);
       });
     } catch (err: any) {
-      console.error('[MomoModal] 💥 Payment initiation failed:', err);
       setError(err?.message || "Payment initiation failed");
       toast.error(err?.message || "Payment initiation failed");
-      console.log('[MomoModal] 🔄 Step changed to: failed (loader should stop)');
       setStep("failed");
     } finally {
-      console.log('[MomoModal] ✅ Payment initiation process completed. Loading set to false');
       setLoading(false);
     }
   };
 
   const handleRetry = () => {
-    console.log('[MomoModal] 🔄 Retry clicked - resetting modal state');
     setStep("input");
     setPhoneNumber("");
     setPaymentData(null);
@@ -173,19 +160,14 @@ export const MomoPaymentModal: React.FC<MomoPaymentModalProps> = ({
   };
 
   const handleClose = () => {
-    console.log('[MomoModal] 🚪 Close clicked, current step:', step);
     if (step === "pending") {
-      console.log('[MomoModal] ⛔ Blocking close - payment is pending');
       // Don't allow closing while payment is pending
       return;
     }
-    console.log('[MomoModal] ✅ Allowing modal to close');
     onClose();
   };
 
   if (!isOpen) return null;
-
-  console.log('[MomoModal] 🎭 Modal opened with initial state:', { step, loading, amount, description });
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">

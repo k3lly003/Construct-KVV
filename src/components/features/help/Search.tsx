@@ -31,7 +31,6 @@ const SearchBar: React.FC = () => {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
     // In a real application, you would trigger a search here
-    console.log('Search term:', event.target.value);
   };
 
   return (

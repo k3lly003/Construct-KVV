@@ -13,45 +13,19 @@ export function StepThreeInterior() {
   const { formData, updateFormData, nextStep, prevStep, setApiResponse } =
     useFormContext();
 
-  console.log("🏠 Step 3 - Interior Component Rendered");
-  console.log("📊 Current Form Data:", formData);
-  console.log("🛋️ Interior Selections:", {
-    openFloorPlan: formData.openFloorPlan,
-    kitchenStyle: formData.kitchenStyle,
-    hasBasement: formData.hasBasement,
-    hasHomeOffice: formData.hasHomeOffice,
-    specialRooms: formData.specialRooms,
-  });
-  console.log("📡 API Response Available:", !!formData.apiResponse);
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("🚀 Step 3 - Form Submit Triggered");
-    console.log("🛋️ Interior Selections at Submit:", {
-      openFloorPlan: formData.openFloorPlan,
-      kitchenStyle: formData.kitchenStyle,
-      hasBasement: formData.hasBasement,
-      hasHomeOffice: formData.hasHomeOffice,
-      specialRooms: formData.specialRooms,
-    });
 
     updateDescriptionWithStep3Selections();
-    console.log("✅ Step 3 - Proceeding to next step");
     nextStep();
   };
 
   const updateDescriptionWithStep3Selections = () => {
-    console.log("📝 Step 3 - Updating Description with Interior Selections");
-
     if (!formData.apiResponse) {
-      console.log(
-        "⚠️ Step 3 - No API response available for description update"
-      );
       return;
     }
 
     const baseDescription = formData.apiResponse.description || "";
-    console.log("📝 Step 3 - Base Description:", baseDescription);
 
     // Build step 3 additions
     const step3Additions = [];
@@ -79,7 +53,6 @@ export function StepThreeInterior() {
       step3Additions.push(`${specialRoomsText}`);
     }
 
-    console.log("🛋️ Step 3 - Interior Additions:", step3Additions);
 
     // Create meaningful sentence
     let step3Description = "";
@@ -89,7 +62,6 @@ export function StepThreeInterior() {
 
     // Combine base description with step 3 additions
     const updatedDescription = baseDescription + step3Description;
-    console.log("📝 Step 3 - Updated Description:", updatedDescription);
 
     // Update the API response with the new description
     const updatedApiResponse = {
@@ -104,7 +76,6 @@ export function StepThreeInterior() {
       },
     };
 
-    console.log("🔄 Step 3 - Updated API Response:", updatedApiResponse);
     setApiResponse(updatedApiResponse);
   };
 

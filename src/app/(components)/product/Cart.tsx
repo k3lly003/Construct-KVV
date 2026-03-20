@@ -141,9 +141,7 @@ export const CartPage: React.FC = () => {
       
       // 2. Set current order ID and open MoMo modal
       const order = response.data;
-      console.log('[Cart] 📦 Order created successfully:', order);
       setCurrentOrderId(order.id);
-      console.log('[Cart] 🎭 Opening MoMo modal for order:', order.id);
       setIsMomoModalOpen(true);
     } catch (err: any) {
       toast.error(err?.message || "Order creation failed.");
@@ -153,29 +151,22 @@ export const CartPage: React.FC = () => {
   };
 
   const handlePaymentSuccess = async (transactionId: string, reference: string) => {
-    console.log('[Cart] 🎉 Payment success callback received:', { transactionId, reference, currentOrderId });
     const token =
       typeof window !== "undefined"
         ? localStorage.getItem("authToken")
         : null;
     if (token && currentOrderId) {
-      console.log('[Cart] 📝 Updating order status to PAID for order:', currentOrderId);
       await orderService.updateOrderStatus(currentOrderId, "PAID", token);
       clearCart();
-      console.log('[Cart] 🗑️ Cart cleared, closing modal');
       setIsMomoModalOpen(false);
-      console.log('[Cart] 🚀 Redirecting to payment-complete page');
       router.push(
         `/payment-complete?status=successful&transaction_id=${transactionId}&reference=${reference}&order_id=${currentOrderId}` 
       );
     } else {
-      console.error('[Cart] ❌ Missing token or order ID for payment success');
     }
   };
 
   const handlePaymentFailure = (message: string) => {
-    console.log('[Cart] 💥 Payment failure callback received:', { message, currentOrderId });
-    console.log('[Cart] 🚀 Redirecting to payment-complete with failed status');
     router.push(`/payment-complete?status=failed&order_id=${currentOrderId}`);
   };
 

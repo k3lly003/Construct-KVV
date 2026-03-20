@@ -40,7 +40,6 @@ export function DragDropZone({ onImagesChange, maxFiles = 10, images }: DragDrop
 
       onImagesChange([...images, ...newImages]);
     } catch (error) {
-      console.error('Upload failed:', error);
     } finally {
       setUploading(false);
     }

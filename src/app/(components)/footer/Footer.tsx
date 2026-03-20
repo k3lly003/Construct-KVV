@@ -12,7 +12,6 @@ const constructionImages = [
   "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=300",
   "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80&w=300",
 ];
- console.log("Footer");
 export const Footer: React.FC = () => {
   const { t } = useTranslation();
   return (

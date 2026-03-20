@@ -29,9 +29,7 @@ type MilestoneKey = "foundation" | "roofing" | "finishing";
 const milestoneKeys: MilestoneKey[] = ["foundation", "roofing", "finishing"];
 
 const ProgressTracker = ({ projectId }: ProgressTrackerProps) => {
-  // Logging the incoming projectId
   useEffect(() => {
-    console.log("[ProgressTracker] projectId prop:", projectId);
   }, [projectId]);
 
   // Get budget, expenses from API
@@ -51,25 +49,6 @@ const ProgressTracker = ({ projectId }: ProgressTrackerProps) => {
 
   // Log API call result
   useEffect(() => {
-    console.log("[ProgressTracker] Loading:", loading);
-    if (data) {
-      console.log("[ProgressTracker] API Data:", data);
-    }
-    if (error) {
-      console.error("[ProgressTracker] API Error:", error);
-    }
-    if (milestones) {
-      console.log("[ProgressTracker] Milestones Data:", milestones);
-    }
-    if (milestonesError) {
-      console.error("[ProgressTracker] Milestones Error:", milestonesError);
-    }
-    if (timeline) {
-      console.log("[ProgressTracker] Timeline Data:", timeline);
-    }
-    if (timelineError) {
-      console.error("[ProgressTracker] Timeline Error:", timelineError);
-    }
   }, [
     loading,
     data,
@@ -98,7 +77,6 @@ const ProgressTracker = ({ projectId }: ProgressTrackerProps) => {
 
   // If data is not available, show nothing or you can render a fallback
   if (!data) {
-    console.log("[ProgressTracker] No data returned from API.");
     return null;
   }
 

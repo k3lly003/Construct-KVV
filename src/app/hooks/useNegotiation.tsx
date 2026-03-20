@@ -45,7 +45,6 @@ export const useNegotiation = (
         );
         return result;
       } catch (error) {
-        console.error("Failed to fetch negotiation history:", error);
         throw error;
       }
     },
@@ -73,7 +72,6 @@ export const useNegotiation = (
         );
         return result;
       } catch (error) {
-        console.error("Failed to send message:", error);
         throw error;
       }
     },
@@ -84,7 +82,6 @@ export const useNegotiation = (
       });
     },
     onError: (error) => {
-      console.error("Error sending message:", error);
     },
   });
 

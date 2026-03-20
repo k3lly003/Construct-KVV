@@ -13,7 +13,6 @@ export const useSafeFormContext = () => {
     return import("@/state/form-context").then((mod) => mod.useFormContext());
   } catch {
     // The error parameter is intentionally omitted to avoid ESLint unused variable error
-    console.log("📝 Form context not available, using default data");
     return {
       formData: {
         bedrooms: 3,
@@ -41,8 +40,6 @@ export const useSafeFormContext = () => {
 export const useProjects = () => {
   const queryClient = useQueryClient();
 
-  console.log("🏠 useProjects hook initialized");
-
   const {
     data: project = [],
     isLoading,
@@ -63,7 +60,6 @@ export const useProjects = () => {
       toast.success("Project deleted successfully");
     },
     onError: (error: Error) => {
-      console.error("❌ Delete project mutation error:", error);
       toast.error("Failed to delete project");
     },
   });
@@ -83,7 +79,6 @@ export const useProjects = () => {
       queryClient.invalidateQueries({ queryKey: ["project"] });
     },
     onError: (error: unknown) => {
-      console.error("❌ Update project mutation error:", error);
     },
   });
 
@@ -101,9 +96,6 @@ export const useProjects = () => {
     [updateProjectMutation]
   );
 
-  console.log("📊 Projects data:", project);
-  console.log("🔄 Loading state:", isLoading);
-
   return {
     project,
     isLoading:
@@ -117,8 +109,6 @@ export const useProjects = () => {
 };
 
 export const useProject = (id: string) => {
-  console.log("🏠 useProject hook initialized for ID:", id);
-
   const {
     data: project,
     isLoading,
@@ -130,9 +120,6 @@ export const useProject = (id: string) => {
     retry: 2,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
-
-  console.log("📊 Project data:", project);
-  console.log("🔄 Loading state:", isLoading);
 
   return {
     project,

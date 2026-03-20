@@ -31,7 +31,6 @@ export const useSellerProfile = (sellerId?: string, token?: string) => {
     queryFn: async () => {
       if (!sellerId || !token) return undefined;
       const response = await getSellerProfile(sellerId, token) as SellerProfileApiResponse;
-      console.log("bbbbbbbbbbbbbb", response)
       return response.data;
     },
     enabled: !!sellerId && !!token,

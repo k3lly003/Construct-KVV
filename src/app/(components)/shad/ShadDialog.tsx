@@ -18,11 +18,6 @@ interface DialogDemoProps {
 }
 
 export function DialogDemo({ shop }: DialogDemoProps) {
-  console.log('=== DialogDemo Component ===');
-  console.log('Received shop prop:', shop);
-  console.log('Shop name:', shop?.name);
-  console.log('Shop seller businessName:', shop?.seller?.businessName);
-  
   const shopName = shop?.name || shop?.seller?.businessName || 'this shop';
   return (
     <Dialog>

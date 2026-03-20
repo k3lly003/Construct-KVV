@@ -59,7 +59,6 @@ export default function ProfessionalDetailPage() {
           const parsed = JSON.parse(userData);
           setFullUserData(parsed);
         } catch (error) {
-          console.error('Error parsing user data:', error);
         }
       }
     }
@@ -136,7 +135,6 @@ export default function ProfessionalDetailPage() {
       setLoading(true);
       try {
         if (typeof window !== 'undefined') {
-          console.log('[ProfessionalDetail] params:', { type, id })
         }
         let data: ProfessionalData | null = null;
 
@@ -256,7 +254,6 @@ export default function ProfessionalDetailPage() {
           setError('Professional not found');
         }
       } catch (err) {
-        console.error('Error fetching professional:', err);
         setError('Failed to load professional details');
       } finally {
         setLoading(false);
@@ -268,8 +265,6 @@ export default function ProfessionalDetailPage() {
 
   useEffect(() => {
     if (professional && typeof window !== 'undefined') {
-      console.log('[ProfessionalDetail] normalized professional:', professional)
-      console.log('[ProfessionalDetail] additionalInfo:', professional.additionalInfo || {})
     }
   }, [professional])
 
@@ -298,7 +293,6 @@ export default function ProfessionalDetailPage() {
             }
           }
         } catch (err) {
-          console.error('Error fetching portfolios:', err);
         }
       }
     };
@@ -375,7 +369,6 @@ export default function ProfessionalDetailPage() {
     rawPortfolio.filter((v): v is string => typeof v === 'string' && isValidImageUrl(v))
   )).slice(0, 12)
   if (typeof window !== 'undefined') {
-    console.log('[ProfessionalDetail] portfolioImages:', portfolioImages)
   }
 
   return (

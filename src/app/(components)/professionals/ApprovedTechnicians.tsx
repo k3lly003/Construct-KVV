@@ -26,7 +26,6 @@ export default function ApprovedTechnicians({ searchQuery = "" }: { searchQuery?
             `Experience: ${t.experience || 0}y`,
           ],
         }));
-        console.log('[ApprovedTechnicians] fetched:', list.length, 'normalized:', normalized.length);
         setItems(normalized);
       } finally {
         setLoading(false);
@@ -39,8 +38,6 @@ export default function ApprovedTechnicians({ searchQuery = "" }: { searchQuery?
     (it.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
     (it.provider?.name || '').toLowerCase().includes(searchQuery.toLowerCase())
   ));
-  console.log('[ApprovedTechnicians] rendering count:', filtered.length, 'searchQuery:', searchQuery);
-
   return (
     <>
       {loading ? (

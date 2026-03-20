@@ -130,7 +130,6 @@ export function GenerateBOQModal({
         throw new Error(response.message || "Failed to generate BOQ");
       }
     } catch (error: any) {
-      console.error("Error generating BOQ:", error);
       toast.error(
         error.message || "BOQ generation failed. Please try again."
       );

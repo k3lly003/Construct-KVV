@@ -101,7 +101,6 @@ export default function Home() {
         setTotal(result.total || 0);
         setTotalPages(Math.ceil((result.total || 0) / limit));
       } catch (err) {
-        console.error("Error fetching portfolios:", err);
         setItems([]);
         setTotal(0);
         setTotalPages(0);

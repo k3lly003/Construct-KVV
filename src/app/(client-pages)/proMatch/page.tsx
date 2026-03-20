@@ -161,18 +161,15 @@ export default function ProMatchPage() {
 
   const handleLocateMe = async () => {
     // eslint-disable-next-line no-console
-    console.log("[ProMatch] Locate Me button clicked");
     setLocateError(null);
     if (!("geolocation" in navigator)) {
       const msg = "Geolocation is not supported by your browser.";
       setLocateError(msg);
       // eslint-disable-next-line no-console
-      console.log("[ProMatch] Geolocation not supported");
       return;
     }
     setLocating(true);
     // eslint-disable-next-line no-console
-    console.log("[ProMatch] Starting geolocation...");
     try {
       const position: GeolocationPosition = await new Promise(
         (resolve, reject) => {
@@ -185,20 +182,17 @@ export default function ProMatchPage() {
       );
       const { latitude, longitude } = position.coords;
       // eslint-disable-next-line no-console
-      console.log("[ProMatch] Coordinates retrieved:", { latitude, longitude });
 
       setForm((prev) => ({
         ...prev,
         location: { ...(prev.location || {}), lat: latitude, lng: longitude },
       }));
       // eslint-disable-next-line no-console
-      console.log("[ProMatch] Set location.lat and location.lng");
 
       const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(
         latitude
       )}&lon=${encodeURIComponent(longitude)}&addressdetails=1`;
       // eslint-disable-next-line no-console
-      console.log("[ProMatch] Fetching reverse geocoding:", url);
       const resp = await fetch(url, {
         headers: {
           accept: "application/json",
@@ -213,7 +207,6 @@ export default function ProMatchPage() {
       }
       const data = await resp.json();
       // eslint-disable-next-line no-console
-      console.log("[ProMatch] Reverse geocoding response:", data);
 
       const address: Record<string, string | undefined> = data?.address || {};
       const country = address.country || "";
@@ -227,7 +220,6 @@ export default function ProMatchPage() {
           location: { ...(prev.location || {}), country },
         }));
         // eslint-disable-next-line no-console
-        console.log("[ProMatch] Populated country:", country);
       }
       if (province) {
         setForm((prev) => ({
@@ -235,7 +227,6 @@ export default function ProMatchPage() {
           location: { ...(prev.location || {}), province },
         }));
         // eslint-disable-next-line no-console
-        console.log("[ProMatch] Populated province (state):", province);
       }
       if (district) {
         setForm((prev) => ({
@@ -243,7 +234,6 @@ export default function ProMatchPage() {
           location: { ...(prev.location || {}), district },
         }));
         // eslint-disable-next-line no-console
-        console.log("[ProMatch] Populated district/city:", district);
       }
       if (street) {
         setForm((prev) => ({
@@ -251,15 +241,9 @@ export default function ProMatchPage() {
           location: { ...(prev.location || {}), street },
         }));
         // eslint-disable-next-line no-console
-        console.log("[ProMatch] Populated street (road):", street);
       }
       // Explicit logs for lat/lng already set earlier
       // eslint-disable-next-line no-console
-      console.log(
-        "[ProMatch] Confirm lat/lng populated:",
-        latitude.toFixed(6),
-        longitude.toFixed(6)
-      );
     } catch (err: unknown) {
       let message = "Failed to get your location.";
       if (
@@ -287,11 +271,9 @@ export default function ProMatchPage() {
       }
       setLocateError(message);
       // eslint-disable-next-line no-console
-      console.log("[ProMatch] Locate Me error:", err);
     } finally {
       setLocating(false);
       // eslint-disable-next-line no-console
-      console.log("[ProMatch] Geolocation flow finished");
     }
   };
 
@@ -301,49 +283,28 @@ export default function ProMatchPage() {
     setPortfolioError(null);
     setPortfolioLoading(true);
     // eslint-disable-next-line no-console
-    console.log("[ProMatch] Opening details for:", pro);
     try {
       const archId = pro.architectId || null;
       const contId = pro.contractorId || null;
       const roleLower = (pro.role || "").toLowerCase();
       // eslint-disable-next-line no-console
-      console.log(
-        "[ProMatch] Preparing to fetch portfolio (by role-specific IDs):",
-        {
-          architectId: archId,
-          contractorId: contId,
-          technicianId: pro.technicianId || null,
-          sellerId: pro.sellerId || null,
-          role: pro.role,
-        }
-      );
       let endpoint = "";
       if (archId && roleLower.includes("architect")) {
         endpoint = `${API_URL}/api/v1/portfolio/public/architect/${encodeURIComponent(
           archId
         )}`;
         // eslint-disable-next-line no-console
-        console.log(
-          "[ProMatch] Role detected: architect. Using architect endpoint."
-        );
       } else if (contId && roleLower.includes("contractor")) {
         endpoint = `${API_URL}/api/v1/portfolio/public/contractor/${encodeURIComponent(
           contId
         )}`;
         // eslint-disable-next-line no-console
-        console.log(
-          "[ProMatch] Role detected: contractor. Using contractor endpoint."
-        );
       } else {
         // eslint-disable-next-line no-console
-        console.log(
-          "[ProMatch] Missing architectId/contractorId or unsupported role; skipping portfolio fetch"
-        );
         setPortfolioLoading(false);
         return;
       }
       // eslint-disable-next-line no-console
-      console.log("[ProMatch] Fetching portfolio:", endpoint);
       const res = await fetch(endpoint, {
         headers: { accept: "application/json" },
       });
@@ -353,13 +314,11 @@ export default function ProMatchPage() {
       }
       const data = await res.json();
       // eslint-disable-next-line no-console
-      console.log("[ProMatch] Portfolio response:", data);
       setPortfolio(data);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Unknown portfolio error";
       setPortfolioError(msg);
       // eslint-disable-next-line no-console
-      console.log("[ProMatch] Portfolio error:", e);
     } finally {
       setPortfolioLoading(false);
     }
@@ -432,13 +391,8 @@ export default function ProMatchPage() {
       // Debug: log submitted payload
       try {
         // eslint-disable-next-line no-console
-        console.log(
-          "[ProMatch] Submitting match payload:",
-          JSON.stringify(payload)
-        );
       } catch {
         // eslint-disable-next-line no-console
-        console.log("[ProMatch] Submitting match payload (raw):", payload);
       }
 
       const res = await fetch(`${API_URL}/api/v1/match`, {
@@ -459,7 +413,6 @@ export default function ProMatchPage() {
       const data = await res.json();
       // Debug: log raw API response
       // eslint-disable-next-line no-console
-      console.log("[ProMatch] Match API response:", data);
       const normalized: MatchResultItem[] = Array.isArray(data?.results)
         ? data.results.map((r: any) => ({
             userId: r.userId || r.id || "",

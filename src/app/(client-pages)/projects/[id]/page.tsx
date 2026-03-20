@@ -45,16 +45,8 @@ export default function ProjectDetailsPage() {
     const loadProject = async () => {
       try {
         const projectData = await getProjectById(projectId);
-        console.log("🔍 Full project response:", projectData);
-        console.log("📊 Analysis data:", {
-          partialSummaries: projectData.partialSummaries,
-          summary: projectData.summary,
-          text: projectData.text,
-          estimationSource: projectData.estimationSource,
-        });
         setProject(projectData);
       } catch (err) {
-        console.error("Failed to load project:", err);
         toast.error("Failed to load project details");
         router.push("/projects");
       }
@@ -76,7 +68,6 @@ export default function ProjectDetailsPage() {
       setProject({ ...project, status: newStatus });
       toast.success(`Project status updated to ${newStatus} successfully!`);
     } catch (err) {
-      console.error("Failed to update project status:", err);
       toast.error("Failed to update project status");
     } finally {
       setIsUpdatingStatus(false);

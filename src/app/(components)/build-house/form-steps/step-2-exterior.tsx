@@ -17,45 +17,19 @@ export function StepTwoExterior() {
   const { formData, updateFormData, nextStep, prevStep, setApiResponse } =
     useFormContext();
 
-  console.log("🏗️ Step 2 - Exterior Component Rendered");
-  console.log("📊 Current Form Data:", formData);
-  console.log("🎨 Exterior Selections:", {
-    houseStyle: formData.houseStyle,
-    roofStyle: formData.roofStyle,
-    exteriorMaterial: formData.exteriorMaterial,
-    colorPalette: formData.colorPalette,
-    hasGarage: formData.hasGarage,
-    garageSize: formData.garageSize,
-  });
-  console.log("📡 API Response Available:", !!formData.apiResponse);
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("🚀 Step 2 - Form Submit Triggered");
-    console.log("🎨 Exterior Selections at Submit:", {
-      houseStyle: formData.houseStyle,
-      roofStyle: formData.roofStyle,
-      exteriorMaterial: formData.exteriorMaterial,
-      colorPalette: formData.colorPalette,
-      hasGarage: formData.hasGarage,
-      garageSize: formData.garageSize,
-    });
 
     updateDescriptionWithStep2Selections();
-    console.log("✅ Step 2 - Proceeding to next step");
     nextStep();
   };
 
   const updateDescriptionWithStep2Selections = () => {
-    console.log("📝 Step 2 - Updating Description with Exterior Selections");
-
     if (!formData.apiResponse) {
-      console.log("⚠ep 2 - No API response available for description update");
       return;
     }
 
     const baseDescription = formData.apiResponse.description || "";
-    console.log("📝 Step 2 - Base Description:", baseDescription);
 
     // Build step 2 additions
     const step2Additions = [];
@@ -76,7 +50,6 @@ export function StepTwoExterior() {
       step2Additions.push(`${formData.colorPalette} color palette`);
     }
 
-    console.log("🎨 Step 2 - Exterior Additions:", step2Additions);
 
     // Create meaningful sentence
     let step2Description = "";
@@ -86,7 +59,6 @@ export function StepTwoExterior() {
 
     // Combine base description with step 2 additions
     const updatedDescription = baseDescription + step2Description;
-    console.log("📝 Step 2 - Updated Description:", updatedDescription);
 
     // Update the API response with the new description
     const updatedApiResponse = {
@@ -100,7 +72,6 @@ export function StepTwoExterior() {
       },
     };
 
-    console.log("🔄 Step 2 - Updated API Response:", updatedApiResponse);
     setApiResponse(updatedApiResponse);
   };
 

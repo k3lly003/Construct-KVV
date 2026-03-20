@@ -51,7 +51,6 @@ const Page = () => {
 
   const handleLocationRequest = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Location request submitted:', locationRequest);
     // Reset form
     setLocationRequest({
       location: '',
@@ -81,9 +80,6 @@ const Page = () => {
           constructorService.getApprovedContractors().catch(() => []),
           technicianService.getApprovedTechnicians().catch(() => []),
         ]);
-        console.log('✅ ARCHITECTS:', architects);
-        console.log('✅ CONTRACTORS:', contractors);
-        console.log('✅ TECHNICIANS:', technicians);
 
         const architectList: Architect[] = Array.isArray(architects)
           ? (architects as Architect[])

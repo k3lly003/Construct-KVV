@@ -17,7 +17,6 @@ const SpecialistLocator: React.FC = () => {
         `https://api.opencagedata.com/geocode/v1/json?q=${lat},${lng}&key=${opencageApi}`
       );
       const data = await res.json();
-      console.log("OpenCageData response:", data); // Log full response for testing
       const components = data.results[0]?.components;
       // Compose area as 'city, country' (e.g., 'Kicukiro, Rwanda')
       const city =
@@ -32,7 +31,6 @@ const SpecialistLocator: React.FC = () => {
         city && country ? `${city}, ${country}` : country || city || "";
       setAreaName(area || "");
     } catch (error) {
-      console.error("Error fetching area name:", error);
       setAreaName("");
     }
   };
@@ -49,11 +47,6 @@ const SpecialistLocator: React.FC = () => {
           lng: position.coords.longitude,
         });
         setLocationError("");
-        console.log(
-          "User location:",
-          position.coords.latitude,
-          position.coords.longitude
-        );
         fetchAreaName(position.coords.latitude, position.coords.longitude);
       },
       (error: GeolocationPositionError) => {
