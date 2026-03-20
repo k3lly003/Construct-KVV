@@ -30,7 +30,6 @@ export const MyShopServices: React.FC<MyShopServicesProps> = ({ shopId, searchTe
         const shopServices = await serviceService.getServicesByShopId(shopId);
         setServices(shopServices);
       } catch (err) {
-        console.error("Error fetching services:", err);
         setServices([]);
       } finally {
         setLoading(false);

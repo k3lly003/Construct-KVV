@@ -116,7 +116,6 @@ const DesignOrders: React.FC = () => {
         throw new Error('Failed to load orders');
       }
     } catch (err: any) {
-      console.error('Error fetching orders:', err);
       setError(err.message || 'Failed to load orders');
       setOrders([]);
     } finally {

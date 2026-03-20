@@ -46,7 +46,6 @@
 // ];
 
 //   const [selectedCategory, setSelectedCategory] = useState('All Products');
-//    console.log('Received shop prop:', shop);
 //   // const {
 //   //   seller = {},
 //   // } = shop.data || {};

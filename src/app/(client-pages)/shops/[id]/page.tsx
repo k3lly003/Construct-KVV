@@ -26,11 +26,9 @@ const Page = ({ params }: PageProps) => {
       try {
         setLoading(true)
         setError(null)
-        console.log('Received shop prop:', shop);
         const shopData = await ShopService.getShopById(id)
         setShop(shopData)
       } catch (err) {
-        console.error('Error fetching shop:', err)
         if (err instanceof Error) {
           if (err.message.includes('404')) {
             setError(`Shop with ID "${id}" not found. Please check the URL or try a different shop.`)

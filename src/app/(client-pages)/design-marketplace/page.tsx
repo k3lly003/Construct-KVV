@@ -141,7 +141,6 @@ const DesignMarketplace: React.FC = () => {
         throw new Error('Failed to load designs');
       }
     } catch (err: any) {
-      console.error('Error fetching designs:', err);
       setError(err.message || 'Failed to load designs');
       setDesigns([]);
     } finally {
@@ -197,7 +196,6 @@ const DesignMarketplace: React.FC = () => {
         toast.error(data.message || 'Failed to purchase design');
       }
     } catch (err: any) {
-      console.error('Error purchasing design:', err);
       toast.error('Failed to purchase design');
     } finally {
       setPurchasing(false);

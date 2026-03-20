@@ -14,19 +14,6 @@ export function StepFourOutdoor() {
   >([]);
   const [isClient, setIsClient] = useState(false);
 
-  console.log("🌳 Step 4 - Outdoor Component Rendered");
-  console.log("📊 Current Form Data:", formData);
-  console.log("🌿 Outdoor Selections:", {
-    landscapeStyle: formData.landscapeStyle,
-    hasDeck: formData.hasDeck,
-    hasPool: formData.hasPool,
-    hasOutdoorKitchen: formData.hasOutdoorKitchen,
-    outdoorNotes: formData.outdoorNotes,
-  });
-  console.log("💰 Selected Cost Optimizations:", selectedCostOptimizations);
-  console.log("📡 API Response Available:", !!formData.apiResponse);
-  console.log("🖥️ Is Client:", isClient);
-
   // Fix hydration issues by ensuring component renders on client
   useEffect(() => {
     setIsClient(true);
@@ -35,43 +22,22 @@ export function StepFourOutdoor() {
   // Debug logging for initial load only
   useEffect(() => {
     if (isClient && formData.apiResponse) {
-      console.log("🔍 Step 4 - Initial load - API Response structure:", {
-        hasCostOptimizations: !!formData.apiResponse.costOptimizations,
-        hasSuggestions: !!formData.apiResponse.suggestions,
-        hasFeasibilityAnalysis: !!formData.apiResponse.feasibilityAnalysis,
-      });
     }
   }, [isClient, formData.apiResponse]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("🚀 Step 4 - Form Submit Triggered");
-    console.log("🌿 Outdoor Selections at Submit:", {
-      landscapeStyle: formData.landscapeStyle,
-      hasDeck: formData.hasDeck,
-      hasPool: formData.hasPool,
-      hasOutdoorKitchen: formData.hasOutdoorKitchen,
-      outdoorNotes: formData.outdoorNotes,
-    });
-    console.log("💰 Cost Optimizations at Submit:", selectedCostOptimizations);
 
     updateDescriptionWithStep4Selections();
-    console.log("✅ Step 4 - Proceeding to next step");
     nextStep();
   };
 
   const updateDescriptionWithStep4Selections = () => {
-    console.log("📝 Step 4 - Updating Description with Outdoor Selections");
-
     if (!formData.apiResponse) {
-      console.log(
-        "⚠️ Step 4 - No API response available for description update"
-      );
       return;
     }
 
     const baseDescription = formData.apiResponse.description || "";
-    console.log("📝 Step 4 - Base Description:", baseDescription);
 
     // Build step 4 additions - only cost optimizations
     const step4Additions = [];
@@ -81,7 +47,6 @@ export function StepFourOutdoor() {
       step4Additions.push(`cost optimizations: ${optimizationsText}`);
     }
 
-    console.log("💰 Step 4 - Cost Optimization Additions:", step4Additions);
 
     // Create meaningful sentence
     let step4Description = "";
@@ -91,7 +56,6 @@ export function StepFourOutdoor() {
 
     // Combine base description with step 4 additions
     const updatedDescription = baseDescription + step4Description;
-    console.log("📝 Step 4 - Updated Description:", updatedDescription);
 
     // Update the API response with the new description
     const updatedApiResponse = {
@@ -102,16 +66,11 @@ export function StepFourOutdoor() {
       },
     };
 
-    console.log("🔄 Step 4 - Updated API Response:", updatedApiResponse);
     setApiResponse(updatedApiResponse);
   };
 
   const handleCostOptimizationChange = useCallback(
     (optimization: string, checked: boolean) => {
-      console.log("🔄 handleCostOptimizationChange called:", {
-        optimization,
-        checked,
-      });
 
       setSelectedCostOptimizations((prevOptimizations) => {
         if (checked) {
@@ -132,7 +91,6 @@ export function StepFourOutdoor() {
   const getCostOptimizationOptions = () => {
     try {
       if (!formData.apiResponse) {
-        console.log("📋 No API response available, using default options");
         return [
           "Use standard materials instead of premium",
           "Reduce square footage by 10%",
@@ -251,11 +209,8 @@ export function StepFourOutdoor() {
         ),
       ];
 
-      console.log("📋 Found optimizations:", uniqueOptimizations);
-
       // If no specific optimizations found, provide default options
       if (uniqueOptimizations.length === 0) {
-        console.log("📋 No optimizations found, using default options");
         return [
           "Use standard materials instead of premium",
           "Reduce square footage by 10%",
@@ -270,7 +225,6 @@ export function StepFourOutdoor() {
 
       return uniqueOptimizations;
     } catch (error) {
-      console.error("❌ Error in getCostOptimizationOptions:", error);
       // Return default options on error
       return [
         "Use standard materials instead of premium",
@@ -532,7 +486,6 @@ export function StepFourOutdoor() {
                                     e.target.checked
                                   );
                                 } catch (error) {
-                                  console.error("❌ Error in onChange:", error);
                                 }
                               }}
                               className="w-4 h-4 text-orange-600 rounded border-gray-300 focus:ring-orange-500"

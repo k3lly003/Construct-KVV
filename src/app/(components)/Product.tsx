@@ -56,9 +56,7 @@ export const Products: React.FC = () => {
       try {
         const response = await productService.getAllProducts();
         setProducts(response);
-        console.log("Fetched products:", response); // TODO remove when API is stable
       } catch (err: any) {
-        console.error("Error fetching products:", err);
         setError(err.message || "Failed to load products");
         setProducts([]);
       } finally {
@@ -76,12 +74,8 @@ export const Products: React.FC = () => {
         setServicesLoading(true);
         try {
           const data = await serviceService.getServices();
-          console.log("Fetched services data:", data);
-          console.log("Services data type:", typeof data);
-          console.log("Is array:", Array.isArray(data));
           setServices(Array.isArray(data) ? data : []);
         } catch (err) {
-          console.error("Error fetching services:", err);
           setServices([]);
         } finally {
           setServicesLoading(false);

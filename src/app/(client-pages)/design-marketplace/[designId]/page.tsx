@@ -103,7 +103,6 @@ const DesignDetails: React.FC<{ params: Promise<{ designId: string }> }> = ({ pa
         throw new Error('Failed to load design details');
       }
     } catch (err: any) {
-      console.error('Error fetching design details:', err);
       setError(err.message || 'Failed to load design details');
     } finally {
       setLoading(false);
@@ -150,7 +149,6 @@ const DesignDetails: React.FC<{ params: Promise<{ designId: string }> }> = ({ pa
         toast.error(data.message || 'Failed to purchase design');
       }
     } catch (err: any) {
-      console.error('Error purchasing design:', err);
       toast.error('Failed to purchase design');
     } finally {
       setPurchasing(false);
@@ -167,7 +165,6 @@ const DesignDetails: React.FC<{ params: Promise<{ designId: string }> }> = ({ pa
           url: window.location.href,
         });
       } catch (err) {
-        console.log('Error sharing:', err);
       }
     } else {
       // Fallback: copy to clipboard

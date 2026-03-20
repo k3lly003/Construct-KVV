@@ -43,7 +43,6 @@ export default function ViewBOQPage() {
         const boqData = await getBOQ(projectId, authToken);
         setBoq(boqData);
       } catch (err: any) {
-        console.error("Failed to load BOQ:", err);
         toast.error(err.message || "Failed to load BOQ");
         router.push(`/projects/${projectId}`);
       } finally {
@@ -153,7 +152,6 @@ export default function ViewBOQPage() {
             img.src = imgUrl;
           });
         } catch (error) {
-          console.error("Error loading logo:", error);
           // Continue without logo if it fails to load
         }
       }
@@ -287,7 +285,6 @@ export default function ViewBOQPage() {
       toast.dismiss(); // Dismiss loading toast
       toast.success("PDF downloaded successfully");
     } catch (error: any) {
-      console.error("Error generating PDF:", error);
       toast.dismiss(); // Dismiss loading toast on error
       toast.error("Failed to generate PDF. Please try again.");
     }

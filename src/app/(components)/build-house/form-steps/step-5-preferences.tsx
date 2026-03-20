@@ -12,17 +12,8 @@ export function StepFivePreferences() {
   const { formData, updateFormData, nextStep, prevStep } = useFormContext();
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
-  console.log("📋 Step 5 - Preferences Component Rendered");
-  console.log("📊 Current Form Data:", formData);
-  console.log("📅 Timeline Selection:", formData.timeline);
-  console.log("✅ Agreement Status:", agreedToTerms);
-  console.log("📡 API Response Available:", !!formData.apiResponse);
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("🚀 Step 5 - Form Submit Triggered");
-    console.log("📅 Timeline at Submit:", formData.timeline);
-    console.log("✅ Agreement at Submit:", agreedToTerms);
 
     if (agreedToTerms) {
       // Store the complete house summary with timeline for use in step 6
@@ -32,17 +23,13 @@ export function StepFivePreferences() {
         fullDescription: generateCompleteDescription(),
       };
 
-      console.log("📋 Step 5 - Complete Summary Generated:", completeSummary);
-
       updateFormData({
         houseSummary: completeSummary,
         timeline: formData.timeline,
       });
 
-      console.log("✅ Step 5 - Proceeding to next step");
       nextStep();
     } else {
-      console.log("❌ Step 5 - Agreement not checked, staying on current step");
     }
   };
 
@@ -144,8 +131,6 @@ export function StepFivePreferences() {
 
   // Generate a complete description combining all sections
   const generateCompleteDescription = () => {
-    console.log("📝 Step 5 - Generating Complete Description");
-
     const descriptionParts = [];
 
     // Add basic information
@@ -167,8 +152,6 @@ export function StepFivePreferences() {
         );
       }
     }
-
-    console.log("🏠 Step 5 - Basic Info Description Parts:", descriptionParts);
 
     // Add exterior features
     const exteriorFeatures = [];
@@ -194,8 +177,6 @@ export function StepFivePreferences() {
       );
     }
 
-    console.log("🏗️ Step 5 - Exterior Features:", exteriorFeatures);
-
     // Add interior features
     const interiorFeatures = [];
     if (formData.openFloorPlan) interiorFeatures.push("open floor plan");
@@ -217,8 +198,6 @@ export function StepFivePreferences() {
       );
     }
 
-    console.log("🛋️ Step 5 - Interior Features:", interiorFeatures);
-
     // Add outdoor features
     const outdoorFeatures = [];
     if (formData.landscapeStyle)
@@ -235,8 +214,6 @@ export function StepFivePreferences() {
       );
     }
 
-    console.log("🌳 Step 5 - Outdoor Features:", outdoorFeatures);
-
     // Add timeline information
     if (formData.timeline) {
       const timelineText = getTimelineText(formData.timeline);
@@ -245,13 +222,7 @@ export function StepFivePreferences() {
       );
     }
 
-    console.log(
-      "📅 Step 5 - Timeline Text:",
-      formData.timeline ? getTimelineText(formData.timeline) : "None"
-    );
-
     const finalDescription = descriptionParts.join(" ");
-    console.log("📝 Step 5 - Final Complete Description:", finalDescription);
     return finalDescription;
   };
 

@@ -39,7 +39,6 @@ export default function PricingPage() {
       }
       return []
     } catch (error) {
-      console.error(`Error loading features for ${key}:`, error)
       return []
     }
   }
@@ -151,7 +150,6 @@ export default function PricingPage() {
       // Fallback to empty array
       return []
     } catch (error) {
-      console.error('Error loading testimonials:', error)
       return []
     }
   }, [t])

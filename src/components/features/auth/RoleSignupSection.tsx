@@ -161,7 +161,6 @@ export default function RoleSignupSection() {
 
   const handleRegister = (role: string) => {
     // This would typically navigate to a registration form
-    console.log(`Registering as ${role}`)
     // You can implement navigation to registration form here
   }
 

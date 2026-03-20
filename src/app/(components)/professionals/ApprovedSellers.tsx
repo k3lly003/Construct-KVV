@@ -15,12 +15,10 @@ export default function ApprovedSellers({ searchQuery = "" }: { searchQuery?: st
       try {
         const authToken = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
         if (!authToken) {
-          console.warn("No auth token found for sellers");
           setItems([]);
           return;
         }
         const res = await getAllSellers(authToken).catch((error) => {
-          console.error("Error fetching all sellers:", error);
           return [];
         });
         const allSellers: SellerProfile[] = Array.isArray(res) ? (res as SellerProfile[]) : ((res as any)?.data ?? []);
@@ -40,7 +38,6 @@ export default function ApprovedSellers({ searchQuery = "" }: { searchQuery?: st
         setItems(normalized);
         setError(null);
       } catch (error) {
-        console.error("Error in load function:", error);
         setError("Failed to load sellers. Please try again.");
         setItems([]);
       } finally {

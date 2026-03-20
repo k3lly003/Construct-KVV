@@ -19,19 +19,10 @@ export function StepOneBasics() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  console.log("🏠 Step 1 - Basics Component Rendered");
-  console.log("📊 Current Form Data:", formData);
-  console.log("🔄 Loading State:", isLoading);
-  console.log("❌ Error State:", error);
-
   // Additional state for new fields
   const [kitchensCount, setKitchensCount] = useState(1);
   const [conversationRoomsCount, setConversationRoomsCount] = useState(0);
   const [estimatedCost, setEstimatedCost] = useState(25000000);
-
-  console.log("🍳 Kitchens Count:", kitchensCount);
-  console.log("💬 Conversation Rooms Count:", conversationRoomsCount);
-  console.log("💰 Estimated Cost:", estimatedCost);
 
   // Dynamic features state
   const [features, setFeatures] = useState([
@@ -63,26 +54,13 @@ export function StepOneBasics() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log("🚀 Step 1 - Form Submit Triggered");
-    console.log("📝 Form Data at Submit:", {
-      projectType: formData.projectType,
-      bedrooms: formData.bedrooms,
-      bathrooms: formData.bathrooms,
-      kitchensCount,
-      conversationRoomsCount,
-      estimatedCost,
-      features: features.filter((f) => f.enabled),
-    });
-
     // Perform API call before proceeding
     await handleApiCall();
 
     // Only proceed to next step if there's no error
     if (!error) {
-      console.log("✅ Step 1 - Proceeding to next step");
       nextStep();
     } else {
-      console.log("❌ Step 1 - Error occurred, staying on current step");
     }
   };
 
@@ -119,8 +97,6 @@ export function StepOneBasics() {
   };
 
   const generateDescription = () => {
-    console.log("📝 Step 1 - Generating Description");
-
     const parts = [];
 
     if (formData.bedrooms) {
@@ -145,7 +121,6 @@ export function StepOneBasics() {
     parts.push("family home");
 
     const finalDescription = parts.join(" ") + " with open plan living";
-    console.log("📝 Step 1 - Generated Description:", finalDescription);
     return finalDescription;
   };
 
@@ -153,13 +128,7 @@ export function StepOneBasics() {
     setIsLoading(true);
     setError(null);
 
-    console.log("🚀formData ", formData);
-    console.log(
-      "🚀 getUserDataFromLocalStorage ",
-      getUserDataFromLocalStorage()
-    );
     const token = localStorage.getItem("authToken");
-    console.log("🚀token from step-1-basics ", token);
     if (!token) {
       setError("No authentication token found. Please login first.");
       setIsLoading(false);
@@ -182,20 +151,6 @@ export function StepOneBasics() {
       estimatedCost: estimatedCost,
     };
 
-    console.log("🚀authToken ", token);
-    console.log("\uD83D\uDE80 Sending API Request:", {
-      url: `${API_URL}/api/v1/estimator/comprehensive`,
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: requestBody,
-    });
-
-    console.log("📤 Request Body:", JSON.stringify(requestBody, null, 2));
-
     try {
       const response = await axios.post(
         `${API_URL}/api/v1/estimator/comprehensive`,
@@ -209,9 +164,6 @@ export function StepOneBasics() {
         }
       );
 
-      console.log("✅ API Response Status:", response.status);
-      console.log("✅ API Response Headers:", response.headers);
-      console.log("✅ API Response Data:", response.data);
       setApiResponse(
         response.data as import("@/app/utils/fakes/formData").FormData["apiResponse"]
       );
@@ -241,7 +193,6 @@ export function StepOneBasics() {
         }
       }
       setError(errorMessage);
-      console.error("❌ API Error:", error);
     } finally {
       setIsLoading(false);
     }

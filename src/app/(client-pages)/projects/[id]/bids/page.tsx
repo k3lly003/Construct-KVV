@@ -91,7 +91,6 @@ export default function ProjectBidsPage() {
     setAccepting(true);
     try {
       // Debug payload to verify number type
-      console.log("Accepting bid payload:", { bidId: selectedBid.id, finalAmount: amountNumber, type: typeof amountNumber });
       await axiosInstance.post(`/api/v1/bids/${selectedBid.id}/accept`, { finalAmount: amountNumber });
       toast.success("Bid accepted successfully");
       setAcceptOpen(false);

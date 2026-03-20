@@ -82,7 +82,6 @@ export default function PortfolioDetailsPage() {
             // Portfolio owner is a technician
             setProfessionalType('technician');
             const data = await technicianService.getTechnicianById(item.technicianId);
-            console.log('Technician data structure:', data);
             setTechnician(data);
             setArchitect(null);
         } else {
@@ -96,7 +95,6 @@ export default function PortfolioDetailsPage() {
           setTechnician(null);
         }
       } catch (e) {
-        console.error('Error fetching professional:', e);
         setArchitect(null);
         setTechnician(null);
         setProfessionalType(null);
@@ -191,7 +189,6 @@ export default function PortfolioDetailsPage() {
         budget: 0
       });
     } catch (error) {
-      console.error('Failed to create request:', error);
       toast.error('Failed to submit request. Please try again.');
     }
   };

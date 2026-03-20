@@ -30,7 +30,6 @@ const Page: NextPage = () => {
       setShops(Array.isArray(data) ? data : []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch shops');
-      console.error('Error fetching shops:', err);
       setShops([]); // Set empty array on error
     } finally {
       setLoading(false);
@@ -43,7 +42,6 @@ const Page: NextPage = () => {
   //     const shop = await ShopService.getShopById(id);
   //     return shop;
   //   } catch (err) {
-  //     console.error('Error fetching shop by ID:', err);
   //     throw err;
   //   }
   // };
@@ -56,7 +54,6 @@ const Page: NextPage = () => {
   const profiles = useMemo(() => {
     if (!shops || !Array.isArray(shops)) return [];
     const mappedProfiles = shops.map(mapShopToProfile);
-    console.log('Available shop IDs:', mappedProfiles.map(p => p.id));
     return mappedProfiles;
   }, [shops]);
 

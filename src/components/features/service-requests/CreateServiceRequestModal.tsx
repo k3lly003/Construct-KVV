@@ -109,7 +109,6 @@
 //       });
 //       setErrors({});
 //     } catch (error) {
-//       console.error('Failed to create service request:', error);
 //     }
 //   };
 

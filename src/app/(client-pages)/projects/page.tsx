@@ -41,7 +41,6 @@ export default function Home() {
         const projects = await getFloorplanProjects();
         setFloorplanProjects(projects);
       } catch (err) {
-        console.error('Failed to load floorplan projects:', err);
       }
     };
     loadFloorplanProjects();
@@ -58,7 +57,6 @@ export default function Home() {
       const projects = await getFloorplanProjects();
       setFloorplanProjects(projects);
     } catch (err) {
-      console.error('Failed to reload floorplan projects:', err);
     }
   };
 

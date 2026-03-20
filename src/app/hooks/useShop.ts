@@ -117,7 +117,6 @@ export const useShops = () => {
       setShops(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch shops');
-      console.error('Error fetching shops:', err);
     } finally {
       setLoading(false);
     }

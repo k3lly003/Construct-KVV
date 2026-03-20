@@ -47,11 +47,6 @@ const DetailedSection: React.FC = () => {
 
   const handleSubmitQuote = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Quote submitted:", {
-      product: selectedProduct,
-      quantity,
-      ...formData,
-    });
     setShowQuoteForm(false);
     setFormData({
       company: "",

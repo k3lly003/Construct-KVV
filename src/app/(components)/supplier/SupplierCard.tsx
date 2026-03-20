@@ -69,7 +69,7 @@ const ShopCard: React.FC<Profile> = ({
         <div className="flex space-x-2 items-center py-3">
           <GenericButton
             className="flex-grow bg-black-100 text-white border border-white rounded-md py-2 text-small font-semibold hover:bg-gray-100 hover:text-black hover:border-0 cursor-pointer focus:outline-none"
-            onClick={() => console.log("Get in Touch clicked")}
+            onClick={() => {}}
           >
             <Mail className="mr-1 inline-block" />
             {t(dashboardFakes.common.contactUs)}

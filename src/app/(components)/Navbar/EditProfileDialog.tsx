@@ -59,7 +59,6 @@ const EditProfileDialog = ({ isOpen, onClose, userData }: EditProfileDialogProps
       },
       onError: (error) => {
         toast.error("Failed to update profile");
-        console.error("Update profile error:", error);
       },
     });
   };
