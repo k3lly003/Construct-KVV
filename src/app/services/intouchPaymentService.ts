@@ -314,3 +314,71 @@ export async function pollIntouchPaymentStatus(
   );
   throw new Error("Payment status polling timed out");
 }
+
+export async function pollLocalPaymentStatus(
+  reference: string,
+  token: string,
+  onUpdate?: (status: string) => void
+): Promise<{ status: string; reference: string; intouchRef: string }> {
+
+  const MAX_ATTEMPTS = 60;
+  const INTERVAL_MS = 2000;
+  let attempts = 0;
+
+  return new Promise((resolve, reject) => {
+    const interval = setInterval(async () => {
+      attempts++;
+      try {
+        console.log('[LocalPoll] 📡 Attempt', attempts, '/ 60 for reference:', reference);
+
+        const res = await axios.get(
+          `${BASE_URL}/api/v1/intouch/transaction/${reference}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        const tx = res.data?.data;
+        const status: string = tx?.status || '';
+
+        console.log('[LocalPoll] 📊 DB status:', status, '| attempt:', attempts);
+
+        if (onUpdate) onUpdate(status);
+
+        if (status === 'COMPLETED') {
+          clearInterval(interval);
+          console.log('[LocalPoll] ✅ Payment COMPLETED for reference:', reference);
+          resolve({
+            status,
+            reference: tx.reference,
+            intouchRef: tx.intouchRef,
+          });
+          return;
+        }
+
+        if (status === 'FAILED') {
+          clearInterval(interval);
+          console.log('[LocalPoll] ❌ Payment FAILED for reference:', reference);
+          reject(new Error('Payment failed. Please try again.'));
+          return;
+        }
+
+        console.log('[LocalPoll] ⏳ Still', status, '— waiting 2s...');
+
+        if (attempts >= MAX_ATTEMPTS) {
+          clearInterval(interval);
+          console.error('[LocalPoll] ⏰ Timed out after 60 attempts for:', reference);
+          reject(new Error(
+            'Payment is still being verified. If you were charged, please contact support with your MoMo transaction ID.'
+          ));
+        }
+      } catch (err: any) {
+        console.error('[LocalPoll] ❌ Network error on attempt', attempts, ':', err?.message);
+        if (attempts >= MAX_ATTEMPTS) {
+          clearInterval(interval);
+          reject(new Error('Could not verify payment. Please contact support if you were charged.'));
+        }
+      }
+    }, INTERVAL_MS);
+  });
+}

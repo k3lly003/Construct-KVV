@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning>
-      <body className="flex flex-col justify-start min-h-screen">
+      <body className="flex flex-col justify-start min-h-screen" suppressHydrationWarning>
         <Providers>
           {children}
           <Toaster position="top-right" richColors />

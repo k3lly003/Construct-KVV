@@ -13,9 +13,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { X, CheckCircle, ArrowLeft } from "lucide-react";
+import { X, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import ConstructorHero from "@/components/features/auth/ConstructorHero";
 import Link from "next/link";
 import { useConstructor } from "@/app/hooks/useConstructor";
 import { ConstructorRegistrationData } from "@/app/services/constructorService";
@@ -68,11 +67,6 @@ export default function ConstructorRegistration() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const addLocation = () => {
-    const newId = (locations.length + 1).toString();
-    setLocations((prev) => [...prev, { id: newId, province: "", district: "", cell: "" }]);
-  };
-
   const removeLocation = (id: string) => {
     if (locations.length > 1) {
       setLocations((prev) => prev.filter((loc) => loc.id !== id));
@@ -85,21 +79,10 @@ export default function ConstructorRegistration() {
     );
   };
 
-  const addDocument = () => {
-    const newId = (documents.length + 1).toString();
-    setDocuments((prev) => [...prev, { id: newId, files: [], names: [], types: [] }]);
-  };
-
   const removeDocument = (id: string) => {
     if (documents.length > 1) {
       setDocuments((prev) => prev.filter((doc) => doc.id !== id));
     }
-  };
-
-  const updateDocument = (id: string, field: 'name' | 'type', value: string) => {
-    setDocuments((prev) =>
-      prev.map((doc) => (doc.id === id ? { ...doc, [field]: value } : doc))
-    );
   };
 
   const handleFileUpload = (id: string, files: FileList | null) => {
@@ -172,7 +155,7 @@ export default function ConstructorRegistration() {
       await register(registrationData);
       toast.success("Registration successful! Your application has been submitted.");
       setIsSubmitted(true);
-    } catch (err) {
+    } catch {
       // Error is handled by the hook, but we can show a toast for additional feedback
       toast.error("Registration failed. Please check your information and try again.");
     }
