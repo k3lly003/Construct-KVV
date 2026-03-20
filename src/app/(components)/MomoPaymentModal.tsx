@@ -8,6 +8,7 @@ import {
   decodeResponseCode,
   initiateIntouchPayment,
   pollIntouchPaymentStatus,
+  pollLocalPaymentStatus,
   type PollResult,
   type IntouchPaymentPayload,
 } from "@/app/services/intouchPaymentService";
@@ -130,47 +131,24 @@ export const MomoPaymentModal: React.FC<MomoPaymentModalProps> = ({
 
       // Start polling for payment status
       console.log('[MomoModal] 📡 Starting polling for reference:', response.reference);
-      pollIntouchPaymentStatus(
+
+      console.log('[MomoModal] 📡 Starting DB polling for reference:', response.reference);
+
+      pollLocalPaymentStatus(
         response.reference,
         token,
-        {
-          intervalMs: 5000,
-          maxAttempts: 24,
-          onUpdate: (result) => {
-            console.log('[MomoModal] 📊 Polling update received:', {
-              status: result.liveStatus.data.status,
-              responsecode: result.liveStatus.data.responsecode,
-              attempt: 'unknown'
-            });
-            setPollResult(result);
-          },
+        (status) => {
+          console.log('[MomoModal] 🔄 Live status update from DB:', status);
         }
       ).then((result) => {
-        console.log('[MomoModal] ✅ Polling completed with final result:', result);
-        const status = result.liveStatus.data.status.toLowerCase();
-        console.log('[MomoModal] 🎯 Processing final status:', status);
-        
-        if (status === "successful" || status === "completed") {
-          console.log('[MomoModal] 🎉 Payment successful! Changing step to success');
-          setStep("success");
-          onSuccess(result.transaction.data.intouchRef, result.transaction.data.reference);
-        } else {
-          console.log('[MomoModal] ❌ Payment failed. Status:', status, 'Response code:', result.liveStatus.data.responsecode);
-          setStep("failed");
-          const errorMessage = decodeResponseCode(result.liveStatus.data.responsecode);
-          console.log('[MomoModal] 💥 Error message:', errorMessage);
-          setError(errorMessage);
-          if (onFailure) {
-            onFailure(errorMessage);
-          }
-        }
-      }).catch((err) => {
-        console.error('[MomoModal] ⏰ Polling timed out or failed:', err);
+        console.log('[MomoModal] 🎉 Payment COMPLETED — result:', result);
+        setStep("success");
+        onSuccess(result.intouchRef, result.reference);
+      }).catch((err: any) => {
+        console.error('[MomoModal] ❌ Polling ended with error:', err.message);
         setStep("failed");
-        setError("Payment verification timed out");
-        if (onFailure) {
-          onFailure("Payment verification timed out");
-        }
+        setError(err.message);
+        if (onFailure) onFailure(err.message);
       });
     } catch (err: any) {
       console.error('[MomoModal] 💥 Payment initiation failed:', err);

@@ -6,6 +6,13 @@ const nextConfig = {
     // API_KEY: 'YOUR_API_KEY',
     // DATABASE_URL: 'YOUR_DATABASE_URL',
   },
+  experimental: {
+    // Disable dev tools segment explorer to prevent the TypeError
+    devOverlay: {
+      // Disable the segment explorer that causes the error
+      segmentExplorer: false,
+    },
+  },
   images: {
     remotePatterns: [
       {
