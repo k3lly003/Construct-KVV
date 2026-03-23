@@ -77,6 +77,9 @@ const Page = () => {
     try {
       // Use Railway for registration (sends welcome email + OTP)
       const NEXT_PUBLIC_API_URL_2 = process.env.NEXT_PUBLIC_NEXT_PUBLIC_API_URL_2 || 'https://construct-kvv-bn-fork.onrender.com';
+      console.log("🚀 Starting registration to:", `${NEXT_PUBLIC_API_URL_2}/api/v1/user/register`);
+      console.log("📤 Registration data:", { firstName: first_name, lastName: second_name, email, password: "***" });
+      
       const response = await axios.post(
         `${NEXT_PUBLIC_API_URL_2}/api/v1/user/register`,
         {
@@ -93,27 +96,37 @@ const Page = () => {
       );
 
       const data = response.data as { data?: { token?: string; user?: User } };
-      console.log("Registration response:", data);
+      console.log("✅ Registration response:", data);
 
       // Use the authentication hook to login
       if (data.data?.token && data.data?.user) {
+        console.log("🔐 Logging user in...");
         login(data.data.token, data.data.user);
-        console.log("User logged in via signup");
+        console.log("✅ User logged in via signup");
+        console.log("📱 User data stored:", data.data.user);
+      } else {
+        console.error("❌ No token or user in response:", data);
       }
+      
       toast.success("Signup successful! Please verify your email.");
+      console.log("🔄 Redirecting to /otp...");
       router.push("/otp");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
+      console.error("❌ Registration failed:", err);
       if (isAxiosError(err)) {
+        console.error("❌ Axios error details:", err.response?.data);
         toast.error(
           err.response?.data?.message ||
             "An unexpected error occurred during signup."
         );
       } else {
+        console.error("❌ Non-axios error:", err);
         toast.error("An unexpected error occurred during signup.");
       }
     } finally {
       setLoading(false);
+      console.log("🏁 Signup process completed, loading set to false");
     }
   };
 

@@ -26,10 +26,15 @@ export default function OTPVerification() {
   // Initialize user data after component mounts to avoid hydration mismatch
   useEffect(() => {
     setMounted(true);
+    console.log("🔍 OTP Page: Component mounted, checking user data...");
     const data = getUserDataFromLocalStorage();
+    console.log("📱 User data from localStorage:", data);
     setUserData(data);
     if (data?.email) {
       setEmail(data.email);
+      console.log("✅ OTP Page: Email set to:", data.email);
+    } else {
+      console.error("❌ OTP Page: No email found in user data");
     }
   }, []);
   
@@ -73,8 +78,12 @@ export default function OTPVerification() {
 
   // Redirect to signin if no user data is found (only after mounting)
   useEffect(() => {
+    console.log("🔍 OTP Page: Checking redirect logic...", { mounted, userData });
     if (mounted && !userData) {
+      console.log("🔄 OTP Page: No user data found, redirecting to signin");
       router.push("/signin");
+    } else if (mounted && userData) {
+      console.log("✅ OTP Page: User data found, staying on OTP page");
     }
   }, [mounted, userData, router]);
 
