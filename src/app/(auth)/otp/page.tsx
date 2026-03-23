@@ -19,7 +19,6 @@ export default function OTPVerification() {
   const [email, setEmail] = useState("");
   const [userData, setUserData] = useState<any>(null);
   const [mounted, setMounted] = useState(false);
-  const [hasRequestedCode, setHasRequestedCode] = useState(false);
   const [expiryTimestamp, setExpiryTimestamp] = useState<number | null>(null);
   const [timeLeftSeconds, setTimeLeftSeconds] = useState<number>(0);
   const router = useRouter();
@@ -86,22 +85,7 @@ export default function OTPVerification() {
     }
   }, [otp, isValidEmail]);
 
-  // Automatically request/sent OTP in the background once we have a valid email
-  useEffect(() => {
-    if (mounted && isValidEmail && !hasRequestedCode) {
-      resendOtp(email)
-        .then((ok) => {
-          if (ok) {
-            const ts = Date.now() + 10 * 60 * 1000; // 10 minutes
-            setExpiryTimestamp(ts);
-            try { localStorage.setItem("otpExpiryAtMs", String(ts)); } catch {}
-          }
-        })
-        .catch(() => {})
-        .finally(() => setHasRequestedCode(true));
-    }
-  }, [mounted, isValidEmail, email, hasRequestedCode, resendOtp]);
-
+  
   // Countdown ticker
   useEffect(() => {
     if (!expiryTimestamp) {
