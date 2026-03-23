@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { otpService, VerifyOtpRequest, ResendOtpRequest } from "@/app/services/otpService";
 
 export interface UseOtpReturn {
@@ -56,7 +56,7 @@ export const useOtp = (): UseOtpReturn => {
     }
   };
 
-  const resendOtp = async (email: string): Promise<boolean> => {
+  const resendOtp = useCallback(async (email: string): Promise<boolean> => {
     if (!email) {
       setError("Email is required");
       return false;
@@ -81,7 +81,7 @@ export const useOtp = (): UseOtpReturn => {
     } finally {
       setIsResending(false);
     }
-  };
+  }, []);
 
   const checkVerificationStatus = async (): Promise<boolean> => {
     setIsLoading(true);
