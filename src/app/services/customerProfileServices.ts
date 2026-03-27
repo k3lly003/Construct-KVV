@@ -9,6 +9,11 @@ type GetProfileResponse = { data: Customer };
 export const customerProfileService = {
   async getMyProfile(authToken: string): Promise<Customer> {
     try {
+      console.log(
+        "🔍 Making profile API call with token:",
+        authToken.substring(0, 20) + "..."
+      );
+
       const response = await axios.get<GetProfileResponse>(
         `${API_URL}/api/v1/user/me`,
         {
@@ -17,8 +22,12 @@ export const customerProfileService = {
           },
         }
       );
+
+      console.log("✅ Profile API success:", response.data);
       return response.data.data;
     } catch (error: unknown) {
+      console.error("❌ Profile API error:", error);
+
       // Check if it's an axios error with response
       if ((axios as any).isAxiosError && (axios as any).isAxiosError(error)) {
         const err = error as any; // Explicit casting to 'any' due to unknown type issues
